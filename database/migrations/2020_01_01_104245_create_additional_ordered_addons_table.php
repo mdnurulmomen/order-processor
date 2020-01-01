@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderItemCustomizationsTable extends Migration
+class CreateAdditionalOrderedAddonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOrderItemCustomizationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_item_customizations', function (Blueprint $table) {
+        Schema::create('additional_ordered_addons', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateOrderItemCustomizationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_item_customizations');
+        Schema::dropIfExists('additional_ordered_addons');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderItemVariationsTable extends Migration
+class CreateRestaurantBookingStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOrderItemVariationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_item_variations', function (Blueprint $table) {
+        Schema::create('restaurant_booking_statuses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateOrderItemVariationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_item_variations');
+        Schema::dropIfExists('restaurant_booking_statuses');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDeliveryAddedInfosTable extends Migration
+class CreateOrderPaymentDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDeliveryAddedInfosTable extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_added_infos', function (Blueprint $table) {
+        Schema::create('order_payment_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateDeliveryAddedInfosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_added_infos');
+        Schema::dropIfExists('order_payment_details');
     }
 }

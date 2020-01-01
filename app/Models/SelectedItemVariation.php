@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderDeliveryProcess extends Model
+class SelectedItemVariation extends Model
 {
     //
 }

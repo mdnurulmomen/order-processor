@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePromotionalDiscountsTable extends Migration
+class CreateOrderDeliveryInfosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePromotionalDiscountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('promotional_discounts', function (Blueprint $table) {
+        Schema::create('order_delivery_infos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreatePromotionalDiscountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promotional_discounts');
+        Schema::dropIfExists('order_delivery_infos');
     }
 }

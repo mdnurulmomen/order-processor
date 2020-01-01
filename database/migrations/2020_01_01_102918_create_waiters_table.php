@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderDeliveryProcessesTable extends Migration
+class CreateWaitersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOrderDeliveryProcessesTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_delivery_processes', function (Blueprint $table) {
+        Schema::create('waiters', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateOrderDeliveryProcessesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_delivery_processes');
+        Schema::dropIfExists('waiters');
     }
 }
