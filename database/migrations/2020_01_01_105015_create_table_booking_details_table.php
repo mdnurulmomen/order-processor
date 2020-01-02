@@ -14,8 +14,14 @@ class CreateTableBookingDetailsTable extends Migration
     public function up()
     {
         Schema::create('table_booking_details', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->increments('id');
+            $table->tinyInteger('guest_number')->default(1);
+            $table->timestamp('arriving_time')->useCurrent();
+            $table->string('mobile', 11);
+            $table->timestamp('max_payment_time')->useCurrent();
+            $table->integer('restaurant_id');
+            $table->boolean('booking_confirmation')->default(0);
+            $table->integer('order_id')->nullable();
         });
     }
 

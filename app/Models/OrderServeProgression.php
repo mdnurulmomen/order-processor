@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TableOrder extends Model
+class OrderServeProgression extends Model
 {
     //
 }

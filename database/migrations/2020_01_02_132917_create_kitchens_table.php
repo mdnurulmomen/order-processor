@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRestaurantTableDetailsTable extends Migration
+class CreateKitchensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRestaurantTableDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('restaurant_table_details', function (Blueprint $table) {
+        Schema::create('kitchens', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateRestaurantTableDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('restaurant_table_details');
+        Schema::dropIfExists('kitchens');
     }
 }

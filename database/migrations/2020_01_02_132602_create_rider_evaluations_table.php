@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSelectedItemVariationsTable extends Migration
+class CreateRiderEvaluationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateSelectedItemVariationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('selected_item_variations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->mediumInteger('selected_variation_id');
-            $table->integer('order_items_id');
+        Schema::create('rider_evaluations', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +26,6 @@ class CreateSelectedItemVariationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('selected_item_variations');
+        Schema::dropIfExists('rider_evaluations');
     }
 }

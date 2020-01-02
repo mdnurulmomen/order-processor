@@ -14,8 +14,10 @@ class CreateOrderDeliveryInfosTable extends Migration
     public function up()
     {
         Schema::create('order_delivery_infos', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->increments('id');
+            $table->string('additional_info')->default('NA');
+            $table->mediumInteger('delivery_address_id');
+            $table->integer('order_id');
         });
     }
 

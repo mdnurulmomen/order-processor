@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableOrdersTable extends Migration
+class CreateOrderServeProgressionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTableOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('table_orders', function (Blueprint $table) {
+        Schema::create('order_serve_progressions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateTableOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_orders');
+        Schema::dropIfExists('order_serve_progressions');
     }
 }

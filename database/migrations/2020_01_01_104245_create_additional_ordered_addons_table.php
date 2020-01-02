@@ -14,8 +14,9 @@ class CreateAdditionalOrderedAddonsTable extends Migration
     public function up()
     {
         Schema::create('additional_ordered_addons', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->smallInteger('added_addon_id');
+            $table->mediumInteger('order_items_id');
         });
     }
 
