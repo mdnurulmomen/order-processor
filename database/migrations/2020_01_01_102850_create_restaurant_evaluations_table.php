@@ -14,8 +14,10 @@ class CreateRestaurantEvaluationsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_evaluations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->unsignedTinyInteger('order_acceptance_percentage')->default(0);
+            $table->unsignedTinyInteger('mean_rating')->default(0);
+            $table->unsignedMediumInteger('restaurant_id')->unique();
         });
     }
 

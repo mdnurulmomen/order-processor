@@ -14,8 +14,10 @@ class CreateRestaurantMenuItemVariationsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_menu_item_variations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->unsignedSmallInteger('variation_id');
+            $table->unsignedSmallInteger('price');
+            $table->unsignedMediumInteger('restaurant_menu_item_id');
         });
     }
 

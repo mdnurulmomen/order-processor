@@ -14,8 +14,13 @@ class CreateRestaurantDealsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_deals', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->unsignedTinyInteger('sale_percentage')->default(0);
+            $table->unsignedTinyInteger('restaurant_promotional_discount')->default(0);
+            $table->unsignedTinyInteger('native_discount')->default(0);
+            $table->unsignedTinyInteger('discount_id')->default(0);
+            $table->boolean('delivery_fee_addition')->default(true);
+            $table->unsignedMediumInteger('restaurant_id')->unique();
         });
     }
 

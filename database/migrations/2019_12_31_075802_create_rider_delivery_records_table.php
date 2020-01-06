@@ -14,8 +14,11 @@ class CreateRiderDeliveryRecordsTable extends Migration
     public function up()
     {
         Schema::create('rider_delivery_records', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->increments('id');
+            $table->boolean('delivery_order_acceptance')->default(1);
+            $table->unsignedInteger('order_id');
+            $table->unsignedSmallInteger('rider_id');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

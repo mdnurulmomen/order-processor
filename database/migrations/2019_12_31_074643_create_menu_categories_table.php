@@ -14,8 +14,8 @@ class CreateMenuCategoriesTable extends Migration
     public function up()
     {
         Schema::create('menu_categories', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->string('name');
         });
     }
 

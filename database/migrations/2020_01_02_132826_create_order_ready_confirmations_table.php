@@ -13,8 +13,16 @@ class CreateOrderReadyConfirmationsTable extends Migration
      */
     public function up()
     {
+        // After restaurant accepted the order (for all order)
         Schema::create('order_ready_confirmations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->unsignedInteger('order_id');
+            $table->boolean('food_ready_confirmation')->default(false);
+            $table->unsignedInteger('restaurant_id');   // Multiple row if multiple restaurants in single order, Same for both counter & kitchen
+            
+            //$table->string('order_confirmer_type')->nullable(); // Counter / Kitchen
+            //$table->unsignedMediumInteger('order_confirmer_id')->nullable();
+            
             $table->timestamps();
         });
     }

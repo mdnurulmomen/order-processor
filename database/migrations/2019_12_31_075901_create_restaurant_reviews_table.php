@@ -14,8 +14,10 @@ class CreateRestaurantReviewsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_reviews', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->increments('id');
+            $table->unsignedTinyInteger('rating')->nullable()->default(3);
+            $table->unsignedMediumInteger('restaurant_id');
+            $table->unsignedInteger('customer_id');
         });
     }
 

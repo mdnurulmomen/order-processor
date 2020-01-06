@@ -14,8 +14,11 @@ class CreateRiderReviewsTable extends Migration
     public function up()
     {
         Schema::create('rider_reviews', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->increments('id');
+            $table->unsignedTinyInteger('rating')->nullable()->default(2);
+            $table->unsignedSmallInteger('rider_id');
+            $table->unsignedInteger('customer_id');
+            $table->timestamp('created_at');
         });
     }
 

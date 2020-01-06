@@ -14,8 +14,9 @@ class CreateRestaurantNotificationsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_notifications', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->increments('id');
+            $table->unsignedMediumInteger('restaurant_id');
+            $table->unsignedMediumInteger('notification_id');
         });
     }
 

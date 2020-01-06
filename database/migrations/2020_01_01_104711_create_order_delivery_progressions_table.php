@@ -14,14 +14,11 @@ class CreateOrderDeliveryProgressionsTable extends Migration
     public function up()
     {
         Schema::create('order_delivery_progressions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->tinyInteger('number_restaurant')->default(1);
-            $table->boolean('restaurant_acceptance')->default(1);
-            $table->boolean('restaurant_handover')->default(0);
-            $table->boolean('rider_pick')->default(0);
-            $table->boolean('rider_delivery')->default(0);
-            $table->integer('order_id');
-            $table->integer('rider_id');
+            $table->increments('id');
+            $table->boolean('rider_food_pick_confirmation')->default(false);
+            $table->boolean('rider_delivery_confirmation')->default(false);
+            $table->unsignedInteger('order_id')->unique();
+            $table->unsignedMediumInteger('rider_id');
             $table->timestamps();
         });
     }

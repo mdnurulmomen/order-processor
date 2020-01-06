@@ -16,7 +16,7 @@ class CreateOrderPaymentDetailsTable extends Migration
         Schema::create('order_payment_details', function (Blueprint $table) {
             $table->increments('id');
             $table->string('payment_id');
-            $table->string('order_id');
+            $table->unsignedInteger('order_id')->unique();
             $table->timestamps();
         });
     }

@@ -14,8 +14,8 @@ class CreateItemVariationsTable extends Migration
     public function up()
     {
         Schema::create('item_variations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->smallIncrements('id');
+            $table->string('variation_name'); // different sizes, chicken, beef
         });
     }
 

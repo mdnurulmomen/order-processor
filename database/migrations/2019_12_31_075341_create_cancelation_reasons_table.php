@@ -14,8 +14,8 @@ class CreateCancelationReasonsTable extends Migration
     public function up()
     {
         Schema::create('cancelation_reasons', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->smallIncrements('id');
+            $table->string('reason');
         });
     }
 

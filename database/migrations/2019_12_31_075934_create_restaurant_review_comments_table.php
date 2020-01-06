@@ -14,8 +14,10 @@ class CreateRestaurantReviewCommentsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_review_comments', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->text('comment');
+            $table->unsignedMediumInteger('review_id');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

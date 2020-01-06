@@ -14,11 +14,11 @@ class CreateRestaurantBookingStatusesTable extends Migration
     public function up()
     {
         Schema::create('restaurant_booking_statuses', function (Blueprint $table) {
-            $table->increments('id');
-            $table->smallInteger('total_seat');
-            $table->smallInteger('engaged_seat');
-            $table->smallInteger('seat_left');
-            $table->integer('restaurant_id');
+            $table->mediumIncrements('id');
+            $table->unsignedSmallInteger('total_seat');
+            $table->unsignedSmallInteger('engaged_seat')->default(0);
+            $table->unsignedSmallInteger('seat_left');
+            $table->unsignedMediumInteger('restaurant_id')->unique();
         });
     }
 

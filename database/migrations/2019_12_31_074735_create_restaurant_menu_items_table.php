@@ -14,8 +14,15 @@ class CreateRestaurantMenuItemsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_menu_items', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->string('name');
+            $table->text('detail')->nullable(); // A short description / quantity / half, full
+            $table->boolean('has_variation')->default(false);
+            $table->boolean('has_addon')->default(false);
+            $table->unsignedSmallInteger('price'); // price / if variation exists, then price of minimum-one
+            $table->boolean('customizable')->default(true);
+            $table->boolean('item_stock')->default(true);
+            $table->unsignedMediumInteger('restaurant_menu_category_id');
         });
     }
 

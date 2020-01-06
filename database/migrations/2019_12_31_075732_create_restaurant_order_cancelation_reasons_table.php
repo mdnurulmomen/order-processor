@@ -14,8 +14,11 @@ class CreateRestaurantOrderCancelationReasonsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_order_cancelation_reasons', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->unsignedTinyInteger('reason_id');
+            $table->unsignedInteger('order_id');
+            $table->unsignedMediumInteger('restaurant_id');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

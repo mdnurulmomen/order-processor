@@ -14,9 +14,9 @@ class CreateSelectedItemVariationsTable extends Migration
     public function up()
     {
         Schema::create('selected_item_variations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->mediumInteger('selected_variation_id');
-            $table->integer('order_items_id');
+            $table->mediumIncrements('id');
+            $table->unsignedSmallInteger('selected_variation_id');
+            $table->unsignedInteger('order_item_id');
         });
     }
 

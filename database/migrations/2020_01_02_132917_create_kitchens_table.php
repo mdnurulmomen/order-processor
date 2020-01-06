@@ -14,7 +14,12 @@ class CreateKitchensTable extends Migration
     public function up()
     {
         Schema::create('kitchens', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->mediumIncrements('id');
+            $table->string('user_name', 30)->unique(); // phone or user_name
+            $table->string('mobile', 13)->unique();
+            $table->string('email')->nullable();
+            $table->string('password');
+            $table->unsignedMediumInteger('restaurant_id')->unique(); //Each restaurant has one kitchen
             $table->timestamps();
         });
     }

@@ -14,9 +14,9 @@ class CreateOrderedItemCustomizationsTable extends Migration
     public function up()
     {
         Schema::create('ordered_item_customizations', function (Blueprint $table) {
-            $table->increments('id');
+            $table->mediumIncrements('id');
             $table->string('custom_instruction')->default('NA');
-            $table->integer('order_items_id');
+            $table->unsignedInteger('order_item_id');
         });
     }
 

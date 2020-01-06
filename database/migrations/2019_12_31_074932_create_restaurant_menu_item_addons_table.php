@@ -14,8 +14,10 @@ class CreateRestaurantMenuItemAddonsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_menu_item_addons', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->unsignedSmallInteger('addon_id');
+            $table->unsignedSmallInteger('price');
+            $table->unsignedMediumInteger('restaurant_menu_item_id');
         });
     }
 

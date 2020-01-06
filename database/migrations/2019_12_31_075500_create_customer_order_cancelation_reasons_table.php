@@ -14,8 +14,11 @@ class CreateCustomerOrderCancelationReasonsTable extends Migration
     public function up()
     {
         Schema::create('customer_order_cancelation_reasons', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->increments('id');
+            $table->unsignedInteger('order_id');
+            $table->unsignedTinyInteger('reason_id');
+            $table->unsignedInteger('customer_id');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

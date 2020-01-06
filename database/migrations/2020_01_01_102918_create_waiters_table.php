@@ -14,7 +14,14 @@ class CreateWaitersTable extends Migration
     public function up()
     {
         Schema::create('waiters', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->mediumIncrements('id');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('user_name')->unique();
+            $table->string('mobile', 13)->unique();
+            $table->string('email')->nullable()->unique();
+            $table->string('password');
+            $table->unsignedMediumInteger('restaurant_id');
             $table->timestamps();
         });
     }

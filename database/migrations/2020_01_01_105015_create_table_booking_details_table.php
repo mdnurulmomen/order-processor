@@ -13,15 +13,16 @@ class CreateTableBookingDetailsTable extends Migration
      */
     public function up()
     {
+        // table reservation (with food / without food)
         Schema::create('table_booking_details', function (Blueprint $table) {
-            $table->increments('id');
-            $table->tinyInteger('guest_number')->default(1);
+            $table->mediumIncrements('id');
+            $table->unsignedTinyInteger('guest_number')->default(1);
             $table->timestamp('arriving_time')->useCurrent();
-            $table->string('mobile', 11);
+            $table->string('mobile', 13);
             $table->timestamp('max_payment_time')->useCurrent();
-            $table->integer('restaurant_id');
-            $table->boolean('booking_confirmation')->default(0);
-            $table->integer('order_id')->nullable();
+            $table->unsignedMediumInteger('restaurant_id');
+            $table->boolean('booking_confirmation')->default(false);
+            $table->unsignedInteger('order_id')->nullable();
         });
     }
 

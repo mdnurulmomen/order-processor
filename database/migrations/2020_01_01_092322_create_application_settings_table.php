@@ -14,7 +14,15 @@ class CreateApplicationSettingsTable extends Migration
     public function up()
     {
         Schema::create('application_settings', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->tinyIncrements('id');
+            $table->unsignedTinyInteger('delivery_fee');
+            $table->unsignedTinyInteger('min_percentage_delivery_fee');
+            $table->unsignedTinyInteger('vat_percentage');
+            $table->string('official_mail_address')->default('qupaid@email.com');
+            $table->char('official_bkash_number',13)->default('8801XXXXXXXXX');
+            $table->string('official_bank')->default('XXXXX Bank');
+            $table->string('official_account_number')->default('XXXXXXXXXXXX');
+            $table->unsignedSmallInteger('admin_id');
             $table->timestamps();
         });
     }

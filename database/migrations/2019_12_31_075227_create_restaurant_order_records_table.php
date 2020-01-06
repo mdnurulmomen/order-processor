@@ -13,9 +13,13 @@ class CreateRestaurantOrderRecordsTable extends Migration
      */
     public function up()
     {
+        // order lifecycle starts after call confirmation
         Schema::create('restaurant_order_records', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->increments('id');
+            $table->boolean('food_order_acceptance')->default(0);
+            $table->unsignedInteger('order_id');
+            $table->unsignedMediumInteger('restaurant_id');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

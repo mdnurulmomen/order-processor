@@ -14,8 +14,11 @@ class CreateCustomerCouponsTable extends Migration
     public function up()
     {
         Schema::create('customer_coupons', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->unsignedTinyInteger('achieved_amount');
+            $table->unsignedSmallInteger('coupon_id');
+            $table->unsignedInteger('customer_id');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

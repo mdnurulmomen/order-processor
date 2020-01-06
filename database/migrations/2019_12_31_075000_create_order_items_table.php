@@ -14,8 +14,10 @@ class CreateOrderItemsTable extends Migration
     public function up()
     {
         Schema::create('order_items', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->mediumIncrements('id');
+            $table->unsignedMediumInteger('restaurant_menu_item_id');
+            $table->unsignedTinyInteger('quantity')->default(1);
+            $table->unsignedInteger('order_id');
         });
     }
 

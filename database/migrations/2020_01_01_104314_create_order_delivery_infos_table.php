@@ -15,9 +15,9 @@ class CreateOrderDeliveryInfosTable extends Migration
     {
         Schema::create('order_delivery_infos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('additional_info')->default('NA');
-            $table->mediumInteger('delivery_address_id');
-            $table->integer('order_id');
+            $table->string('additional_info')->nullable();
+            $table->unsignedMediumInteger('delivery_address_id');
+            $table->unsignedInteger('order_id')->unique();
         });
     }
 
