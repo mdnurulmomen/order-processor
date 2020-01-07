@@ -23,7 +23,7 @@ class CreateOrderReadyConfirmationsTable extends Migration
             //$table->string('order_confirmer_type')->nullable(); // Counter / Kitchen
             //$table->unsignedMediumInteger('order_confirmer_id')->nullable();
             
-            $table->timestamps();
+            $table->timestamps();  // Calculating avg time from restaurant_order_records and order_ready_confirmations
         });
     }
 
