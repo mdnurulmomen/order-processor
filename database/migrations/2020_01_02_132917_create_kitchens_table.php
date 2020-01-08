@@ -20,6 +20,8 @@ class CreateKitchensTable extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('password'); // Login with username / mobile
             $table->unsignedMediumInteger('restaurant_id')->unique(); //Each restaurant has one kitchen
+            $table->rememberToken();
+            $table->boolean('admin_approval')->default(true);
             $table->timestamps();
         });
     }

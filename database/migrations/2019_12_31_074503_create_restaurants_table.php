@@ -20,6 +20,7 @@ class CreateRestaurantsTable extends Migration
             $table->char('mobile', 13)->unique();
             $table->string('email', 50)->nullable()->unique();
             $table->string('password'); // Login with username / mobile
+            $table->rememberToken();
             $table->string('title', 50)->nullable();
             $table->text('description')->nullable();
             $table->string('address'); // floor, house, road and other landmark  
@@ -36,7 +37,7 @@ class CreateRestaurantsTable extends Migration
             $table->json('service_schedule')->nullable(); // service hour for whole week
             $table->json('booking_schedule_break')->nullable(); // break hour for whole week
             $table->boolean('taking_order')->default(false);
-            $table->boolean('admin_publish_approval')->default(false);
+            $table->boolean('admin_approval')->default(false);
             $table->timestamps();
         });
     }

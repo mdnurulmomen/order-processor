@@ -22,6 +22,8 @@ class CreateWaitersTable extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('password'); // Login with username / mobile
             $table->unsignedMediumInteger('restaurant_id');
+            $table->rememberToken();
+            $table->boolean('admin_approval')->default(true);
             $table->timestamps();
         });
     }

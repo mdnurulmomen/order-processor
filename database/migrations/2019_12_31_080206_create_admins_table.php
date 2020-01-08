@@ -21,6 +21,8 @@ class CreateAdminsTable extends Migration
             $table->string('mobile', 13)->unique();
             $table->string('email')->unique();
             $table->string('password'); // Login with email / mobile with OTP
+            $table->boolean('active')->default(true);
+            $table->rememberToken();
             $table->timestamps();
         });
     }
