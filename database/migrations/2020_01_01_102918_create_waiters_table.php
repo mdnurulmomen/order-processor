@@ -20,7 +20,7 @@ class CreateWaitersTable extends Migration
             $table->string('user_name')->unique();
             $table->string('mobile', 13)->unique();
             $table->string('email')->nullable()->unique();
-            $table->string('password');
+            $table->string('password'); // Login with username / mobile
             $table->unsignedMediumInteger('restaurant_id');
             $table->timestamps();
         });

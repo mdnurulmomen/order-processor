@@ -18,8 +18,8 @@ class CreateRestaurantsTable extends Migration
             $table->string('name', 50)->unique();
             $table->string('user_name', 50)->unique(); // Auto Generated
             $table->char('mobile', 13)->unique();
-            $table->string('email', 50)->unique();
-            $table->string('password');
+            $table->string('email', 50)->nullable()->unique();
+            $table->string('password'); // Login with username / mobile
             $table->string('title', 50)->nullable();
             $table->text('description')->nullable();
             $table->string('address'); // floor, house, road and other landmark  

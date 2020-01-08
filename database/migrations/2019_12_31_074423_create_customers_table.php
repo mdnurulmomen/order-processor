@@ -20,7 +20,7 @@ class CreateCustomersTable extends Migration
             $table->string('user_name')->unique();
             $table->char('mobile', 13)->unique();
             $table->string('email', 50)->nullable()->unique();
-            $table->string('password');
+            $table->string('password'); // Login with username / mobile
             $table->timestamps();
         });
     }
