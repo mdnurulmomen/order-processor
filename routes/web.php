@@ -10,11 +10,63 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::domain('admin.localhost')->group(function () {
+
+	Route::group(['as' => 'admin.'], function () {
+	    
+	    Route::namespace('Auth')->group(function () {
+		
+			Route::get('/', 'LoginController@showAdminLoginForm')->name('login');
+			Route::post('/', 'LoginController@submitAdminLoginForm');
+
+			Route::group(['middleware' => ['auth:admin']], function () {
+			    
+			    Route::get('/home', 'HomeController@showAdminHome')->name('home');
+			});
+		});
+
+		Route::namespace('Web')->group(function () {
+
+			Route::group(['middleware' => ['auth:admin']], function () {
+			    
+			    Route::get('/profile', 'ProfileController@showAdminProfile')->name('profile');
+			});
+		});
+	});
+});
+
+Route::domain('resto.localhost')->group(function () {
+
+	Route::group(['as' => 'resto.'], function () {
+	    
+	    Route::namespace('Auth')->group(function () {
+		
+			Route::get('/', 'LoginController@showRestaurantLoginForm')->name('login');
+			Route::post('/', 'LoginController@submitRestaurantLoginForm');
+
+			Route::group(['middleware' => ['auth:restaurant']], function () {
+			    
+			    Route::get('/home', 'HomeController@showRestaurantHome')->name('home');
+			});
+		});
+
+		Route::namespace('Web')->group(function () {
+
+			Route::group(['middleware' => ['auth:restaurant']], function () {
+			    
+			    Route::get('/profile', 'ProfileController@showRestaurantProfile')->name('profile');
+			});
+		});
+	});
+});
+
+
+Route::view('/', 'welcome')->name('home');
+Route::get('/home', 'Auth\HomeController@index')->name('customer.home');
+Route::fallback(function () {
+    Route::view('/', 'welcome')->name('customer.home');
+});
+
+
