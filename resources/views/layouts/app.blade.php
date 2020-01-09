@@ -55,13 +55,13 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                    <a class="dropdown-item" href='{{ isset($url) ? route("$url.logout") : route("logout") }}'
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" action='{{ isset($url) ? route("$url.logout") : route("logout") }}' method="POST" style="display: none;">
                                         @csrf
                                     </form>
                                 </div>

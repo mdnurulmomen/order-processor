@@ -10,20 +10,23 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes();
 
 Route::domain('admin.localhost')->group(function () {
 
-	Route::group(['as' => 'admin.'], function () {
+	Route::name('admin.')->group(function () {
 	    
 	    Route::namespace('Auth')->group(function () {
 		
 			Route::get('/', 'LoginController@showAdminLoginForm')->name('login');
-			Route::post('/', 'LoginController@submitAdminLoginForm');
+			Route::post('/', 'LoginController@adminLogin');
+		    Route::get('/home', 'HomeController@showAdminHome')->name('home');
 
 			Route::group(['middleware' => ['auth:admin']], function () {
 			    
-			    Route::get('/home', 'HomeController@showAdminHome')->name('home');
+			    Route::post('/logout', 'LoginController@adminLogout')->name('logout');
+			    
 			});
 		});
 
@@ -39,16 +42,18 @@ Route::domain('admin.localhost')->group(function () {
 
 Route::domain('resto.localhost')->group(function () {
 
-	Route::group(['as' => 'resto.'], function () {
+	Route::name('resto.')->group(function () {
 	    
 	    Route::namespace('Auth')->group(function () {
 		
 			Route::get('/', 'LoginController@showRestaurantLoginForm')->name('login');
-			Route::post('/', 'LoginController@submitRestaurantLoginForm');
+			Route::post('/', 'LoginController@restaurantLogin');
+		    Route::get('/home', 'HomeController@showRestaurantHome')->name('home');
 
 			Route::group(['middleware' => ['auth:restaurant']], function () {
 			    
-			    Route::get('/home', 'HomeController@showRestaurantHome')->name('home');
+			    Route::post('/logout', 'LoginController@restaurantLogout')->name('logout');
+			    
 			});
 		});
 
@@ -62,11 +67,12 @@ Route::domain('resto.localhost')->group(function () {
 	});
 });
 
+Route::view('/', 'welcome')->name('website');
 
-Route::view('/', 'welcome')->name('home');
 Route::get('/home', 'Auth\HomeController@index')->name('customer.home');
+
 Route::fallback(function () {
-    Route::view('/', 'welcome')->name('customer.home');
+    Route::view('/', 'welcome');
 });
 
 

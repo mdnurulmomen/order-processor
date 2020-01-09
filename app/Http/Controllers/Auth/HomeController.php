@@ -14,7 +14,9 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->only('index');
+        $this->middleware('auth:admin')->only('showAdminHome');
+        $this->middleware('auth:restaurant')->only('showRestaurantHome');
     }
 
     /**
@@ -34,7 +36,7 @@ class HomeController extends Controller
      */
     public function showAdminHome()
     {
-        return view('home');
+        return view('home', ['url' => 'admin']);
     }
 
     /**
@@ -44,6 +46,6 @@ class HomeController extends Controller
      */
     public function showRestaurantHome()
     {
-        return view('home');
+        return view('home', ['url' => 'resto']);
     }    
 }
