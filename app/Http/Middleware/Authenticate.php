@@ -17,14 +17,14 @@ class Authenticate extends Middleware
     {
         if (! $request->expectsJson()) {
             
-            // $name = $request->route()->getName();
-            $url = $request->url();
+            // $url = $request->url();
+            $name = $request->route()->getName();
 
-            if (Str::contains($url, 'admin.')) {
+            if (Str::contains($name, 'admin.')) {
                 return route('admin.login');
             }
 
-            elseif (Str::contains($url, 'resto.')) {
+            elseif (Str::contains($name, 'resto.')) {
                 return route('resto.login');
             }
             
