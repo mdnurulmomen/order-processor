@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'.':'.'app.port'), // Have to set on .env as well
+    'url' => env('APP_URL', 'http://localhost'), // Have to set on .env as well
 
     'asset_url' => env('ASSET_URL', null),
 
