@@ -11,8 +11,6 @@
 |
 */
 
-Auth::routes();
-
 Route::domain('admin.localhost')->group(function () {
 
 	Route::name('admin.')->group(function () {
@@ -21,7 +19,11 @@ Route::domain('admin.localhost')->group(function () {
 		
 			Route::get('/', 'LoginController@showAdminLoginForm')->name('login');
 			Route::post('/', 'LoginController@adminLogin');
+		    
 		    Route::get('/home', 'HomeController@showAdminHome')->name('home');
+
+		    // For all other routes coming from vue
+		    Route::get('/{any}', 'HomeController@showAdminHome');
 
 			Route::group(['middleware' => ['auth:admin']], function () {
 			    
@@ -48,7 +50,11 @@ Route::domain('resto.localhost')->group(function () {
 		
 			Route::get('/', 'LoginController@showRestaurantLoginForm')->name('login');
 			Route::post('/', 'LoginController@restaurantLogin');
+			
 		    Route::get('/home', 'HomeController@showRestaurantHome')->name('home');
+
+		    // For all other routes coming from vue
+		    Route::get('/{any}', 'HomeController@showAdminHome');
 
 			Route::group(['middleware' => ['auth:restaurant']], function () {
 			    
@@ -67,12 +73,14 @@ Route::domain('resto.localhost')->group(function () {
 	});
 });
 
-Route::view('/', 'welcome')->name('website');
+Auth::routes();
+
+Route::view('/', 'layouts.website')->name('website');
 
 Route::get('/home', 'Auth\HomeController@index')->name('customer.home');
 
 Route::fallback(function () {
-    Route::view('/', 'welcome');
+    Route::view('/', 'layouts.website');
 });
 
 
