@@ -11,7 +11,7 @@ class HomeController extends Controller
      * Create a new controller instance.
      *
      * @return void
-     */
+     **/
     public function __construct()
     {
         $this->middleware('auth')->only('index');
@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('sub-views.customer.home');
     }
 
     /**
@@ -36,7 +36,7 @@ class HomeController extends Controller
      */
     public function showAdminHome()
     {
-        return view('home', ['url' => 'admin']);
+        return view('layouts.admin');
     }
 
     /**
@@ -46,6 +46,6 @@ class HomeController extends Controller
      */
     public function showRestaurantHome()
     {
-        return view('home', ['url' => 'resto']);
+        return view('layouts.restaurant');
     }    
 }
