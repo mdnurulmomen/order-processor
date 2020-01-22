@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  
   <title>Qupaid | Admin</title>
 
   <!-- Font Awesome Icons -->
@@ -55,22 +56,22 @@
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
 
-        <li class="nav-item mr-1">
+        <li class="nav-item">
           <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
             <i class="fa fa-th-large fa-2x"></i>
           </a>
         </li>
 
-        <div class="navbar-custom-menu">
-          <ul class="nav navbar-nav">
+        <li class="nav-item navbar-custom-menu">
+          <ul class="navbar-nav ml-auto mt-1">
             
-            <li class="mt-2 dropdown user user-menu float-right">
-              <a href="#" data-toggle="dropdown" aria-expanded="false">
+            <li class="nav-item dropdown user-menu float-right">
+              <a href="#" class="nav-link" data-toggle="dropdown" aria-expanded="false">
                 
-                <img src="dist/img/user2-160x160.jpg" class="user-image border border-danger" alt="User Image">
+                <img src="dist/img/user2-160x160.jpg" class="user-image profile-user-img img-fluid" alt="User Image">
                 
               </a>
-              <ul class="dropdown-menu">
+              <ul class="ml-auto dropdown-menu">
                 <!-- User image -->
                 <li class="user-header bg-success">
                   <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
@@ -84,7 +85,7 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="float-left">
-                    <a href="{{ route('admin.profile') }}" class="btn btn-default btn-default">Profile</a>
+                    <a href="/profile" class="btn btn-default btn-default">Profile</a>
                   </div>
 
                   <div class="float-right">
@@ -104,7 +105,7 @@
             <!-- Control Sidebar Toggle Button -->
             
           </ul>
-        </div>
+        </li>
 
       </ul>
 
@@ -128,6 +129,8 @@
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <!-- Bootstrap -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- bs-custom-file-input -->
+<script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
 <!-- overlayScrollbars -->
 <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <!-- AdminLTE App -->
