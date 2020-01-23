@@ -34,8 +34,9 @@ Route::name('admin.')->group(function () {
 
 		Route::group(['middleware' => ['auth:admin']], function () {
 		    
-		    Route::get('/api/profile', 'ProfileController@showAdminProfile')->name('profile');
+		    Route::get('/api/profile', 'ProfileController@showAdminProfile');
 		    Route::post('/profile', 'ProfileController@updateAdminProfile');
+		    Route::post('/password', 'PasswordController@updateAdminPassword');
 		});
 	});
 });
