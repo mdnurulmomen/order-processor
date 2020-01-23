@@ -27,8 +27,8 @@ class ProfileController extends Controller
         $adminToUpdate = \Auth::guard('admin')->user();
         
         $request->validate([
-            'first_name'=>'string|max:50',
-            'last_name'=>'string|max:50',
+            'first_name'=>'nullable|string|max:50',
+            'last_name'=>'nullable|string|max:50',
             'mobile'=>'string|required|max:13|bail|unique:admins,mobile,'.$adminToUpdate->id,
             'email'=>'email|required|bail|unique:admins,email,'.$adminToUpdate->id,
             'profile_picture'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
