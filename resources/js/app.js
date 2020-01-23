@@ -22,6 +22,7 @@ import App from './views/App.vue';
 import Home from './components/admin/HomeComponent.vue';
 import Dashboard2 from './components/admin/Dashboard2.vue';
 import Dashboard3 from './components/admin/Dashboard3.vue';
+import Profile from './components/admin/ProfileComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -44,6 +45,11 @@ const router = new VueRouter({
 			path: '/dashboard3',
             name: 'admin.dashboard3',
             component: Dashboard3
+		},
+		{
+			path: '/profile',
+            name: 'admin.profile',
+            component: Profile
 		},
 	],
 });
