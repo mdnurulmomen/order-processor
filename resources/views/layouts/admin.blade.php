@@ -15,10 +15,15 @@
   <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+  <!-- Toastr style -->
+  <link href="{{ asset('css/toastr.css') }}" rel="stylesheet"/>
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <!-- PAGE PLUGINS -->
+  <!-- jQuery -->
+  <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -68,16 +73,16 @@
             <li class="nav-item dropdown user-menu float-right">
               <a href="#" class="nav-link" data-toggle="dropdown" aria-expanded="false">
                 
-                <img src="dist/img/user2-160x160.jpg" class="user-image profile-user-img img-fluid" alt="User Image">
+                <img src="{{ asset(\Auth::guard('admin')->user()->profile_picture) }}" class="user-image profile-user-img img-fluid" alt="User Image">
                 
               </a>
               <ul class="ml-auto dropdown-menu">
                 <!-- User image -->
                 <li class="user-header bg-success">
-                  <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
+                  <img src="{{ asset(\Auth::guard('admin')->user()->profile_picture) }}" class="img-circle" alt="User Image">
 
                   <p>
-                    {{ Auth::guard('admin')->user()->first_name.' '.Auth::guard('admin')->user()->last_name }}
+                    {{ Auth::guard('admin')->user()->full_name }}
                     <small>Role Name</small>
                   </p>
                 </li>
@@ -85,11 +90,11 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="float-left">
-                    <a href="/profile" class="btn btn-default btn-default">Profile</a>
+                    <a href="/profile" class="btn btn-default">Profile</a>
                   </div>
 
                   <div class="float-right">
-                    <a class="dropdown-item" href="{{ route('admin.logout') }}"
+                    <a class="btn btn-default" href="{{ route('admin.logout') }}"
                        onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
                         {{ __('Sign out') }}
@@ -116,17 +121,42 @@
       
     </div>
 
-    @yield('content')
-
   </div>
 <!-- ./wrapper -->
 
+<script type="text/javascript">
+  
+  $(document).ready(function() {
+    
+    @if ($errors->any())
+      @foreach ($errors->all() as $error)
+        toastr.error("{{ $error }}", "Oops");
+      @endforeach
+
+    @elseif(session('success'))
+      toastr.success("{{ session('success') }}", "Success");
+
+    @elseif(session('info'))
+      toastr.info("{{ session('info') }}", "Hints");
+
+    @elseif(session('warning'))
+      toastr.warning("{{ session('warning') }}", "Warning");
+
+    @endif
+    
+    toastr.options = {
+       "timeOut": "2000"
+    } 
+  
+  });
+
+</script>
+
 <!-- PAGE SCRIPTS -->
 <script src="{{ asset('js/app.js') }}"></script>
-
 <!-- REQUIRED SCRIPTS -->
-<!-- jQuery -->
-<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+<!-- Toastr -->
+<script src="{{ asset('js/toastr.min.js') }}"></script>
 <!-- Bootstrap -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- bs-custom-file-input -->
@@ -135,11 +165,8 @@
 <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
-
 <!-- OPTIONAL SCRIPTS -->
 <script src="{{ asset('dist/js/demo.js') }}"></script>
-
-<!-- PAGE PLUGINS -->
 <!-- jQuery Mapael -->
 <script src="{{ asset('plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
 <script src="{{ asset('plugins/raphael/raphael.min.js') }}"></script>
