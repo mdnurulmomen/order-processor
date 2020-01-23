@@ -2,22 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\Uploadable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable
 {
-   	use Notifiable;
+   	use Notifiable, Uploadable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
+    protected $guarded = [
+        'id' 
     ];
 
     /**
@@ -33,8 +34,24 @@ class Admin extends Authenticatable
      * The attributes that should be cast to native types.
      *
      * @var array
-     */
+    **/
+    
+    /* 
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    */
+   
+    public function setProfilePictureAttribute(UploadedFile $uploadedFile=null)
+    {
+        if ($uploadedFile) {
+            
+            $this->attributes['profile_picture'] = $this->uploadImage($uploadedFile, $this->id, 'uploads/admin');
+        }
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

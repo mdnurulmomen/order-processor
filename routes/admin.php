@@ -29,4 +29,13 @@ Route::name('admin.')->group(function () {
 		});
 	});
 
+
+	Route::namespace('Web')->group(function () {
+
+		Route::group(['middleware' => ['auth:admin']], function () {
+		    
+		    Route::get('/api/profile', 'ProfileController@showAdminProfile')->name('profile');
+		    Route::post('/profile', 'ProfileController@updateAdminProfile');
+		});
+	});
 });
