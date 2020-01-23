@@ -16,7 +16,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
   <!-- Toastr style -->
-  <link href="{{ asset('css/toastr.css') }}" rel="stylesheet"/>
+  <link href="{{ asset('plugins/toastr/css/toastr.css') }}" rel="stylesheet"/>
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   <!-- Google Font: Source Sans Pro -->
@@ -156,7 +156,7 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <!-- REQUIRED SCRIPTS -->
 <!-- Toastr -->
-<script src="{{ asset('js/toastr.min.js') }}"></script>
+<script src="{{ asset('plugins/toastr/js/toastr.min.js') }}"></script>
 <!-- Bootstrap -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- bs-custom-file-input -->
@@ -173,7 +173,7 @@
 <script src="{{ asset('plugins/jquery-mapael/jquery.mapael.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
 <!-- ChartJS -->
-<script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
+<script src="{{ asset('plugins/chart.js/js/Chart.min.js') }}"></script>
 
 </body>
 </html>
