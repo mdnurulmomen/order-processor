@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\Uploadable;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Intervention\Image\ImageManagerStatic as ImageIntervention;
 
 class Admin extends Authenticatable
 {
-   	use Notifiable, Uploadable;
+   	use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -41,12 +39,21 @@ class Admin extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     */
-   
-    public function setProfilePictureAttribute(UploadedFile $uploadedFile=null)
+
+    public function setProfilePictureAttribute($encodedImageFile)
     {
-        if ($uploadedFile) {
+        if ($encodedImageFile) {
+
+            $directory = "uploads/admin/images/profile/";
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
             
-            $this->attributes['profile_picture'] = $this->uploadImage($uploadedFile, $this->id, 'uploads/admin');
+            $imageObject = ImageIntervention::make($encodedImageFile);
+            $imageObject->save($directory.$this->id.'.jpg');
+
+            $this->attributes['profile_picture'] = $directory.$this->id.'.jpg';
         }
     }
 

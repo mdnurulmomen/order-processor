@@ -22,7 +22,7 @@
 	<div class="tab-content">
 		<div class="tab-pane container active" id="profile">	
 			<!-- form start -->
-		  	<form class="form-horizontal" method="post" action="/profile" enctype="multipart/form-data">
+		  	<form class="form-horizontal" method="post" v-on:submit.prevent="profileUpdation" enctype="multipart/form-data">
 
 				<div class="row">
 					<div v-if="loading">
@@ -38,7 +38,9 @@
 			                  		<img class="profile-user-img img-fluid img-circle" :src="admin.profile_picture" alt="Admin picture">
 			                	</div>
 
-			                	<h3 class="profile-username text-center">{{ admin.first_name+' '+admin.last_name }}</h3>
+			                	<h3 class="profile-username text-center">
+			                		{{ admin.first_name+' '+admin.last_name }}
+			                	</h3>
 
 			                	<p class="text-muted text-center">Role Name</p>
 
@@ -47,7 +49,7 @@
 					                <div class="col-sm-12">
 					                  	<div class="input-group">
 						                    <div class="custom-file">
-						                        <input type="file" class="custom-file-input" id="exampleInputFile" name="profile_picture" accept="image/*">
+						                        <input type="file" class="custom-file-input" id="exampleInputFile" v-on:change="onImageChange" accept="image/*">
 						                        <label class="custom-file-label" for="exampleInputFile">Change Picture</label>
 						                    </div>
 					                    </div>
@@ -66,7 +68,7 @@
 					              		<div class="row">
 						              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">First Name</label>
 							                <div class="col-sm-8">
-							                  <input type="text" class="form-control" id="inputFirstName3" :value="admin.first_name" name="first_name" placeholder="First Name">
+							                  <input type="text" class="form-control" id="inputFirstName3" v-model="admin.first_name" placeholder="First Name">
 							                </div>
 					              		</div>
 					              	</div>
@@ -74,7 +76,7 @@
 					                	<div class="row">
 						              		<label for="inputLastName3" class="col-sm-4 col-form-label text-right">Last Name</label>
 							                <div class="col-sm-8">
-							                  	<input type="text" class="form-control" id="inputLastName3" :value="admin.last_name" name="last_name" placeholder="Last Name">
+							                  	<input type="text" class="form-control" id="inputLastName3" v-model="admin.last_name" placeholder="Last Name">
 							                </div>
 					                	</div>
 					              	</div>
@@ -84,7 +86,7 @@
 					              		<div class="row">
 						              		<label for="inputEmail3" class="col-sm-4 col-form-label text-right">Email</label>
 							                <div class="col-sm-8">
-							                  <input type="email" class="form-control" id="inputEmail3" :value="admin.email" name="email" placeholder="Email" required="true">
+							                  <input type="email" class="form-control" id="inputEmail3" v-model="admin.email" placeholder="Email" required="true">
 							                </div>
 					              		</div>
 					              	</div>
@@ -92,7 +94,7 @@
 					                	<div class="row">
 					                		<label for="inputMobile3" class="col-sm-4 col-form-label text-right">Mobile</label>
 							                <div class="col-sm-8">
-							                  	<input type="tel" class="form-control" id="inputMobile3" :value="admin.mobile" name="mobile" placeholder="Mobile" required="true">
+							                  	<input type="tel" class="form-control" id="inputMobile3" v-model="admin.mobile" placeholder="Mobile" required="true">
 							                </div>
 					                	</div>
 					              	</div>
@@ -167,6 +169,7 @@
 	        return {
 	        	loading : false,
 	        	admin : null,
+	        	newProfilePicture : null,
 	            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 	        }
 		},
@@ -176,6 +179,7 @@
 		methods : {
 			fetchData() {
 				this.loading = true;
+				this.admin = false;
 				axios
 					.get('/api/profile')
 					.then(response => {
@@ -184,6 +188,42 @@
 						this.admin = response.data;
 					});
 			},
+			onImageChange(evnt){
+				let files = evnt.target.files || evnt.dataTransfer.files;
+
+                // Only process image files.
+		      	if (files.length && files[0].type.match('image.*')) {
+                	this.createImage(files[0]);
+		      	}
+
+		      	return;
+			},
+			createImage(file) {
+                let reader = new FileReader();
+                reader.onload = (evnt) => {
+                    this.newProfilePicture = this.admin.profile_picture = evnt.target.result;
+                };
+                reader.readAsDataURL(file);
+            },
+			profileUpdation(){
+
+				let newData = {
+					first_name : this.admin.first_name,
+					last_name : this.admin.last_name,
+					email : this.admin.email,
+					mobile : this.admin.mobile,
+					profile_picture : this.newProfilePicture,
+				};
+
+				axios
+					.post('/profile', newData)
+					.then(response => {
+						console.log(response.data);
+					})
+					.catch(error => {
+						console.log("ERRRR:: ", error.response.data);
+					});
+			}
 		}
   	}
 

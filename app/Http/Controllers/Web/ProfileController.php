@@ -31,17 +31,19 @@ class ProfileController extends Controller
             'last_name'=>'nullable|string|max:50',
             'mobile'=>'string|required|max:13|bail|unique:admins,mobile,'.$adminToUpdate->id,
             'email'=>'email|required|bail|unique:admins,email,'.$adminToUpdate->id,
-            'profile_picture'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'profile_picture'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $adminToUpdate->first_name = $request->first_name;
         $adminToUpdate->last_name = $request->last_name;
         $adminToUpdate->mobile = $request->mobile;
         $adminToUpdate->email = $request->email;
-        $adminToUpdate->profile_picture = $request->file('profile_picture');
+        $adminToUpdate->profile_picture = $request->profile_picture;
 
         $adminToUpdate->save();
 
-        return back()->with('success', 'Profile has been updated');
+        return response(null, 200);
+
+        // return back()->with('success', 'Profile has been updated');
     }
 }
