@@ -23,9 +23,11 @@ class PasswordController extends Controller
 	            'password' => Hash::make($request->password)
 	        ]);
    			
-   			return back()->with('success', 'Password has been updated');
-		}
+   			return response(null, 200);
+            // return back()->with('success', 'Password has been updated');
+		   }
 
-		return back()->with('warning', "Password doesn't match");
+         return response(null, 400);
+		   // return back()->with('warning', "Password doesn't match");
    	}
 }

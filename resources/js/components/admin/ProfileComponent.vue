@@ -113,10 +113,14 @@
 
 		<div class="tab-pane container fade" id="password">	
 			<div class="row">
-				<div class="col-sm-12">
+				<div v-if="loading"  class="col-sm-12">
+					Loading ...
+				</div>
+
+				<div  v-if="!loading" class="col-sm-12">
 					<div class="card card-primary card-outline">
 						<!-- form start -->
-				      	<form class="form-horizontal" method="post" action="/password">
+				      	<form class="form-horizontal" v-on:submit.prevent="passwordUpdation">
 				      		
 				      		<input type="hidden" name="_token" :value="csrf">
 				            
@@ -125,19 +129,19 @@
 				              	<div class="form-group row">
 				              		<label for="inputPassword3" class="col-sm-3 col-form-label text-right">Current Password</label>
 					                <div class="col-sm-9">
-					                  	<input type="password" class="form-control" id="inputPassword3" name="current_password" placeholder="Current Password" required="true">
+					                  	<input type="password" class="form-control" id="inputPassword3" v-model="password.current_password" placeholder="Current Password" required="true">
 					                </div>
 				              	</div>
 				              	<div class="form-group row">
 				              		<label for="inputPassword3" class="col-sm-3 col-form-label text-right">New Password</label>
 					                <div class="col-sm-9">
-					                  	<input type="password" class="form-control" id="inputPassword3" name="password" placeholder="New Password" required="true">
+					                  	<input type="password" class="form-control" id="inputPassword3" v-model="password.password" placeholder="New Password" required="true">
 					                </div>
 				              	</div>
 				              	<div class="form-group row">
 				              		<label for="inputPassword3" class="col-sm-3 col-form-label text-right">Confirm Password</label>
 					                <div class="col-sm-9">
-					                  	<input type="password" class="form-control" id="inputPassword3" name="password_confirmation" placeholder="Confirm Password" required="true">
+					                  	<input type="password" class="form-control" id="inputPassword3" v-model="password.password_confirmation" placeholder="Confirm Password" required="true">
 					                </div>
 				              	</div>
 
@@ -167,8 +171,9 @@
 
 	    data() {
 	        return {
-	        	loading : false,
 	        	admin : null,
+	        	password : {},
+	        	loading : false,
 	        	newProfilePicture : null,
 	            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 	        }
@@ -221,6 +226,26 @@
 						console.log(response.data);
 					})
 					.catch(error => {
+						console.log("ERRRR:: ", error.response.data);
+					});
+			},
+			passwordUpdation(){
+				this.loading = true;
+
+				let newData = {
+					current_password : this.password.current_password,
+					password : this.password.password,
+					password_confirmation : this.password.password_confirmation,
+				};
+
+				axios
+					.post('/password', newData)
+					.then(response => {
+						this.loading = false;
+						console.log(response.data);
+					})
+					.catch(error => {
+						this.loading = false;
 						console.log("ERRRR:: ", error.response.data);
 					});
 			}

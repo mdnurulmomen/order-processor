@@ -2849,12 +2849,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      loading: false,
       admin: null,
+      password: {},
+      loading: false,
       newProfilePicture: null,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
@@ -2905,6 +2910,23 @@ __webpack_require__.r(__webpack_exports__);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/profile', newData).then(function (response) {
         console.log(response.data);
       })["catch"](function (error) {
+        console.log("ERRRR:: ", error.response.data);
+      });
+    },
+    passwordUpdation: function passwordUpdation() {
+      var _this3 = this;
+
+      this.loading = true;
+      var newData = {
+        current_password: this.password.current_password,
+        password: this.password.password,
+        password_confirmation: this.password.password_confirmation
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/password', newData).then(function (response) {
+        _this3.loading = false;
+        console.log(response.data);
+      })["catch"](function (error) {
+        _this3.loading = false;
         console.log("ERRRR:: ", error.response.data);
       });
     }
@@ -5901,27 +5923,179 @@ var render = function() {
         { staticClass: "tab-pane container fade", attrs: { id: "password" } },
         [
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-sm-12" }, [
-              _c("div", { staticClass: "card card-primary card-outline" }, [
-                _c(
-                  "form",
-                  {
-                    staticClass: "form-horizontal",
-                    attrs: { method: "post", action: "/password" }
-                  },
-                  [
-                    _c("input", {
-                      attrs: { type: "hidden", name: "_token" },
-                      domProps: { value: _vm.csrf }
-                    }),
-                    _vm._v(" "),
-                    _vm._m(2),
-                    _vm._v(" "),
-                    _vm._m(3)
-                  ]
-                )
-              ])
-            ])
+            _vm.loading
+              ? _c("div", { staticClass: "col-sm-12" }, [
+                  _vm._v("\n\t\t\t\t\tLoading ...\n\t\t\t\t")
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            !_vm.loading
+              ? _c("div", { staticClass: "col-sm-12" }, [
+                  _c("div", { staticClass: "card card-primary card-outline" }, [
+                    _c(
+                      "form",
+                      {
+                        staticClass: "form-horizontal",
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.passwordUpdation($event)
+                          }
+                        }
+                      },
+                      [
+                        _c("input", {
+                          attrs: { type: "hidden", name: "_token" },
+                          domProps: { value: _vm.csrf }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "card-body box-profile" }, [
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass:
+                                  "col-sm-3 col-form-label text-right",
+                                attrs: { for: "inputPassword3" }
+                              },
+                              [_vm._v("Current Password")]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-sm-9" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.password.current_password,
+                                    expression: "password.current_password"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "password",
+                                  id: "inputPassword3",
+                                  placeholder: "Current Password",
+                                  required: "true"
+                                },
+                                domProps: {
+                                  value: _vm.password.current_password
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.password,
+                                      "current_password",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass:
+                                  "col-sm-3 col-form-label text-right",
+                                attrs: { for: "inputPassword3" }
+                              },
+                              [_vm._v("New Password")]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-sm-9" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.password.password,
+                                    expression: "password.password"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "password",
+                                  id: "inputPassword3",
+                                  placeholder: "New Password",
+                                  required: "true"
+                                },
+                                domProps: { value: _vm.password.password },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.password,
+                                      "password",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass:
+                                  "col-sm-3 col-form-label text-right",
+                                attrs: { for: "inputPassword3" }
+                              },
+                              [_vm._v("Confirm Password")]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-sm-9" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.password.password_confirmation,
+                                    expression: "password.password_confirmation"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "password",
+                                  id: "inputPassword3",
+                                  placeholder: "Confirm Password",
+                                  required: "true"
+                                },
+                                domProps: {
+                                  value: _vm.password.password_confirmation
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.password,
+                                      "password_confirmation",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(2)
+                      ]
+                    )
+                  ])
+                ])
+              : _vm._e()
           ])
         ]
       )
@@ -5971,84 +6145,6 @@ var staticRenderFns = [
         { staticClass: "btn btn-primary", attrs: { type: "submit" } },
         [_vm._v("Update Profile")]
       )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-body box-profile" }, [
-      _c("div", { staticClass: "form-group row" }, [
-        _c(
-          "label",
-          {
-            staticClass: "col-sm-3 col-form-label text-right",
-            attrs: { for: "inputPassword3" }
-          },
-          [_vm._v("Current Password")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-sm-9" }, [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "password",
-              id: "inputPassword3",
-              name: "current_password",
-              placeholder: "Current Password",
-              required: "true"
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group row" }, [
-        _c(
-          "label",
-          {
-            staticClass: "col-sm-3 col-form-label text-right",
-            attrs: { for: "inputPassword3" }
-          },
-          [_vm._v("New Password")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-sm-9" }, [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "password",
-              id: "inputPassword3",
-              name: "password",
-              placeholder: "New Password",
-              required: "true"
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group row" }, [
-        _c(
-          "label",
-          {
-            staticClass: "col-sm-3 col-form-label text-right",
-            attrs: { for: "inputPassword3" }
-          },
-          [_vm._v("Confirm Password")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-sm-9" }, [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "password",
-              id: "inputPassword3",
-              name: "password_confirmation",
-              placeholder: "Confirm Password",
-              required: "true"
-            }
-          })
-        ])
-      ])
     ])
   },
   function() {
