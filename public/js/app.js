@@ -2847,12 +2847,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       loading: false,
       admin: null,
+      newProfilePicture: null,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
@@ -2864,10 +2867,45 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
+      this.admin = false;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/profile').then(function (response) {
         // console.log(response.data);
         _this.loading = false;
         _this.admin = response.data;
+      });
+    },
+    onImageChange: function onImageChange(evnt) {
+      var files = evnt.target.files || evnt.dataTransfer.files; // Only process image files.
+
+      if (files.length && files[0].type.match('image.*')) {
+        this.createImage(files[0]);
+      }
+
+      return;
+    },
+    createImage: function createImage(file) {
+      var _this2 = this;
+
+      var reader = new FileReader();
+
+      reader.onload = function (evnt) {
+        _this2.newProfilePicture = _this2.admin.profile_picture = evnt.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    },
+    profileUpdation: function profileUpdation() {
+      var newData = {
+        first_name: this.admin.first_name,
+        last_name: this.admin.last_name,
+        email: this.admin.email,
+        mobile: this.admin.mobile,
+        profile_picture: this.newProfilePicture
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/profile', newData).then(function (response) {
+        console.log(response.data);
+      })["catch"](function (error) {
+        console.log("ERRRR:: ", error.response.data);
       });
     }
   }
@@ -5560,10 +5598,12 @@ var render = function() {
             "form",
             {
               staticClass: "form-horizontal",
-              attrs: {
-                method: "post",
-                action: "/profile",
-                enctype: "multipart/form-data"
+              attrs: { method: "post", enctype: "multipart/form-data" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.profileUpdation($event)
+                }
               }
             },
             [
@@ -5600,11 +5640,13 @@ var render = function() {
                               { staticClass: "profile-username text-center" },
                               [
                                 _vm._v(
-                                  _vm._s(
-                                    _vm.admin.first_name +
-                                      " " +
-                                      _vm.admin.last_name
-                                  )
+                                  "\n\t\t\t                \t\t" +
+                                    _vm._s(
+                                      _vm.admin.first_name +
+                                        " " +
+                                        _vm.admin.last_name
+                                    ) +
+                                    "\n\t\t\t                \t"
                                 )
                               ]
                             ),
@@ -5613,7 +5655,32 @@ var render = function() {
                               _vm._v("Role Name")
                             ]),
                             _vm._v(" "),
-                            _vm._m(1)
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-sm-12" }, [
+                                _c("div", { staticClass: "input-group" }, [
+                                  _c("div", { staticClass: "custom-file" }, [
+                                    _c("input", {
+                                      staticClass: "custom-file-input",
+                                      attrs: {
+                                        type: "file",
+                                        id: "exampleInputFile",
+                                        accept: "image/*"
+                                      },
+                                      on: { change: _vm.onImageChange }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
+                                      {
+                                        staticClass: "custom-file-label",
+                                        attrs: { for: "exampleInputFile" }
+                                      },
+                                      [_vm._v("Change Picture")]
+                                    )
+                                  ])
+                                ])
+                              ])
+                            ])
                           ])
                         ]
                       )
@@ -5642,14 +5709,33 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("div", { staticClass: "col-sm-8" }, [
                                     _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.admin.first_name,
+                                          expression: "admin.first_name"
+                                        }
+                                      ],
                                       staticClass: "form-control",
                                       attrs: {
                                         type: "text",
                                         id: "inputFirstName3",
-                                        name: "first_name",
                                         placeholder: "First Name"
                                       },
-                                      domProps: { value: _vm.admin.first_name }
+                                      domProps: { value: _vm.admin.first_name },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.admin,
+                                            "first_name",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
                                     })
                                   ])
                                 ])
@@ -5669,14 +5755,33 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("div", { staticClass: "col-sm-8" }, [
                                     _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.admin.last_name,
+                                          expression: "admin.last_name"
+                                        }
+                                      ],
                                       staticClass: "form-control",
                                       attrs: {
                                         type: "text",
                                         id: "inputLastName3",
-                                        name: "last_name",
                                         placeholder: "Last Name"
                                       },
-                                      domProps: { value: _vm.admin.last_name }
+                                      domProps: { value: _vm.admin.last_name },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.admin,
+                                            "last_name",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
                                     })
                                   ])
                                 ])
@@ -5698,15 +5803,34 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("div", { staticClass: "col-sm-8" }, [
                                     _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.admin.email,
+                                          expression: "admin.email"
+                                        }
+                                      ],
                                       staticClass: "form-control",
                                       attrs: {
                                         type: "email",
                                         id: "inputEmail3",
-                                        name: "email",
                                         placeholder: "Email",
                                         required: "true"
                                       },
-                                      domProps: { value: _vm.admin.email }
+                                      domProps: { value: _vm.admin.email },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.admin,
+                                            "email",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
                                     })
                                   ])
                                 ])
@@ -5726,15 +5850,34 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("div", { staticClass: "col-sm-8" }, [
                                     _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.admin.mobile,
+                                          expression: "admin.mobile"
+                                        }
+                                      ],
                                       staticClass: "form-control",
                                       attrs: {
                                         type: "tel",
                                         id: "inputMobile3",
-                                        name: "mobile",
                                         placeholder: "Mobile",
                                         required: "true"
                                       },
-                                      domProps: { value: _vm.admin.mobile }
+                                      domProps: { value: _vm.admin.mobile },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.admin,
+                                            "mobile",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
                                     })
                                   ])
                                 ])
@@ -5742,7 +5885,7 @@ var render = function() {
                             ])
                           ]),
                           _vm._v(" "),
-                          _vm._m(2)
+                          _vm._m(1)
                         ]
                       )
                     ])
@@ -5772,9 +5915,9 @@ var render = function() {
                       domProps: { value: _vm.csrf }
                     }),
                     _vm._v(" "),
-                    _vm._m(3),
+                    _vm._m(2),
                     _vm._v(" "),
-                    _vm._m(4)
+                    _vm._m(3)
                   ]
                 )
               ])
@@ -5817,37 +5960,6 @@ var staticRenderFns = [
         ])
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-sm-12" }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("div", { staticClass: "custom-file" }, [
-            _c("input", {
-              staticClass: "custom-file-input",
-              attrs: {
-                type: "file",
-                id: "exampleInputFile",
-                name: "profile_picture",
-                accept: "image/*"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "label",
-              {
-                staticClass: "custom-file-label",
-                attrs: { for: "exampleInputFile" }
-              },
-              [_vm._v("Change Picture")]
-            )
-          ])
-        ])
-      ])
-    ])
   },
   function() {
     var _vm = this

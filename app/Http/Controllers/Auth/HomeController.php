@@ -46,6 +46,7 @@ class HomeController extends Controller
      */
     public function showRestaurantHome()
     {
+        \Auth::guard('restaurant')->logout();   // Restaurant Home Aint Placed yet
         return view('layouts.restaurant');
     }    
 }
