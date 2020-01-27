@@ -128,22 +128,6 @@
   
   $(document).ready(function() {
     
-    @if ($errors->any())
-      @foreach ($errors->all() as $error)
-        toastr.error("{{ $error }}", "Oops");
-      @endforeach
-
-    @elseif(session('success'))
-      toastr.success("{{ session('success') }}", "Success");
-
-    @elseif(session('info'))
-      toastr.info("{{ session('info') }}", "Hints");
-
-    @elseif(session('warning'))
-      toastr.warning("{{ session('warning') }}", "Warning");
-
-    @endif
-    
     toastr.options = {
        "timeOut": "2000"
     } 

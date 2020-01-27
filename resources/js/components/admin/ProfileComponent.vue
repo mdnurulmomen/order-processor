@@ -22,11 +22,21 @@
 	<div class="tab-content">
 		<div class="tab-pane container active" id="profile">	
 			<!-- form start -->
-		  	<form class="form-horizontal" method="post" v-on:submit.prevent="profileUpdation" enctype="multipart/form-data">
+		  	<form class="form-horizontal" method="post" v-on:submit.prevent="profileUpdation">
 
 				<div class="row">
-					<div v-if="loading">
-						Loading ...
+					<div v-if="loading" class="col-sm-12">
+						<div class="d-flex align-items-center">
+						  	<button class="btn btn-secondary" type="button" disabled>
+								<span class="font-italic">
+									Loading...
+								</span>
+							  	<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+							</button>
+						  	<div class="spinner-grow text-dark ml-auto" role="status">
+							  	<span class="sr-only">Loading...</span>
+							</div>
+						</div>
 					</div>
 
 		      		<input type="hidden" name="_token" :value="csrf">
@@ -102,7 +112,7 @@
 				            </div>
 				            <!-- /.card-body -->
 				            <div class="card-footer text-center">
-				              	<button type="submit" class="btn btn-primary">Update Profile</button>
+				              	<button type="submit" :disabled="loading" class="btn btn-primary">Update Profile</button>
 				            </div>
 				        	<!-- /.card-footer -->
 					    </div>
@@ -113,8 +123,19 @@
 
 		<div class="tab-pane container fade" id="password">	
 			<div class="row">
-				<div v-if="loading"  class="col-sm-12">
-					Loading ...
+				
+				<div v-if="loading" class="col-sm-12">
+					<div class="d-flex align-items-center">
+					  	<button class="btn btn-secondary" type="button" disabled>
+							<span class="font-italic">
+								Loading...
+							</span>
+						  	<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+						</button>
+					  	<div class="spinner-grow text-dark ml-auto" role="status">
+						  	<span class="sr-only">Loading...</span>
+						</div>
+					</div>
 				</div>
 
 				<div  v-if="!loading" class="col-sm-12">
@@ -133,22 +154,22 @@
 					                </div>
 				              	</div>
 				              	<div class="form-group row">
-				              		<label for="inputPassword3" class="col-sm-3 col-form-label text-right">New Password</label>
+				              		<label for="inputNewPassword3" class="col-sm-3 col-form-label text-right">New Password</label>
 					                <div class="col-sm-9">
-					                  	<input type="password" class="form-control" id="inputPassword3" v-model="password.password" placeholder="New Password" required="true">
+					                  	<input type="password" class="form-control" id="inputNewPassword3" v-model="password.password" placeholder="New Password" required="true">
 					                </div>
 				              	</div>
 				              	<div class="form-group row">
-				              		<label for="inputPassword3" class="col-sm-3 col-form-label text-right">Confirm Password</label>
+				              		<label for="inputConfirmPassword3" class="col-sm-3 col-form-label text-right">Confirm Password</label>
 					                <div class="col-sm-9">
-					                  	<input type="password" class="form-control" id="inputPassword3" v-model="password.password_confirmation" placeholder="Confirm Password" required="true">
+					                  	<input type="password" class="form-control" id="inputConfirmPassword3" v-model="password.password_confirmation" placeholder="Confirm Password" required="true">
 					                </div>
 				              	</div>
 
 				            </div>
 				            <!-- /.card-body -->
 				            <div class="card-footer text-center">
-				              	<button type="submit" class="btn btn-primary">Update Password</button>
+				              	<button type="submit" :disabled="loading" class="btn btn-primary">Update Password</button>
 				            </div>
 				        	<!-- /.card-footer -->
 				      	</form>
@@ -188,7 +209,6 @@
 				axios
 					.get('/api/profile')
 					.then(response => {
-						// console.log(response.data);
 						this.loading = false;
 						this.admin = response.data;
 					});
@@ -210,7 +230,7 @@
                 };
                 reader.readAsDataURL(file);
             },
-			profileUpdation(){
+			profileUpdation() {
 
 				let newData = {
 					first_name : this.admin.first_name,
@@ -223,13 +243,23 @@
 				axios
 					.post('/profile', newData)
 					.then(response => {
-						console.log(response.data);
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
 					})
 					.catch(error => {
-						console.log("ERRRR:: ", error.response.data);
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
 					});
 			},
-			passwordUpdation(){
+			passwordUpdation() {
+
 				this.loading = true;
 
 				let newData = {
@@ -241,12 +271,27 @@
 				axios
 					.post('/password', newData)
 					.then(response => {
+
 						this.loading = false;
-						console.log(response.data);
+
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
 					})
 					.catch(error => {
+						
 						this.loading = false;
-						console.log("ERRRR:: ", error.response.data);
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+				      	else if (error.response.status == 401) {
+							
+							toastr.error("Wrong Current Password ", "Oops");	
+				      	}
 					});
 			}
 		}

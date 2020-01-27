@@ -42,8 +42,8 @@ class ProfileController extends Controller
 
         $adminToUpdate->save();
 
-        return response(null, 200);
-
-        // return back()->with('success', 'Profile has been updated');
+        return response()->json([
+            'success' => "Profile has been updated"
+        ], 200);
     }
 }
