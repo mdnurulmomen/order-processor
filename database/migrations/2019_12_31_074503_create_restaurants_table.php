@@ -22,7 +22,6 @@ class CreateRestaurantsTable extends Migration
             $table->string('password'); // Login with username / mobile
             $table->rememberToken();
             $table->string('title', 50)->nullable();
-            $table->text('description')->nullable();
             $table->string('address'); // floor, house, road and other landmark  
             $table->string('lat'); // from area name / map
             $table->string('lang'); // from area name / map
