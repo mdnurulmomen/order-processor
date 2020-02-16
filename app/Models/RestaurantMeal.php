@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RestaurantCuisine extends Model
+class RestaurantMeal extends Model
 {
-   	public $timestamps = false;
+    //
 }

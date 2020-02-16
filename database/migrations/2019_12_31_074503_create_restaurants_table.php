@@ -21,15 +21,14 @@ class CreateRestaurantsTable extends Migration
             $table->string('email', 50)->nullable()->unique();
             $table->string('password'); // Login with username / mobile
             $table->rememberToken();
-            $table->string('title', 50)->nullable();
             $table->string('address'); // floor, house, road and other landmark  
             $table->string('lat'); // from area name / map
-            $table->string('lang'); // from area name / map
+            $table->string('lng'); // from area name / map
             $table->string('website')->nullable();
             $table->string('banner_preview')->nullable();
             $table->unsignedTinyInteger('min_order')->default(150);
-            $table->string('meal_tags')->nullable();
-            $table->string('food_tags')->nullable();
+            // $table->string('meal_tags')->nullable();
+            // $table->string('food_tags')->nullable();
             $table->boolean('is_post_paid')->default(false);
             $table->boolean('is_self_service')->default(true);
             $table->boolean('has_parking')->default(false);
