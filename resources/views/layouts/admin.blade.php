@@ -9,19 +9,20 @@
   
   <title>Qupaid | Admin</title>
 
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+  {{-- <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}"> --}}
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
   <!-- Toastr style -->
   <link href="{{ asset('plugins/toastr/css/toastr.css') }}" rel="stylesheet"/>
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+  <!-- work schedule appointments -->
+  <link href="{{ asset('plugins/scheduler/css/scheduler.css') }}" rel="stylesheet" />
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-  <!-- PAGE PLUGINS -->
   <!-- jQuery -->
   <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 </head>
@@ -61,11 +62,13 @@
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
 
-        <li class="nav-item">
-          <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
-            <i class="fa fa-th-large fa-2x"></i>
-          </a>
-        </li>
+        {{-- 
+          <li class="nav-item">
+            <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
+              <i class="fa fa-th-large fa-2x"></i>
+            </a>
+          </li> 
+        --}}
 
         <li class="nav-item navbar-custom-menu">
           <ul class="navbar-nav ml-auto mt-1">
@@ -129,35 +132,41 @@
   $(document).ready(function() {
     
     toastr.options = {
-       "timeOut": "2000"
+      "timeOut": "2000"
     } 
   
   });
 
 </script>
 
-<!-- PAGE SCRIPTS -->
-<script src="{{ asset('js/app.js') }}"></script>
 <!-- REQUIRED SCRIPTS -->
+<!-- google location api -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYz-qkrVLMSJCB8u8INQK9Ep7NF3eJBxU&libraries=places"></script>
+<!-- Scheduler -->
+<script src="{{ asset('plugins/scheduler/js/scheduler.js') }}"></script>
 <!-- Toastr -->
 <script src="{{ asset('plugins/toastr/js/toastr.min.js') }}"></script>
 <!-- Bootstrap -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- bs-custom-file-input -->
 <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
-<!-- overlayScrollbars -->
-<script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+{{-- 
+  <!-- overlayScrollbars -->
+  <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script> 
+--}}
 <!-- AdminLTE App -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
+<!-- PAGE SCRIPTS -->
+<script src="{{ asset('js/app.js') }}"></script>
+<!-- ChartJS -->
+{{-- <script src="{{ asset('plugins/chart.js/js/Chart.min.js') }}"></script> --}}
 <!-- OPTIONAL SCRIPTS -->
-<script src="{{ asset('dist/js/demo.js') }}"></script>
+{{-- <script src="{{ asset('dist/js/demo.js') }}"></script> --}}
 <!-- jQuery Mapael -->
-<script src="{{ asset('plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
+{{-- <script src="{{ asset('plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
 <script src="{{ asset('plugins/raphael/raphael.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery-mapael/jquery.mapael.min.js') }}"></script>
-<script src="{{ asset('plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
-<!-- ChartJS -->
-<script src="{{ asset('plugins/chart.js/js/Chart.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery-mapael/maps/usa_states.min.js') }}"></script> --}}
 
 </body>
 </html>
