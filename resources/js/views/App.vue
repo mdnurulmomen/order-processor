@@ -40,7 +40,17 @@
                 </li>
               </ul>
             </li>
-            
+
+            <li class="nav-item">
+              <router-link :to="{ name: 'admin.restaurants.index' }" v-bind:class="[(currentPage.includes('restaurants')) ? 'active' : '', 'nav-link']">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Restaurants
+                  <span class="right badge badge-danger">New</span>
+                </p>
+              </router-link>
+            </li>
+
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-copy"></i>
@@ -190,35 +200,30 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container-fluid">
           
-          <!-- 
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark">{{ currentPage }}</h1>
-            </div>
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v2</li>
-              </ol>
-            </div> 
-          </div>  
-          -->
+        <!-- 
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">{{ currentPage }}</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Dashboard v2</li>
+            </ol>
+          </div> 
+        </div>  
+        -->
          
-          <router-view></router-view>
+        <router-view></router-view>
 
-        </div><!-- /.container-fluid -->
-      </div>
-      <!-- /.content-header -->
     </div>
     <!-- /.content-wrapper -->
 
     <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
+    <!-- <aside class="control-sidebar control-sidebar-dark"> -->
       <!-- Control sidebar content goes here -->
-    </aside>
+    <!-- </aside> -->
     <!-- /.control-sidebar -->
   </div>
   
