@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cuisine extends Model
 {
-    //
+	public $timestamps = false;   
+    protected $guarded = ['id'];
 }

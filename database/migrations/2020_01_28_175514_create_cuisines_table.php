@@ -14,8 +14,8 @@ class CreateCuisinesTable extends Migration
     public function up()
     {
         Schema::create('cuisines', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->smallIncrements('id');
+            $table->string('name', 50)->unique();
         });
     }
 
