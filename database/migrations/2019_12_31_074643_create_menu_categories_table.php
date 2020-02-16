@@ -15,7 +15,7 @@ class CreateMenuCategoriesTable extends Migration
     {
         Schema::create('menu_categories', function (Blueprint $table) {
             $table->mediumIncrements('id');
-            $table->string('name');
+            $table->string('name', 50);
         });
     }
 
