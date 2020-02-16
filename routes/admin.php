@@ -36,7 +36,20 @@ Route::name('admin.')->group(function () {
 		    
 		    Route::get('/api/profile', 'ProfileController@showAdminProfile');
 		    Route::post('/profile', 'ProfileController@updateAdminProfile');
+		    
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
+
+		    Route::get('/api/restaurant-cuisines', 'RestaurantController@showAllRestaurantCuisines');
+		    Route::post('/restaurant-cuisines', 'RestaurantController@createRestaurantCuisine');
+
+		    Route::get('/api/menu-categories', 'RestaurantController@showAllMenuCategories');
+		    Route::post('/menu-categories', 'RestaurantController@createMenuCategory');
+
+		    Route::get('/api/meals', 'RestaurantController@showAllMeals');
+		    Route::post('/meals', 'RestaurantController@createNewMeal');
+
+		    Route::get('/api/restaurants', 'RestaurantController@showAllRestaurants');
+		    Route::post('/restaurants', 'RestaurantController@createNewRestaurant');
 		});
 	});
 });
