@@ -23,10 +23,10 @@ import Home from './components/admin/HomeComponent.vue';
 import Dashboard2 from './components/admin/Dashboard2.vue';
 import Dashboard3 from './components/admin/Dashboard3.vue';
 import Profile from './components/admin/ProfileComponent.vue';
+import Restaurant from './components/admin/RestaurantComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
-
 
 const router = new VueRouter({
 	mode : 'history',
@@ -50,6 +50,11 @@ const router = new VueRouter({
 			path: '/profile',
             name: 'admin.profile',
             component: Profile
+		},
+		{
+			path: '/restaurants',
+            name: 'admin.restaurants.index',
+            component: Restaurant
 		},
 	],
 });
