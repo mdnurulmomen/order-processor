@@ -83,5 +83,21 @@
         @yield('content')
     </main>
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script type="text/javascript">
+
+        @if ($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Wrong Username or Password !',
+                width: '30%',
+                showConfirmButton: false,
+            })
+        @endif
+
+    </script>
+
 </body>
 </html>
