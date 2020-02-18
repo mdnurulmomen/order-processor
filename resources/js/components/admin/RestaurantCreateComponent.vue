@@ -3,18 +3,6 @@
 
 	<div class="container-fluid">
 
-		<section v-show="loading">
-			<div class="row justify-content-center">
-				<div class="d-flex flex-column justify-content-center align-items-center vh-100">
-					<div class="card p-5">
-					  	<div class="overlay dark">
-					    	<i class="fas fa-3x fa-sync-alt fa-spin"></i>
-					  	</div>
-					</div>
-				</div>
-			</div>
-	    </section>
-
 		<div class="modal fade" id="modal-create-restaurant-category">
 			<div class="modal-dialog">
 				<div class="modal-content bg-secondary">
@@ -146,6 +134,19 @@
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal-modal-create-meal-tag -->
+
+		<section v-show="loading">
+			<div class="row justify-content-center vh-100">
+				<div class="d-flex align-items-center">
+					<div class="card p-5">
+					  	<div class="overlay dark">
+					    	<i class="fas fa-3x fa-sync-alt fa-spin"></i>
+					  	</div>
+					</div>
+				</div>
+			</div>
+	    </section>
+
 		<!-- form start -->
 	  	<form class="form-horizontal" v-on:submit.prevent="restaurantCreation" autocomplete="off">
 		
@@ -928,6 +929,11 @@
 					.then(response => {
 						console.log(response.data);
 						if (response.status == 200) {
+							this.restaurant = {};
+							this.restaurantCuisineObjectTags = [];
+							this.restaurantFoodObjectTags = [];
+							this.restaurantMealObjectTags = [];
+							this.$router.push({name:'admin.restaurants.index'});
 							toastr.success(response.data.success, "Success");
 						}
 					})
@@ -947,7 +953,7 @@
 
 <!-- <style src="vue-multiselect/dist/vue-multiselect.min.css"></style> -->
 
-<style>
+<style scoped>
 	
 	@import '~vue-multiselect/dist/vue-multiselect.min.css';
 
