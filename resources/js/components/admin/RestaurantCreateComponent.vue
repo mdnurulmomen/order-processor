@@ -619,7 +619,7 @@
 	import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 	import VueGoogleAutocomplete from 'vue-google-autocomplete';
 
-	var restaurantComponentData = {
+	var restaurantCreateData = {
     	step : 1,
     	// errors : [],
 	    editor: ClassicEditor,
@@ -678,7 +678,7 @@
 		},
 
 	    data() {
-	        return restaurantComponentData;
+	        return restaurantCreateData;
 		},
 
 		created(){
@@ -787,8 +787,8 @@
 					  	// console.log('Drag End');
 					},
 					onSelect: function(){
-						restaurantComponentData.service_schedule = $('#service_schedule').scheduler('val');
-						// console.log(restaurantComponentData.service_schedule);
+						restaurantCreateData.service_schedule = $('#service_schedule').scheduler('val');
+						// console.log(restaurantCreateData.service_schedule);
 					  	// console.log($('#service_schedule').scheduler('val'));
 					},
 				});
@@ -805,8 +805,8 @@
 					  	// console.log('Drag End');
 					},
 					onSelect: function(){
-						restaurantComponentData.booking_break_schedule = $('#booking_break_schedule').scheduler('val');
-						// console.log(restaurantComponentData.booking_break_schedule);
+						restaurantCreateData.booking_break_schedule = $('#booking_break_schedule').scheduler('val');
+						// console.log(restaurantCreateData.booking_break_schedule);
 					  	// console.log($('#booking_break_schedule').scheduler('val'));
 					},
 				});

@@ -74,6 +74,6 @@ class Restaurant extends Authenticatable
 
     public function restaurantMealCategories()
     {
-        return $this->belongsToMany(RestaurantMeal::class, 'restaurant_meals', 'restaurant_id', 'meal_id');
+        return $this->belongsToMany(Meal::class, 'restaurant_meals', 'restaurant_id', 'meal_id');
     }    
 }
