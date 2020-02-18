@@ -763,11 +763,11 @@
 				axios
 					.get('/api/meals')
 					.then(response => {
-						console.log('Meal Response : '+response);
+						// console.log('Meal Response : '+response);
 						if (response.status == 200) {
 							this.loading = false;
 							this.allMeals = response.data;
-							console.log('All Meals :'+this.allMeals);
+							// console.log('All Meals :'+this.allMeals);
 						}
 					})
 					.catch(error => {
@@ -927,12 +927,10 @@
 				axios
 					.post('/restaurants', this.restaurant)
 					.then(response => {
-						console.log(response.data);
+						// console.log(response.data);
 						if (response.status == 200) {
 							this.restaurant = {};
-							this.restaurantCuisineObjectTags = [];
-							this.restaurantFoodObjectTags = [];
-							this.restaurantMealObjectTags = [];
+							this.restaurantCuisineObjectTags = this.restaurantFoodObjectTags = this.restaurantMealObjectTags = [];
 							this.$router.push({name:'admin.restaurants.index'});
 							toastr.success(response.data.success, "Success");
 						}
