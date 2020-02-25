@@ -50,6 +50,13 @@ Route::name('admin.')->group(function () {
 
 		    Route::get('/api/restaurants', 'RestaurantController@showAllRestaurants');
 		    Route::post('/restaurants', 'RestaurantController@createNewRestaurant');
+		    Route::put('/restaurants/{restaurant}', 'RestaurantController@updateRestaurant');
+		    Route::delete('/restaurants/{restaurant}', 'RestaurantController@deleteRestaurant');
+		    Route::patch('/restaurants/{restaurant}', 'RestaurantController@restoreRestaurant');
 		});
 	});
+});
+
+Route::fallback(function () {
+    Route::view('/home', 'layouts.admin');
 });

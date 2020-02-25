@@ -26,7 +26,7 @@ class CreateRestaurantsTable extends Migration
             $table->string('lng'); // from area name / map
             $table->string('website')->nullable();
             $table->string('banner_preview')->nullable();
-            $table->unsignedTinyInteger('min_order')->default(150);
+            $table->unsignedMediumInteger('min_order')->default(150);
             // $table->string('meal_tags')->nullable();
             // $table->string('food_tags')->nullable();
             $table->boolean('is_post_paid')->default(false);
@@ -36,6 +36,9 @@ class CreateRestaurantsTable extends Migration
             $table->json('booking_schedule_break')->nullable(); // break hour for whole week
             $table->boolean('taking_order')->default(false);
             $table->boolean('admin_approval')->default(false);
+
+            $table->softDeletes();
+            
             $table->timestamps();
         });
     }
