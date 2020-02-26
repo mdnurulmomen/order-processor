@@ -60,13 +60,13 @@ class RestaurantController extends Controller
          return $this->showAllMeals();
       }
 
-   	public function showAllRestaurants()
+   	public function showAllRestaurants($perPage)
    	{
    		return response()->json([
-            'all' => Restaurant::withTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate(1),
-            'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate(1),
-            'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate(1),
-            'trashed' => Restaurant::onlyTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate(1),
+            'all' => Restaurant::withTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+            'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+            'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+            'trashed' => Restaurant::onlyTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
             
          ], 200);
 
@@ -75,7 +75,7 @@ class RestaurantController extends Controller
          // );
    	}
 
-   	public function createNewRestaurant(Request $request)
+   	public function createNewRestaurant(Request $request, $perPage)
    	{
    		$request->validate([
    			'name'=>'required|unique:restaurants,name|string|max:50',
@@ -132,10 +132,10 @@ class RestaurantController extends Controller
          
          $newRestaurant->save();
 
-   		return $this->showAllRestaurants();
+   		return $this->showAllRestaurants($perPage);
    	}
 
-      public function updateRestaurant(Request $request, $restaurant)
+      public function updateRestaurant(Request $request, $restaurant, $perPage)
       {
          $restaurantToUpdate = Restaurant::find($restaurant);
 
@@ -193,20 +193,20 @@ class RestaurantController extends Controller
          
          $restaurantToUpdate->save();
 
-         return $this->showAllRestaurants();
+         return $this->showAllRestaurants($perPage);
       }
 
-      public function deleteRestaurant($restaurantToDelete)
+      public function deleteRestaurant($restaurantToDelete, $perPage)
       {
          Restaurant::destroy($restaurantToDelete);
-         return $this->showAllRestaurants();
+         return $this->showAllRestaurants($perPage);
       }
 
-      public function restoreRestaurant($restaurantToRestore)
+      public function restoreRestaurant($restaurantToRestore, $perPage)
       {
          $restorationToStore = Restaurant::onlyTrashed()->find($restaurantToRestore);
          $restorationToStore->restore();
          
-         return $this->showAllRestaurants();
+         return $this->showAllRestaurants($perPage);
       }
 }

@@ -4199,6 +4199,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4208,7 +4215,6 @@ __webpack_require__.r(__webpack_exports__);
 
 var singleRestaurantData = {
   step: 1,
-  // errors : [],
   editor: _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_4___default.a,
   restaurant: {
     banner_preview: null,
@@ -4258,6 +4264,8 @@ var restaurantListData = {
   query: '',
   queryFiled: '',
   csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+  // errors : [],
+  perPage: 20,
   singleRestaurantData: singleRestaurantData
   /*
   columns : 	
@@ -4417,9 +4425,8 @@ var restaurantListData = {
       var _this = this;
 
       this.loading = true;
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/restaurants?page=' + this.pagination.current_page).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/restaurants/' + this.perPage + '?page=' + this.pagination.current_page).then(function (response) {
         if (response.status == 200) {
-          _this.loading = false;
           _this.allRestaurants = response.data;
 
           if (_this.currentTab == 'all') {
@@ -4434,13 +4441,18 @@ var restaurantListData = {
           } else {
             _this.restaurantsToShow = _this.allRestaurants.trashed.data;
             _this.pagination = response.data.trashed;
-          } // console.log(response);
-          // console.log(this.allRestaurants);
+          }
 
+          _this.loading = false; // console.log(response);
+          // console.log(this.allRestaurants);
         }
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    changeNumberContents: function changeNumberContents() {
+      this.pagination.current_page = 1;
+      this.fetchAllRestaurants();
     },
     reload: function reload() {
       this.fetchAllRestaurants(); // this.query = "";
@@ -4463,7 +4475,7 @@ var restaurantListData = {
       // this.restaurant.service_schedule : this.restaurant.service_schedule,
       // this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/restaurants', this.singleRestaurantData.restaurant).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/restaurants/' + this.perPage, this.singleRestaurantData.restaurant).then(function (response) {
         // console.log(response.data);
         if (response.status == 200) {
           _this2.singleRestaurantData.restaurant = {};
@@ -4510,7 +4522,7 @@ var restaurantListData = {
       // this.restaurant.service_schedule : this.restaurant.service_schedule,
       // this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/restaurants/' + this.singleRestaurantData.restaurant.id, this.singleRestaurantData.restaurant).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage, this.singleRestaurantData.restaurant).then(function (response) {
         if (response.status == 200) {
           // this.allRestaurants = response.data.data;
           _this3.allRestaurants = response.data;
@@ -4546,7 +4558,7 @@ var restaurantListData = {
       var _this4 = this;
 
       $("#modal-restaurant-delete-confirmation").modal("hide");
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"]('/restaurants/' + this.singleRestaurantData.restaurant.id).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"]('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage).then(function (response) {
         if (response.status == 200) {
           _this4.allRestaurants = response.data;
 
@@ -4581,7 +4593,7 @@ var restaurantListData = {
       var _this5 = this;
 
       $("#modal-restaurant-restore-confirmation").modal("hide");
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch('/restaurants/' + this.singleRestaurantData.restaurant.id).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage).then(function (response) {
         if (response.status == 200) {
           // this.allRestaurants = response.data.data;
           _this5.allRestaurants = response.data;
@@ -5043,7 +5055,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 exports.i(__webpack_require__(/*! -!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!vue-multiselect/dist/vue-multiselect.min.css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-multiselect/dist/vue-multiselect.min.css"), "");
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t/*\n\t.fade-enter-active {\n  \t\tanimation: drag-out .5s reverse;\n\t}\n\t.fade-leave-active {\n  \t\tanimation: drag-out .5s;\n\t}\n\n\t@keyframes drag-out {\n\t\tfrom {\n\t\t\ttransform: translate(0, 0);\n\t\t}\n  \t\tto {\n  \t\t\ttransform: translate(-100%, 0);\n  \t\t}\n\t}\n\t*/\n.fade-enter-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .9s ease;\n  \t\ttransition: all .9s ease;\n}\n.fade-leave-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  \t\ttransition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n\t/* .slide-fade-leave-active below version 2.1.8 */\n.fade-enter[data-v-754898d3], .fade-leave-to[data-v-754898d3] {\n  \t\t-webkit-transform: translateX(10px);\n  \t\t        transform: translateX(10px);\n  \t\topacity: 0;\n}\n.modal-body[data-v-754898d3] {\n\t\tword-break: break-all;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t/*\n\t.fade-enter-active {\n  \t\tanimation: drag-out .5s reverse;\n\t}\n\t.fade-leave-active {\n  \t\tanimation: drag-out .5s;\n\t}\n\n\t@keyframes drag-out {\n\t\tfrom {\n\t\t\ttransform: translate(0, 0);\n\t\t}\n  \t\tto {\n  \t\t\ttransform: translate(-100%, 0);\n  \t\t}\n\t}\n\t*/\n.fade-enter-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .9s ease;\n  \t\ttransition: all .9s ease;\n}\n.fade-leave-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  \t\ttransition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n\t/* .slide-fade-leave-active below version 2.1.8 */\n.fade-enter[data-v-754898d3], .fade-leave-to[data-v-754898d3] {\n  \t\t-webkit-transform: translateX(10px);\n  \t\t        transform: translateX(10px);\n  \t\topacity: 0;\n}\n.modal-body[data-v-754898d3] {\n\t\tword-break: break-all;\n}\n", ""]);
 
 // exports
 
@@ -10561,44 +10573,95 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-2" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary btn-sm",
-                        attrs: { type: "button" },
-                        on: { click: _vm.reload }
-                      },
-                      [
-                        _vm._v(
-                          "\n\t\t\t\t\t\t\t\t\t\tReload\n\t\t\t\t\t\t\t\t\t\t"
-                        ),
-                        _c("i", { staticClass: "fas fa-sync" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "col-10" },
-                    [
-                      _vm.pagination.last_page > 1
-                        ? _c("pagination", {
-                            attrs: { pagination: _vm.pagination, offset: 5 },
-                            on: {
-                              paginate: function($event) {
-                                _vm.query === ""
-                                  ? _vm.fetchAllRestaurants()
-                                  : _vm.searchData()
-                              }
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "row d-flex align-items-center align-content-center"
+                  },
+                  [
+                    _c("div", { staticClass: "col-sm-1" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.perPage,
+                              expression: "perPage"
                             }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ])
+                          ],
+                          staticClass: "form-control",
+                          on: {
+                            change: [
+                              function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.perPage = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              },
+                              function($event) {
+                                return _vm.changeNumberContents()
+                              }
+                            ]
+                          }
+                        },
+                        [
+                          _c("option", [_vm._v("20")]),
+                          _vm._v(" "),
+                          _c("option", [_vm._v("50")]),
+                          _vm._v(" "),
+                          _c("option", [_vm._v("100")])
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-2" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm",
+                          attrs: { type: "button" },
+                          on: { click: _vm.reload }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t\t\t\tReload\n\t\t\t\t\t\t\t\t\t\t"
+                          ),
+                          _c("i", { staticClass: "fas fa-sync" })
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-sm-9" },
+                      [
+                        _vm.pagination.last_page > 1
+                          ? _c("pagination", {
+                              attrs: { pagination: _vm.pagination, offset: 5 },
+                              on: {
+                                paginate: function($event) {
+                                  _vm.query === ""
+                                    ? _vm.fetchAllRestaurants()
+                                    : _vm.searchData()
+                                }
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ]
+                )
               ])
             ])
           ])

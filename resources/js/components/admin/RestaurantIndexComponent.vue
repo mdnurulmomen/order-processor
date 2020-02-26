@@ -132,14 +132,21 @@
 									</tbody>
 								</table>
 							</div>	
-							<div class="row">
-								<div class="col-2">
+							<div class="row d-flex align-items-center align-content-center">
+								<div class="col-sm-1">
+									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+										<option>20</option>
+										<option>50</option>
+										<option>100</option>
+									</select>
+								</div>
+								<div class="col-sm-2">
 									<button type="button" class="btn btn-primary btn-sm" @click="reload">
 										Reload
 										<i class="fas fa-sync"></i>
 									</button>
 								</div>
-								<div class="col-10">
+								<div class="col-sm-9">
 									<pagination
 										v-if="pagination.last_page > 1"
 										:pagination="pagination"
@@ -1033,7 +1040,6 @@
 
 	var singleRestaurantData = {
     	step : 1,
-    	// errors : [],
 	    editor: ClassicEditor,
     	restaurant : {
     		banner_preview : null,
@@ -1092,6 +1098,8 @@
     	queryFiled : '',
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
 
+    	// errors : [],
+    	perPage : 20,
         singleRestaurantData : singleRestaurantData,
 
     	/*
@@ -1258,11 +1266,10 @@
 			fetchAllRestaurants(){
 				this.loading = true;
 				axios
-					.get('/api/restaurants?page='+ this.pagination.current_page)
+					.get('/api/restaurants/'+ this.perPage +'?page='+ this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.loading = false;
 							this.allRestaurants = response.data;
 
 							if (this.currentTab=='all') {
@@ -1280,6 +1287,8 @@
 								this.pagination = response.data.trashed;
 							}
 
+							this.loading = false;
+
 							// console.log(response);
 							// console.log(this.allRestaurants);
 						}
@@ -1288,6 +1297,10 @@
 						console.log(error);
 					});
 			},
+			changeNumberContents() {
+				this.pagination.current_page = 1;
+				this.fetchAllRestaurants();
+    		},
 			reload() {
 				this.fetchAllRestaurants();
 				// this.query = "";
@@ -1313,7 +1326,7 @@
 				// this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
 				axios
-					.post('/restaurants', this.singleRestaurantData.restaurant)
+					.post('/restaurants/'+ this.perPage, this.singleRestaurantData.restaurant)
 					.then(response => {
 						// console.log(response.data);
 						if (response.status == 200) {
@@ -1369,7 +1382,7 @@
 				// this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
 				axios
-					.put('/restaurants/'+this.singleRestaurantData.restaurant.id, this.singleRestaurantData.restaurant)
+					.put('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage, this.singleRestaurantData.restaurant)
 					.then(response => {
 						if (response.status == 200) {
 							// this.allRestaurants = response.data.data;
@@ -1407,7 +1420,7 @@
 				$("#modal-restaurant-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/restaurants/'+this.singleRestaurantData.restaurant.id)
+					.delete('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1446,7 +1459,7 @@
 				$("#modal-restaurant-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/restaurants/'+this.singleRestaurantData.restaurant.id)
+					.patch('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							// this.allRestaurants = response.data.data;

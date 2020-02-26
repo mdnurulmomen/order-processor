@@ -48,11 +48,11 @@ Route::name('admin.')->group(function () {
 		    Route::get('/api/meals', 'RestaurantController@showAllMeals');
 		    Route::post('/meals', 'RestaurantController@createNewMeal');
 
-		    Route::get('/api/restaurants', 'RestaurantController@showAllRestaurants');
-		    Route::post('/restaurants', 'RestaurantController@createNewRestaurant');
-		    Route::put('/restaurants/{restaurant}', 'RestaurantController@updateRestaurant');
-		    Route::delete('/restaurants/{restaurant}', 'RestaurantController@deleteRestaurant');
-		    Route::patch('/restaurants/{restaurant}', 'RestaurantController@restoreRestaurant');
+		    Route::get('/api/restaurants/{perPage}', 'RestaurantController@showAllRestaurants');
+		    Route::post('/restaurants/{perPage}', 'RestaurantController@createNewRestaurant');
+		    Route::put('/restaurants/{restaurant}/{perPage}', 'RestaurantController@updateRestaurant');
+		    Route::delete('/restaurants/{restaurant}/{perPage}', 'RestaurantController@deleteRestaurant');
+		    Route::patch('/restaurants/{restaurant}/{perPage}', 'RestaurantController@restoreRestaurant');
 		});
 	});
 });
