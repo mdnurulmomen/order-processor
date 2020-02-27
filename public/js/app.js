@@ -4207,6 +4207,469 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4215,8 +4678,6 @@ __webpack_require__.r(__webpack_exports__);
  // import VueBootstrap4Table from 'vue-bootstrap4-table';
 
 var singleRestaurantData = {
-  step: 1,
-  editor: _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_4___default.a,
   restaurant: {
     banner_preview: null,
     name: null,
@@ -4225,48 +4686,50 @@ var singleRestaurantData = {
     email: null,
     password: null,
     password_confirmation: null,
-    restaurantCuisineTags: [],
     website: null,
     address: null,
     lat: null,
     lng: null,
     min_order: 100,
     is_post_paid: false,
+    restaurantCuisineTags: [],
     restaurantFoodTags: [],
     restaurantMealTags: [],
     has_parking: false,
     is_self_service: false,
     service_schedule: null,
-    booking_break_schedule: null
+    booking_break_schedule: null,
+    admin_approval: 0
   },
-  restaurantNewBanner: null,
   restaurantCuisineObjectTags: [],
-  allRestaurantCuisines: [],
-  newRestaurantCuisine: {},
   restaurantFoodObjectTags: [],
-  allMenuCategories: [],
-  newMenuCategory: {},
   restaurantMealObjectTags: [],
-  allMeals: [],
-  newMeal: {},
   service_schedule: {},
   booking_break_schedule: {}
 };
 var restaurantListData = {
-  editMode: false,
-  currentTab: 'all',
+  step: 1,
+  query: '',
+  perPage: 10,
   loading: false,
+  editor: _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_4___default.a,
+  currentTab: 'all',
   allRestaurants: [],
   restaurantsToShow: [],
+  allMeals: [],
+  allMenuCategories: [],
+  allRestaurantCuisines: [],
+  newMeal: {},
+  newMenuCategory: {},
+  newRestaurantCuisine: {},
+  restaurantNewBanner: null,
   pagination: {
     current_page: 1
   },
-  query: '',
-  queryFiled: '',
-  csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
   // errors : [],
-  perPage: 10,
-  singleRestaurantData: singleRestaurantData
+  restaurantCreateData: singleRestaurantData,
+  restaurantDetailData: singleRestaurantData,
+  csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
   /*
   columns : 	
   [
@@ -4348,56 +4811,88 @@ var restaurantListData = {
   // Local registration of components
   components: {
     // VueBootstrap4Table
-    ToggleButton: vue_js_toggle_button__WEBPACK_IMPORTED_MODULE_1__["ToggleButton"],
     Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_2___default.a,
     // short form of Multiselect : Multiselect
-    ckeditor: _ckeditor_ckeditor5_vue__WEBPACK_IMPORTED_MODULE_3___default.a.component,
-    VueGoogleAutocomplete: vue_google_autocomplete__WEBPACK_IMPORTED_MODULE_5__["default"]
+    VueGoogleAutocomplete: vue_google_autocomplete__WEBPACK_IMPORTED_MODULE_5__["default"],
+    ToggleButton: vue_js_toggle_button__WEBPACK_IMPORTED_MODULE_1__["ToggleButton"],
+    ckeditor: _ckeditor_ckeditor5_vue__WEBPACK_IMPORTED_MODULE_3___default.a.component
   },
   data: function data() {
     return restaurantListData;
   },
   created: function created() {
+    this.fetchAllMeals();
     this.fetchAllRestaurants();
     this.fetchAllRestaurantCuisines();
     this.fetchAllMenuCategories();
-    this.fetchAllMeals();
   },
   mounted: function mounted() {
     this.enableScheduler();
   },
   watch: {
-    'singleRestaurantData.restaurantCuisineObjectTags': function singleRestaurantDataRestaurantCuisineObjectTags(restaurantCuisineObjectTags) {
+    'restaurantCreateData.restaurantCuisineObjectTags': function restaurantCreateDataRestaurantCuisineObjectTags(restaurantCuisineObjectTags) {
       var array = [];
       $.each(restaurantCuisineObjectTags, function (key, value) {
         array.push(value.id);
       });
-      this.singleRestaurantData.restaurant.restaurantCuisineTags = array;
+      this.restaurantCreateData.restaurant.restaurantCuisineTags = array;
     },
-    'singleRestaurantData.restaurantFoodObjectTags': function singleRestaurantDataRestaurantFoodObjectTags(restaurantFoodObjectTags) {
+    'restaurantCreateData.restaurantFoodObjectTags': function restaurantCreateDataRestaurantFoodObjectTags(restaurantFoodObjectTags) {
       var array = [];
       $.each(restaurantFoodObjectTags, function (key, value) {
         array.push(value.id);
       });
-      this.singleRestaurantData.restaurant.restaurantFoodTags = array;
+      this.restaurantCreateData.restaurant.restaurantFoodTags = array;
     },
-    'singleRestaurantData.restaurantMealObjectTags': function singleRestaurantDataRestaurantMealObjectTags(restaurantMealObjectTags) {
+    'restaurantCreateData.restaurantMealObjectTags': function restaurantCreateDataRestaurantMealObjectTags(restaurantMealObjectTags) {
       var array = [];
       $.each(restaurantMealObjectTags, function (key, value) {
         array.push(value.id);
       });
-      this.singleRestaurantData.restaurant.restaurantMealTags = array;
+      this.restaurantCreateData.restaurant.restaurantMealTags = array;
     },
-    'singleRestaurantData.restaurant.name': function singleRestaurantDataRestaurantName(val) {
+    'restaurantCreateData.restaurant.name': function restaurantCreateDataRestaurantName(val) {
       if (typeof val !== 'undefined' && val !== null) {
-        this.singleRestaurantData.restaurant.user_name = val.replace(/\s/g, '');
+        this.restaurantCreateData.restaurant.user_name = val.replace(/\s/g, '');
       }
     },
-    'singleRestaurantData.service_schedule': function singleRestaurantDataService_schedule(val) {
-      this.singleRestaurantData.restaurant.service_schedule = val;
+    'restaurantCreateData.service_schedule': function restaurantCreateDataService_schedule(val) {
+      this.restaurantCreateData.restaurant.service_schedule = val;
     },
-    'singleRestaurantData.booking_break_schedule': function singleRestaurantDataBooking_break_schedule(val) {
-      this.singleRestaurantData.restaurant.booking_break_schedule = val;
+    'restaurantCreateData.booking_break_schedule': function restaurantCreateDataBooking_break_schedule(val) {
+      this.restaurantCreateData.restaurant.booking_break_schedule = val;
+    },
+    'restaurantDetailData.restaurantCuisineObjectTags': function restaurantDetailDataRestaurantCuisineObjectTags(restaurantCuisineObjectTags) {
+      var array = [];
+      $.each(restaurantCuisineObjectTags, function (key, value) {
+        array.push(value.id);
+      });
+      this.restaurantDetailData.restaurant.restaurantCuisineTags = array;
+    },
+    'restaurantDetailData.restaurantFoodObjectTags': function restaurantDetailDataRestaurantFoodObjectTags(restaurantFoodObjectTags) {
+      var array = [];
+      $.each(restaurantFoodObjectTags, function (key, value) {
+        array.push(value.id);
+      });
+      this.restaurantDetailData.restaurant.restaurantFoodTags = array;
+    },
+    'restaurantDetailData.restaurantMealObjectTags': function restaurantDetailDataRestaurantMealObjectTags(restaurantMealObjectTags) {
+      var array = [];
+      $.each(restaurantMealObjectTags, function (key, value) {
+        array.push(value.id);
+      });
+      this.restaurantDetailData.restaurant.restaurantMealTags = array;
+    },
+    'restaurantDetailData.restaurant.name': function restaurantDetailDataRestaurantName(val) {
+      if (typeof val !== 'undefined' && val !== null) {
+        this.restaurantDetailData.restaurant.user_name = val.replace(/\s/g, '');
+      }
+    },
+    'restaurantDetailData.service_schedule': function restaurantDetailDataService_schedule(val) {
+      this.restaurantDetailData.restaurant.service_schedule = val;
+    },
+    'restaurantDetailData.booking_break_schedule': function restaurantDetailDataBooking_break_schedule(val) {
+      this.restaurantDetailData.restaurant.booking_break_schedule = val;
     },
     query: function query(val) {
       if (val === '') {
@@ -4466,27 +4961,20 @@ var restaurantListData = {
         this.fetchAllRestaurants();
       } else this.searchData();
     },
-    showRestaurantCreateModal: function showRestaurantCreateModal() {
-      this.editMode = false;
-      this.singleRestaurantData.step = 1;
-      this.singleRestaurantData.restaurant = {};
-      this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
-      $("#modal-restaurant").modal("show");
-    },
     storeRestaurant: function storeRestaurant() {
       var _this2 = this;
 
-      $("#modal-restaurant").modal("hide");
-      this.singleRestaurantData.restaurant.banner_preview = this.singleRestaurantData.restaurantNewBanner; // this.restaurant.lat : null,
+      $("#modal-create-restaurant").modal("hide");
+      this.restaurantCreateData.restaurant.banner_preview = this.restaurantNewBanner; // this.restaurant.lat : null,
       // this.restaurant.lng : null,
       // this.restaurant.service_schedule : this.restaurant.service_schedule,
       // this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/restaurants/' + this.perPage, this.singleRestaurantData.restaurant).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/restaurants/' + this.perPage, this.restaurantCreateData.restaurant).then(function (response) {
         // console.log(response.data);
         if (response.status == 200) {
-          _this2.singleRestaurantData.restaurant = {};
-          _this2.singleRestaurantData.restaurantCuisineObjectTags = _this2.singleRestaurantData.restaurantFoodObjectTags = _this2.singleRestaurantData.restaurantMealObjectTags = [];
+          _this2.restaurantCreateData.restaurant = {};
+          _this2.restaurantCreateData.restaurantCuisineObjectTags = _this2.restaurantCreateData.restaurantFoodObjectTags = _this2.restaurantCreateData.restaurantMealObjectTags = [];
           _this2.query = '';
           _this2.currentTab = 'all';
           _this2.allRestaurants = response.data;
@@ -4505,31 +4993,30 @@ var restaurantListData = {
       });
     },
     showRestaurantDetailModal: function showRestaurantDetailModal(restaurant) {
-      this.singleRestaurantData.restaurant = restaurant;
-      this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
-      this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
-      this.singleRestaurantData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
+      this.restaurantDetailData.restaurant = restaurant;
+      this.restaurantDetailData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
+      this.restaurantDetailData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
+      this.restaurantDetailData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
       $("#modal-show-restaurant").modal("show"); // console.log(restaurant);
     },
     showRestaurantEditModal: function showRestaurantEditModal(restaurant) {
-      this.editMode = true;
-      this.singleRestaurantData.step = 1;
-      this.singleRestaurantData.restaurant = restaurant;
-      this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
-      this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
-      this.singleRestaurantData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
-      $("#modal-restaurant").modal("show");
+      this.step = 1;
+      this.restaurantDetailData.restaurant = restaurant;
+      this.restaurantDetailData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
+      this.restaurantDetailData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
+      this.restaurantDetailData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
+      $("#modal-edit-restaurant").modal("show");
     },
     updateRestaurant: function updateRestaurant() {
       var _this3 = this;
 
-      $("#modal-restaurant").modal("hide");
-      this.singleRestaurantData.restaurant.banner_preview = this.singleRestaurantData.restaurantNewBanner; // this.restaurant.lat : null,
+      $("#modal-edit-restaurant").modal("hide");
+      this.restaurantDetailData.restaurant.banner_preview = this.restaurantNewBanner; // this.restaurant.lat : null,
       // this.restaurant.lng : null,
       // this.restaurant.service_schedule : this.restaurant.service_schedule,
       // this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage, this.singleRestaurantData.restaurant).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/restaurants/' + this.restaurantDetailData.restaurant.id + '/' + this.perPage, this.restaurantDetailData.restaurant).then(function (response) {
         if (response.status == 200) {
           if (_this3.query === '') {
             _this3.allRestaurants = response.data;
@@ -4559,14 +5046,14 @@ var restaurantListData = {
       });
     },
     showRestaurantDeletionModal: function showRestaurantDeletionModal(restaurant) {
-      this.singleRestaurantData.restaurant = restaurant;
+      this.restaurantDetailData.restaurant = restaurant;
       $("#modal-restaurant-delete-confirmation").modal("show");
     },
     destroyRestaurant: function destroyRestaurant() {
       var _this4 = this;
 
       $("#modal-restaurant-delete-confirmation").modal("hide");
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"]('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"]('/restaurants/' + this.restaurantDetailData.restaurant.id + '/' + this.perPage).then(function (response) {
         if (response.status == 200) {
           if (_this4.query === '') {
             _this4.allRestaurants = response.data;
@@ -4596,15 +5083,18 @@ var restaurantListData = {
       });
     },
     showRestaurantRestoreModal: function showRestaurantRestoreModal(restaurant) {
-      this.singleRestaurantData.restaurant = restaurant;
+      this.restaurantDetailData.restaurant = restaurant;
       $("#modal-restaurant-restore-confirmation").modal("show");
     },
     restoreRestaurant: function restoreRestaurant() {
       var _this5 = this;
 
       $("#modal-restaurant-restore-confirmation").modal("hide");
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch('/restaurants/' + this.restaurantDetailData.restaurant.id + '/' + this.perPage).then(function (response) {
         if (response.status == 200) {
+          _this5.restaurantDetailData.restaurant = {};
+          _this5.restaurantDetailData.restaurantCuisineObjectTags = _this5.restaurantDetailData.restaurantFoodObjectTags = _this5.restaurantDetailData.restaurantMealObjectTags = [];
+
           if (_this5.query === '') {
             _this5.allRestaurants = response.data;
 
@@ -4656,7 +5146,7 @@ var restaurantListData = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/restaurant-cuisines').then(function (response) {
         if (response.status == 200) {
           _this7.loading = false;
-          _this7.singleRestaurantData.allRestaurantCuisines = response.data;
+          _this7.allRestaurantCuisines = response.data;
         }
       })["catch"](function (error) {
         console.log(error);
@@ -4669,7 +5159,7 @@ var restaurantListData = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/menu-categories').then(function (response) {
         if (response.status == 200) {
           _this8.loading = false;
-          _this8.singleRestaurantData.allMenuCategories = response.data;
+          _this8.allMenuCategories = response.data;
         }
       })["catch"](function (error) {
         console.log(error);
@@ -4682,14 +5172,14 @@ var restaurantListData = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/meals').then(function (response) {
         if (response.status == 200) {
           _this9.loading = false;
-          _this9.singleRestaurantData.allMeals = response.data; // console.log('All Meals :'+this.allMeals);
+          _this9.allMeals = response.data; // console.log('All Meals :'+this.allMeals);
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     enableScheduler: function enableScheduler() {
-      $('#service_schedule').scheduler({
+      $('.service_schedule').scheduler({
         accuracy: 1,
         onDragStart: function onDragStart() {// console.log('Drag Start');
         },
@@ -4702,7 +5192,7 @@ var restaurantListData = {
           // console.log($('#service_schedule').scheduler('val'));
         }
       });
-      $('#booking_break_schedule').scheduler({
+      $('.booking_break_schedule').scheduler({
         accuracy: 1,
         onDragStart: function onDragStart() {// console.log('Drag Start');
         },
@@ -4720,10 +5210,10 @@ var restaurantListData = {
       var _this10 = this;
 
       $('#modal-create-restaurant-category').modal('hide');
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/restaurant-cuisines', this.singleRestaurantData.newRestaurantCuisine).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/restaurant-cuisines', this.newRestaurantCuisine).then(function (response) {
         if (response.status == 200) {
-          _this10.singleRestaurantData.newRestaurantCuisine = {};
-          _this10.singleRestaurantData.allRestaurantCuisines = response.data;
+          _this10.newRestaurantCuisine = {};
+          _this10.allRestaurantCuisines = response.data;
           toastr.success(response.data.success, "Success");
         }
       })["catch"](function (error) {
@@ -4738,10 +5228,10 @@ var restaurantListData = {
       var _this11 = this;
 
       $('#modal-create-menu-category').modal('hide');
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/menu-categories', this.singleRestaurantData.newMenuCategory).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/menu-categories', this.newMenuCategory).then(function (response) {
         if (response.status == 200) {
-          _this11.singleRestaurantData.newMenuCategory = {};
-          _this11.singleRestaurantData.allMenuCategories = response.data;
+          _this11.newMenuCategory = {};
+          _this11.allMenuCategories = response.data;
           toastr.success(response.data.success, "Success");
         }
       })["catch"](function (error) {
@@ -4756,10 +5246,10 @@ var restaurantListData = {
       var _this12 = this;
 
       $('#modal-create-meal-tag').modal('hide');
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/meals', this.singleRestaurantData.newMeal).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/meals', this.newMeal).then(function (response) {
         if (response.status == 200) {
-          _this12.singleRestaurantData.newMeal = {};
-          _this12.singleRestaurantData.allMeals = response.data;
+          _this12.newMeal = {};
+          _this12.allMeals = response.data;
           toastr.success(response.data.success, "Success");
         }
       })["catch"](function (error) {
@@ -4788,7 +5278,7 @@ var restaurantListData = {
       else if (this.step==4) {
       	}
       */
-      this.singleRestaurantData.step += 1;
+      this.step += 1;
     },
     onBannerChange: function onBannerChange(evnt) {
       var files = evnt.target.files || evnt.dataTransfer.files; // Only process image files.
@@ -4805,7 +5295,7 @@ var restaurantListData = {
       var reader = new FileReader();
 
       reader.onload = function (evnt) {
-        _this13.singleRestaurantData.restaurantNewBanner = _this13.singleRestaurantData.restaurant.banner_preview = evnt.target.result;
+        _this13.restaurantNewBanner = _this13.restaurantCreateData.restaurant.banner_preview = _this13.restaurantDetailData.restaurant.banner_preview = evnt.target.result;
       };
 
       reader.readAsDataURL(file);
@@ -10318,33 +10808,7 @@ var render = function() {
         [
           _c("div", { staticClass: "col-sm-12" }, [
             _c("div", { staticClass: "card" }, [
-              _c("div", { staticClass: "card-header" }, [
-                _c("h2", { staticClass: "lead float-left mt-1" }, [
-                  _vm._v("Restaurant List")
-                ]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-secondary btn-sm float-right mb-2",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        return _vm.showRestaurantCreateModal()
-                      }
-                    }
-                  },
-                  [
-                    _c("i", {
-                      staticClass: "fa fa-plus-circle",
-                      attrs: { "aria-hidden": "true" }
-                    }),
-                    _vm._v(
-                      "\n                                Add Restaurant\n\t\t\t\t\t      \t"
-                    )
-                  ]
-                )
-              ]),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
                 _c("div", { staticClass: "mb-3" }, [
@@ -10461,7 +10925,7 @@ var render = function() {
                         "table table-hover table-bordered table-striped text-center"
                     },
                     [
-                      _vm._m(1),
+                      _vm._m(2),
                       _vm._v(" "),
                       _c(
                         "tbody",
@@ -10608,7 +11072,7 @@ var render = function() {
                                 }
                               ]
                             },
-                            [_vm._m(2)]
+                            [_vm._m(3)]
                           )
                         ],
                         2
@@ -10726,10 +11190,10 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog modal-lg" }, [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(3),
+              _vm._m(4),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
-                _vm._m(4),
+                _vm._m(5),
                 _vm._v(" "),
                 _c("div", { staticClass: "tab-content" }, [
                   _c(
@@ -10746,7 +11210,7 @@ var render = function() {
                               staticClass: "img-fluid ",
                               attrs: {
                                 src:
-                                  _vm.singleRestaurantData.restaurant
+                                  _vm.restaurantDetailData.restaurant
                                     .banner_preview,
                                 alt: "Restaurant Banner"
                               }
@@ -10760,7 +11224,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t                \t\t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant.name
+                                    _vm.restaurantDetailData.restaurant.name
                                   ) +
                                   "\n\t\t\t\t\t\t                \t"
                               )
@@ -10784,7 +11248,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant
+                                    _vm.restaurantDetailData.restaurant
                                       .user_name
                                   ) +
                                   "\n\t\t\t\t\t\t\t\t                "
@@ -10807,7 +11271,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant.mobile
+                                    _vm.restaurantDetailData.restaurant.mobile
                                   ) +
                                   "\n\t\t\t\t\t\t\t\t                "
                               )
@@ -10829,7 +11293,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant.email
+                                    _vm.restaurantDetailData.restaurant.email
                                   ) +
                                   "\n\t\t\t\t\t\t\t\t                "
                               )
@@ -10851,8 +11315,8 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant.website
-                                      ? _vm.singleRestaurantData.restaurant
+                                    _vm.restaurantDetailData.restaurant.website
+                                      ? _vm.restaurantDetailData.restaurant
                                           .website
                                       : "No website"
                                   ) +
@@ -10876,7 +11340,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant
+                                    _vm.restaurantDetailData.restaurant
                                       .admin_approval
                                       ? "Approved"
                                       : "Not approved"
@@ -10914,14 +11378,14 @@ var render = function() {
                               _c("span", {
                                 domProps: {
                                   innerHTML: _vm._s(
-                                    _vm.singleRestaurantData.restaurant.address
+                                    _vm.restaurantDetailData.restaurant.address
                                   )
                                 }
                               })
                             ])
                           ]),
                           _vm._v(" "),
-                          _vm._m(5)
+                          _vm._m(6)
                         ])
                       ])
                     ]
@@ -10951,7 +11415,7 @@ var render = function() {
                               _c(
                                 "ul",
                                 _vm._l(
-                                  _vm.singleRestaurantData
+                                  _vm.restaurantDetailData
                                     .restaurantCuisineObjectTags,
                                   function(restaurantCuisineObjectTag) {
                                     return _c("li", [
@@ -10985,7 +11449,7 @@ var render = function() {
                               _c(
                                 "ul",
                                 _vm._l(
-                                  _vm.singleRestaurantData
+                                  _vm.restaurantDetailData
                                     .restaurantFoodObjectTags,
                                   function(restaurantFoodObjectTag) {
                                     return _c("li", [
@@ -11017,7 +11481,7 @@ var render = function() {
                               _c(
                                 "ul",
                                 _vm._l(
-                                  _vm.singleRestaurantData
+                                  _vm.restaurantDetailData
                                     .restaurantMealObjectTags,
                                   function(restaurantMealObjectTag) {
                                     return _c("li", [
@@ -11049,7 +11513,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant
+                                    _vm.restaurantDetailData.restaurant
                                       .min_order
                                   ) +
                                   " tk\n\t\t\t\t\t\t\t\t                "
@@ -11085,7 +11549,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant
+                                    _vm.restaurantDetailData.restaurant
                                       .is_post_paid
                                       ? "Post-paid"
                                       : "Pre-paid"
@@ -11110,7 +11574,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant
+                                    _vm.restaurantDetailData.restaurant
                                       .is_self_service
                                       ? "Self-service"
                                       : "Waiter service"
@@ -11135,7 +11599,7 @@ var render = function() {
                               _vm._v(
                                 "\n\t\t\t\t\t\t\t\t                  \t" +
                                   _vm._s(
-                                    _vm.singleRestaurantData.restaurant
+                                    _vm.restaurantDetailData.restaurant
                                       .has_perking
                                       ? "Available"
                                       : "Not available"
@@ -11151,7 +11615,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(6)
+              _vm._m(7)
             ])
           ])
         ]
@@ -11159,19 +11623,11 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "modal fade", attrs: { id: "modal-restaurant" } },
+        { staticClass: "modal fade", attrs: { id: "modal-create-restaurant" } },
         [
           _c("div", { staticClass: "modal-dialog modal-xl" }, [
             _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c("h4", { staticClass: "modal-title" }, [
-                  _vm._v(
-                    _vm._s(_vm.editMode ? "Update" : "Create") + " Restaurant"
-                  )
-                ]),
-                _vm._v(" "),
-                _vm._m(7)
-              ]),
+              _vm._m(8),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c(
@@ -11182,9 +11638,7 @@ var render = function() {
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
-                        _vm.editMode
-                          ? _vm.updateRestaurant()
-                          : _vm.storeRestaurant()
+                        return _vm.storeRestaurant()
                       }
                     }
                   },
@@ -11202,11 +11656,8 @@ var render = function() {
                             {
                               name: "show",
                               rawName: "v-show",
-                              value:
-                                !_vm.loading &&
-                                _vm.singleRestaurantData.step == 1,
-                              expression:
-                                "!loading && singleRestaurantData.step==1"
+                              value: !_vm.loading && _vm.step == 1,
+                              expression: "!loading && step==1"
                             }
                           ],
                           key: 1,
@@ -11240,7 +11691,7 @@ var render = function() {
                                                   "max-height": "150px"
                                                 },
                                                 attrs: {
-                                                  src: this.singleRestaurantData
+                                                  src: this.restaurantCreateData
                                                     .restaurant.banner_preview,
                                                   alt: "Restaurant Banner"
                                                 }
@@ -11335,10 +11786,10 @@ var render = function() {
                                                       name: "model",
                                                       rawName: "v-model",
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant.name,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.name"
+                                                        "restaurantCreateData.restaurant.name"
                                                     }
                                                   ],
                                                   staticClass: "form-control",
@@ -11349,7 +11800,7 @@ var render = function() {
                                                   },
                                                   domProps: {
                                                     value:
-                                                      _vm.singleRestaurantData
+                                                      _vm.restaurantCreateData
                                                         .restaurant.name
                                                   },
                                                   on: {
@@ -11360,7 +11811,7 @@ var render = function() {
                                                         return
                                                       }
                                                       _vm.$set(
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant,
                                                         "name",
                                                         $event.target.value
@@ -11395,10 +11846,10 @@ var render = function() {
                                                       name: "model",
                                                       rawName: "v-model",
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant.user_name,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.user_name"
+                                                        "restaurantCreateData.restaurant.user_name"
                                                     }
                                                   ],
                                                   staticClass: "form-control",
@@ -11409,7 +11860,7 @@ var render = function() {
                                                   },
                                                   domProps: {
                                                     value:
-                                                      _vm.singleRestaurantData
+                                                      _vm.restaurantCreateData
                                                         .restaurant.user_name
                                                   },
                                                   on: {
@@ -11420,7 +11871,7 @@ var render = function() {
                                                         return
                                                       }
                                                       _vm.$set(
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant,
                                                         "user_name",
                                                         $event.target.value
@@ -11461,10 +11912,10 @@ var render = function() {
                                                       name: "model",
                                                       rawName: "v-model",
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant.email,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.email"
+                                                        "restaurantCreateData.restaurant.email"
                                                     }
                                                   ],
                                                   staticClass: "form-control",
@@ -11475,7 +11926,7 @@ var render = function() {
                                                   },
                                                   domProps: {
                                                     value:
-                                                      _vm.singleRestaurantData
+                                                      _vm.restaurantCreateData
                                                         .restaurant.email
                                                   },
                                                   on: {
@@ -11486,7 +11937,7 @@ var render = function() {
                                                         return
                                                       }
                                                       _vm.$set(
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant,
                                                         "email",
                                                         $event.target.value
@@ -11521,10 +11972,10 @@ var render = function() {
                                                       name: "model",
                                                       rawName: "v-model",
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant.mobile,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.mobile"
+                                                        "restaurantCreateData.restaurant.mobile"
                                                     }
                                                   ],
                                                   staticClass: "form-control",
@@ -11535,7 +11986,7 @@ var render = function() {
                                                   },
                                                   domProps: {
                                                     value:
-                                                      _vm.singleRestaurantData
+                                                      _vm.restaurantCreateData
                                                         .restaurant.mobile
                                                   },
                                                   on: {
@@ -11546,7 +11997,7 @@ var render = function() {
                                                         return
                                                       }
                                                       _vm.$set(
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant,
                                                         "mobile",
                                                         $event.target.value
@@ -11591,22 +12042,21 @@ var render = function() {
                                                       name: "model",
                                                       rawName: "v-model",
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant.password,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.password"
+                                                        "restaurantCreateData.restaurant.password"
                                                     }
                                                   ],
                                                   staticClass: "form-control",
                                                   attrs: {
                                                     type: "password",
                                                     placeholder:
-                                                      "Login Password",
-                                                    required: !_vm.editMode
+                                                      "Login Password"
                                                   },
                                                   domProps: {
                                                     value:
-                                                      _vm.singleRestaurantData
+                                                      _vm.restaurantCreateData
                                                         .restaurant.password
                                                   },
                                                   on: {
@@ -11617,7 +12067,7 @@ var render = function() {
                                                         return
                                                       }
                                                       _vm.$set(
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant,
                                                         "password",
                                                         $event.target.value
@@ -11658,23 +12108,22 @@ var render = function() {
                                                       name: "model",
                                                       rawName: "v-model",
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant
                                                           .password_confirmation,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.password_confirmation"
+                                                        "restaurantCreateData.restaurant.password_confirmation"
                                                     }
                                                   ],
                                                   staticClass: "form-control",
                                                   attrs: {
                                                     type: "password",
                                                     placeholder:
-                                                      "Repeat Password",
-                                                    required: !_vm.editMode
+                                                      "Repeat Password"
                                                   },
                                                   domProps: {
                                                     value:
-                                                      _vm.singleRestaurantData
+                                                      _vm.restaurantCreateData
                                                         .restaurant
                                                         .password_confirmation
                                                   },
@@ -11686,7 +12135,7 @@ var render = function() {
                                                         return
                                                       }
                                                       _vm.$set(
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant,
                                                         "password_confirmation",
                                                         $event.target.value
@@ -11740,25 +12189,24 @@ var render = function() {
                                                       label: "name",
                                                       "track-by": "id",
                                                       options:
-                                                        _vm.singleRestaurantData
-                                                          .allRestaurantCuisines,
+                                                        _vm.allRestaurantCuisines,
                                                       multiple: true,
                                                       max: 3,
                                                       required: true
                                                     },
                                                     model: {
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurantCuisineObjectTags,
                                                       callback: function($$v) {
                                                         _vm.$set(
-                                                          _vm.singleRestaurantData,
+                                                          _vm.restaurantCreateData,
                                                           "restaurantCuisineObjectTags",
                                                           $$v
                                                         )
                                                       },
                                                       expression:
-                                                        "singleRestaurantData.restaurantCuisineObjectTags"
+                                                        "restaurantCreateData.restaurantCuisineObjectTags"
                                                     }
                                                   })
                                                 ],
@@ -11843,10 +12291,10 @@ var render = function() {
                                                       name: "model",
                                                       rawName: "v-model",
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant.website,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.website"
+                                                        "restaurantCreateData.restaurant.website"
                                                     }
                                                   ],
                                                   staticClass: "form-control",
@@ -11857,7 +12305,7 @@ var render = function() {
                                                   },
                                                   domProps: {
                                                     value:
-                                                      _vm.singleRestaurantData
+                                                      _vm.restaurantCreateData
                                                         .restaurant.website
                                                   },
                                                   on: {
@@ -11868,7 +12316,7 @@ var render = function() {
                                                         return
                                                       }
                                                       _vm.$set(
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant,
                                                         "website",
                                                         $event.target.value
@@ -11922,8 +12370,8 @@ var render = function() {
                             {
                               name: "show",
                               rawName: "v-show",
-                              value: _vm.singleRestaurantData.step == 2,
-                              expression: "singleRestaurantData.step==2"
+                              value: _vm.step == 2,
+                              expression: "step==2"
                             }
                           ],
                           key: 2,
@@ -11959,7 +12407,7 @@ var render = function() {
                                           [
                                             _c("vue-google-autocomplete", {
                                               attrs: {
-                                                id: "restaurantAddress",
+                                                id: "restaurantCreateAddress",
                                                 classname: "form-control",
                                                 placeholder: "Start typing",
                                                 types: "(cities)",
@@ -11995,25 +12443,21 @@ var render = function() {
                                           [
                                             _c("ckeditor", {
                                               staticClass: "form-control",
-                                              attrs: {
-                                                editor:
-                                                  _vm.singleRestaurantData
-                                                    .editor
-                                              },
+                                              attrs: { editor: _vm.editor },
                                               model: {
                                                 value:
-                                                  _vm.singleRestaurantData
+                                                  _vm.restaurantCreateData
                                                     .restaurant.address,
                                                 callback: function($$v) {
                                                   _vm.$set(
-                                                    _vm.singleRestaurantData
+                                                    _vm.restaurantCreateData
                                                       .restaurant,
                                                     "address",
                                                     $$v
                                                   )
                                                 },
                                                 expression:
-                                                  "singleRestaurantData.restaurant.address"
+                                                  "restaurantCreateData.restaurant.address"
                                               }
                                             })
                                           ],
@@ -12039,7 +12483,7 @@ var render = function() {
                                       attrs: { type: "button" },
                                       on: {
                                         click: function($event) {
-                                          _vm.singleRestaurantData.step -= 1
+                                          _vm.step -= 1
                                         }
                                       }
                                     },
@@ -12082,8 +12526,8 @@ var render = function() {
                             {
                               name: "show",
                               rawName: "v-show",
-                              value: _vm.singleRestaurantData.step == 3,
-                              expression: "singleRestaurantData.step==3"
+                              value: _vm.step == 3,
+                              expression: "step==3"
                             }
                           ],
                           key: 3,
@@ -12125,10 +12569,10 @@ var render = function() {
                                                       name: "model",
                                                       rawName: "v-model",
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant.min_order,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.min_order"
+                                                        "restaurantCreateData.restaurant.min_order"
                                                     }
                                                   ],
                                                   staticClass: "form-control",
@@ -12141,7 +12585,7 @@ var render = function() {
                                                   },
                                                   domProps: {
                                                     value:
-                                                      _vm.singleRestaurantData
+                                                      _vm.restaurantCreateData
                                                         .restaurant.min_order
                                                   },
                                                   on: {
@@ -12152,7 +12596,7 @@ var render = function() {
                                                         return
                                                       }
                                                       _vm.$set(
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurant,
                                                         "min_order",
                                                         $event.target.value
@@ -12233,7 +12677,7 @@ var render = function() {
                                                       model: {
                                                         value:
                                                           _vm
-                                                            .singleRestaurantData
+                                                            .restaurantCreateData
                                                             .restaurant
                                                             .is_post_paid,
                                                         callback: function(
@@ -12241,14 +12685,14 @@ var render = function() {
                                                         ) {
                                                           _vm.$set(
                                                             _vm
-                                                              .singleRestaurantData
+                                                              .restaurantCreateData
                                                               .restaurant,
                                                             "is_post_paid",
                                                             $$v
                                                           )
                                                         },
                                                         expression:
-                                                          "singleRestaurantData.restaurant.is_post_paid"
+                                                          "restaurantCreateData.restaurant.is_post_paid"
                                                       }
                                                     })
                                                   ],
@@ -12296,25 +12740,24 @@ var render = function() {
                                                       label: "name",
                                                       "track-by": "id",
                                                       options:
-                                                        _vm.singleRestaurantData
-                                                          .allMenuCategories,
+                                                        _vm.allMenuCategories,
                                                       multiple: true,
                                                       max: 3,
                                                       required: true
                                                     },
                                                     model: {
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurantFoodObjectTags,
                                                       callback: function($$v) {
                                                         _vm.$set(
-                                                          _vm.singleRestaurantData,
+                                                          _vm.restaurantCreateData,
                                                           "restaurantFoodObjectTags",
                                                           $$v
                                                         )
                                                       },
                                                       expression:
-                                                        "singleRestaurantData.restaurantFoodObjectTags"
+                                                        "restaurantCreateData.restaurantFoodObjectTags"
                                                     }
                                                   })
                                                 ],
@@ -12389,26 +12832,24 @@ var render = function() {
                                                         "Available Meals",
                                                       label: "name",
                                                       "track-by": "id",
-                                                      options:
-                                                        _vm.singleRestaurantData
-                                                          .allMeals,
+                                                      options: _vm.allMeals,
                                                       multiple: true,
                                                       max: 6,
                                                       required: true
                                                     },
                                                     model: {
                                                       value:
-                                                        _vm.singleRestaurantData
+                                                        _vm.restaurantCreateData
                                                           .restaurantMealObjectTags,
                                                       callback: function($$v) {
                                                         _vm.$set(
-                                                          _vm.singleRestaurantData,
+                                                          _vm.restaurantCreateData,
                                                           "restaurantMealObjectTags",
                                                           $$v
                                                         )
                                                       },
                                                       expression:
-                                                        "singleRestaurantData.restaurantMealObjectTags"
+                                                        "restaurantCreateData.restaurantMealObjectTags"
                                                     }
                                                   })
                                                 ],
@@ -12472,7 +12913,7 @@ var render = function() {
                                       attrs: { type: "button" },
                                       on: {
                                         click: function($event) {
-                                          _vm.singleRestaurantData.step -= 1
+                                          _vm.step -= 1
                                         }
                                       }
                                     },
@@ -12515,8 +12956,8 @@ var render = function() {
                             {
                               name: "show",
                               rawName: "v-show",
-                              value: _vm.singleRestaurantData.step == 4,
-                              expression: "singleRestaurantData.step==4"
+                              value: _vm.step == 4,
+                              expression: "step==4"
                             }
                           ],
                           key: 4,
@@ -12577,7 +13018,7 @@ var render = function() {
                                                       model: {
                                                         value:
                                                           _vm
-                                                            .singleRestaurantData
+                                                            .restaurantCreateData
                                                             .restaurant
                                                             .has_parking,
                                                         callback: function(
@@ -12585,14 +13026,14 @@ var render = function() {
                                                         ) {
                                                           _vm.$set(
                                                             _vm
-                                                              .singleRestaurantData
+                                                              .restaurantCreateData
                                                               .restaurant,
                                                             "has_parking",
                                                             $$v
                                                           )
                                                         },
                                                         expression:
-                                                          "singleRestaurantData.restaurant.has_parking"
+                                                          "restaurantCreateData.restaurant.has_parking"
                                                       }
                                                     })
                                                   ],
@@ -12645,7 +13086,7 @@ var render = function() {
                                                       model: {
                                                         value:
                                                           _vm
-                                                            .singleRestaurantData
+                                                            .restaurantCreateData
                                                             .restaurant
                                                             .is_self_service,
                                                         callback: function(
@@ -12653,14 +13094,14 @@ var render = function() {
                                                         ) {
                                                           _vm.$set(
                                                             _vm
-                                                              .singleRestaurantData
+                                                              .restaurantCreateData
                                                               .restaurant,
                                                             "is_self_service",
                                                             $$v
                                                           )
                                                         },
                                                         expression:
-                                                          "singleRestaurantData.restaurant.is_self_service"
+                                                          "restaurantCreateData.restaurant.is_self_service"
                                                       }
                                                     })
                                                   ],
@@ -12694,7 +13135,7 @@ var render = function() {
                                           { staticClass: "col-sm-10" },
                                           [
                                             _c("table", {
-                                              attrs: { id: "service_schedule" }
+                                              staticClass: "service_schedule"
                                             })
                                           ]
                                         )
@@ -12720,9 +13161,8 @@ var render = function() {
                                           { staticClass: "col-sm-10" },
                                           [
                                             _c("table", {
-                                              attrs: {
-                                                id: "booking_break_schedule"
-                                              }
+                                              staticClass:
+                                                "booking_break_schedule"
                                             })
                                           ]
                                         )
@@ -12746,7 +13186,7 @@ var render = function() {
                                       attrs: { type: "button" },
                                       on: {
                                         click: function($event) {
-                                          _vm.singleRestaurantData.step -= 1
+                                          _vm.step -= 1
                                         }
                                       }
                                     },
@@ -12767,11 +13207,8 @@ var render = function() {
                                       attrs: { type: "submit" }
                                     },
                                     [
-                                      _vm.editMode
-                                        ? _c("span", [_vm._v("Update")])
-                                        : _c("span", [_vm._v("Create")]),
                                       _vm._v(
-                                        "\n\t\t\t\t\t\t\t                     \t\tRestaurant\n\t\t\t\t\t\t\t\t                  \t"
+                                        "\n\t\t\t\t\t\t\t\t\t                    Create Restaurant\n\t\t\t\t\t\t\t\t                  \t"
                                       )
                                     ]
                                   )
@@ -12811,10 +13248,8 @@ var render = function() {
                                         {
                                           name: "show",
                                           rawName: "v-show",
-                                          value:
-                                            _vm.singleRestaurantData.step >= 1,
-                                          expression:
-                                            "singleRestaurantData.step>=1"
+                                          value: _vm.step >= 1,
+                                          expression: "step>=1"
                                         }
                                       ],
                                       staticClass:
@@ -12834,10 +13269,8 @@ var render = function() {
                                         {
                                           name: "show",
                                           rawName: "v-show",
-                                          value:
-                                            _vm.singleRestaurantData.step >= 2,
-                                          expression:
-                                            "singleRestaurantData.step>=2"
+                                          value: _vm.step >= 2,
+                                          expression: "step>=2"
                                         }
                                       ],
                                       staticClass: "progress-bar bg-info w-25"
@@ -12856,10 +13289,8 @@ var render = function() {
                                         {
                                           name: "show",
                                           rawName: "v-show",
-                                          value:
-                                            _vm.singleRestaurantData.step >= 3,
-                                          expression:
-                                            "singleRestaurantData.step>=3"
+                                          value: _vm.step >= 3,
+                                          expression: "step>=3"
                                         }
                                       ],
                                       staticClass:
@@ -12879,10 +13310,1725 @@ var render = function() {
                                         {
                                           name: "show",
                                           rawName: "v-show",
-                                          value:
-                                            _vm.singleRestaurantData.step >= 4,
-                                          expression:
-                                            "singleRestaurantData.step>=4"
+                                          value: _vm.step >= 4,
+                                          expression: "step>=4"
+                                        }
+                                      ],
+                                      staticClass: "progress-bar bg-danger w-25"
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n\t\t\t\t\t\t\t\t\t\t          \t\tService & Schedule\n\t\t\t\t\t\t\t\t\t\t        \t"
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          ])
+                        ])
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ])
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "modal fade", attrs: { id: "modal-edit-restaurant" } },
+        [
+          _c("div", { staticClass: "modal-dialog modal-xl" }, [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(9),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "form",
+                  {
+                    staticClass: "form-horizontal",
+                    attrs: { autocomplete: "off", novalidate: "" },
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.updateRestaurant()
+                      }
+                    }
+                  },
+                  [
+                    _c("input", {
+                      attrs: { type: "hidden", name: "_token" },
+                      domProps: { value: _vm.csrf }
+                    }),
+                    _vm._v(" "),
+                    _c("transition-group", { attrs: { name: "fade" } }, [
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.loading && _vm.step == 1,
+                              expression: "!loading && step==1"
+                            }
+                          ],
+                          key: 1,
+                          staticClass: "row"
+                        },
+                        [
+                          _c("div", { staticClass: "col-sm-12" }, [
+                            _c("h2", { staticClass: "text-center mb-4 lead" }, [
+                              _vm._v("Restaurant Profile")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-sm-12" }, [
+                                _c("div", { staticClass: "card" }, [
+                                  _c("div", { staticClass: "card-body" }, [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "d-flex flex-wrap align-content-center form-group row"
+                                      },
+                                      [
+                                        _c("div", { staticClass: "col-sm-8" }, [
+                                          _c(
+                                            "div",
+                                            { staticClass: "text-center" },
+                                            [
+                                              _c("img", {
+                                                staticClass: "img-fluid",
+                                                staticStyle: {
+                                                  "max-height": "150px"
+                                                },
+                                                attrs: {
+                                                  src: this.restaurantDetailData
+                                                    .restaurant.banner_preview,
+                                                  alt: "Restaurant Banner"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass:
+                                              "col-sm-4  align-self-center"
+                                          },
+                                          [
+                                            _c(
+                                              "div",
+                                              { staticClass: "input-group" },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass: "custom-file"
+                                                  },
+                                                  [
+                                                    _c("input", {
+                                                      staticClass:
+                                                        "custom-file-input",
+                                                      attrs: {
+                                                        type: "file",
+                                                        accept: "image/*"
+                                                      },
+                                                      on: {
+                                                        change:
+                                                          _vm.onBannerChange
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "label",
+                                                      {
+                                                        staticClass:
+                                                          "custom-file-label",
+                                                        attrs: {
+                                                          for: "customFile"
+                                                        }
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          "\n\t\t\t\t\t\t\t\t\t                                    \t\tChange Banner\n\t\t\t\t\t\t\t\t\t                                    \t"
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("hr"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: { for: "inputName3" }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n\t\t\t\t\t\t\t\t\t                              \t\t\tRestaurant Name\n\t\t\t\t\t\t\t\t\t                              \t\t"
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c("input", {
+                                                  directives: [
+                                                    {
+                                                      name: "model",
+                                                      rawName: "v-model",
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurant.name,
+                                                      expression:
+                                                        "restaurantDetailData.restaurant.name"
+                                                    }
+                                                  ],
+                                                  staticClass: "form-control",
+                                                  attrs: {
+                                                    type: "text",
+                                                    placeholder:
+                                                      "Restaurant Name"
+                                                  },
+                                                  domProps: {
+                                                    value:
+                                                      _vm.restaurantDetailData
+                                                        .restaurant.name
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      if (
+                                                        $event.target.composing
+                                                      ) {
+                                                        return
+                                                      }
+                                                      _vm.$set(
+                                                        _vm.restaurantDetailData
+                                                          .restaurant,
+                                                        "name",
+                                                        $event.target.value
+                                                      )
+                                                    }
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: { for: "inputUserName3" }
+                                              },
+                                              [_vm._v("Username")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c("input", {
+                                                  directives: [
+                                                    {
+                                                      name: "model",
+                                                      rawName: "v-model",
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurant.user_name,
+                                                      expression:
+                                                        "restaurantDetailData.restaurant.user_name"
+                                                    }
+                                                  ],
+                                                  staticClass: "form-control",
+                                                  attrs: {
+                                                    type: "text",
+                                                    placeholder:
+                                                      "No Space or special characters"
+                                                  },
+                                                  domProps: {
+                                                    value:
+                                                      _vm.restaurantDetailData
+                                                        .restaurant.user_name
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      if (
+                                                        $event.target.composing
+                                                      ) {
+                                                        return
+                                                      }
+                                                      _vm.$set(
+                                                        _vm.restaurantDetailData
+                                                          .restaurant,
+                                                        "user_name",
+                                                        $event.target.value
+                                                      )
+                                                    }
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ])
+                                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: { for: "inputEmail3" }
+                                              },
+                                              [_vm._v("Email")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c("input", {
+                                                  directives: [
+                                                    {
+                                                      name: "model",
+                                                      rawName: "v-model",
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurant.email,
+                                                      expression:
+                                                        "restaurantDetailData.restaurant.email"
+                                                    }
+                                                  ],
+                                                  staticClass: "form-control",
+                                                  attrs: {
+                                                    type: "email",
+                                                    placeholder: "Email",
+                                                    required: "true"
+                                                  },
+                                                  domProps: {
+                                                    value:
+                                                      _vm.restaurantDetailData
+                                                        .restaurant.email
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      if (
+                                                        $event.target.composing
+                                                      ) {
+                                                        return
+                                                      }
+                                                      _vm.$set(
+                                                        _vm.restaurantDetailData
+                                                          .restaurant,
+                                                        "email",
+                                                        $event.target.value
+                                                      )
+                                                    }
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: { for: "inputMobile3" }
+                                              },
+                                              [_vm._v("Mobile")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c("input", {
+                                                  directives: [
+                                                    {
+                                                      name: "model",
+                                                      rawName: "v-model",
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurant.mobile,
+                                                      expression:
+                                                        "restaurantDetailData.restaurant.mobile"
+                                                    }
+                                                  ],
+                                                  staticClass: "form-control",
+                                                  attrs: {
+                                                    type: "tel",
+                                                    placeholder: "Mobile",
+                                                    required: "true"
+                                                  },
+                                                  domProps: {
+                                                    value:
+                                                      _vm.restaurantDetailData
+                                                        .restaurant.mobile
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      if (
+                                                        $event.target.composing
+                                                      ) {
+                                                        return
+                                                      }
+                                                      _vm.$set(
+                                                        _vm.restaurantDetailData
+                                                          .restaurant,
+                                                        "mobile",
+                                                        $event.target.value
+                                                      )
+                                                    }
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ])
+                                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: { for: "inputPassword3" }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n\t\t\t\t\t\t\t\t\t                              \t\t\tPassword\n\t\t\t\t\t\t\t\t\t                              \t\t"
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c("input", {
+                                                  directives: [
+                                                    {
+                                                      name: "model",
+                                                      rawName: "v-model",
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurant.password,
+                                                      expression:
+                                                        "restaurantDetailData.restaurant.password"
+                                                    }
+                                                  ],
+                                                  staticClass: "form-control",
+                                                  attrs: {
+                                                    type: "password",
+                                                    placeholder:
+                                                      "Login Password"
+                                                  },
+                                                  domProps: {
+                                                    value:
+                                                      _vm.restaurantDetailData
+                                                        .restaurant.password
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      if (
+                                                        $event.target.composing
+                                                      ) {
+                                                        return
+                                                      }
+                                                      _vm.$set(
+                                                        _vm.restaurantDetailData
+                                                          .restaurant,
+                                                        "password",
+                                                        $event.target.value
+                                                      )
+                                                    }
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: {
+                                                  for: "inputConfirmPassword3"
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n\t\t\t\t\t\t\t\t\t                              \t\t\tRepeat Password\n\t\t\t\t\t\t\t\t\t                              \t\t"
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c("input", {
+                                                  directives: [
+                                                    {
+                                                      name: "model",
+                                                      rawName: "v-model",
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurant
+                                                          .password_confirmation,
+                                                      expression:
+                                                        "restaurantDetailData.restaurant.password_confirmation"
+                                                    }
+                                                  ],
+                                                  staticClass: "form-control",
+                                                  attrs: {
+                                                    type: "password",
+                                                    placeholder:
+                                                      "Repeat Password"
+                                                  },
+                                                  domProps: {
+                                                    value:
+                                                      _vm.restaurantDetailData
+                                                        .restaurant
+                                                        .password_confirmation
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      if (
+                                                        $event.target.composing
+                                                      ) {
+                                                        return
+                                                      }
+                                                      _vm.$set(
+                                                        _vm.restaurantDetailData
+                                                          .restaurant,
+                                                        "password_confirmation",
+                                                        $event.target.value
+                                                      )
+                                                    }
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ])
+                                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "row d-flex align-items-center"
+                                            },
+                                            [
+                                              _c(
+                                                "label",
+                                                {
+                                                  staticClass:
+                                                    "col-sm-4 col-form-label text-right",
+                                                  attrs: {
+                                                    for: "inputCusineTags3"
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n\t\t\t\t\t\t\t\t\t                              \t\t\tRestaurant Type\n\t\t\t\t\t\t\t\t\t                              \t\t"
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                { staticClass: "col-sm-6" },
+                                                [
+                                                  _c("multiselect", {
+                                                    attrs: {
+                                                      placeholder:
+                                                        "Restaurant Type",
+                                                      label: "name",
+                                                      "track-by": "id",
+                                                      options:
+                                                        _vm.allRestaurantCuisines,
+                                                      multiple: true,
+                                                      max: 3,
+                                                      required: true
+                                                    },
+                                                    model: {
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurantCuisineObjectTags,
+                                                      callback: function($$v) {
+                                                        _vm.$set(
+                                                          _vm.restaurantDetailData,
+                                                          "restaurantCuisineObjectTags",
+                                                          $$v
+                                                        )
+                                                      },
+                                                      expression:
+                                                        "restaurantDetailData.restaurantCuisineObjectTags"
+                                                    }
+                                                  })
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "col-sm-2 text-center"
+                                                },
+                                                [
+                                                  _c(
+                                                    "button",
+                                                    {
+                                                      staticClass:
+                                                        "btn btn-secondary btn-sm p-0",
+                                                      attrs: {
+                                                        type: "button",
+                                                        "data-toggle": "modal",
+                                                        "data-target":
+                                                          "#modal-create-restaurant-category"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "fa fa-plus-circle",
+                                                        attrs: {
+                                                          "aria-hidden": "true"
+                                                        }
+                                                      }),
+                                                      _vm._v(
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t                                    Cuisine\n\t\t\t\t\t\t\t\t\t\t                                \t"
+                                                      )
+                                                    ]
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 text-right"
+                                              },
+                                              [
+                                                _c(
+                                                  "label",
+                                                  {
+                                                    staticClass:
+                                                      "col-form-label",
+                                                    attrs: {
+                                                      for: "inputWebsite3"
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t                                  Website\n\t\t\t\t\t\t\t\t\t\t                                "
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(
+                                                  "\n\t\t\t\t\t\t\t\t\t\t                                (if any)\n\t\t\t\t\t\t\t\t\t\t                              "
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c("input", {
+                                                  directives: [
+                                                    {
+                                                      name: "model",
+                                                      rawName: "v-model",
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurant.website,
+                                                      expression:
+                                                        "restaurantDetailData.restaurant.website"
+                                                    }
+                                                  ],
+                                                  staticClass: "form-control",
+                                                  attrs: {
+                                                    type: "url",
+                                                    placeholder:
+                                                      "Restaurant Website"
+                                                  },
+                                                  domProps: {
+                                                    value:
+                                                      _vm.restaurantDetailData
+                                                        .restaurant.website
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      if (
+                                                        $event.target.composing
+                                                      ) {
+                                                        return
+                                                      }
+                                                      _vm.$set(
+                                                        _vm.restaurantDetailData
+                                                          .restaurant,
+                                                        "website",
+                                                        $event.target.value
+                                                      )
+                                                    }
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ])
+                                        ])
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "col-sm-12 text-right" },
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-outline-secondary btn-sm rounded-pill",
+                                      attrs: { type: "button" },
+                                      on: { click: _vm.nextPage }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass:
+                                          "fa fa-2x fa-angle-double-right",
+                                        attrs: { "aria-hidden": "true" }
+                                      })
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.step == 2,
+                              expression: "step==2"
+                            }
+                          ],
+                          key: 2,
+                          staticClass: "row"
+                        },
+                        [
+                          _c("div", { staticClass: "col-sm-12" }, [
+                            _c("h2", { staticClass: "text-center mb-4 lead" }, [
+                              _vm._v("Restaurant Address")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-sm-12" }, [
+                                _c("div", { staticClass: "card" }, [
+                                  _c("div", { staticClass: "card-body" }, [
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c(
+                                          "label",
+                                          {
+                                            staticClass:
+                                              "col-sm-4 col-form-label text-right",
+                                            attrs: { for: "inputLocation3" }
+                                          },
+                                          [_vm._v("Restaurant Location")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "col-sm-8" },
+                                          [
+                                            _c("vue-google-autocomplete", {
+                                              attrs: {
+                                                id: "restaurantEditAddress",
+                                                classname: "form-control",
+                                                placeholder: "Start typing",
+                                                types: "(cities)",
+                                                country: "bd"
+                                              },
+                                              on: {
+                                                placechanged: _vm.getAddressData
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c(
+                                          "label",
+                                          {
+                                            staticClass:
+                                              "col-sm-4 col-form-label text-right",
+                                            attrs: { for: "inputAddress3" }
+                                          },
+                                          [_vm._v("Detail Address")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "col-sm-8" },
+                                          [
+                                            _c("ckeditor", {
+                                              staticClass: "form-control",
+                                              attrs: { editor: _vm.editor },
+                                              model: {
+                                                value:
+                                                  _vm.restaurantDetailData
+                                                    .restaurant.address,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.restaurantDetailData
+                                                      .restaurant,
+                                                    "address",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression:
+                                                  "restaurantDetailData.restaurant.address"
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "col-sm-12 text-right" },
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-outline-secondary btn-sm rounded-pill",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.step -= 1
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass:
+                                          "fa fa-2x fa-angle-double-left",
+                                        attrs: { "aria-hidden": "true" }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-outline-secondary btn-sm rounded-pill",
+                                      attrs: { type: "button" },
+                                      on: { click: _vm.nextPage }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass:
+                                          "fa fa-2x fa-angle-double-right",
+                                        attrs: { "aria-hidden": "true" }
+                                      })
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.step == 3,
+                              expression: "step==3"
+                            }
+                          ],
+                          key: 3,
+                          staticClass: "row"
+                        },
+                        [
+                          _c("div", { staticClass: "col-sm-12" }, [
+                            _c("h2", { staticClass: "text-center mb-4 lead" }, [
+                              _vm._v("Restaurant Menu Profile")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-sm-12" }, [
+                                _c("div", { staticClass: "card" }, [
+                                  _c("div", { staticClass: "card-body" }, [
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: { for: "inputMinOrder3" }
+                                              },
+                                              [_vm._v("Min. Order")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c("input", {
+                                                  directives: [
+                                                    {
+                                                      name: "model",
+                                                      rawName: "v-model",
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurant.min_order,
+                                                      expression:
+                                                        "restaurantDetailData.restaurant.min_order"
+                                                    }
+                                                  ],
+                                                  staticClass: "form-control",
+                                                  attrs: {
+                                                    type: "number",
+                                                    placeholder:
+                                                      "Minimum Currency",
+                                                    min: "100",
+                                                    step: "1"
+                                                  },
+                                                  domProps: {
+                                                    value:
+                                                      _vm.restaurantDetailData
+                                                        .restaurant.min_order
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      if (
+                                                        $event.target.composing
+                                                      ) {
+                                                        return
+                                                      }
+                                                      _vm.$set(
+                                                        _vm.restaurantDetailData
+                                                          .restaurant,
+                                                        "min_order",
+                                                        $event.target.value
+                                                      )
+                                                    }
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 text-right"
+                                              },
+                                              [
+                                                _c(
+                                                  "label",
+                                                  {
+                                                    staticClass:
+                                                      "col-form-label pb-0",
+                                                    attrs: {
+                                                      for: "inputPayment3"
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t                                \t\tPayment\n\t\t\t\t\t\t\t\t\t\t                                \t"
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "text-right p-0 m-0"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t                                \t\t(physical orders)\n\t\t\t\t\t\t\t\t\t\t                                \t"
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass: "checkbox mt-2"
+                                                  },
+                                                  [
+                                                    _c("toggle-button", {
+                                                      attrs: {
+                                                        sync: true,
+                                                        value: "true",
+                                                        width: 120,
+                                                        "font-size": 15,
+                                                        color: {
+                                                          checked: "green",
+                                                          unchecked: "#17a2b8"
+                                                        },
+                                                        labels: {
+                                                          checked: "Post-paid",
+                                                          unchecked: "Pre-paid"
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm
+                                                            .restaurantDetailData
+                                                            .restaurant
+                                                            .is_post_paid,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm
+                                                              .restaurantDetailData
+                                                              .restaurant,
+                                                            "is_post_paid",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "restaurantDetailData.restaurant.is_post_paid"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "row d-flex align-items-center"
+                                            },
+                                            [
+                                              _c(
+                                                "label",
+                                                {
+                                                  staticClass:
+                                                    "col-sm-4 col-form-label text-right",
+                                                  attrs: {
+                                                    for: "inputFoodTags3"
+                                                  }
+                                                },
+                                                [_vm._v("Best Food Items")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                { staticClass: "col-sm-6" },
+                                                [
+                                                  _c("multiselect", {
+                                                    attrs: {
+                                                      placeholder:
+                                                        "Select three main foods",
+                                                      label: "name",
+                                                      "track-by": "id",
+                                                      options:
+                                                        _vm.allMenuCategories,
+                                                      multiple: true,
+                                                      max: 3,
+                                                      required: true
+                                                    },
+                                                    model: {
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurantFoodObjectTags,
+                                                      callback: function($$v) {
+                                                        _vm.$set(
+                                                          _vm.restaurantDetailData,
+                                                          "restaurantFoodObjectTags",
+                                                          $$v
+                                                        )
+                                                      },
+                                                      expression:
+                                                        "restaurantDetailData.restaurantFoodObjectTags"
+                                                    }
+                                                  })
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "col-sm-2 text-center"
+                                                },
+                                                [
+                                                  _c(
+                                                    "button",
+                                                    {
+                                                      staticClass:
+                                                        "btn btn-secondary btn-sm p-0",
+                                                      attrs: {
+                                                        type: "button",
+                                                        "data-toggle": "modal",
+                                                        "data-target":
+                                                          "#modal-create-menu-category"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "fa fa-plus-circle",
+                                                        attrs: {
+                                                          "aria-hidden": "true"
+                                                        }
+                                                      }),
+                                                      _vm._v(
+                                                        "\n\t\t\t\t\t\t\t\t\t\t                                    \tFood\n\t\t\t\t\t\t\t\t\t\t                                \t"
+                                                      )
+                                                    ]
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "row d-flex align-items-center"
+                                            },
+                                            [
+                                              _c(
+                                                "label",
+                                                {
+                                                  staticClass:
+                                                    "col-sm-4 col-form-label text-right",
+                                                  attrs: {
+                                                    for: "inputMealTags3"
+                                                  }
+                                                },
+                                                [_vm._v("Available Meals")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                { staticClass: "col-sm-6" },
+                                                [
+                                                  _c("multiselect", {
+                                                    attrs: {
+                                                      placeholder:
+                                                        "Available Meals",
+                                                      label: "name",
+                                                      "track-by": "id",
+                                                      options: _vm.allMeals,
+                                                      multiple: true,
+                                                      max: 6,
+                                                      required: true
+                                                    },
+                                                    model: {
+                                                      value:
+                                                        _vm.restaurantDetailData
+                                                          .restaurantMealObjectTags,
+                                                      callback: function($$v) {
+                                                        _vm.$set(
+                                                          _vm.restaurantDetailData,
+                                                          "restaurantMealObjectTags",
+                                                          $$v
+                                                        )
+                                                      },
+                                                      expression:
+                                                        "restaurantDetailData.restaurantMealObjectTags"
+                                                    }
+                                                  })
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "col-sm-2 text-center"
+                                                },
+                                                [
+                                                  _c(
+                                                    "button",
+                                                    {
+                                                      staticClass:
+                                                        "btn btn-secondary btn-sm p-0",
+                                                      attrs: {
+                                                        type: "button",
+                                                        "data-toggle": "modal",
+                                                        "data-target":
+                                                          "#modal-create-meal-tag"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "fa fa-plus-circle",
+                                                        attrs: {
+                                                          "aria-hidden": "true"
+                                                        }
+                                                      }),
+                                                      _vm._v(
+                                                        "\n\t\t\t\t\t\t\t\t\t\t                                    \tMeal\n\t\t\t\t\t\t\t\t\t\t                                \t"
+                                                      )
+                                                    ]
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        ])
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "col-sm-12 text-right" },
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-outline-secondary btn-sm rounded-pill",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.step -= 1
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass:
+                                          "fa fa-2x fa-angle-double-left",
+                                        attrs: { "aria-hidden": "true" }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-outline-secondary btn-sm rounded-pill",
+                                      attrs: { type: "button" },
+                                      on: { click: _vm.nextPage }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass:
+                                          "fa fa-2x fa-angle-double-right",
+                                        attrs: { "aria-hidden": "true" }
+                                      })
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.step == 4,
+                              expression: "step==4"
+                            }
+                          ],
+                          key: 4,
+                          staticClass: "row"
+                        },
+                        [
+                          _c("div", { staticClass: "col-sm-12" }, [
+                            _c("h2", { staticClass: "text-center mb-4 lead" }, [
+                              _vm._v("Service & Schedule")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-sm-12" }, [
+                                _c("div", { staticClass: "card" }, [
+                                  _c("div", { staticClass: "card-body" }, [
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: { for: "inputParking3" }
+                                              },
+                                              [_vm._v("Parking Facility")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass: "checkbox mt-2"
+                                                  },
+                                                  [
+                                                    _c("toggle-button", {
+                                                      attrs: {
+                                                        value: "true",
+                                                        sync: true,
+                                                        width: 120,
+                                                        "font-size": 15,
+                                                        color: {
+                                                          checked: "green",
+                                                          unchecked: "#FF0000"
+                                                        },
+                                                        labels: {
+                                                          checked: "Available",
+                                                          unchecked:
+                                                            "No Parking"
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm
+                                                            .restaurantDetailData
+                                                            .restaurant
+                                                            .has_parking,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm
+                                                              .restaurantDetailData
+                                                              .restaurant,
+                                                            "has_parking",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "restaurantDetailData.restaurant.has_parking"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col-6" }, [
+                                          _c("div", { staticClass: "row" }, [
+                                            _c(
+                                              "label",
+                                              {
+                                                staticClass:
+                                                  "col-sm-4 col-form-label text-right",
+                                                attrs: {
+                                                  for: "inputSelfService3"
+                                                }
+                                              },
+                                              [_vm._v("Self Service")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              { staticClass: "col-sm-8" },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass: "checkbox mt-2"
+                                                  },
+                                                  [
+                                                    _c("toggle-button", {
+                                                      attrs: {
+                                                        value: "true",
+                                                        sync: true,
+                                                        width: 120,
+                                                        "font-size": 15,
+                                                        color: {
+                                                          checked: "green",
+                                                          unchecked: "#17a2b8"
+                                                        },
+                                                        labels: {
+                                                          checked: "Yes",
+                                                          unchecked: "No"
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm
+                                                            .restaurantDetailData
+                                                            .restaurant
+                                                            .is_self_service,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm
+                                                              .restaurantDetailData
+                                                              .restaurant,
+                                                            "is_self_service",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "restaurantDetailData.restaurant.is_self_service"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row mb-4" },
+                                      [
+                                        _c(
+                                          "label",
+                                          {
+                                            staticClass:
+                                              "col-sm-2 col-form-label text-right",
+                                            attrs: {
+                                              for: "inputServiceSchedule3"
+                                            }
+                                          },
+                                          [_vm._v("Service Schedule")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "col-sm-10" },
+                                          [
+                                            _c("table", {
+                                              staticClass: "service_schedule"
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group row" },
+                                      [
+                                        _c(
+                                          "label",
+                                          {
+                                            staticClass:
+                                              "col-sm-2 col-form-label text-right",
+                                            attrs: { for: "inputBookingBreak3" }
+                                          },
+                                          [_vm._v("Booking Breaks")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "col-sm-10" },
+                                          [
+                                            _c("table", {
+                                              staticClass:
+                                                "booking_break_schedule"
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "col-sm-12 text-right" },
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-outline-secondary btn-sm rounded-pill",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.step -= 1
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass:
+                                          "fa fa-2x fa-angle-double-left",
+                                        attrs: { "aria-hidden": "true" }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-danger rounded-pill",
+                                      attrs: { type: "submit" }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n\t\t\t\t\t\t\t\t\t                    Update Restaurant\n\t\t\t\t\t\t\t\t                  \t"
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ])
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.loading,
+                            expression: "!loading"
+                          }
+                        ],
+                        staticClass: "row"
+                      },
+                      [
+                        _c("div", { staticClass: "col-sm-12" }, [
+                          _c("div", { staticClass: "card" }, [
+                            _c(
+                              "div",
+                              { staticClass: "card-header text-center" },
+                              [
+                                _c("div", { staticClass: "progress" }, [
+                                  _c(
+                                    "div",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.step >= 1,
+                                          expression: "step>=1"
+                                        }
+                                      ],
+                                      staticClass:
+                                        "progress-bar bg-success w-25"
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n\t\t\t\t\t\t\t\t\t\t          \t\tProfile\n\t\t\t\t\t\t\t\t\t\t        \t"
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.step >= 2,
+                                          expression: "step>=2"
+                                        }
+                                      ],
+                                      staticClass: "progress-bar bg-info w-25"
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n\t\t\t\t\t\t\t\t\t\t          \t\tAddress\n\t\t\t\t\t\t\t\t\t\t        \t"
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.step >= 3,
+                                          expression: "step>=3"
+                                        }
+                                      ],
+                                      staticClass:
+                                        "progress-bar bg-warning w-25"
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n\t\t\t\t\t\t\t\t\t\t          \t\tMenu Profile\n\t\t\t\t\t\t\t\t\t\t        \t"
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.step >= 4,
+                                          expression: "step>=4"
                                         }
                                       ],
                                       staticClass: "progress-bar bg-danger w-25"
@@ -12918,7 +15064,7 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-secondary" }, [
-              _vm._m(8),
+              _vm._m(10),
               _vm._v(" "),
               _c(
                 "form",
@@ -12960,11 +15106,8 @@ var render = function() {
                                     {
                                       name: "model",
                                       rawName: "v-model",
-                                      value:
-                                        _vm.singleRestaurantData
-                                          .newRestaurantCuisine.name,
-                                      expression:
-                                        "singleRestaurantData.newRestaurantCuisine.name"
+                                      value: _vm.newRestaurantCuisine.name,
+                                      expression: "newRestaurantCuisine.name"
                                     }
                                   ],
                                   staticClass: "form-control",
@@ -12974,9 +15117,7 @@ var render = function() {
                                     required: "true"
                                   },
                                   domProps: {
-                                    value:
-                                      _vm.singleRestaurantData
-                                        .newRestaurantCuisine.name
+                                    value: _vm.newRestaurantCuisine.name
                                   },
                                   on: {
                                     input: function($event) {
@@ -12984,8 +15125,7 @@ var render = function() {
                                         return
                                       }
                                       _vm.$set(
-                                        _vm.singleRestaurantData
-                                          .newRestaurantCuisine,
+                                        _vm.newRestaurantCuisine,
                                         "name",
                                         $event.target.value
                                       )
@@ -13000,7 +15140,7 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(9)
+                  _vm._m(11)
                 ]
               )
             ])
@@ -13014,7 +15154,7 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-secondary" }, [
-              _vm._m(10),
+              _vm._m(12),
               _vm._v(" "),
               _c(
                 "form",
@@ -13062,10 +15202,8 @@ var render = function() {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value:
-                                          _vm.singleRestaurantData.newMeal.name,
-                                        expression:
-                                          "singleRestaurantData.newMeal.name"
+                                        value: _vm.newMeal.name,
+                                        expression: "newMeal.name"
                                       }
                                     ],
                                     staticClass: "form-control",
@@ -13074,17 +15212,14 @@ var render = function() {
                                       placeholder: "Meal Name",
                                       required: "true"
                                     },
-                                    domProps: {
-                                      value:
-                                        _vm.singleRestaurantData.newMeal.name
-                                    },
+                                    domProps: { value: _vm.newMeal.name },
                                     on: {
                                       input: function($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
                                         _vm.$set(
-                                          _vm.singleRestaurantData.newMeal,
+                                          _vm.newMeal,
                                           "name",
                                           $event.target.value
                                         )
@@ -13100,7 +15235,7 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
-                  _vm._m(11)
+                  _vm._m(13)
                 ]
               )
             ])
@@ -13117,7 +15252,7 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-secondary" }, [
-              _vm._m(12),
+              _vm._m(14),
               _vm._v(" "),
               _c(
                 "form",
@@ -13159,11 +15294,8 @@ var render = function() {
                                     {
                                       name: "model",
                                       rawName: "v-model",
-                                      value:
-                                        _vm.singleRestaurantData.newMenuCategory
-                                          .name,
-                                      expression:
-                                        "singleRestaurantData.newMenuCategory.name"
+                                      value: _vm.newMenuCategory.name,
+                                      expression: "newMenuCategory.name"
                                     }
                                   ],
                                   staticClass: "form-control",
@@ -13172,19 +15304,14 @@ var render = function() {
                                     placeholder: "Menu Name",
                                     required: "true"
                                   },
-                                  domProps: {
-                                    value:
-                                      _vm.singleRestaurantData.newMenuCategory
-                                        .name
-                                  },
+                                  domProps: { value: _vm.newMenuCategory.name },
                                   on: {
                                     input: function($event) {
                                       if ($event.target.composing) {
                                         return
                                       }
                                       _vm.$set(
-                                        _vm.singleRestaurantData
-                                          .newMenuCategory,
+                                        _vm.newMenuCategory,
                                         "name",
                                         $event.target.value
                                       )
@@ -13199,7 +15326,7 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(13)
+                  _vm._m(15)
                 ]
               )
             ])
@@ -13216,7 +15343,7 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-danger" }, [
-              _vm._m(14),
+              _vm._m(16),
               _vm._v(" "),
               _c(
                 "form",
@@ -13241,10 +15368,10 @@ var render = function() {
                       _vm._v("Are you sure want to delete restaurant ?? ")
                     ]),
                     _vm._v(" "),
-                    _vm._m(15)
+                    _vm._m(17)
                   ]),
                   _vm._v(" "),
-                  _vm._m(16)
+                  _vm._m(18)
                 ]
               )
             ])
@@ -13261,7 +15388,7 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-danger" }, [
-              _vm._m(17),
+              _vm._m(19),
               _vm._v(" "),
               _c(
                 "form",
@@ -13287,7 +15414,7 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(18)
+                  _vm._m(20)
                 ]
               )
             ])
@@ -13308,6 +15435,37 @@ var staticRenderFns = [
           _c("i", { staticClass: "fas fa-3x fa-sync-alt fa-spin" })
         ])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h2", { staticClass: "lead float-left mt-1" }, [
+        _vm._v("Restaurant List")
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary btn-sm float-right mb-2",
+          attrs: {
+            type: "button",
+            "data-toggle": "modal",
+            "data-target": "#modal-create-restaurant"
+          }
+        },
+        [
+          _c("i", {
+            staticClass: "fa fa-plus-circle",
+            attrs: { "aria-hidden": "true" }
+          }),
+          _vm._v(
+            "\n                                Add Restaurant\n\t\t\t\t\t      \t"
+          )
+        ]
+      )
     ])
   },
   function() {
@@ -13461,18 +15619,43 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "close",
-        attrs: {
-          type: "button",
-          "data-dismiss": "modal",
-          "aria-label": "Close"
-        }
-      },
-      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Create Restaurant")]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Edit Restaurant")]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
   },
   function() {
     var _vm = this
