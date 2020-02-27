@@ -49,6 +49,7 @@ Route::name('admin.')->group(function () {
 		    Route::post('/meals', 'RestaurantController@createNewMeal');
 
 		    Route::get('/api/restaurants/{perPage}', 'RestaurantController@showAllRestaurants');
+		    Route::get('/api/restaurants/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurants');
 		    Route::post('/restaurants/{perPage}', 'RestaurantController@createNewRestaurant');
 		    Route::put('/restaurants/{restaurant}/{perPage}', 'RestaurantController@updateRestaurant');
 		    Route::delete('/restaurants/{restaurant}/{perPage}', 'RestaurantController@deleteRestaurant');

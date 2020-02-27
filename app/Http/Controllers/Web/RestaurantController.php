@@ -69,11 +69,23 @@ class RestaurantController extends Controller
             'trashed' => Restaurant::onlyTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
             
          ], 200);
-
-         // return response(
-            // Restaurant::with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->orderBy('id', 'DESC')->paginate(1), 200
-         // );
    	}
+
+      public function searchAllRestaurants($search, $perPage)
+      {
+         $columnsToSearch = ['name', 'user_name', 'mobile', 'email', 'address', 'website', 'min_order'];
+
+         $query = Restaurant::withTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories']);
+
+         foreach($columnsToSearch as $column)
+         {
+            $query->orWhere($column, 'like', "%$search%");
+         }
+
+         return response()->json([
+            'all' => $query->latest()->paginate($perPage),  
+         ], 200);
+      }
 
    	public function createNewRestaurant(Request $request, $perPage)
    	{

@@ -4206,6 +4206,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -4248,7 +4249,6 @@ var singleRestaurantData = {
   restaurantMealObjectTags: [],
   allMeals: [],
   newMeal: {},
-  // csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
   service_schedule: {},
   booking_break_schedule: {}
 };
@@ -4265,7 +4265,7 @@ var restaurantListData = {
   queryFiled: '',
   csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
   // errors : [],
-  perPage: 20,
+  perPage: 10,
   singleRestaurantData: singleRestaurantData
   /*
   columns : 	
@@ -4398,6 +4398,11 @@ var restaurantListData = {
     },
     'singleRestaurantData.booking_break_schedule': function singleRestaurantDataBooking_break_schedule(val) {
       this.singleRestaurantData.restaurant.booking_break_schedule = val;
+    },
+    query: function query(val) {
+      if (val === '') {
+        this.fetchAllRestaurants();
+      } else this.searchData();
     }
   },
   methods: {
@@ -4443,8 +4448,7 @@ var restaurantListData = {
             _this.pagination = response.data.trashed;
           }
 
-          _this.loading = false; // console.log(response);
-          // console.log(this.allRestaurants);
+          _this.loading = false;
         }
       })["catch"](function (error) {
         console.log(error);
@@ -4452,12 +4456,15 @@ var restaurantListData = {
     },
     changeNumberContents: function changeNumberContents() {
       this.pagination.current_page = 1;
-      this.fetchAllRestaurants();
+
+      if (this.query === '') {
+        this.fetchAllRestaurants();
+      } else this.searchData();
     },
     reload: function reload() {
-      this.fetchAllRestaurants(); // this.query = "";
-      // this.queryFiled = "name";
-      // this.$snotify.success("Data Successfully Refresh", "Success");
+      if (this.query === '') {
+        this.fetchAllRestaurants();
+      } else this.searchData();
     },
     showRestaurantCreateModal: function showRestaurantCreateModal() {
       this.editMode = false;
@@ -4469,8 +4476,8 @@ var restaurantListData = {
     storeRestaurant: function storeRestaurant() {
       var _this2 = this;
 
-      this.singleRestaurantData.restaurant.banner_preview = this.singleRestaurantData.restaurantNewBanner;
-      $("#modal-restaurant").modal("hide"); // this.restaurant.lat : null,
+      $("#modal-restaurant").modal("hide");
+      this.singleRestaurantData.restaurant.banner_preview = this.singleRestaurantData.restaurantNewBanner; // this.restaurant.lat : null,
       // this.restaurant.lng : null,
       // this.restaurant.service_schedule : this.restaurant.service_schedule,
       // this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
@@ -4479,8 +4486,9 @@ var restaurantListData = {
         // console.log(response.data);
         if (response.status == 200) {
           _this2.singleRestaurantData.restaurant = {};
-          _this2.singleRestaurantData.restaurantCuisineObjectTags = _this2.singleRestaurantData.restaurantFoodObjectTags = _this2.singleRestaurantData.restaurantMealObjectTags = []; // this.allRestaurants = response.data.data;
-
+          _this2.singleRestaurantData.restaurantCuisineObjectTags = _this2.singleRestaurantData.restaurantFoodObjectTags = _this2.singleRestaurantData.restaurantMealObjectTags = [];
+          _this2.query = '';
+          _this2.currentTab = 'all';
           _this2.allRestaurants = response.data;
           _this2.restaurantsToShow = _this2.allRestaurants.all.data;
           _this2.pagination = response.data.all;
@@ -4504,7 +4512,6 @@ var restaurantListData = {
       $("#modal-show-restaurant").modal("show"); // console.log(restaurant);
     },
     showRestaurantEditModal: function showRestaurantEditModal(restaurant) {
-      // console.log(restaurant);
       this.editMode = true;
       this.singleRestaurantData.step = 1;
       this.singleRestaurantData.restaurant = restaurant;
@@ -4524,19 +4531,20 @@ var restaurantListData = {
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage, this.singleRestaurantData.restaurant).then(function (response) {
         if (response.status == 200) {
-          // this.allRestaurants = response.data.data;
-          _this3.allRestaurants = response.data;
+          if (_this3.query === '') {
+            _this3.allRestaurants = response.data;
 
-          if (_this3.currentTab == 'all') {
-            _this3.restaurantsToShow = _this3.allRestaurants.all.data;
-            _this3.pagination = response.data.all;
-          } else if (_this3.currentTab == 'approved') {
-            _this3.restaurantsToShow = _this3.allRestaurants.approved.data;
-            _this3.pagination = response.data.approved;
-          } else {
-            _this3.restaurantsToShow = _this3.allRestaurants.nonApproved.data;
-            _this3.pagination = response.data.nonApproved;
-          }
+            if (_this3.currentTab == 'all') {
+              _this3.restaurantsToShow = _this3.allRestaurants.all.data;
+              _this3.pagination = response.data.all;
+            } else if (_this3.currentTab == 'approved') {
+              _this3.restaurantsToShow = _this3.allRestaurants.approved.data;
+              _this3.pagination = response.data.approved;
+            } else {
+              _this3.restaurantsToShow = _this3.allRestaurants.nonApproved.data;
+              _this3.pagination = response.data.nonApproved;
+            }
+          } else _this3.searchData();
 
           toastr.success(response.data.success, "Updated");
         }
@@ -4560,18 +4568,20 @@ var restaurantListData = {
       $("#modal-restaurant-delete-confirmation").modal("hide");
       axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"]('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage).then(function (response) {
         if (response.status == 200) {
-          _this4.allRestaurants = response.data;
+          if (_this4.query === '') {
+            _this4.allRestaurants = response.data;
 
-          if (_this4.currentTab == 'all') {
-            _this4.restaurantsToShow = _this4.allRestaurants.all.data;
-            _this4.pagination = response.data.all;
-          } else if (_this4.currentTab == 'approved') {
-            _this4.restaurantsToShow = _this4.allRestaurants.approved.data;
-            _this4.pagination = response.data.approved;
-          } else {
-            _this4.restaurantsToShow = _this4.allRestaurants.nonApproved.data;
-            _this4.pagination = response.data.nonApproved;
-          }
+            if (_this4.currentTab == 'all') {
+              _this4.restaurantsToShow = _this4.allRestaurants.all.data;
+              _this4.pagination = response.data.all;
+            } else if (_this4.currentTab == 'approved') {
+              _this4.restaurantsToShow = _this4.allRestaurants.approved.data;
+              _this4.pagination = response.data.approved;
+            } else {
+              _this4.restaurantsToShow = _this4.allRestaurants.nonApproved.data;
+              _this4.pagination = response.data.nonApproved;
+            }
+          } else _this4.searchData();
 
           toastr.success(response.data.success, "Deleted");
         }
@@ -4595,10 +4605,24 @@ var restaurantListData = {
       $("#modal-restaurant-restore-confirmation").modal("hide");
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage).then(function (response) {
         if (response.status == 200) {
-          // this.allRestaurants = response.data.data;
-          _this5.allRestaurants = response.data;
-          _this5.restaurantsToShow = _this5.allRestaurants.trashed.data;
-          _this5.pagination = response.data.trashed;
+          if (_this5.query === '') {
+            _this5.allRestaurants = response.data;
+
+            if (_this5.currentTab == 'all') {
+              _this5.restaurantsToShow = _this5.allRestaurants.all.data;
+              _this5.pagination = response.data.all;
+            } else if (_this5.currentTab == 'approved') {
+              _this5.restaurantsToShow = _this5.allRestaurants.approved.data;
+              _this5.pagination = response.data.approved;
+            } else if (_this5.currentTab == 'nonApproved') {
+              _this5.restaurantsToShow = _this5.allRestaurants.nonApproved.data;
+              _this5.pagination = response.data.nonApproved;
+            } else {
+              _this5.restaurantsToShow = _this5.allRestaurants.trashed.data;
+              _this5.pagination = response.data.trashed;
+            }
+          } else _this5.searchData();
+
           toastr.success(response.data.success, "Restored");
         }
       })["catch"](function (error) {
@@ -4614,14 +4638,13 @@ var restaurantListData = {
     searchData: function searchData() {
       var _this6 = this;
 
-      // this.$Progress.start();
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/search/customers/" + this.queryFiled + "/" + this.query + "?page=" + this.pagination.current_page).then(function (response) {// this.customers = response.data.data;
-        // this.pagination = response.data.meta;
-        // this.$Progress.finish();
+      this.pagination.current_page = 1;
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/restaurants/search/" + this.query + "/" + this.perPage + "?page=" + this.pagination.current_page).then(function (response) {
+        _this6.allRestaurants = response.data;
+        _this6.restaurantsToShow = _this6.allRestaurants.all.data;
+        _this6.pagination = response.data.all;
       })["catch"](function (e) {
         console.log(e);
-
-        _this6.$Progress.fail();
       });
     },
     getAddressData: function getAddressData(addressData, placeResultData, id) {// console.log(addressData);
@@ -4657,7 +4680,6 @@ var restaurantListData = {
 
       this.loading = true;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/meals').then(function (response) {
-        // console.log('Meal Response : '+response);
         if (response.status == 200) {
           _this9.loading = false;
           _this9.singleRestaurantData.allMeals = response.data; // console.log('All Meals :'+this.allMeals);
@@ -5055,7 +5077,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 exports.i(__webpack_require__(/*! -!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!vue-multiselect/dist/vue-multiselect.min.css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-multiselect/dist/vue-multiselect.min.css"), "");
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t/*\n\t.fade-enter-active {\n  \t\tanimation: drag-out .5s reverse;\n\t}\n\t.fade-leave-active {\n  \t\tanimation: drag-out .5s;\n\t}\n\n\t@keyframes drag-out {\n\t\tfrom {\n\t\t\ttransform: translate(0, 0);\n\t\t}\n  \t\tto {\n  \t\t\ttransform: translate(-100%, 0);\n  \t\t}\n\t}\n\t*/\n.fade-enter-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .9s ease;\n  \t\ttransition: all .9s ease;\n}\n.fade-leave-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  \t\ttransition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n\t/* .slide-fade-leave-active below version 2.1.8 */\n.fade-enter[data-v-754898d3], .fade-leave-to[data-v-754898d3] {\n  \t\t-webkit-transform: translateX(10px);\n  \t\t        transform: translateX(10px);\n  \t\topacity: 0;\n}\n.modal-body[data-v-754898d3] {\n\t\tword-break: break-all;\n}\n", ""]);
+exports.push([module.i, "\n.fade-enter-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .9s ease;\n  \t\ttransition: all .9s ease;\n}\n.fade-leave-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  \t\ttransition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n\t/* .slide-fade-leave-active below version 2.1.8 */\n.fade-enter[data-v-754898d3], .fade-leave-to[data-v-754898d3] {\n  \t\t-webkit-transform: translateX(10px);\n  \t\t        transform: translateX(10px);\n  \t\topacity: 0;\n}\n.modal-body[data-v-754898d3] {\n\t\tword-break: break-all;\n}\n", ""]);
 
 // exports
 
@@ -10328,55 +10350,81 @@ var render = function() {
                 _c("div", { staticClass: "mb-3" }, [
                   _c("div", { staticClass: "row" }, [
                     _c("div", { staticClass: "col-sm-6" }, [
-                      _c("ul", { staticClass: "nav nav-tabs" }, [
-                        _c("li", { staticClass: "nav-item" }, [
-                          _c(
-                            "a",
+                      _c(
+                        "ul",
+                        {
+                          directives: [
                             {
-                              staticClass: "nav-link active",
-                              attrs: { "data-toggle": "tab" },
-                              on: { click: _vm.showAllRestaurants }
-                            },
-                            [_vm._v("All")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", { staticClass: "nav-item" }, [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "nav-link",
-                              attrs: { "data-toggle": "tab" },
-                              on: { click: _vm.showApprovedRestaurants }
-                            },
-                            [_vm._v("Approved")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", { staticClass: "nav-item" }, [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "nav-link",
-                              attrs: { "data-toggle": "tab" },
-                              on: { click: _vm.showNonApprovedRestaurants }
-                            },
-                            [_vm._v("Non-Approved")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", { staticClass: "nav-item" }, [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "nav-link",
-                              attrs: { "data-toggle": "tab" },
-                              on: { click: _vm.showTrashedRestaurants }
-                            },
-                            [_vm._v("Trashed")]
-                          )
-                        ])
-                      ])
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.query === "",
+                              expression: "query === ''"
+                            }
+                          ],
+                          staticClass: "nav nav-tabs"
+                        },
+                        [
+                          _c("li", { staticClass: "nav-item" }, [
+                            _c(
+                              "a",
+                              {
+                                class: [
+                                  { active: _vm.currentTab == "all" },
+                                  "nav-link"
+                                ],
+                                attrs: { "data-toggle": "tab" },
+                                on: { click: _vm.showAllRestaurants }
+                              },
+                              [_vm._v("All")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("li", { staticClass: "nav-item" }, [
+                            _c(
+                              "a",
+                              {
+                                class: [
+                                  { active: _vm.currentTab == "approved" },
+                                  "nav-link"
+                                ],
+                                attrs: { "data-toggle": "tab" },
+                                on: { click: _vm.showApprovedRestaurants }
+                              },
+                              [_vm._v("Approved")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("li", { staticClass: "nav-item" }, [
+                            _c(
+                              "a",
+                              {
+                                class: [
+                                  { active: _vm.currentTab == "nonApproved" },
+                                  "nav-link"
+                                ],
+                                attrs: { "data-toggle": "tab" },
+                                on: { click: _vm.showNonApprovedRestaurants }
+                              },
+                              [_vm._v("Non-Approved")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("li", { staticClass: "nav-item" }, [
+                            _c(
+                              "a",
+                              {
+                                class: [
+                                  { active: _vm.currentTab == "trashed" },
+                                  "nav-link"
+                                ],
+                                attrs: { "data-toggle": "tab" },
+                                on: { click: _vm.showTrashedRestaurants }
+                              },
+                              [_vm._v("Trashed")]
+                            )
+                          ])
+                        ]
+                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-sm-6 float-right" }, [
@@ -10541,11 +10589,7 @@ var render = function() {
                                         }
                                       }
                                     },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fas fa-trash-restore"
-                                      })
-                                    ]
+                                    [_c("i", { staticClass: "fas fa-undo" })]
                                   )
                                 ])
                               ]
@@ -10615,11 +10659,13 @@ var render = function() {
                           }
                         },
                         [
+                          _c("option", [_vm._v("10")]),
+                          _vm._v(" "),
                           _c("option", [_vm._v("20")]),
                           _vm._v(" "),
-                          _c("option", [_vm._v("50")]),
+                          _c("option", [_vm._v("30")]),
                           _vm._v(" "),
-                          _c("option", [_vm._v("100")])
+                          _c("option", [_vm._v("50")])
                         ]
                       )
                     ]),
@@ -10630,7 +10676,13 @@ var render = function() {
                         {
                           staticClass: "btn btn-primary btn-sm",
                           attrs: { type: "button" },
-                          on: { click: _vm.reload }
+                          on: {
+                            click: function($event) {
+                              _vm.query === ""
+                                ? _vm.fetchAllRestaurants()
+                                : _vm.reload()
+                            }
+                          }
                         },
                         [
                           _vm._v(

@@ -56,24 +56,24 @@
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-sm-6">
-									  	<ul class="nav nav-tabs">
+									  	<ul class="nav nav-tabs" v-show="query === ''">
 											<li class="nav-item">
-												<a class="nav-link active" data-toggle="tab" @click="showAllRestaurants">All</a>
+												<a :class="[{ 'active': currentTab=='all' }, 'nav-link']" data-toggle="tab" @click="showAllRestaurants">All</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link" data-toggle="tab" @click="showApprovedRestaurants">Approved</a>
+												<a :class="[{ 'active': currentTab=='approved' }, 'nav-link']" data-toggle="tab" @click="showApprovedRestaurants">Approved</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link" data-toggle="tab" @click="showNonApprovedRestaurants">Non-Approved</a>
+												<a :class="[{ 'active': currentTab=='nonApproved' }, 'nav-link']" data-toggle="tab" @click="showNonApprovedRestaurants">Non-Approved</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link" data-toggle="tab" @click="showTrashedRestaurants">Trashed</a>
+												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedRestaurants">Trashed</a>
 											</li>
 										</ul>
 									</div>
 
 									<div class="col-sm-6 float-right">
-									  	<input v-model="query" type="text" class="form-control" placeholder="Search">
+									  	<input type="text" v-model="query" class="form-control" placeholder="Search">
 									</div>
 								</div>
 							</div>
@@ -120,7 +120,7 @@
 								        			@click="showRestaurantRestoreModal(restaurant)"
 								        			class="btn btn-danger btn-sm"
 							      				>
-								        			<i class="fas fa-trash-restore"></i>
+								        			<i class="fas fa-undo"></i>
 								      			</button>
 								    		</td>
 									  	</tr>
@@ -135,13 +135,14 @@
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
 									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+										<option>10</option>
 										<option>20</option>
+										<option>30</option>
 										<option>50</option>
-										<option>100</option>
 									</select>
 								</div>
 								<div class="col-sm-2">
-									<button type="button" class="btn btn-primary btn-sm" @click="reload">
+									<button type="button" class="btn btn-primary btn-sm" @click="query === '' ? fetchAllRestaurants() : reload()">
 										Reload
 										<i class="fas fa-sync"></i>
 									</button>
@@ -1080,7 +1081,6 @@
     	allMeals : [],
     	newMeal : {},
 
-        // csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     	service_schedule : {},
 		booking_break_schedule : {},
     };
@@ -1099,7 +1099,7 @@
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
 
     	// errors : [],
-    	perPage : 20,
+    	perPage : 10,
         singleRestaurantData : singleRestaurantData,
 
     	/*
@@ -1240,6 +1240,13 @@
 			'singleRestaurantData.booking_break_schedule' : function(val){
 				this.singleRestaurantData.restaurant.booking_break_schedule = val;
 			},
+			query : function(val){
+				if (val==='') {
+					this.fetchAllRestaurants();
+				}
+				else 
+					this.searchData();
+			}
 		},
 
 		methods : {
@@ -1281,16 +1288,13 @@
 							}else if (this.currentTab=='nonApproved') {
 								this.restaurantsToShow = this.allRestaurants.nonApproved.data;
 								this.pagination = response.data.nonApproved;
-							}
-							else {
+							}else {
 								this.restaurantsToShow = this.allRestaurants.trashed.data;
 								this.pagination = response.data.trashed;
 							}
 
 							this.loading = false;
 
-							// console.log(response);
-							// console.log(this.allRestaurants);
 						}
 					})
 					.catch(error => {
@@ -1299,13 +1303,16 @@
 			},
 			changeNumberContents() {
 				this.pagination.current_page = 1;
-				this.fetchAllRestaurants();
+				if (this.query === '') {
+					this.fetchAllRestaurants();
+				}else
+					this.searchData();
     		},
 			reload() {
-				this.fetchAllRestaurants();
-				// this.query = "";
-				// this.queryFiled = "name";
-				// this.$snotify.success("Data Successfully Refresh", "Success");
+				if (this.query === '') {
+					this.fetchAllRestaurants();
+				}else
+					this.searchData();
     		},
     		showRestaurantCreateModal() {		
 		    	this.editMode = false;
@@ -1317,9 +1324,10 @@
 				$("#modal-restaurant").modal("show");
 			},
 		    storeRestaurant() {
-				
-				this.singleRestaurantData.restaurant.banner_preview = this.singleRestaurantData.restaurantNewBanner;
 				$("#modal-restaurant").modal("hide");
+
+				this.singleRestaurantData.restaurant.banner_preview = this.singleRestaurantData.restaurantNewBanner;
+				
 				// this.restaurant.lat : null,
 				// this.restaurant.lng : null,
 				// this.restaurant.service_schedule : this.restaurant.service_schedule,
@@ -1333,7 +1341,8 @@
 							this.singleRestaurantData.restaurant = {};
 							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
 
-							// this.allRestaurants = response.data.data;
+							this.query = '';
+							this.currentTab = 'all';
 							this.allRestaurants = response.data;
 							this.restaurantsToShow = this.allRestaurants.all.data;
 							this.pagination = response.data.all;
@@ -1350,7 +1359,6 @@
 					});
 			},
 		    showRestaurantDetailModal(restaurant) {
-		    	
 				this.singleRestaurantData.restaurant = restaurant;
 				this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
 		    	this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
@@ -1360,7 +1368,6 @@
 				// console.log(restaurant);
 			},
 			showRestaurantEditModal(restaurant) {
-				// console.log(restaurant);
 				this.editMode = true;
 				this.singleRestaurantData.step = 1;
 				this.singleRestaurantData.restaurant = restaurant;
@@ -1385,19 +1392,24 @@
 					.put('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage, this.singleRestaurantData.restaurant)
 					.then(response => {
 						if (response.status == 200) {
-							// this.allRestaurants = response.data.data;
-							this.allRestaurants = response.data;
+							
+							if (this.query === '') {
 
-							if (this.currentTab=='all') {
-								this.restaurantsToShow = this.allRestaurants.all.data;
-								this.pagination = response.data.all;
-							}else if (this.currentTab=='approved') {
-								this.restaurantsToShow = this.allRestaurants.approved.data;
-								this.pagination = response.data.approved;
-							}else {
-								this.restaurantsToShow = this.allRestaurants.nonApproved.data;
-								this.pagination = response.data.nonApproved;
+								this.allRestaurants = response.data;
+
+								if (this.currentTab=='all') {
+									this.restaurantsToShow = this.allRestaurants.all.data;
+									this.pagination = response.data.all;
+								}else if (this.currentTab=='approved') {
+									this.restaurantsToShow = this.allRestaurants.approved.data;
+									this.pagination = response.data.approved;
+								}else {
+									this.restaurantsToShow = this.allRestaurants.nonApproved.data;
+									this.pagination = response.data.nonApproved;
+								}
 							}
+							else
+								this.searchData();
 
 							toastr.success(response.data.success, "Updated");
 						}
@@ -1424,19 +1436,24 @@
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.allRestaurants = response.data;
+							if (this.query === '') {
+								
+								this.allRestaurants = response.data;
 
-							if (this.currentTab=='all') {
-								this.restaurantsToShow = this.allRestaurants.all.data;
-								this.pagination = response.data.all;
-							}else if (this.currentTab=='approved') {
-								this.restaurantsToShow = this.allRestaurants.approved.data;
-								this.pagination = response.data.approved;
-							}else {
-								this.restaurantsToShow = this.allRestaurants.nonApproved.data;
-								this.pagination = response.data.nonApproved;
+								if (this.currentTab=='all') {
+									this.restaurantsToShow = this.allRestaurants.all.data;
+									this.pagination = response.data.all;
+								}else if (this.currentTab=='approved') {
+									this.restaurantsToShow = this.allRestaurants.approved.data;
+									this.pagination = response.data.approved;
+								}else {
+									this.restaurantsToShow = this.allRestaurants.nonApproved.data;
+									this.pagination = response.data.nonApproved;
+								}
 							}
-							
+							else
+								this.searchData();
+
 							toastr.success(response.data.success, "Deleted");
 						}
 					})
@@ -1462,10 +1479,28 @@
 					.patch('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
-							// this.allRestaurants = response.data.data;
-							this.allRestaurants = response.data;
-							this.restaurantsToShow = this.allRestaurants.trashed.data;
-							this.pagination = response.data.trashed;
+
+							if (this.query === '') {
+
+								this.allRestaurants = response.data;
+
+								if (this.currentTab=='all') {
+									this.restaurantsToShow = this.allRestaurants.all.data;
+									this.pagination = response.data.all;
+								}else if (this.currentTab=='approved') {
+									this.restaurantsToShow = this.allRestaurants.approved.data;
+									this.pagination = response.data.approved;
+								}else if (this.currentTab=='nonApproved') {
+									this.restaurantsToShow = this.allRestaurants.nonApproved.data;
+									this.pagination = response.data.nonApproved;
+								}else {
+									this.restaurantsToShow = this.allRestaurants.trashed.data;
+									this.pagination = response.data.trashed;
+								}
+							}
+							else
+								this.searchData();
+
 							toastr.success(response.data.success, "Restored");
 						}
 					})
@@ -1480,24 +1515,23 @@
 
 			},
 		    searchData() {
-				// this.$Progress.start();
+
+				this.pagination.current_page = 1;
+				
 				axios
 				.get(
-				  "/api/search/customers/" +
-				    this.queryFiled +
-				    "/" +
-				    this.query +
+					"/api/restaurants/search/"+ this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
 				.then(response => {
-					// this.customers = response.data.data;
-					// this.pagination = response.data.meta;
-					// this.$Progress.finish();
+
+					this.allRestaurants = response.data;
+					this.restaurantsToShow = this.allRestaurants.all.data;
+					this.pagination = response.data.all;
 				})
 				.catch(e => {
 					console.log(e);
-					this.$Progress.fail();
 				});
 			},
 			getAddressData(addressData, placeResultData, id) {
@@ -1536,7 +1570,6 @@
 				axios
 					.get('/api/meals')
 					.then(response => {
-						// console.log('Meal Response : '+response);
 						if (response.status == 200) {
 							this.loading = false;
 							this.singleRestaurantData.allMeals = response.data;
@@ -1693,23 +1726,6 @@
 </script>
 
 <style scoped>
-	/*
-	.fade-enter-active {
-  		animation: drag-out .5s reverse;
-	}
-	.fade-leave-active {
-  		animation: drag-out .5s;
-	}
-
-	@keyframes drag-out {
-		from {
-			transform: translate(0, 0);
-		}
-  		to {
-  			transform: translate(-100%, 0);
-  		}
-	}
-	*/
 	@import '~vue-multiselect/dist/vue-multiselect.min.css';
 	
 	.fade-enter-active {
