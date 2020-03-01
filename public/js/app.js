@@ -11349,7 +11349,7 @@ var render = function() {
                                               attrs: {
                                                 sync: true,
                                                 value: "true",
-                                                width: 240,
+                                                width: 130,
                                                 height: 30,
                                                 "font-size": 15,
                                                 color: {
