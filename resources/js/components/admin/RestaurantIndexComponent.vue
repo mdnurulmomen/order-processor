@@ -416,11 +416,11 @@
 									                        </div>
 
 									                        <div class="form-group row">
-									                        	<div class="col-sm-12 text-center">
+									                        	<div class="col-sm-12 text-right">
 
 								                              		<label for="inputAdminApproval" class="col-form-label mr-2">Admin Approval</label>
 								                              		
-						                                  			<toggle-button :sync="true" v-model="singleRestaurantData.restaurant.admin_approval" value="true" :width="240"  :height="30" :font-size="15" :color="{checked: 'green', unchecked: 'red'}" 
+						                                  			<toggle-button :sync="true" v-model="singleRestaurantData.restaurant.admin_approval" value="true" :width="130"  :height="30" :font-size="15" :color="{checked: 'green', unchecked: 'red'}" 
 							                                  		:labels="{checked: 'Approved', unchecked: 'Not-approved' }"/>
 								                              		
 									                        	</div>
