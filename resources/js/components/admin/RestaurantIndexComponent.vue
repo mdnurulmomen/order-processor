@@ -46,7 +46,7 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">Restaurant List</h2>
 
-                        	<button type="button" data-toggle="modal" data-target="#modal-create-restaurant" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button type="button" @click="showRestaurantCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Restaurant
 					      	</button>
@@ -56,17 +56,17 @@
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-sm-6">
-									  	<ul class="nav nav-tabs" v-show="query === ''">
-											<li class="nav-item">
+									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
+											<li class="nav-item flex-fill">
 												<a :class="[{ 'active': currentTab=='all' }, 'nav-link']" data-toggle="tab" @click="showAllRestaurants">All</a>
 											</li>
-											<li class="nav-item">
+											<li class="nav-item flex-fill">
 												<a :class="[{ 'active': currentTab=='approved' }, 'nav-link']" data-toggle="tab" @click="showApprovedRestaurants">Approved</a>
 											</li>
-											<li class="nav-item">
+											<li class="nav-item flex-fill">
 												<a :class="[{ 'active': currentTab=='nonApproved' }, 'nav-link']" data-toggle="tab" @click="showNonApprovedRestaurants">Non-Approved</a>
 											</li>
-											<li class="nav-item">
+											<li class="nav-item flex-fill">
 												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedRestaurants">Trashed</a>
 											</li>
 										</ul>
@@ -142,7 +142,7 @@
 									</select>
 								</div>
 								<div class="col-sm-2">
-									<button type="button" class="btn btn-primary btn-sm" @click="query === '' ? fetchAllRestaurants() : reload()">
+									<button type="button" class="btn btn-primary btn-sm" @click="query === '' ? fetchAllRestaurants() : searchData()">
 										Reload
 										<i class="fas fa-sync"></i>
 									</button>
@@ -162,6 +162,7 @@
 				</div>	
 			</div>
 
+			<!-- modal-show-restaurant -->
 			<div class="modal fade" id="modal-show-restaurant">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
@@ -201,10 +202,10 @@
 									<div class="row">
 					            		<div class="col-sm-4">
 						                	<div class="text-center">
-						                  		<img class="img-fluid " :src="restaurantDetailData.restaurant.banner_preview" alt="Restaurant Banner">
+						                  		<img class="img-fluid " :src="singleRestaurantData.restaurant.banner_preview" alt="Restaurant Banner">
 						                	</div>
 						                	<h3 class="profile-username text-center">
-						                		{{ restaurantDetailData.restaurant.name }}
+						                		{{ singleRestaurantData.restaurant.name }}
 						                	</h3>
 						              	</div>
 					            		<div class="col-sm-8">
@@ -213,7 +214,7 @@
 							              			User-name :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.user_name}}
+								                  	{{singleRestaurantData.restaurant.user_name}}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
@@ -221,7 +222,7 @@
 							              			Mobile :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.mobile}}
+								                  	{{singleRestaurantData.restaurant.mobile}}
 								                </div>	
 								            </div> 
 								            <div class="form-group row">		
@@ -229,7 +230,7 @@
 							              			Email :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.email}}
+								                  	{{singleRestaurantData.restaurant.email}}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
@@ -237,7 +238,7 @@
 							              			Website :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.website ? restaurantDetailData.restaurant.website : 'No website'}}
+								                  	{{singleRestaurantData.restaurant.website ? singleRestaurantData.restaurant.website : 'No website'}}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
@@ -245,7 +246,7 @@
 							              			Approval :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.admin_approval ? 'Approved' : 'Not approved'}}
+								                  	{{singleRestaurantData.restaurant.admin_approval ? 'Approved' : 'Not approved'}}
 								                </div>	
 								            </div>  
 					            		</div>
@@ -259,7 +260,7 @@
 							              			Restaurant Address :
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span v-html="restaurantDetailData.restaurant.address"></span>
+								                	<span v-html="singleRestaurantData.restaurant.address"></span>
 								                </div>	
 								            </div>
 								            <div class="form-group row">
@@ -282,7 +283,7 @@
 							              		</label>
 								                <div class="col-sm-6">
 								                	<ul>
-													  	<li v-for="restaurantCuisineObjectTag in restaurantDetailData.restaurantCuisineObjectTags">
+													  	<li v-for="restaurantCuisineObjectTag in singleRestaurantData.restaurantCuisineObjectTags">
 													    	{{ restaurantCuisineObjectTag.name }}
 													  	</li>
 													</ul>
@@ -294,7 +295,7 @@
 							              		</label>
 								                <div class="col-sm-6">
 								                	<ul>
-													  	<li v-for="restaurantFoodObjectTag in restaurantDetailData.restaurantFoodObjectTags">
+													  	<li v-for="restaurantFoodObjectTag in singleRestaurantData.restaurantFoodObjectTags">
 													    	{{ restaurantFoodObjectTag.name }}
 													  	</li>
 													</ul>
@@ -306,7 +307,7 @@
 							              		</label>
 								                <div class="col-sm-6">
 								                  	<ul>
-													  	<li v-for="restaurantMealObjectTag in restaurantDetailData.restaurantMealObjectTags">
+													  	<li v-for="restaurantMealObjectTag in singleRestaurantData.restaurantMealObjectTags">
 													    	{{ restaurantMealObjectTag.name }}
 													  	</li>
 													</ul>
@@ -317,7 +318,7 @@
 							              			Minimum Order :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.min_order}} tk
+								                  	{{singleRestaurantData.restaurant.min_order}} tk
 								                </div>	
 								            </div> 
 					            		</div>
@@ -331,7 +332,7 @@
 							              			Payment :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.is_post_paid ? 'Post-paid' : 'Pre-paid'}}
+								                  	{{singleRestaurantData.restaurant.is_post_paid ? 'Post-paid' : 'Pre-paid'}}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
@@ -339,15 +340,15 @@
 							              			Self-service :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.is_self_service ? 'Self-service' : 'Waiter service'}}
+								                  	{{singleRestaurantData.restaurant.is_self_service ? 'Self-service' : 'Waiter service'}}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Parking :
+							              			Parking Facility:
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{restaurantDetailData.restaurant.has_perking ? 'Available' : 'Not available'}}
+								                  	{{singleRestaurantData.restaurant.has_parking ? 'Available' : 'Not-available'}}
 								                </div>	
 								            </div> 
 					            		</div>
@@ -366,21 +367,21 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
+			<!-- /modal-show-restaurant -->
 
-
-			<!-- modal-create-restaurant -->
-			<div class="modal fade" id="modal-create-restaurant">
+			<!-- modal-createOrEdit-restaurant -->
+			<div class="modal fade" id="modal-createOrEdit-restaurant">
 				<div class="modal-dialog modal-xl">
 					<div class="modal-content">
 						<div class="modal-header">
-						  	<h4 class="modal-title">Create Restaurant</h4>
+						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Restaurant</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body">
 						  	<!-- form start -->
-							<form class="form-horizontal" v-on:submit.prevent="storeRestaurant()" autocomplete="off" novalidate>
+							<form class="form-horizontal" v-on:submit.prevent=" editMode ? updateRestaurant() : storeRestaurant()" autocomplete="off" novalidate>
 
 								<input type="hidden" name="_token" :value="csrf">
 
@@ -399,22 +400,30 @@
 									                    <div class="card-body">
 
 									                      	<div class="d-flex flex-wrap align-content-center form-group row">
-									                        	<div class="col-sm-8">
-									                              	<div class="text-center">
-									                                	<img class="img-fluid" :src="this.restaurantCreateData.restaurant.banner_preview" alt="Restaurant Banner" style="max-height: 150px;">
-
-									                              	</div>
+									                        	<div class="col-sm-8 text-center mb-2">
+								                                	<img class="img-fluid" :src="singleRestaurantData.restaurant.banner_preview" alt="Restaurant Banner" style="max-height: 150px;">
 									                          	</div>
-									                          	<div class="col-sm-4  align-self-center">
+									                          	<div class="col-sm-4 align-self-center">
 									                              	<div class="input-group">
 									                                	<div class="custom-file">
-									                                    	<input type="file" class="custom-file-input" v-on:change="onBannerChange" accept="image/*">
+									                                    	<input type="file" class="custom-file-input" @change="onBannerChange" accept="image/*">
 									                                    	<label class="custom-file-label" for="customFile">
 									                                    		Change Banner
 									                                    	</label>
 									                                	</div>
 									                              	</div>
 									                          	</div>
+									                        </div>
+
+									                        <div class="form-group row">
+									                        	<div class="col-sm-12 text-center">
+
+								                              		<label for="inputAdminApproval" class="col-form-label mr-2">Admin Approval</label>
+								                              		
+						                                  			<toggle-button :sync="true" v-model="singleRestaurantData.restaurant.admin_approval" value="true" :width="240"  :height="30" :font-size="15" :color="{checked: 'green', unchecked: 'red'}" 
+							                                  		:labels="{checked: 'Approved', unchecked: 'Not-approved' }"/>
+								                              		
+									                        	</div>
 									                        </div>
 
 									                        <hr>
@@ -426,7 +435,7 @@
 									                              			Restaurant Name
 									                              		</label>
 									                              		<div class="col-sm-8">
-									                                  		<input type="text" class="form-control" v-model="restaurantCreateData.restaurant.name" placeholder="Restaurant Name">
+									                                  		<input type="text" class="form-control" v-model="singleRestaurantData.restaurant.name" placeholder="Restaurant Name">
 									                              		</div>
 									                          		</div>
 									                      		</div>
@@ -434,7 +443,7 @@
 									                            	<div class="row">
 									                              		<label for="inputUserName3" class="col-sm-4 col-form-label text-right">Username</label>
 									                              		<div class="col-sm-8">
-									                                  		<input type="text" class="form-control" v-model="restaurantCreateData.restaurant.user_name" placeholder="No Space or special characters">
+									                                  		<input type="text" class="form-control" v-model="singleRestaurantData.restaurant.user_name" placeholder="No Space or special characters">
 									                              		</div>
 										                          	</div>
 										                      	</div>
@@ -444,7 +453,7 @@
 									                            	<div class="row">
 									                              		<label for="inputEmail3" class="col-sm-4 col-form-label text-right">Email</label>
 									                              		<div class="col-sm-8">
-									                                		<input type="email" class="form-control" v-model="restaurantCreateData.restaurant.email" placeholder="Email" required="true">
+									                                		<input type="email" class="form-control" v-model="singleRestaurantData.restaurant.email" placeholder="Email" required="true">
 									                              		</div>
 									                            	</div>
 									                          	</div>
@@ -452,7 +461,7 @@
 										                            <div class="row">
 										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-right">Mobile</label>
 										                              	<div class="col-sm-8">
-										                                  	<input type="tel" class="form-control" v-model="restaurantCreateData.restaurant.mobile" placeholder="Mobile" required="true">
+										                                  	<input type="tel" class="form-control" v-model="singleRestaurantData.restaurant.mobile" placeholder="Mobile" required="true">
 										                              	</div>
 										                            </div>
 									                          	</div>
@@ -464,7 +473,7 @@
 									                              			Password
 									                              		</label>
 									                              		<div class="col-sm-8">
-									                                  		<input type="password" class="form-control" v-model="restaurantCreateData.restaurant.password" placeholder="Login Password">
+									                                  		<input type="password" class="form-control" v-model="singleRestaurantData.restaurant.password" placeholder="Login Password">
 									                              		</div>
 									                            	</div>
 									                          	</div>
@@ -474,7 +483,7 @@
 									                              			Repeat Password
 									                              		</label>
 									                              		<div class="col-sm-8">
-									                                  		<input type="password" class="form-control" v-model="restaurantCreateData.restaurant.password_confirmation" placeholder="Repeat Password">
+									                                  		<input type="password" class="form-control" v-model="singleRestaurantData.restaurant.password_confirmation" placeholder="Repeat Password">
 									                              		</div>
 									                            	</div>
 									                          	</div>
@@ -489,12 +498,12 @@
 									                              		</label>
 									                              		<div class="col-sm-6">
 
-										                                	<multiselect v-model="restaurantCreateData.restaurantCuisineObjectTags" placeholder="Restaurant Type" label="name" track-by="id" :options="allRestaurantCuisines" :multiple="true" :max="3" :required="true">
+										                                	<multiselect v-model="singleRestaurantData.restaurantCuisineObjectTags" placeholder="Restaurant Type" label="name" track-by="id" :options="allRestaurantCuisines" :multiple="true" :max="3" :required="true">
 
 										                                	</multiselect>
 
 										                              	</div>
-										                              	<div class="col-sm-2 text-center">
+										                              	<div class="col-sm-2 text-right">
 										                                  	<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-restaurant-category">
 										                                    	<i class="fa fa-plus-circle" aria-hidden="true"></i>
 											                                    Cuisine
@@ -511,470 +520,7 @@
 										                                (if any)
 										                              </div>
 										                              <div class="col-sm-8">
-										                                  <input type="url" class="form-control" v-model="restaurantCreateData.restaurant.website" placeholder="Restaurant Website">
-										                              </div>
-										                            </div>
-									                          	</div>
-									                        </div>
-
-									                    </div>
-									                    <!-- /.card-body -->
-									              	</div>
-									              <!-- /.card-card -->
-									          	</div>  
-									        </div>
-
-									        <div class="row">
-									          	<div class="col-sm-12 text-right">
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
-								                    	<i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
-								                  	</button>
-									          	</div>
-								            </div>
-									  	</div>
-
-									</div>
-
-									<div class="row" v-bind:key="2" v-show="step==2">
-									  
-									  	<div class="col-sm-12">
-									        
-									        <h2 class="text-center mb-4 lead">Restaurant Address</h2>
-									      
-									        <div class="row">
-									          
-									          	<div class="col-sm-12">
-									            	<div class="card">
-									                    <div class="card-body">
-
-									                        <div class="form-group row">    
-									                          <label for="inputLocation3" class="col-sm-4 col-form-label text-right">Restaurant Location</label>
-									                          	<div class="col-sm-8">
-									                    
-										                    		<vue-google-autocomplete
-										                    			id="restaurantCreateAddress"
-			                        									classname="form-control"
-										                        		placeholder="Start typing"
-										                        		v-on:placechanged="getAddressData"
-												                        types="(cities)"
-												                        country="bd"
-										                    		>
-										                    		</vue-google-autocomplete>
-
-									                    <!-- 
-									                              <input type="text" class="form-control" v-model="restaurant.lat" placeholder="Restaurant Location" required="true">
-									                              -->
-
-									                          	</div>   
-									                        </div>
-									                          
-									                        <div class="form-group row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">Detail Address</label>
-									                          	<div class="col-sm-8">
-
-									                              	<ckeditor class="form-control" :editor="editor" v-model="restaurantCreateData.restaurant.address">
-									                              	</ckeditor>
-
-									                          	</div>  
-									                        </div>
-
-									                    </div>
-									                    <!-- /.card-body -->
-									              	</div>
-									              	<!-- /.card-card -->
-									          	</div>  
-									        </div>
-
-									        <div class="row">
-									          	<div class="col-sm-12 text-right">
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="step-=1">
-									                    <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
-								                  	</button>
-									          
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
-									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
-								                  	</button>
-									          	</div>
-								            </div>
-									  	</div>
-									</div>
-
-									<div class="row" v-bind:key="3" v-show="step==3">
-									  
-									  	<div class="col-sm-12">
-									        
-									        <h2 class="text-center mb-4 lead">Restaurant Menu Profile</h2>
-									      
-									        <div class="row">
-									          
-									          	<div class="col-sm-12">
-									            	<div class="card">
-									                    <div class="card-body">
-
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-										                            <div class="row">
-										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-right">Min. Order</label>
-										                              	<div class="col-sm-8">
-										                                  	<input type="number" class="form-control" v-model="restaurantCreateData.restaurant.min_order" placeholder="Minimum Currency" min="100" step="1">
-										                              	</div>
-										                          	</div>
-										                      	</div>
-										                  		<div class="col-6">
-										                            <div class="row">
-										                                
-										                              	<div class="col-sm-4 text-right">
-										                                	<label for="inputPayment3" class="col-form-label pb-0">
-										                                		Payment
-										                                	</label>
-										                                	<div class="text-right p-0 m-0">
-										                                		(physical orders)
-										                                	</div>
-										                                
-										                              	</div>
-
-										                              	<div class="col-sm-8">
-										                                	<div class="checkbox mt-2">
-										                                  
-										                                    	<toggle-button :sync="true" v-model="restaurantCreateData.restaurant.is_post_paid" value="true" :width="120" :font-size="15" :color="{checked: 'green', unchecked: '#17a2b8'}" 
-										                                  		:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"/>
-										                                	</div>
-										                              	</div>
-										                          	</div>
-										                      	</div>
-									                        </div>
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">Best Food Items</label>
-									                              		<div class="col-sm-6">
-									                                  
-									                                  		<multiselect v-model="restaurantCreateData.restaurantFoodObjectTags" placeholder="Select three main foods" label="name" track-by="id" :options="allMenuCategories" :multiple="true" :max="3" :required="true">
-									                                		</multiselect>
-
-									                              		</div>
-									                               
-										                              	<div class="col-sm-2 text-center">
-										                                  	<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-menu-category">
-										                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-										                                    	Food
-										                                	</button>
-										                              	</div> 
-									                            
-									                            	</div>
-									                          	</div>
-									                          	<div class="col-6">
-									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputMealTags3" class="col-sm-4 col-form-label text-right">Available Meals</label>
-									                              		<div class="col-sm-6">
-									                                  
-									                                		<multiselect v-model="restaurantCreateData.restaurantMealObjectTags" placeholder="Available Meals" label="name" track-by="id" :options="allMeals" :multiple="true" :max="6" :required="true">
-
-									                                		</multiselect>
-
-									                              		</div>
-									                              
-									                              		<div class="col-sm-2 text-center">
-									                                  		<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-meal-tag">
-										                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-										                                    	Meal
-										                                	</button>
-									                              		</div>
-									                              
-									                            	</div>
-									                          	</div>
-									                        </div>
-
-									                    </div>
-									                    <!-- /.card-body -->
-									              	</div>
-									              	<!-- /.card-card -->
-								          		</div>  
-							       			</div>
-
-									        <div class="row">
-									          	<div class="col-sm-12 text-right">
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="step-=1">
-									                    <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
-								                  	</button>
-									          
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
-									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
-								                  	</button>
-									          	</div>
-								            </div>
-									  	</div>
-									</div>
-
-									<div class="row" v-bind:key="4" v-show="step==4"> 
-									  	<div class="col-sm-12">
-
-									        <h2 class="text-center mb-4 lead">Service & Schedule</h2>
-									      
-									        <div class="row">
-									          
-									          	<div class="col-sm-12">
-									            	<div class="card">
-									                    <div class="card-body">
-
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputParking3" class="col-sm-4 col-form-label text-right">Parking Facility</label>
-									                              		<div class="col-sm-8">
-									                                  		<div class="checkbox mt-2">
-									                                  
-									                                    		<toggle-button value="true" :sync="true" v-model="restaurantCreateData.restaurant.has_parking" :width="120" :font-size="15" :color="{checked: 'green', unchecked: '#FF0000'}" 
-									                                  			:labels="{checked: 'Available', unchecked: 'No Parking' }"/>
-									                                		</div>
-									                              		</div>
-									                          		</div>
-									                      		</div>
-									                  			<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputSelfService3" class="col-sm-4 col-form-label text-right">Self Service</label>
-									                                
-									                              		<div class="col-sm-8">
-									                                  		<div class="checkbox mt-2">
-									                                  
-									                                    		<toggle-button value ="true" :sync="true" v-model="restaurantCreateData.restaurant.is_self_service" :width="120" :font-size="15" :color="{checked: 'green', unchecked: '#17a2b8'}" 
-									                                  			:labels="{checked: 'Yes', unchecked: 'No' }"/>
-									                                		</div>
-									                              		</div>
-									                          		</div>
-									                      		</div>
-									                        </div>
-									                        <div class="form-group row mb-4">
-									                            
-									                          	<label for="inputServiceSchedule3" class="col-sm-2 col-form-label text-right">Service Schedule</label>
-									                          	<div class="col-sm-10">
-
-								                            		<table class="service_schedule"></table>
-
-									                              <!-- 
-									                              <input type="text" class="form-control" v-model="restaurant.service_schedule" placeholder="Available Meals" required="true">
-									                               -->
-									                          	</div>
-									                            
-									                        </div>
-
-									                        <div class="form-group row">      
-									                          	<label for="inputBookingBreak3" class="col-sm-2 col-form-label text-right">Booking Breaks</label>
-
-									                          	<div class="col-sm-10">
-
-									                            	<table class="booking_break_schedule"></table>
-
-									                              	<!-- 
-									                              	<input type="text" class="form-control" v-model="restaurant.booking_break_schedule" placeholder="Available Meals" required="true">
-									                    -->
-
-									                          	</div>      
-									                        </div>
-									                    </div>
-									                    <!-- /.card-body -->
-									              	</div>
-									              	<!-- /.card-card -->
-									          	</div>  
-									        </div>
-
-									        <div class="row">
-									          	<div class="col-sm-12 text-right">
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="step-=1">
-								                    	<i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
-								                  	</button>
-									          
-								                  	<button type="submit" class="btn btn-danger rounded-pill">
-									                    Create Restaurant
-								                  	</button>
-									          	</div>
-								            </div>
-									  	</div>
-									</div>
-
-								</transition-group>
-
-								<div v-show="!loading" class="row">
-									<div class="col-sm-12">
-
-									  	<div class="card">
-										    <div class="card-header text-center">
-
-										      	<div class="progress">
-										        	<div class="progress-bar bg-success w-25" v-show="step>=1">
-										          		Profile
-										        	</div>
-										        	<div class="progress-bar bg-info w-25" v-show="step>=2">
-										          		Address
-										        	</div>
-										        	<div class="progress-bar bg-warning w-25" v-show="step>=3">
-										          		Menu Profile
-										        	</div>
-										        	<div class="progress-bar bg-danger w-25" v-show="step>=4">
-										          		Service & Schedule
-										        	</div>
-										      	</div>
-
-										    </div>
-									  	</div>
-									  
-									</div>
-								</div>
-
-							</form>
-							<!-- form end -->
-						</div>
-					</div>
-					<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- modal-create-restaurant -->
-
-			<!-- modal-edit-restaurant -->
-			<div class="modal fade" id="modal-edit-restaurant">
-				<div class="modal-dialog modal-xl">
-					<div class="modal-content">
-						<div class="modal-header">
-						  	<h4 class="modal-title">Edit Restaurant</h4>
-						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						    	<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-						  	<!-- form start -->
-							<form class="form-horizontal" v-on:submit.prevent="updateRestaurant()" autocomplete="off" novalidate>
-
-								<input type="hidden" name="_token" :value="csrf">
-
-								<transition-group name="fade">
-
-									<div class="row" v-bind:key="1" v-show="!loading && step==1">
-
-									  	<div class="col-sm-12">
-	  
-									        <h2 class="text-center mb-4 lead">Restaurant Profile</h2>
-									      
-									        <div class="row">
-
-									          	<div class="col-sm-12">
-									            	<div class="card">
-									                    <div class="card-body">
-
-									                      	<div class="d-flex flex-wrap align-content-center form-group row">
-									                        	<div class="col-sm-8">
-									                              	<div class="text-center">
-									                                	<img class="img-fluid" :src="this.restaurantDetailData.restaurant.banner_preview" alt="Restaurant Banner" style="max-height: 150px;">
-
-									                              	</div>
-									                          	</div>
-									                          	<div class="col-sm-4  align-self-center">
-									                              	<div class="input-group">
-									                                	<div class="custom-file">
-									                                    	<input type="file" class="custom-file-input" v-on:change="onBannerChange" accept="image/*">
-									                                    	<label class="custom-file-label" for="customFile">
-									                                    		Change Banner
-									                                    	</label>
-									                                	</div>
-									                              	</div>
-									                          	</div>
-									                        </div>
-
-									                        <hr>
-
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputName3" class="col-sm-4 col-form-label text-right">
-									                              			Restaurant Name
-									                              		</label>
-									                              		<div class="col-sm-8">
-									                                  		<input type="text" class="form-control" v-model="restaurantDetailData.restaurant.name" placeholder="Restaurant Name">
-									                              		</div>
-									                          		</div>
-									                      		</div>
-									                  			<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputUserName3" class="col-sm-4 col-form-label text-right">Username</label>
-									                              		<div class="col-sm-8">
-									                                  		<input type="text" class="form-control" v-model="restaurantDetailData.restaurant.user_name" placeholder="No Space or special characters">
-									                              		</div>
-										                          	</div>
-										                      	</div>
-									                        </div>
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputEmail3" class="col-sm-4 col-form-label text-right">Email</label>
-									                              		<div class="col-sm-8">
-									                                		<input type="email" class="form-control" v-model="restaurantDetailData.restaurant.email" placeholder="Email" required="true">
-									                              		</div>
-									                            	</div>
-									                          	</div>
-									                          	<div class="col-6">
-										                            <div class="row">
-										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-right">Mobile</label>
-										                              	<div class="col-sm-8">
-										                                  	<input type="tel" class="form-control" v-model="restaurantDetailData.restaurant.mobile" placeholder="Mobile" required="true">
-										                              	</div>
-										                            </div>
-									                          	</div>
-									                        </div>
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputPassword3" class="col-sm-4 col-form-label text-right">
-									                              			Password
-									                              		</label>
-									                              		<div class="col-sm-8">
-									                                  		<input type="password" class="form-control" v-model="restaurantDetailData.restaurant.password" placeholder="Login Password">
-									                              		</div>
-									                            	</div>
-									                          	</div>
-									                          	<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputConfirmPassword3" class="col-sm-4 col-form-label text-right">
-									                              			Repeat Password
-									                              		</label>
-									                              		<div class="col-sm-8">
-									                                  		<input type="password" class="form-control" v-model="restaurantDetailData.restaurant.password_confirmation" placeholder="Repeat Password">
-									                              		</div>
-									                            	</div>
-									                          	</div>
-									                        </div>
-
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row d-flex align-items-center">
-
-									                              		<label for="inputCusineTags3" class="col-sm-4 col-form-label text-right">
-									                              			Restaurant Type
-									                              		</label>
-									                              		<div class="col-sm-6">
-
-										                                	<multiselect v-model="restaurantDetailData.restaurantCuisineObjectTags" placeholder="Restaurant Type" label="name" track-by="id" :options="allRestaurantCuisines" :multiple="true" :max="3" :required="true">
-
-										                                	</multiselect>
-
-										                              	</div>
-										                              	<div class="col-sm-2 text-center">
-										                                  	<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-restaurant-category">
-										                                    	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-											                                    Cuisine
-										                                	</button>
-										                              	</div>
-										                            </div>
-									                          	</div>
-									                          	<div class="col-6">
-										                            <div class="row">
-										                              <div class="col-sm-4 text-right">
-										                                <label for="inputWebsite3" class="col-form-label">
-										                                  Website
-										                                </label>
-										                                (if any)
-										                              </div>
-										                              <div class="col-sm-8">
-										                                  <input type="url" class="form-control" v-model="restaurantDetailData.restaurant.website" placeholder="Restaurant Website">
+										                                  <input type="url" class="form-control" v-model="singleRestaurantData.restaurant.website" placeholder="Restaurant Website">
 										                              </div>
 										                            </div>
 									                          	</div>
@@ -1035,7 +581,7 @@
 									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">Detail Address</label>
 									                          	<div class="col-sm-8">
 
-									                              	<ckeditor class="form-control" :editor="editor" v-model="restaurantDetailData.restaurant.address">
+									                              	<ckeditor class="form-control" :editor="editor" v-model="singleRestaurantData.restaurant.address">
 									                              	</ckeditor>
 
 									                          	</div>  
@@ -1079,27 +625,27 @@
 										                            <div class="row">
 										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-right">Min. Order</label>
 										                              	<div class="col-sm-8">
-										                                  	<input type="number" class="form-control" v-model="restaurantDetailData.restaurant.min_order" placeholder="Minimum Currency" min="100" step="1">
+										                                  	<input type="number" class="form-control" v-model="singleRestaurantData.restaurant.min_order" placeholder="Minimum Currency" min="100" step="1">
 										                              	</div>
 										                          	</div>
 										                      	</div>
 										                  		<div class="col-6">
-										                            <div class="row">
+										                            <div class="d-flex flex-wrap align-content-center form-group row">
 										                                
 										                              	<div class="col-sm-4 text-right">
 										                                	<label for="inputPayment3" class="col-form-label pb-0">
 										                                		Payment
 										                                	</label>
-										                                	<div class="text-right p-0 m-0">
+										                                	<div class="p-0 m-0">
 										                                		(physical orders)
 										                                	</div>
 										                                
 										                              	</div>
 
-										                              	<div class="col-sm-8">
-										                                	<div class="checkbox mt-2">
+										                              	<div class="col-sm-8 align-self-center text-center">
+										                                	<div class="checkbox">
 										                                  
-										                                    	<toggle-button :sync="true" v-model="restaurantDetailData.restaurant.is_post_paid" value="true" :width="120" :font-size="15" :color="{checked: 'green', unchecked: '#17a2b8'}" 
+										                                    	<toggle-button :sync="true" v-model="singleRestaurantData.restaurant.is_post_paid" value="true" :width="120"  :height="30" :font-size="15" :color="{checked: 'green', unchecked: '#17a2b8'}" 
 										                                  		:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"/>
 										                                	</div>
 										                              	</div>
@@ -1112,12 +658,12 @@
 									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">Best Food Items</label>
 									                              		<div class="col-sm-6">
 									                                  
-									                                  		<multiselect v-model="restaurantDetailData.restaurantFoodObjectTags" placeholder="Select three main foods" label="name" track-by="id" :options="allMenuCategories" :multiple="true" :max="3" :required="true">
+									                                  		<multiselect v-model="singleRestaurantData.restaurantFoodObjectTags" placeholder="Select three main foods" label="name" track-by="id" :options="allMenuCategories" :multiple="true" :max="3" :required="true">
 									                                		</multiselect>
 
 									                              		</div>
 									                               
-										                              	<div class="col-sm-2 text-center">
+										                              	<div class="col-sm-2 text-right">
 										                                  	<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-menu-category">
 										                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
 										                                    	Food
@@ -1131,13 +677,13 @@
 									                              		<label for="inputMealTags3" class="col-sm-4 col-form-label text-right">Available Meals</label>
 									                              		<div class="col-sm-6">
 									                                  
-									                                		<multiselect v-model="restaurantDetailData.restaurantMealObjectTags" placeholder="Available Meals" label="name" track-by="id" :options="allMeals" :multiple="true" :max="6" :required="true">
+									                                		<multiselect v-model="singleRestaurantData.restaurantMealObjectTags" placeholder="Available Meals" label="name" track-by="id" :options="allMeals" :multiple="true" :max="6" :required="true">
 
 									                                		</multiselect>
 
 									                              		</div>
 									                              
-									                              		<div class="col-sm-2 text-center">
+									                              		<div class="col-sm-2 text-right">
 									                                  		<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-meal-tag">
 										                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
 										                                    	Meal
@@ -1182,25 +728,26 @@
 
 									                        <div class="form-group row">
 									                          	<div class="col-6">
-									                            	<div class="row">
+									                            	<div class="d-flex flex-wrap align-content-center row">
 									                              		<label for="inputParking3" class="col-sm-4 col-form-label text-right">Parking Facility</label>
-									                              		<div class="col-sm-8">
-									                                  		<div class="checkbox mt-2">
+									                              		<div class="col-sm-8 align-self-center text-center">
+									                                  		<div class="checkbox">
 									                                  
-									                                    		<toggle-button value="true" :sync="true" v-model="restaurantDetailData.restaurant.has_parking" :width="120" :font-size="15" :color="{checked: 'green', unchecked: '#FF0000'}" 
+									                                    		<toggle-button value="true" :sync="true" v-model="singleRestaurantData.restaurant.has_parking" :width="120"  :height="30" :font-size="15" :color="{checked: 'green', unchecked: '#FF0000'}" 
 									                                  			:labels="{checked: 'Available', unchecked: 'No Parking' }"/>
 									                                		</div>
 									                              		</div>
 									                          		</div>
 									                      		</div>
 									                  			<div class="col-6">
-									                            	<div class="row">
+									                            	<div class="d-flex flex-wrap align-content-center row">
+
 									                              		<label for="inputSelfService3" class="col-sm-4 col-form-label text-right">Self Service</label>
 									                                
-									                              		<div class="col-sm-8">
-									                                  		<div class="checkbox mt-2">
+									                              		<div class="col-sm-8 align-self-center text-center">
+									                                  		<div class="checkbox">
 									                                  
-									                                    		<toggle-button value ="true" :sync="true" v-model="restaurantDetailData.restaurant.is_self_service" :width="120" :font-size="15" :color="{checked: 'green', unchecked: '#17a2b8'}" 
+									                                    		<toggle-button value ="true" :sync="true" v-model="singleRestaurantData.restaurant.is_self_service" :width="120"  :height="30" :font-size="15" :color="{checked: 'green', unchecked: '#17a2b8'}" 
 									                                  			:labels="{checked: 'Yes', unchecked: 'No' }"/>
 									                                		</div>
 									                              		</div>
@@ -1248,7 +795,7 @@
 								                  	</button>
 									          
 								                  	<button type="submit" class="btn btn-danger rounded-pill">
-									                    Update Restaurant
+									                    {{ editMode ? 'Update' : 'Create' }} Restaurant
 								                  	</button>
 									          	</div>
 								            </div>
@@ -1292,6 +839,7 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
+			<!-- /modal-createOrEdit-restaurant -->
 
 			<!-- /.modal-create-restaurant-category -->
 			<div class="modal fade" id="modal-create-restaurant-category">
@@ -1338,7 +886,8 @@
 				<!-- /.modal-dialog -->
 			</div>
 			<!-- /.modal-create-restaurant-category -->
-
+			
+			<!-- modal-create-meal-tag -->
 			<div class="modal fade" id="modal-create-meal-tag">
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
@@ -1382,8 +931,9 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-
 			<!-- /.modal-modal-create-meal-tag -->
+
+			<!-- /.modal-modal-create-menu-category -->
 			<div class="modal fade" id="modal-create-menu-category">
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
@@ -1429,7 +979,7 @@
 			</div>
 			<!-- /.modal-modal-create-menu-category -->
 
-			<!-- /.modal-modal-create-meal-tag -->
+			<!-- modal-restaurant-delete-confirmation -->
 			<div class="modal fade" id="modal-restaurant-delete-confirmation">
 				<div class="modal-dialog">
 					<div class="modal-content bg-danger">
@@ -1456,9 +1006,9 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal-modal-create-menu-category -->
+			<!-- /modal-restaurant-delete-confirmation -->
 
-			<!-- /.modal-modal-create-meal-tag -->
+			<!-- modal-restaurant-restore-confirmation -->
 			<div class="modal fade" id="modal-restaurant-restore-confirmation">
 				<div class="modal-dialog">
 					<div class="modal-content bg-danger">
@@ -1484,7 +1034,7 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal-modal-create-menu-category -->
+			<!-- /.modal-restaurant-restore-confirmation -->
 
 	    </section>
 
@@ -1530,7 +1080,7 @@
 			service_schedule : null,
 			booking_break_schedule : null,
 
-			admin_approval : 0,
+			admin_approval : false,
     	},
 
 		restaurantCuisineObjectTags : [],
@@ -1547,6 +1097,7 @@
     	perPage : 10,
     	loading : false,
 
+    	editMode : false,
     	editor: ClassicEditor,
     	
     	currentTab : 'all',
@@ -1568,8 +1119,7 @@
       	},
 
     	// errors : [],
-        restaurantCreateData : singleRestaurantData,
-        restaurantDetailData : singleRestaurantData,
+        singleRestaurantData : singleRestaurantData,
 
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
 
@@ -1679,70 +1229,37 @@
 		},
 
 		watch : {
-			'restaurantCreateData.restaurantCuisineObjectTags' : function(restaurantCuisineObjectTags){
+			'singleRestaurantData.restaurantCuisineObjectTags' : function(restaurantCuisineObjectTags){
 				let array = [];
 				$.each(restaurantCuisineObjectTags, function(key, value) {
 			     	array.push(value.id);
 			   	});
-		     	this.restaurantCreateData.restaurant.restaurantCuisineTags = array;
+		     	this.singleRestaurantData.restaurant.restaurantCuisineTags = array;
 			},
-			'restaurantCreateData.restaurantFoodObjectTags' : function(restaurantFoodObjectTags){
+			'singleRestaurantData.restaurantFoodObjectTags' : function(restaurantFoodObjectTags){
 				let array = [];
 				$.each(restaurantFoodObjectTags, function(key, value) {
 			     	array.push(value.id);
 			   	});
-		     	this.restaurantCreateData.restaurant.restaurantFoodTags = array;
+		     	this.singleRestaurantData.restaurant.restaurantFoodTags = array;
 			},
-			'restaurantCreateData.restaurantMealObjectTags' : function(restaurantMealObjectTags){
+			'singleRestaurantData.restaurantMealObjectTags' : function(restaurantMealObjectTags){
 				let array = [];
 				$.each(restaurantMealObjectTags, function(key, value) {
 			     	array.push(value.id);
 			   	});
-		     	this.restaurantCreateData.restaurant.restaurantMealTags = array;
+		     	this.singleRestaurantData.restaurant.restaurantMealTags = array;
 			},
-			'restaurantCreateData.restaurant.name' : function(val){
+			'singleRestaurantData.restaurant.name' : function(val){
 				if(typeof(val) !== 'undefined' && val !== null) {
-					this.restaurantCreateData.restaurant.user_name = val.replace(/\s/g, '');
+					this.singleRestaurantData.restaurant.user_name = val.replace(/\s/g, '');
 				}
 			},
-			'restaurantCreateData.service_schedule' : function(val){
-				this.restaurantCreateData.restaurant.service_schedule = val;
+			'singleRestaurantData.service_schedule' : function(val){
+				this.singleRestaurantData.restaurant.service_schedule = val;
 			},
-			'restaurantCreateData.booking_break_schedule' : function(val){
-				this.restaurantCreateData.restaurant.booking_break_schedule = val;
-			},
-
-			'restaurantDetailData.restaurantCuisineObjectTags' : function(restaurantCuisineObjectTags){
-				let array = [];
-				$.each(restaurantCuisineObjectTags, function(key, value) {
-			     	array.push(value.id);
-			   	});
-		     	this.restaurantDetailData.restaurant.restaurantCuisineTags = array;
-			},
-			'restaurantDetailData.restaurantFoodObjectTags' : function(restaurantFoodObjectTags){
-				let array = [];
-				$.each(restaurantFoodObjectTags, function(key, value) {
-			     	array.push(value.id);
-			   	});
-		     	this.restaurantDetailData.restaurant.restaurantFoodTags = array;
-			},
-			'restaurantDetailData.restaurantMealObjectTags' : function(restaurantMealObjectTags){
-				let array = [];
-				$.each(restaurantMealObjectTags, function(key, value) {
-			     	array.push(value.id);
-			   	});
-		     	this.restaurantDetailData.restaurant.restaurantMealTags = array;
-			},
-			'restaurantDetailData.restaurant.name' : function(val){
-				if(typeof(val) !== 'undefined' && val !== null) {
-					this.restaurantDetailData.restaurant.user_name = val.replace(/\s/g, '');
-				}
-			},
-			'restaurantDetailData.service_schedule' : function(val){
-				this.restaurantDetailData.restaurant.service_schedule = val;
-			},
-			'restaurantDetailData.booking_break_schedule' : function(val){
-				this.restaurantDetailData.restaurant.booking_break_schedule = val;
+			'singleRestaurantData.booking_break_schedule' : function(val){
+				this.singleRestaurantData.restaurant.booking_break_schedule = val;
 			},
 			query : function(val){
 				if (val==='') {
@@ -1818,11 +1335,25 @@
 				}else
 					this.searchData();
     		},
+    		showRestaurantCreateModal(restaurant) {
+    			
+    			this.step = 1;
+    			this.editMode = false;
+
+				this.singleRestaurantData.restaurant = {};
+				// this.singleRestaurantData.restaurant.banner_preview = '';
+
+				this.singleRestaurantData.restaurantCuisineObjectTags = 
+		    	this.singleRestaurantData.restaurantFoodObjectTags = 
+		    	this.singleRestaurantData.restaurantMealObjectTags = [];
+
+				$("#modal-createOrEdit-restaurant").modal("show");
+			},
 		    storeRestaurant() {
 
-				$("#modal-create-restaurant").modal("hide");
+				$("#modal-createOrEdit-restaurant").modal("hide");
 
-				this.restaurantCreateData.restaurant.banner_preview = this.restaurantNewBanner;
+				this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner;
 				
 				// this.restaurant.lat : null,
 				// this.restaurant.lng : null,
@@ -1830,12 +1361,14 @@
 				// this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
 				axios
-					.post('/restaurants/'+ this.perPage, this.restaurantCreateData.restaurant)
+					.post('/restaurants/'+ this.perPage, this.singleRestaurantData.restaurant)
 					.then(response => {
 						// console.log(response.data);
 						if (response.status == 200) {
-							this.restaurantCreateData.restaurant = {};
-							this.restaurantCreateData.restaurantCuisineObjectTags = this.restaurantCreateData.restaurantFoodObjectTags = this.restaurantCreateData.restaurantMealObjectTags = [];
+							this.singleRestaurantData.restaurant = {};
+							// this.singleRestaurantData.restaurant.banner_preview = '';
+
+							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
 
 							this.query = '';
 							this.currentTab = 'all';
@@ -1855,41 +1388,49 @@
 					});
 			},
 		    showRestaurantDetailModal(restaurant) {
-				this.restaurantDetailData.restaurant = restaurant;
+		    	
+				this.singleRestaurantData.restaurant = restaurant;
 
-				this.restaurantDetailData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
-		    	this.restaurantDetailData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
-		    	this.restaurantDetailData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
+				this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
+		    	this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
+		    	this.singleRestaurantData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
 
 				$("#modal-show-restaurant").modal("show");
-				// console.log(restaurant);
 			},
 			showRestaurantEditModal(restaurant) {
+
 				this.step = 1;
+				this.editMode = true;
 
-				this.restaurantDetailData.restaurant = restaurant;
+				this.singleRestaurantData.restaurant = restaurant;
 
-				this.restaurantDetailData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
-		    	this.restaurantDetailData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
-		    	this.restaurantDetailData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
+				this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
+		    	this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
+		    	this.singleRestaurantData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
 		    	
-				$("#modal-edit-restaurant").modal("show");
+				$("#modal-createOrEdit-restaurant").modal("show");
 			},
 			updateRestaurant() {
 			
-				$("#modal-edit-restaurant").modal("hide");
+				$("#modal-createOrEdit-restaurant").modal("hide");
 
-				this.restaurantDetailData.restaurant.banner_preview = this.restaurantNewBanner;
+				this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner;
+				
 				// this.restaurant.lat : null,
 				// this.restaurant.lng : null,
 				// this.restaurant.service_schedule : this.restaurant.service_schedule,
 				// this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
 				axios
-					.put('/restaurants/'+this.restaurantDetailData.restaurant.id+'/'+this.perPage, this.restaurantDetailData.restaurant)
+					.put('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage, this.singleRestaurantData.restaurant)
 					.then(response => {
 						if (response.status == 200) {
 							
+							this.singleRestaurantData.restaurant = {};
+							// this.singleRestaurantData.restaurant.banner_preview = '';
+
+							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
+
 							if (this.query === '') {
 
 								this.allRestaurants = response.data;
@@ -1921,7 +1462,7 @@
 					});
 			},
 			showRestaurantDeletionModal(restaurant) {
-				this.restaurantDetailData.restaurant = restaurant;
+				this.singleRestaurantData.restaurant = restaurant;
 				$("#modal-restaurant-delete-confirmation").modal("show");
 			},
 			destroyRestaurant() {
@@ -1929,7 +1470,7 @@
 				$("#modal-restaurant-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/restaurants/'+this.restaurantDetailData.restaurant.id+'/'+this.perPage)
+					.delete('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1965,7 +1506,7 @@
 
 			},
 			showRestaurantRestoreModal(restaurant) {
-				this.restaurantDetailData.restaurant = restaurant;
+				this.singleRestaurantData.restaurant = restaurant;
 				$("#modal-restaurant-restore-confirmation").modal("show");
 			},
 			restoreRestaurant() {
@@ -1973,12 +1514,12 @@
 				$("#modal-restaurant-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/restaurants/'+this.restaurantDetailData.restaurant.id+'/'+this.perPage)
+					.patch('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 
-							this.restaurantDetailData.restaurant = {};
-							this.restaurantDetailData.restaurantCuisineObjectTags = this.restaurantDetailData.restaurantFoodObjectTags = this.restaurantDetailData.restaurantMealObjectTags = [];
+							this.singleRestaurantData.restaurant = {};
+							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
 
 							if (this.query === '') {
 
@@ -2094,7 +1635,7 @@
 					  	// console.log('Drag End');
 					},
 					onSelect: function(){
-						singleRestaurantData.service_schedule = $('#service_schedule').scheduler('val');
+						singleRestaurantData.service_schedule = $(this).scheduler('val');
 						// console.log(singleRestaurantData.service_schedule);
 					  	// console.log($('#service_schedule').scheduler('val'));
 					},
@@ -2112,7 +1653,7 @@
 					  	// console.log('Drag End');
 					},
 					onSelect: function(){
-						singleRestaurantData.booking_break_schedule = $('#booking_break_schedule').scheduler('val');
+						singleRestaurantData.booking_break_schedule = $(this).scheduler('val');
 						// console.log(singleRestaurantData.booking_break_schedule);
 					  	// console.log($('#booking_break_schedule').scheduler('val'));
 					},
@@ -2215,7 +1756,7 @@
 			createImage(file) {
                 let reader = new FileReader();
                 reader.onload = (evnt) => {
-                    this.restaurantNewBanner = this.restaurantCreateData.restaurant.banner_preview = this.restaurantDetailData.restaurant.banner_preview = evnt.target.result;
+                    this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = evnt.target.result;
                 };
                 reader.readAsDataURL(file);
             }
