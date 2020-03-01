@@ -133,6 +133,7 @@ class RestaurantController extends Controller
          $newRestaurant->is_post_paid = $request->is_post_paid ?? 0;
          $newRestaurant->has_parking = $request->has_parking ?? 0;
          $newRestaurant->is_self_service = $request->is_self_service ?? 0;
+         $newRestaurant->admin_approval = $request->admin_approval ?? 0;
          // $newRestaurant->service_schedule = $request->service_schedule;
          // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
          $newRestaurant->save();
@@ -196,6 +197,7 @@ class RestaurantController extends Controller
          $restaurantToUpdate->is_post_paid = $request->is_post_paid;
          $restaurantToUpdate->has_parking = $request->has_parking;
          $restaurantToUpdate->is_self_service = $request->is_self_service;
+         $restaurantToUpdate->admin_approval = $request->admin_approval ?? 0;
          // $newRestaurant->service_schedule = $request->service_schedule;
          // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
          $restaurantToUpdate->restaurantCuisines()->sync($request->restaurantCuisineTags);
