@@ -4220,6 +4220,384 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4262,6 +4640,7 @@ var restaurantListData = {
   query: '',
   perPage: 10,
   loading: false,
+  submitForm: true,
   editMode: false,
   editor: _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_4___default.a,
   currentTab: 'all',
@@ -4277,85 +4656,14 @@ var restaurantListData = {
   pagination: {
     current_page: 1
   },
-  // errors : [],
+  errors: {
+    newMeal: {},
+    restaurant: {},
+    newMenuCategory: {},
+    newRestaurantCuisine: {}
+  },
   singleRestaurantData: singleRestaurantData,
   csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-  /*
-  columns : 	
-  [
-         {
-             label: "Name",
-             name: "user_name",
-             sort: true,
-             filter: {
-           type: "simple",
-           placeholder: "Search Name",
-           case_sensitive: true, // "false" by default
-           showClearButton: false,
-           filterOnPressEnter: false,
-       },
-         },
-         {
-             label: "Mobile",
-             name: "mobile",
-             sort: true,
-             filter: {
-           type: "simple",
-           placeholder: "Search Mobile No.",
-           case_sensitive: true, // "false" by default
-           showClearButton: false,
-           filterOnPressEnter: false,
-       }
-         },
-         {
-             label: "Email",
-             name: "email",
-             sort: true,
-             filter: {
-           type: "simple",
-           placeholder: "Search Email",
-           case_sensitive: true, // "false" by default
-           showClearButton: false,
-           filterOnPressEnter: false,
-       }
-         },
-         {
-             label: "Website",
-             name: "website",
-             sort: true,
-             filter: {
-           type: "simple",
-           placeholder: "Search Website",
-           case_sensitive: true, // "false" by default
-           showClearButton: false,
-           filterOnPressEnter: false,
-       }
-         },
-         {
-             label: "Action",
-             name: "",
-         }
-     ],
-      config: {
-         card_mode:  true,
-         server_mode : false,
-         checkbox_rows: false,
-         rows_selectable: false,
-          global_search: {
-             visibility: true,
-             showClearButton: false,
-             placeholder: "Custom Search",
-         },
-          // show_reset_button:  false,
-         show_refresh_button:  false,
-         pagination: true, 
-         per_page: 20, // default 10
-         pagination_info : false,
-         per_page_options:  [20,  50,  100],
-         num_of_visibile_pagination_buttons: 7,
-     },
-     */
-
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
   // Local registration of components
@@ -4482,7 +4790,8 @@ var restaurantListData = {
     showRestaurantCreateModal: function showRestaurantCreateModal(restaurant) {
       this.step = 1;
       this.editMode = false;
-      this.singleRestaurantData.restaurant = {}; // this.singleRestaurantData.restaurant.banner_preview = '';
+      this.errors.restaurant = {};
+      this.singleRestaurantData.restaurant = {}; // this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
       this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
       $("#modal-createOrEdit-restaurant").modal("show");
@@ -4499,7 +4808,7 @@ var restaurantListData = {
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/restaurants/' + this.perPage, this.singleRestaurantData.restaurant).then(function (response) {
         // console.log(response.data);
         if (response.status == 200) {
-          _this2.singleRestaurantData.restaurant = {}; // this.singleRestaurantData.restaurant.banner_preview = '';
+          _this2.singleRestaurantData.restaurant = {}; // this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
           _this2.singleRestaurantData.restaurantCuisineObjectTags = _this2.singleRestaurantData.restaurantFoodObjectTags = _this2.singleRestaurantData.restaurantMealObjectTags = [];
           _this2.query = '';
@@ -4529,6 +4838,7 @@ var restaurantListData = {
     showRestaurantEditModal: function showRestaurantEditModal(restaurant) {
       this.step = 1;
       this.editMode = true;
+      this.errors.restaurant = {};
       this.singleRestaurantData.restaurant = restaurant;
       this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
       this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
@@ -4546,7 +4856,7 @@ var restaurantListData = {
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/restaurants/' + this.singleRestaurantData.restaurant.id + '/' + this.perPage, this.singleRestaurantData.restaurant).then(function (response) {
         if (response.status == 200) {
-          _this3.singleRestaurantData.restaurant = {}; // this.singleRestaurantData.restaurant.banner_preview = '';
+          _this3.singleRestaurantData.restaurant = {}; // this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
           _this3.singleRestaurantData.restaurantCuisineObjectTags = _this3.singleRestaurantData.restaurantFoodObjectTags = _this3.singleRestaurantData.restaurantMealObjectTags = [];
 
@@ -4711,7 +5021,7 @@ var restaurantListData = {
       });
     },
     enableScheduler: function enableScheduler() {
-      $('.service_schedule').scheduler({
+      $('#service_schedule').scheduler({
         accuracy: 1,
         onDragStart: function onDragStart() {// console.log('Drag Start');
         },
@@ -4720,11 +5030,11 @@ var restaurantListData = {
         onDragEnd: function onDragEnd() {// console.log('Drag End');
         },
         onSelect: function onSelect() {
-          singleRestaurantData.service_schedule = $(this).scheduler('val'); // console.log(singleRestaurantData.service_schedule);
+          singleRestaurantData.service_schedule = $('#service_schedule').scheduler('val'); // console.log(singleRestaurantData.service_schedule);
           // console.log($('#service_schedule').scheduler('val'));
         }
       });
-      $('.booking_break_schedule').scheduler({
+      $('#booking_break_schedule').scheduler({
         accuracy: 1,
         onDragStart: function onDragStart() {// console.log('Drag Start');
         },
@@ -4733,7 +5043,7 @@ var restaurantListData = {
         onDragEnd: function onDragEnd() {// console.log('Drag End');
         },
         onSelect: function onSelect() {
-          singleRestaurantData.booking_break_schedule = $(this).scheduler('val'); // console.log(singleRestaurantData.booking_break_schedule);
+          singleRestaurantData.booking_break_schedule = $('#booking_break_schedule').scheduler('val'); // console.log(singleRestaurantData.booking_break_schedule);
           // console.log($('#booking_break_schedule').scheduler('val'));
         }
       });
@@ -4792,32 +5102,160 @@ var restaurantListData = {
         }
       });
     },
-    nextPage: function nextPage() {
-      /*
-      this.errors = [];
-      	if (this.step==1) {
-      	if (!this.name) {
-              this.errors.push('Name required.');
-          }
-          if (!this.age) {
-              this.errors.push('Age required.');
-          }
-      }
-      else if (this.step==2) {
-      	}
-      else if (this.step==3) {
-      	}
-      else if (this.step==4) {
-      	}
-      */
+    nextPage: function nextPage(event) {
+      this.checkRestaurantFormValidation();
       this.step += 1;
+    },
+    validateFormInput: function validateFormInput(formInputName) {
+      switch (formInputName) {
+        case 'restaurant.name':
+          if (!this.singleRestaurantData.restaurant.name) {
+            this.errors.restaurant.name = 'Name is required';
+          } else if (!this.singleRestaurantData.restaurant.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+            this.errors.restaurant.name = 'No special characters';
+          } else this.$delete(this.errors.restaurant, 'name');
+
+          break;
+
+        case 'restaurant.user_name':
+          if (!this.singleRestaurantData.restaurant.user_name) {
+            this.errors.restaurant.user_name = 'Username is required';
+          } else if (!this.singleRestaurantData.restaurant.user_name.match(/^[_A-z0-9]*((-|_|\s)*[_A-z0-9])*$/g)) {
+            this.errors.restaurant.user_name = 'No specail characters';
+          } else this.$delete(this.errors.restaurant, 'user_name');
+
+          break;
+
+        case 'restaurant.email':
+          if (!this.singleRestaurantData.restaurant.email) {
+            this.errors.restaurant.email = 'Email is required';
+          } else if (!this.singleRestaurantData.restaurant.email.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
+            this.errors.restaurant.email = 'Invalid Email';
+          } else this.$delete(this.errors.restaurant, 'email');
+
+          break;
+
+        case 'restaurant.mobile':
+          if (!this.singleRestaurantData.restaurant.mobile) {
+            this.errors.restaurant.mobile = 'Mobile is required';
+          } else if (!this.singleRestaurantData.restaurant.mobile.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
+            this.errors.restaurant.mobile = 'Invalid mobile number';
+          } else this.$delete(this.errors.restaurant, 'mobile');
+
+          break;
+
+        case 'restaurant.password':
+          if (this.singleRestaurantData.restaurant.password && this.singleRestaurantData.restaurant.password.length < 8) {
+            this.errors.restaurant.password = 'Password length has to be 8';
+          } else this.$delete(this.errors.restaurant, 'password');
+
+          break;
+
+        case 'restaurant.password_confirmation':
+          if (this.singleRestaurantData.restaurant.password && this.singleRestaurantData.restaurant.password !== this.singleRestaurantData.restaurant.password_confirmation) {
+            this.errors.restaurant.password_confirmation = "Password doesn't match";
+          } else this.$delete(this.errors.restaurant, 'password_confirmation');
+
+          break;
+
+        case 'restaurant.restaurantCuisineObjectTags':
+          if (this.singleRestaurantData.restaurantCuisineObjectTags.length === 0) {
+            this.errors.restaurant.restaurantCuisineObjectTags = 'Type is required';
+          } else this.$delete(this.errors.restaurant, 'restaurantCuisineObjectTags');
+
+          break;
+
+        case 'restaurant.website':
+          if (this.singleRestaurantData.restaurant.website && !this.singleRestaurantData.restaurant.website.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)) {
+            this.errors.restaurant.website = 'Invalid url';
+          } else this.$delete(this.errors.restaurant, 'website');
+
+          break;
+
+        case 'restaurant.address':
+          if (!this.singleRestaurantData.restaurant.address) {
+            this.errors.restaurant.address = 'Address is required';
+          } else this.$delete(this.errors.restaurant, 'address');
+
+          break;
+
+        case 'restaurant.min_order':
+          if (!this.singleRestaurantData.restaurant.min_order) {
+            this.errors.restaurant.min_order = 'Minimum order is required';
+          } else if (this.singleRestaurantData.restaurant.min_order < 100 || this.singleRestaurantData.restaurant.min_order > 5000) {
+            this.errors.restaurant.min_order = 'Value should be between 100 and 5000';
+          } else this.$delete(this.errors.restaurant, 'min_order');
+
+          break;
+
+        case 'restaurant.restaurantFoodObjectTags':
+          if (this.singleRestaurantData.restaurantFoodObjectTags.length === 0) {
+            this.errors.restaurant.restaurantFoodObjectTags = 'Food tag is required';
+          } else this.$delete(this.errors.restaurant, 'restaurantFoodObjectTags');
+
+          break;
+
+        case 'restaurant.restaurantMealObjectTags':
+          if (this.singleRestaurantData.restaurantMealObjectTags.length === 0) {
+            this.errors.restaurant.restaurantMealObjectTags = 'Meal tag is required';
+          } else this.$delete(this.errors.restaurant, 'restaurantMealObjectTags');
+
+          break;
+
+        case 'newRestaurantCuisine.name':
+          this.submitForm = false;
+
+          if (!this.newRestaurantCuisine.name) {
+            this.errors.newRestaurantCuisine.name = 'Cuisine name is required';
+          } else if (!this.newRestaurantCuisine.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+            this.errors.newRestaurantCuisine.name = 'No special characters';
+          } else {
+            this.submitForm = true;
+            this.$delete(this.errors.newRestaurantCuisine, 'name');
+          }
+
+          break;
+
+        case 'newMeal.name':
+          this.submitForm = false;
+
+          if (!this.newMeal.name) {
+            this.errors.newMeal.name = 'Meal name is required';
+          } else if (!this.newMeal.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+            this.errors.newMeal.name = 'No special characters';
+          } else {
+            this.submitForm = true;
+            this.$delete(this.errors.newMeal, 'name');
+          }
+
+          break;
+
+        case 'newMenuCategory.name':
+          this.submitForm = false;
+
+          if (!this.newMenuCategory.name) {
+            this.errors.newMenuCategory.name = 'Menu category name is required';
+          } else if (!this.newMenuCategory.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+            this.errors.newMenuCategory.name = 'No special characters';
+          } else {
+            this.submitForm = true;
+            this.$delete(this.errors.newMenuCategory, 'name');
+          }
+
+          break;
+      }
+    },
+    checkRestaurantFormValidation: function checkRestaurantFormValidation() {
+      if (this.singleRestaurantData.restaurant.name && this.singleRestaurantData.restaurant.user_name && this.singleRestaurantData.restaurant.email && this.singleRestaurantData.restaurant.mobile && this.singleRestaurantData.restaurant.restaurantCuisineTags.length > 0 && this.singleRestaurantData.restaurant.address && this.singleRestaurantData.restaurant.min_order && this.singleRestaurantData.restaurant.restaurantFoodTags.length > 0 && this.singleRestaurantData.restaurant.restaurantMealTags.length > 0 && Object.keys(this.errors.restaurant).length === 0) {
+        this.submitForm = true;
+      } else this.submitForm = false;
     },
     onBannerChange: function onBannerChange(evnt) {
       var files = evnt.target.files || evnt.dataTransfer.files; // Only process image files.
 
       if (files.length && files[0].type.match('image.*')) {
         this.createImage(files[0]);
-      }
+      } else this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
       return;
     },
@@ -5099,7 +5537,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 exports.i(__webpack_require__(/*! -!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!vue-multiselect/dist/vue-multiselect.min.css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-multiselect/dist/vue-multiselect.min.css"), "");
 
 // module
-exports.push([module.i, "\n.fade-enter-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .9s ease;\n  \t\ttransition: all .9s ease;\n}\n.fade-leave-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  \t\ttransition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n\t/* .slide-fade-leave-active below version 2.1.8 */\n.fade-enter[data-v-754898d3], .fade-leave-to[data-v-754898d3] {\n  \t\t-webkit-transform: translateX(10px);\n  \t\t        transform: translateX(10px);\n  \t\topacity: 0;\n}\n.modal-body[data-v-754898d3] {\n\t\tword-break: break-all;\n}\n", ""]);
+exports.push([module.i, "\n.fade-enter-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .9s ease;\n  \t\ttransition: all .9s ease;\n}\n.fade-leave-active[data-v-754898d3] {\n  \t\t-webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  \t\ttransition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.fade-enter[data-v-754898d3], .fade-leave-to[data-v-754898d3] {\n  \t\t-webkit-transform: translateX(10px);\n  \t\t        transform: translateX(10px);\n  \t\topacity: 0;\n}\n.modal[data-v-754898d3] { \n\t\toverflow: auto !important;\n}\n.modal-body[data-v-754898d3] {\n\t\tword-break: break-all;\n}\n", ""]);
 
 // exports
 
@@ -10445,29 +10883,43 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-sm-6 float-right" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.query,
-                            expression: "query"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", placeholder: "Search" },
-                        domProps: { value: _vm.query },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                    _c(
+                      "div",
+                      { staticClass: "col-sm-6 float-right was-validated" },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.query,
+                              expression: "query"
                             }
-                            _vm.query = $event.target.value
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            pattern: "[^'!#$%^()\\x22]+",
+                            placeholder: "Search"
+                          },
+                          domProps: { value: _vm.query },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.query = $event.target.value
+                            }
                           }
-                        }
-                      })
-                    ])
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "invalid-feedback" }, [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t\t\t  \t\tPlease search with releavant input\n\t\t\t\t\t\t\t\t\t        "
+                          )
+                        ])
+                      ]
+                    )
                   ])
                 ]),
                 _vm._v(" "),
@@ -11199,7 +11651,7 @@ var render = function() {
                   "form",
                   {
                     staticClass: "form-horizontal",
-                    attrs: { autocomplete: "off", novalidate: "" },
+                    attrs: { autocomplete: "off", novalidate: "true" },
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
@@ -11254,18 +11706,21 @@ var render = function() {
                                               "col-sm-8 text-center mb-2"
                                           },
                                           [
-                                            _c("img", {
-                                              staticClass: "img-fluid",
-                                              staticStyle: {
-                                                "max-height": "150px"
-                                              },
-                                              attrs: {
-                                                src:
-                                                  _vm.singleRestaurantData
-                                                    .restaurant.banner_preview,
-                                                alt: "Restaurant Banner"
-                                              }
-                                            })
+                                            _c("picture", [
+                                              _c("img", {
+                                                staticClass: "img-fluid",
+                                                staticStyle: {
+                                                  "max-height": "200px"
+                                                },
+                                                attrs: {
+                                                  src:
+                                                    _vm.singleRestaurantData
+                                                      .restaurant
+                                                      .banner_preview,
+                                                  alt: "Restaurant Banner"
+                                                }
+                                              })
+                                            ])
                                           ]
                                         ),
                                         _vm._v(" "),
@@ -11325,26 +11780,14 @@ var render = function() {
                                     _vm._v(" "),
                                     _c(
                                       "div",
-                                      { staticClass: "form-group row" },
+                                      { staticClass: "form-group row mb-0" },
                                       [
                                         _c(
                                           "div",
                                           {
-                                            staticClass: "col-sm-12 text-center"
+                                            staticClass: "col-sm-12 text-right"
                                           },
                                           [
-                                            _c(
-                                              "label",
-                                              {
-                                                staticClass:
-                                                  "col-form-label mr-2",
-                                                attrs: {
-                                                  for: "inputAdminApproval"
-                                                }
-                                              },
-                                              [_vm._v("Admin Approval")]
-                                            ),
-                                            _vm._v(" "),
                                             _c("toggle-button", {
                                               attrs: {
                                                 sync: true,
@@ -11383,7 +11826,7 @@ var render = function() {
                                       ]
                                     ),
                                     _vm._v(" "),
-                                    _c("hr"),
+                                    _c("hr", { staticClass: "mt-1" }),
                                     _vm._v(" "),
                                     _c(
                                       "div",
@@ -11422,8 +11865,14 @@ var render = function() {
                                                     }
                                                   ],
                                                   staticClass: "form-control",
+                                                  class: !!_vm.errors.restaurant
+                                                    .name
+                                                    ? "is-invalid"
+                                                    : "is-valid",
                                                   attrs: {
                                                     type: "text",
+                                                    pattern:
+                                                      "^[_A-z0-9]*((-|&|\\s)*[_A-z0-9])*$",
                                                     placeholder:
                                                       "Restaurant Name"
                                                   },
@@ -11433,6 +11882,11 @@ var render = function() {
                                                         .restaurant.name
                                                   },
                                                   on: {
+                                                    keyup: function($event) {
+                                                      return _vm.validateFormInput(
+                                                        "restaurant.name"
+                                                      )
+                                                    },
                                                     input: function($event) {
                                                       if (
                                                         $event.target.composing
@@ -11447,7 +11901,25 @@ var render = function() {
                                                       )
                                                     }
                                                   }
-                                                })
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "invalid-feedback"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                        _vm._s(
+                                                          _vm.errors.restaurant
+                                                            .name
+                                                        ) +
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                    )
+                                                  ]
+                                                )
                                               ]
                                             )
                                           ])
@@ -11473,19 +11945,26 @@ var render = function() {
                                                   directives: [
                                                     {
                                                       name: "model",
-                                                      rawName: "v-model",
+                                                      rawName: "v-model.trim",
                                                       value:
                                                         _vm.singleRestaurantData
                                                           .restaurant.user_name,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.user_name"
+                                                        "singleRestaurantData.restaurant.user_name",
+                                                      modifiers: { trim: true }
                                                     }
                                                   ],
                                                   staticClass: "form-control",
+                                                  class: !!_vm.errors.restaurant
+                                                    .user_name
+                                                    ? "is-invalid"
+                                                    : "is-valid",
                                                   attrs: {
                                                     type: "text",
                                                     placeholder:
-                                                      "No Space or special characters"
+                                                      "No Space or special characters",
+                                                    pattern:
+                                                      "^\\S+\\w{1,32}\\S{1,}"
                                                   },
                                                   domProps: {
                                                     value:
@@ -11493,6 +11972,11 @@ var render = function() {
                                                         .restaurant.user_name
                                                   },
                                                   on: {
+                                                    keyup: function($event) {
+                                                      return _vm.validateFormInput(
+                                                        "restaurant.user_name"
+                                                      )
+                                                    },
                                                     input: function($event) {
                                                       if (
                                                         $event.target.composing
@@ -11503,11 +11987,32 @@ var render = function() {
                                                         _vm.singleRestaurantData
                                                           .restaurant,
                                                         "user_name",
-                                                        $event.target.value
+                                                        $event.target.value.trim()
                                                       )
+                                                    },
+                                                    blur: function($event) {
+                                                      return _vm.$forceUpdate()
                                                     }
                                                   }
-                                                })
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "invalid-feedback"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t     \t" +
+                                                        _vm._s(
+                                                          _vm.errors.restaurant
+                                                            .user_name
+                                                        ) +
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                    )
+                                                  ]
+                                                )
                                               ]
                                             )
                                           ])
@@ -11548,10 +12053,15 @@ var render = function() {
                                                     }
                                                   ],
                                                   staticClass: "form-control",
+                                                  class: !!_vm.errors.restaurant
+                                                    .email
+                                                    ? "is-invalid"
+                                                    : "is-valid",
                                                   attrs: {
                                                     type: "email",
                                                     placeholder: "Email",
-                                                    required: "true"
+                                                    pattern:
+                                                      "[a-z0-9._+-]+@[a-z0-9.-]+\\.[a-z]{2,}$"
                                                   },
                                                   domProps: {
                                                     value:
@@ -11559,6 +12069,11 @@ var render = function() {
                                                         .restaurant.email
                                                   },
                                                   on: {
+                                                    keyup: function($event) {
+                                                      return _vm.validateFormInput(
+                                                        "restaurant.email"
+                                                      )
+                                                    },
                                                     input: function($event) {
                                                       if (
                                                         $event.target.composing
@@ -11573,7 +12088,25 @@ var render = function() {
                                                       )
                                                     }
                                                   }
-                                                })
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "invalid-feedback"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                        _vm._s(
+                                                          _vm.errors.restaurant
+                                                            .email
+                                                        ) +
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                    )
+                                                  ]
+                                                )
                                               ]
                                             )
                                           ])
@@ -11608,10 +12141,15 @@ var render = function() {
                                                     }
                                                   ],
                                                   staticClass: "form-control",
+                                                  class: !!_vm.errors.restaurant
+                                                    .mobile
+                                                    ? "is-invalid"
+                                                    : "is-valid",
                                                   attrs: {
                                                     type: "tel",
                                                     placeholder: "Mobile",
-                                                    required: "true"
+                                                    pattern:
+                                                      "\\+?(88)?0?1[123456789][0-9]{8}\\b"
                                                   },
                                                   domProps: {
                                                     value:
@@ -11619,6 +12157,11 @@ var render = function() {
                                                         .restaurant.mobile
                                                   },
                                                   on: {
+                                                    keyup: function($event) {
+                                                      return _vm.validateFormInput(
+                                                        "restaurant.mobile"
+                                                      )
+                                                    },
                                                     input: function($event) {
                                                       if (
                                                         $event.target.composing
@@ -11633,7 +12176,25 @@ var render = function() {
                                                       )
                                                     }
                                                   }
-                                                })
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "invalid-feedback"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                        _vm._s(
+                                                          _vm.errors.restaurant
+                                                            .mobile
+                                                        ) +
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                    )
+                                                  ]
+                                                )
                                               ]
                                             )
                                           ])
@@ -11678,8 +12239,13 @@ var render = function() {
                                                     }
                                                   ],
                                                   staticClass: "form-control",
+                                                  class: !!_vm.errors.restaurant
+                                                    .password
+                                                    ? "is-invalid"
+                                                    : "is-valid",
                                                   attrs: {
                                                     type: "password",
+                                                    pattern: ".{8,}",
                                                     placeholder:
                                                       "Login Password"
                                                   },
@@ -11689,6 +12255,11 @@ var render = function() {
                                                         .restaurant.password
                                                   },
                                                   on: {
+                                                    keyup: function($event) {
+                                                      return _vm.validateFormInput(
+                                                        "restaurant.password"
+                                                      )
+                                                    },
                                                     input: function($event) {
                                                       if (
                                                         $event.target.composing
@@ -11703,7 +12274,25 @@ var render = function() {
                                                       )
                                                     }
                                                   }
-                                                })
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "invalid-feedback"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                        _vm._s(
+                                                          _vm.errors.restaurant
+                                                            .password
+                                                        ) +
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                    )
+                                                  ]
+                                                )
                                               ]
                                             )
                                           ])
@@ -11745,8 +12334,13 @@ var render = function() {
                                                     }
                                                   ],
                                                   staticClass: "form-control",
+                                                  class: !!_vm.errors.restaurant
+                                                    .password_confirmation
+                                                    ? "is-invalid"
+                                                    : "is-valid",
                                                   attrs: {
                                                     type: "password",
+                                                    pattern: ".{8,}",
                                                     placeholder:
                                                       "Repeat Password"
                                                   },
@@ -11757,6 +12351,11 @@ var render = function() {
                                                         .password_confirmation
                                                   },
                                                   on: {
+                                                    keyup: function($event) {
+                                                      return _vm.validateFormInput(
+                                                        "restaurant.password_confirmation"
+                                                      )
+                                                    },
                                                     input: function($event) {
                                                       if (
                                                         $event.target.composing
@@ -11771,7 +12370,25 @@ var render = function() {
                                                       )
                                                     }
                                                   }
-                                                })
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "invalid-feedback"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                        _vm._s(
+                                                          _vm.errors.restaurant
+                                                            .password_confirmation
+                                                        ) +
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                    )
+                                                  ]
+                                                )
                                               ]
                                             )
                                           ])
@@ -11812,6 +12429,11 @@ var render = function() {
                                                 { staticClass: "col-sm-6" },
                                                 [
                                                   _c("multiselect", {
+                                                    class: !!_vm.errors
+                                                      .restaurant
+                                                      .restaurantCuisineObjectTags
+                                                      ? "is-invalid"
+                                                      : "is-valid",
                                                     attrs: {
                                                       placeholder:
                                                         "Restaurant Type",
@@ -11822,6 +12444,13 @@ var render = function() {
                                                       multiple: true,
                                                       max: 3,
                                                       required: true
+                                                    },
+                                                    on: {
+                                                      close: function($event) {
+                                                        return _vm.validateFormInput(
+                                                          "restaurant.restaurantCuisineObjectTags"
+                                                        )
+                                                      }
                                                     },
                                                     model: {
                                                       value:
@@ -11837,7 +12466,26 @@ var render = function() {
                                                       expression:
                                                         "singleRestaurantData.restaurantCuisineObjectTags"
                                                     }
-                                                  })
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "div",
+                                                    {
+                                                      staticClass:
+                                                        "invalid-feedback"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                          _vm._s(
+                                                            _vm.errors
+                                                              .restaurant
+                                                              .restaurantCuisineObjectTags
+                                                          ) +
+                                                          "\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                      )
+                                                    ]
+                                                  )
                                                 ],
                                                 1
                                               ),
@@ -11927,8 +12575,14 @@ var render = function() {
                                                     }
                                                   ],
                                                   staticClass: "form-control",
+                                                  class: !!_vm.errors.restaurant
+                                                    .website
+                                                    ? "is-invalid"
+                                                    : "is-valid",
                                                   attrs: {
                                                     type: "url",
+                                                    pattern:
+                                                      "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
                                                     placeholder:
                                                       "Restaurant Website"
                                                   },
@@ -11938,6 +12592,11 @@ var render = function() {
                                                         .restaurant.website
                                                   },
                                                   on: {
+                                                    keyup: function($event) {
+                                                      return _vm.validateFormInput(
+                                                        "restaurant.website"
+                                                      )
+                                                    },
                                                     input: function($event) {
                                                       if (
                                                         $event.target.composing
@@ -11952,7 +12611,25 @@ var render = function() {
                                                       )
                                                     }
                                                   }
-                                                })
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "invalid-feedback"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                        _vm._s(
+                                                          _vm.errors.restaurant
+                                                            .website
+                                                        ) +
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                    )
+                                                  ]
+                                                )
                                               ]
                                             )
                                           ])
@@ -11964,7 +12641,7 @@ var render = function() {
                               ])
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "row mb-2" }, [
                               _c(
                                 "div",
                                 { staticClass: "col-sm-12 text-right" },
@@ -12072,7 +12749,18 @@ var render = function() {
                                           [
                                             _c("ckeditor", {
                                               staticClass: "form-control",
+                                              class: !!_vm.errors.restaurant
+                                                .address
+                                                ? "is-invalid"
+                                                : "is-valid",
                                               attrs: { editor: _vm.editor },
+                                              on: {
+                                                blur: function($event) {
+                                                  return _vm.validateFormInput(
+                                                    "restaurant.address"
+                                                  )
+                                                }
+                                              },
                                               model: {
                                                 value:
                                                   _vm.singleRestaurantData
@@ -12088,7 +12776,24 @@ var render = function() {
                                                 expression:
                                                   "singleRestaurantData.restaurant.address"
                                               }
-                                            })
+                                            }),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass: "invalid-feedback"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                    _vm._s(
+                                                      _vm.errors.restaurant
+                                                        .address
+                                                    ) +
+                                                    "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                )
+                                              ]
+                                            )
                                           ],
                                           1
                                         )
@@ -12099,7 +12804,7 @@ var render = function() {
                               ])
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "row mb-2" }, [
                               _c(
                                 "div",
                                 { staticClass: "col-sm-12 text-right" },
@@ -12196,20 +12901,28 @@ var render = function() {
                                                   directives: [
                                                     {
                                                       name: "model",
-                                                      rawName: "v-model",
+                                                      rawName: "v-model.number",
                                                       value:
                                                         _vm.singleRestaurantData
                                                           .restaurant.min_order,
                                                       expression:
-                                                        "singleRestaurantData.restaurant.min_order"
+                                                        "singleRestaurantData.restaurant.min_order",
+                                                      modifiers: {
+                                                        number: true
+                                                      }
                                                     }
                                                   ],
                                                   staticClass: "form-control",
+                                                  class: !!_vm.errors.restaurant
+                                                    .min_order
+                                                    ? "is-invalid"
+                                                    : "is-valid",
                                                   attrs: {
                                                     type: "number",
                                                     placeholder:
                                                       "Minimum Currency",
                                                     min: "100",
+                                                    max: "5000",
                                                     step: "1"
                                                   },
                                                   domProps: {
@@ -12218,6 +12931,11 @@ var render = function() {
                                                         .restaurant.min_order
                                                   },
                                                   on: {
+                                                    keyup: function($event) {
+                                                      return _vm.validateFormInput(
+                                                        "restaurant.min_order"
+                                                      )
+                                                    },
                                                     input: function($event) {
                                                       if (
                                                         $event.target.composing
@@ -12228,11 +12946,34 @@ var render = function() {
                                                         _vm.singleRestaurantData
                                                           .restaurant,
                                                         "min_order",
-                                                        $event.target.value
+                                                        _vm._n(
+                                                          $event.target.value
+                                                        )
                                                       )
+                                                    },
+                                                    blur: function($event) {
+                                                      return _vm.$forceUpdate()
                                                     }
                                                   }
-                                                })
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "invalid-feedback"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                        _vm._s(
+                                                          _vm.errors.restaurant
+                                                            .min_order
+                                                        ) +
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                    )
+                                                  ]
+                                                )
                                               ]
                                             )
                                           ])
@@ -12371,6 +13112,11 @@ var render = function() {
                                                 { staticClass: "col-sm-6" },
                                                 [
                                                   _c("multiselect", {
+                                                    class: !!_vm.errors
+                                                      .restaurant
+                                                      .restaurantFoodObjectTags
+                                                      ? "is-invalid"
+                                                      : "is-valid",
                                                     attrs: {
                                                       placeholder:
                                                         "Select three main foods",
@@ -12381,6 +13127,13 @@ var render = function() {
                                                       multiple: true,
                                                       max: 3,
                                                       required: true
+                                                    },
+                                                    on: {
+                                                      close: function($event) {
+                                                        return _vm.validateFormInput(
+                                                          "restaurant.restaurantFoodObjectTags"
+                                                        )
+                                                      }
                                                     },
                                                     model: {
                                                       value:
@@ -12396,7 +13149,26 @@ var render = function() {
                                                       expression:
                                                         "singleRestaurantData.restaurantFoodObjectTags"
                                                     }
-                                                  })
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "div",
+                                                    {
+                                                      staticClass:
+                                                        "invalid-feedback"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                          _vm._s(
+                                                            _vm.errors
+                                                              .restaurant
+                                                              .restaurantFoodObjectTags
+                                                          ) +
+                                                          "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                      )
+                                                    ]
+                                                  )
                                                 ],
                                                 1
                                               ),
@@ -12464,6 +13236,11 @@ var render = function() {
                                                 { staticClass: "col-sm-6" },
                                                 [
                                                   _c("multiselect", {
+                                                    class: !!_vm.errors
+                                                      .restaurant
+                                                      .restaurantMealObjectTags
+                                                      ? "is-invalid"
+                                                      : "is-valid",
                                                     attrs: {
                                                       placeholder:
                                                         "Available Meals",
@@ -12473,6 +13250,13 @@ var render = function() {
                                                       multiple: true,
                                                       max: 6,
                                                       required: true
+                                                    },
+                                                    on: {
+                                                      close: function($event) {
+                                                        return _vm.validateFormInput(
+                                                          "restaurant.restaurantMealObjectTags"
+                                                        )
+                                                      }
                                                     },
                                                     model: {
                                                       value:
@@ -12488,7 +13272,26 @@ var render = function() {
                                                       expression:
                                                         "singleRestaurantData.restaurantMealObjectTags"
                                                     }
-                                                  })
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "div",
+                                                    {
+                                                      staticClass:
+                                                        "invalid-feedback"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t        " +
+                                                          _vm._s(
+                                                            _vm.errors
+                                                              .restaurant
+                                                              .restaurantMealObjectTags
+                                                          ) +
+                                                          "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \t"
+                                                      )
+                                                    ]
+                                                  )
                                                 ],
                                                 1
                                               ),
@@ -12537,7 +13340,7 @@ var render = function() {
                               ])
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "row mb-2" }, [
                               _c(
                                 "div",
                                 { staticClass: "col-sm-12 text-right" },
@@ -12793,7 +13596,7 @@ var render = function() {
                                           { staticClass: "col-sm-10" },
                                           [
                                             _c("table", {
-                                              staticClass: "service_schedule"
+                                              attrs: { id: "service_schedule" }
                                             })
                                           ]
                                         )
@@ -12819,8 +13622,9 @@ var render = function() {
                                           { staticClass: "col-sm-10" },
                                           [
                                             _c("table", {
-                                              staticClass:
-                                                "booking_break_schedule"
+                                              attrs: {
+                                                id: "booking_break_schedule"
+                                              }
                                             })
                                           ]
                                         )
@@ -12831,7 +13635,7 @@ var render = function() {
                               ])
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "row mb-2" }, [
                               _c(
                                 "div",
                                 { staticClass: "col-sm-12 text-right" },
@@ -12862,7 +13666,10 @@ var render = function() {
                                     {
                                       staticClass:
                                         "btn btn-danger rounded-pill",
-                                      attrs: { type: "submit" }
+                                      attrs: {
+                                        type: "submit",
+                                        disabled: !_vm.submitForm
+                                      }
                                     },
                                     [
                                       _vm._v(
@@ -13015,7 +13822,7 @@ var render = function() {
                 "form",
                 {
                   staticClass: "form-horizontal",
-                  attrs: { autocomplete: "off", novalidate: "" },
+                  attrs: { autocomplete: "off" },
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
@@ -13056,6 +13863,9 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
+                                  class: !!_vm.errors.newRestaurantCuisine.name
+                                    ? "is-invalid"
+                                    : "is-valid",
                                   attrs: {
                                     type: "text",
                                     placeholder: "Cuisine Name",
@@ -13065,6 +13875,11 @@ var render = function() {
                                     value: _vm.newRestaurantCuisine.name
                                   },
                                   on: {
+                                    keyup: function($event) {
+                                      return _vm.validateFormInput(
+                                        "newRestaurantCuisine.name"
+                                      )
+                                    },
                                     input: function($event) {
                                       if ($event.target.composing) {
                                         return
@@ -13076,7 +13891,17 @@ var render = function() {
                                       )
                                     }
                                   }
-                                })
+                                }),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "invalid-feedback" }, [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t\t\t\t\t\t\t\t        \t" +
+                                      _vm._s(
+                                        _vm.errors.newRestaurantCuisine.name
+                                      ) +
+                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t  \t\t"
+                                  )
+                                ])
                               ])
                             ])
                           ])
@@ -13085,7 +13910,37 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(9)
+                  _c(
+                    "div",
+                    { staticClass: "modal-footer justify-content-between" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "button", "data-dismiss": "modal" }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t  \t\tClose\n\t\t\t\t\t\t\t  \t"
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "submit", disabled: !_vm.submitForm }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t  \t\tAdd Cuisine\n\t\t\t\t\t\t\t\t"
+                          )
+                        ]
+                      )
+                    ]
+                  )
                 ]
               )
             ])
@@ -13099,7 +13954,7 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-secondary" }, [
-              _vm._m(10),
+              _vm._m(9),
               _vm._v(" "),
               _c(
                 "form",
@@ -13114,73 +13969,112 @@ var render = function() {
                   }
                 },
                 [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "modal-body text-dark",
-                      attrs: { novalidate: "" }
-                    },
-                    [
-                      _c("input", {
-                        attrs: { type: "hidden", name: "_token" },
-                        domProps: { value: _vm.csrf }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "row" }, [
-                        _c("div", { staticClass: "col-sm-12" }, [
-                          _c("div", { staticClass: "card card-outline" }, [
-                            _c("div", { staticClass: "card-body" }, [
-                              _c("div", { staticClass: "form-group row" }, [
-                                _c(
-                                  "label",
-                                  {
-                                    staticClass:
-                                      "col-sm-4 col-form-label text-right",
-                                    attrs: { for: "inputMenuName3" }
-                                  },
-                                  [_vm._v("Meal Name")]
-                                ),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "col-sm-8" }, [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.newMeal.name,
-                                        expression: "newMeal.name"
-                                      }
-                                    ],
-                                    staticClass: "form-control",
-                                    attrs: {
-                                      type: "text",
-                                      placeholder: "Meal Name",
-                                      required: "true"
-                                    },
-                                    domProps: { value: _vm.newMeal.name },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          _vm.newMeal,
-                                          "name",
-                                          $event.target.value
-                                        )
-                                      }
+                  _c("div", { staticClass: "modal-body text-dark" }, [
+                    _c("input", {
+                      attrs: { type: "hidden", name: "_token" },
+                      domProps: { value: _vm.csrf }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-sm-12" }, [
+                        _c("div", { staticClass: "card card-outline" }, [
+                          _c("div", { staticClass: "card-body" }, [
+                            _c("div", { staticClass: "form-group row" }, [
+                              _c(
+                                "label",
+                                {
+                                  staticClass:
+                                    "col-sm-4 col-form-label text-right",
+                                  attrs: { for: "inputMealName3" }
+                                },
+                                [_vm._v("Meal Name")]
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-sm-8" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.newMeal.name,
+                                      expression: "newMeal.name"
                                     }
-                                  })
+                                  ],
+                                  staticClass: "form-control",
+                                  class: !!_vm.errors.newMeal.name
+                                    ? "is-invalid"
+                                    : "is-valid",
+                                  attrs: {
+                                    type: "text",
+                                    placeholder: "Meal Name",
+                                    required: "true"
+                                  },
+                                  domProps: { value: _vm.newMeal.name },
+                                  on: {
+                                    keyup: function($event) {
+                                      return _vm.validateFormInput(
+                                        "newMeal.name"
+                                      )
+                                    },
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.newMeal,
+                                        "name",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "invalid-feedback" }, [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t\t\t\t\t\t\t\t        \t" +
+                                      _vm._s(_vm.errors.newMeal.name) +
+                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t  \t\t"
+                                  )
                                 ])
                               ])
                             ])
                           ])
                         ])
                       ])
-                    ]
-                  ),
+                    ])
+                  ]),
                   _vm._v(" "),
-                  _vm._m(11)
+                  _c(
+                    "div",
+                    { staticClass: "modal-footer justify-content-between" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "button", "data-dismiss": "modal" }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t  \t\tClose\n\t\t\t\t\t\t\t  \t"
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "submit", disabled: !_vm.submitForm }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t  \t\tAdd Meal\n\t\t\t\t\t\t\t\t"
+                          )
+                        ]
+                      )
+                    ]
+                  )
                 ]
               )
             ])
@@ -13197,13 +14091,13 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-secondary" }, [
-              _vm._m(12),
+              _vm._m(10),
               _vm._v(" "),
               _c(
                 "form",
                 {
                   staticClass: "form-horizontal",
-                  attrs: { autocomplete: "off", novalidate: "" },
+                  attrs: { autocomplete: "off" },
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
@@ -13244,6 +14138,9 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control",
+                                  class: !!_vm.errors.newMenuCategory.name
+                                    ? "is-invalid"
+                                    : "is-valid",
                                   attrs: {
                                     type: "text",
                                     placeholder: "Menu Name",
@@ -13251,6 +14148,11 @@ var render = function() {
                                   },
                                   domProps: { value: _vm.newMenuCategory.name },
                                   on: {
+                                    keyup: function($event) {
+                                      return _vm.validateFormInput(
+                                        "newMenuCategory.name"
+                                      )
+                                    },
                                     input: function($event) {
                                       if ($event.target.composing) {
                                         return
@@ -13262,7 +14164,15 @@ var render = function() {
                                       )
                                     }
                                   }
-                                })
+                                }),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "invalid-feedback" }, [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t\t\t\t\t\t\t\t        \t" +
+                                      _vm._s(_vm.errors.newMenuCategory.name) +
+                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t  \t\t"
+                                  )
+                                ])
                               ])
                             ])
                           ])
@@ -13271,7 +14181,37 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(13)
+                  _c(
+                    "div",
+                    { staticClass: "modal-footer justify-content-between" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "button", "data-dismiss": "modal" }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t  \t\tClose\n\t\t\t\t\t\t\t  \t"
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "submit", disabled: !_vm.submitForm }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t  \t\tAdd Food Menu\n\t\t\t\t\t\t\t  \t"
+                          )
+                        ]
+                      )
+                    ]
+                  )
                 ]
               )
             ])
@@ -13288,13 +14228,13 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-danger" }, [
-              _vm._m(14),
+              _vm._m(11),
               _vm._v(" "),
               _c(
                 "form",
                 {
                   staticClass: "form-horizontal",
-                  attrs: { autocomplete: "off", novalidate: "" },
+                  attrs: { autocomplete: "off" },
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
@@ -13313,10 +14253,36 @@ var render = function() {
                       _vm._v("Are you sure want to delete restaurant ?? ")
                     ]),
                     _vm._v(" "),
-                    _vm._m(15)
+                    _vm._m(12)
                   ]),
                   _vm._v(" "),
-                  _vm._m(16)
+                  _c(
+                    "div",
+                    { staticClass: "modal-footer justify-content-between" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "button", "data-dismiss": "modal" }
+                        },
+                        [_vm._v("Close")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "submit", disabled: !_vm.submitForm }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t  \t\tDelete\n\t\t\t\t\t\t\t  \t"
+                          )
+                        ]
+                      )
+                    ]
+                  )
                 ]
               )
             ])
@@ -13333,13 +14299,13 @@ var render = function() {
         [
           _c("div", { staticClass: "modal-dialog" }, [
             _c("div", { staticClass: "modal-content bg-danger" }, [
-              _vm._m(17),
+              _vm._m(13),
               _vm._v(" "),
               _c(
                 "form",
                 {
                   staticClass: "form-horizontal",
-                  attrs: { autocomplete: "off", novalidate: "" },
+                  attrs: { autocomplete: "off" },
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
@@ -13359,7 +14325,33 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(18)
+                  _c(
+                    "div",
+                    { staticClass: "modal-footer justify-content-between" },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "button", "data-dismiss": "modal" }
+                        },
+                        [_vm._v("Close")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-light",
+                          attrs: { type: "submit", disabled: !_vm.submitForm }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t  \t\tRestore\n\t\t\t\t\t\t\t  \t"
+                          )
+                        ]
+                      )
+                    ]
+                  )
                 ]
               )
             ])
@@ -13571,27 +14563,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer justify-content-between" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-outline-light",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-light", attrs: { type: "submit" } },
-        [_vm._v("Add Cuisine")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
       _c("h4", { staticClass: "modal-title" }, [_vm._v("Create New Meal")]),
       _vm._v(" "),
@@ -13613,27 +14584,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer justify-content-between" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-outline-light",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-light", attrs: { type: "submit" } },
-        [_vm._v("Add Meal")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
       _c("h4", { staticClass: "modal-title" }, [_vm._v("Add Menu Category")]),
       _vm._v(" "),
@@ -13648,27 +14598,6 @@ var staticRenderFns = [
           }
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer justify-content-between" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-outline-light",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-light", attrs: { type: "submit" } },
-        [_vm._v("Add Food Menu")]
       )
     ])
   },
@@ -13705,27 +14634,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer justify-content-between" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-outline-light",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-light", attrs: { type: "submit" } },
-        [_vm._v("Delete")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
       _c("h4", { staticClass: "modal-title" }, [
         _vm._v("Restaurant Restoration")
@@ -13742,27 +14650,6 @@ var staticRenderFns = [
           }
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer justify-content-between" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-outline-light",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-light", attrs: { type: "submit" } },
-        [_vm._v("Restore")]
       )
     ])
   }
