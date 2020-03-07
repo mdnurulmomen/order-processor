@@ -21,26 +21,16 @@ class Restaurant extends Authenticatable
      *
      * @var array
      */
-
     protected $guarded = [
         'id'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
+    
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    
     protected $casts = [
         'is_post_paid' => 'boolean',
         'is_self_service' => 'boolean',

@@ -16,10 +16,7 @@ class CreateRestaurantsTable extends Migration
         Schema::create('restaurants', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 50)->unique();
-            $table->string('user_name', 50)->unique(); // Auto Generated
             $table->char('mobile', 13)->unique();
-            $table->string('email', 50)->nullable()->unique();
-            $table->string('password'); // Login with username / mobile
             $table->rememberToken();
             $table->string('address'); // floor, house, road and other landmark  
             $table->string('lat'); // from area name / map
@@ -36,6 +33,7 @@ class CreateRestaurantsTable extends Migration
             $table->json('booking_schedule_break')->nullable(); // break hour for whole week
             $table->boolean('taking_order')->default(false);
             $table->boolean('admin_approval')->default(false);
+            $table->unsignedInteger('restaurant_admins_id');
 
             $table->softDeletes();
             

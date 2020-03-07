@@ -14,7 +14,11 @@ class CreateRestaurantAdminsTable extends Migration
     public function up()
     {
         Schema::create('restaurant_admins', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->string('user_name', 50)->unique(); // Auto Generated
+            $table->char('mobile', 13)->unique();
+            $table->string('email', 50)->nullable()->unique();
+            $table->string('password'); // Login with username / mobile
             $table->timestamps();
         });
     }
