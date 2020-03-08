@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Cuisine;
 use App\Models\MenuCategory;
 use App\Models\RestaurantMeal;
+use App\Models\RestaurantAdmin;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -55,6 +56,11 @@ class Restaurant extends Authenticatable
 
             $this->attributes['banner_preview'] = $directory.$this->id.'.jpg';
         }
+    }
+
+    public function restaurantAdmin()
+    {
+        return $this->belongsTo(RestaurantAdmin::class, 'restaurant_admins_id', 'id');
     }
 
     public function restaurantCuisines()

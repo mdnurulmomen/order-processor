@@ -39,6 +39,9 @@ Route::name('admin.')->group(function () {
 		    
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
+		    Route::get('/api/restaurant-admins', 'RestaurantController@showAllRestaurantAdmins');
+		    Route::post('/restaurant-admins', 'RestaurantController@createRestaurantAdmin');
+
 		    Route::get('/api/restaurant-cuisines', 'RestaurantController@showAllRestaurantCuisines');
 		    Route::post('/restaurant-cuisines', 'RestaurantController@createRestaurantCuisine');
 

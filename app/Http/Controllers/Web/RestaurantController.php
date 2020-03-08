@@ -7,26 +7,51 @@ use App\Models\Cuisine;
 use App\Models\Restaurant;
 use App\Models\MenuCategory;
 use Illuminate\Http\Request;
+use App\Models\RestaurantAdmin;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 
 class RestaurantController extends Controller
 {
-      public function showAllRestaurantCuisines()
+      public function showAllRestaurantAdmins()
    	{
-   		return response(Cuisine::get(), 200);
+   		return response(RestaurantAdmin::get(), 200);
    	}
 
-   	public function createRestaurantCuisine(Request $request)
+   	public function createRestaurantAdmin(Request $request)
    	{
    		$request->validate([
-   			'name'=>'required|unique:cuisines,name|max:50'
+   			'user_name'=>'required|unique:restaurant_admins,user_name|string|max:50',
+            'email'=>'required|unique:restaurant_admins,email|email|string|max:50',
+            'mobile'=>'required|unique:restaurant_admins,mobile|max:13',
+            'password'=>'required|string|min:8|max:100|confirmed',
    		]);
 
-   		$newCuisine = Cuisine::create(['name' => $request->name]);
+   		$newRestaurantAdmin = RestaurantAdmin::create([
+            'user_name' => $request->user_name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'password' => Hash::make($request->password)
+         ]);
 
-   		return $this->showAllRestaurantCuisines();
+   		return $this->showAllRestaurantAdmins();
    	}
+
+      public function showAllRestaurantCuisines()
+      {
+         return response(Cuisine::get(), 200);
+      }
+
+      public function createRestaurantCuisine(Request $request)
+      {
+         $request->validate([
+            'name'=>'required|unique:cuisines,name|max:50'
+         ]);
+
+         $newCuisine = Cuisine::create(['name' => $request->name]);
+
+         return $this->showAllRestaurantCuisines();
+      }
 
    	public function showAllMenuCategories()
    	{
@@ -63,19 +88,19 @@ class RestaurantController extends Controller
    	public function showAllRestaurants($perPage)
    	{
    		return response()->json([
-            'all' => Restaurant::withTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-            'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-            'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-            'trashed' => Restaurant::onlyTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+            'all' => Restaurant::withTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+            'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+            'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+            'trashed' => Restaurant::onlyTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
             
          ], 200);
    	}
 
       public function searchAllRestaurants($search, $perPage)
       {
-         $columnsToSearch = ['name', 'user_name', 'mobile', 'email', 'address', 'website', 'min_order'];
+         $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order'];
 
-         $query = Restaurant::withTrashed()->with(['restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories']);
+         $query = Restaurant::withTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories']);
 
          foreach($columnsToSearch as $column)
          {
@@ -90,11 +115,9 @@ class RestaurantController extends Controller
    	public function createNewRestaurant(Request $request, $perPage)
    	{
    		$request->validate([
-   			'name'=>'required|unique:restaurants,name|string|max:50',
-   			'user_name'=>'required|unique:restaurants,user_name|string|max:50',
-   			'email'=>'required|unique:restaurants,email|email|string|max:50',
+   			'restaurantAdmin'=>'required',
+            'name'=>'required|unique:restaurants,name|string|max:50',
    			'mobile'=>'required|unique:restaurants,mobile|max:13',
-   			'password'=>'required|string|min:8|max:100|confirmed',
             'restaurantCuisineTags' => 'present|array|max:3',
             'restaurantCuisineTags.*' => 'numeric|distinct',
    			'website'=>'nullable|url|max:255',
@@ -118,11 +141,11 @@ class RestaurantController extends Controller
          // return $request;
 
    		$newRestaurant = new Restaurant();
+         $newRestaurant->admin_approval = $request->admin_approval ?? 0;
+         $newRestaurant->restaurant_admins_id = $request->restaurantAdmin;
+         
          $newRestaurant->name = $request->name;
-         $newRestaurant->user_name = $request->user_name;
          $newRestaurant->mobile = $request->mobile;
-         $newRestaurant->email = $request->email;
-         $newRestaurant->password = Hash::make($request->password);
          $newRestaurant->website = $request->website;
          
          $newRestaurant->lat = '23.781800';
@@ -133,7 +156,6 @@ class RestaurantController extends Controller
          $newRestaurant->is_post_paid = $request->is_post_paid ?? 0;
          $newRestaurant->has_parking = $request->has_parking ?? 0;
          $newRestaurant->is_self_service = $request->is_self_service ?? 0;
-         $newRestaurant->admin_approval = $request->admin_approval ?? 0;
          // $newRestaurant->service_schedule = $request->service_schedule;
          // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
          $newRestaurant->save();
@@ -153,11 +175,9 @@ class RestaurantController extends Controller
          $restaurantToUpdate = Restaurant::find($restaurant);
 
          $request->validate([
+            'restaurantAdmin'=>'required',
             'name'=>'required|string|max:50|unique:restaurants,name,'.$restaurantToUpdate->id,
-            'user_name'=>'required|string|max:50|unique:restaurants,user_name,'.$restaurantToUpdate->id,
-            'email'=>'required|email|string|max:50|unique:restaurants,email,'.$restaurantToUpdate->id,
             'mobile'=>'required|max:13|unique:restaurants,mobile,'.$restaurantToUpdate->id,
-            'password'=>'nullable|string|min:8|max:100|confirmed',
             'restaurantCuisineTags' => 'present|array|max:3',
             'restaurantCuisineTags.*' => 'numeric|distinct',
             'website'=>'nullable|url|max:255',
@@ -178,15 +198,11 @@ class RestaurantController extends Controller
             // 'booking_schedule_break'=>'required|unique:menu_categories,name|max:50',
          ]);
 
+         $restaurantToUpdate->admin_approval = $request->admin_approval ?? 0;
+         $restaurantToUpdate->restaurant_admins_id = $request->restaurantAdmin;
+         
          $restaurantToUpdate->name = $request->name;
-         $restaurantToUpdate->user_name = $request->user_name;
          $restaurantToUpdate->mobile = $request->mobile;
-         $restaurantToUpdate->email = $request->email;
-
-         if ($request->has('password')) {   
-            $restaurantToUpdate->password = Hash::make($request->password);
-         }
-
          $restaurantToUpdate->website = $request->website;
          
          $restaurantToUpdate->lat = '23.781800';
@@ -197,7 +213,6 @@ class RestaurantController extends Controller
          $restaurantToUpdate->is_post_paid = $request->is_post_paid;
          $restaurantToUpdate->has_parking = $request->has_parking;
          $restaurantToUpdate->is_self_service = $request->is_self_service;
-         $restaurantToUpdate->admin_approval = $request->admin_approval ?? 0;
          // $newRestaurant->service_schedule = $request->service_schedule;
          // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
          $restaurantToUpdate->restaurantCuisines()->sync($request->restaurantCuisineTags);

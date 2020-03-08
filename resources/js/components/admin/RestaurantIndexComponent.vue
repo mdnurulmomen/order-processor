@@ -80,7 +80,7 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Name</th>
-											<th scope="col">Email</th>
+											<!-- <th scope="col">Email</th> -->
 											<th scope="col">Phone</th>
 											<th scope="col">Website</th>
 											<th scope="col">Action</th>
@@ -93,7 +93,7 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ restaurant.name}}</td>
-								    		<td>{{ restaurant.email }}</td>
+								    		<!-- <td>{{ restaurant.email }}</td> -->
 								    		<td>{{ restaurant.mobile }}</td>
 								    		<td>{{ restaurant.website }}</td>
 								    		<td>
@@ -212,28 +212,29 @@
 					            		<div class="col-sm-8">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			User-name :
+							              			Restaurant Admin :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleRestaurantData.restaurant.user_name}}
+								                  	{{ singleRestaurantData.restaurantAdminObject.user_name }}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Mobile :
+							              			Admin Mobile
+							              		</label>
+								                <div class="col-sm-6">
+								                  	{{ singleRestaurantData.restaurantAdminObject.mobile
+								                  		 }}
+								                </div>	
+								            </div>
+								            <div class="form-group row">		
+							              		<label class="col-sm-6 text-right">
+							              			Restaurant Mobile :
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{singleRestaurantData.restaurant.mobile}}
 								                </div>	
 								            </div> 
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Email :
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{singleRestaurantData.restaurant.email}}
-								                </div>	
-								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Website :
@@ -433,28 +434,71 @@
 									                          	</div>
 									                        </div>
 
-									                        <div class="form-group row mb-0">
-									                        	<div class="col-sm-12 text-right">
-
-								                              		<!-- 
-								                              			<label for="inputAdminApproval" class="col-form-label mr-2">Admin Approval</label> 
-								                              		-->
-								                              		
-						                                  			<toggle-button 
-							                                  			:sync="true" 
-							                                  			v-model="singleRestaurantData.restaurant.admin_approval" 
-							                                  			value="true" 
-							                                  			:width="130"  
-							                                  			:height="30" 
-							                                  			:font-size="15" 
-							                                  			:color="{checked: 'green', unchecked: 'red'}" 
-							                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
-						                                  			/>
-								                              		
-									                        	</div>
-									                        </div>
-
 									                        <hr class="mt-1">
+
+									                        <div class="form-group row">
+
+
+									                        	<div class="col-6">
+									                            	<div class="row d-flex align-items-center">
+									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">Restaurant Admin</label>
+									                              		<div class="col-sm-6">
+									                                  		
+									                                  		<multiselect 
+									                                  			v-model="singleRestaurantData.restaurantAdminObject"
+									                                  			placeholder="Restaurant Owner" 
+										                                  		label="user_name" 
+										                                  		track-by="id" 
+										                                  		:options="allRestaurantAdmins" 
+										                                  		:required="true"
+										                                  		:class="!errors.restaurant.restaurantAdminObject  ? 'is-valid' : 'is-invalid'"
+										                                  		:allow-empty="false"
+										                                  		selectLabel = "Press/Click"
+										                                  		deselect-label="Can't remove single value"
+										                                  		@close="validateFormInput('restaurant.restaurantAdminObject')"
+									                                  		>
+										                                	</multiselect>
+
+									                                		<div 
+											                                  	class="invalid-feedback"
+											                                >
+																		        {{ errors.restaurant.restaurantFoodObjectTags }}
+																		  	</div>
+
+									                              		</div>
+									                               
+										                              	<div class="col-sm-2 text-right">
+										                                  	<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-restaurant-admin">
+										                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+										                                    	Admin
+										                                	</button>
+										                              	</div> 
+									                            
+									                            	</div>
+									                          	</div>
+
+																<div class="col-6">
+																	<div class="row">
+																  		<label for="inputAdminApproval3" class="col-sm-4 col-form-label text-right">Admin Approval</label>
+																  		<div class="col-sm-8">
+																  			
+																			<toggle-button 
+									                                  			:sync="true" 
+									                                  			v-model="singleRestaurantData.restaurant.admin_approval" 
+									                                  			value="true" 
+									                                  			:width="130"  
+									                                  			:height="30" 
+									                                  			:font-size="15" 
+									                                  			:color="{checked: 'green', unchecked: 'red'}" 
+									                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
+								                                  			/>
+																    			
+																  		</div>
+																	</div>
+																</div>
+										                        
+
+									                        </div>
 
 									                        <div class="form-group row">
 									                          	<div class="col-6">
@@ -467,10 +511,9 @@
 									                                  		<input 
 										                                  		type="text" 
 										                                  		class="form-control" 
-										                                  		v-model="singleRestaurantData.restaurant.name" 
-										                                  		pattern="^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$" 
+										                                  		v-model="singleRestaurantData.restaurant.name"  
 										                                  		placeholder="Restaurant Name" 
-										                                  		:class="!!errors.restaurant.name  ? 'is-invalid' : 'is-valid'"
+										                                  		:class="!errors.restaurant.name  ? 'is-valid' : 'is-invalid'"
 										                                  		@keyup="validateFormInput('restaurant.name')" 
 									                                  		>
 									                                  		<div 
@@ -482,57 +525,8 @@
 									                              		</div>
 									                          		</div>
 									                      		</div>
-									                  			<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputUserName3" class="col-sm-4 col-form-label text-right">Username</label>
-									                              		<div class="col-sm-8">
-									                              			
-									                                  		<input 
-									                                  			type="text" 
-									                                  			class="form-control" 
-									                                  			v-model.trim="singleRestaurantData.restaurant.user_name" 
-									                                  			placeholder="No Space or special characters" 
-									                                  			pattern="^\S+\w{1,32}\S{1,}" 
-									                                  			:class="!!errors.restaurant.user_name  ? 'is-invalid' : 'is-valid'" 
-									                                  			@keyup="validateFormInput('restaurant.user_name')"
-									                                  		>
 
-									                                  		<div 
-									                                  			class="invalid-feedback" 
-									                                  		>
-																		     	{{ errors.restaurant.user_name }}
-																		  	</div>
-										                                  		
-									                              		</div>
-										                          	</div>
-										                      	</div>
-									                        </div>
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputEmail3" class="col-sm-4 col-form-label text-right">Email</label>
-									                              		<div class="col-sm-8">
-									                              			
-								                                			<input 
-									                                			type="email" 
-									                                			class="form-control" 
-									                                			v-model="singleRestaurantData.restaurant.email" 
-									                                			placeholder="Email" 
-									                                			pattern="[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
-									                                			:class="!!errors.restaurant.email  ? 'is-invalid' : 'is-valid'" 
-									                                			@keyup="validateFormInput('restaurant.email')"
-								                                			>
-
-								                                			<div 
-									                                			class="invalid-feedback" 
-								                                			>
-																		        {{ errors.restaurant.email }}
-																		  	</div>
-									                                			
-									                              		</div>
-									                            	</div>
-									                          	</div>
-									                          	<div class="col-6">
+									                      		<div class="col-6">
 										                            <div class="row">
 										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-right">Mobile</label>
 										                              	<div class="col-sm-8">
@@ -542,8 +536,7 @@
 										                                  		class="form-control" 
 										                                  		v-model="singleRestaurantData.restaurant.mobile" 
 										                                  		placeholder="Mobile" 
-										                                  		pattern="\+?(88)?0?1[123456789][0-9]{8}\b" 
-										                                  		:class="!!errors.restaurant.mobile  ? 'is-invalid' : 'is-valid'"
+										                                  		:class="!errors.restaurant.mobile  ? 'is-valid' : 'is-invalid'"
 										                                  		@keyup="validateFormInput('restaurant.mobile')"
 									                                  		>
 
@@ -555,63 +548,6 @@
 										                                  		
 										                              	</div>
 										                            </div>
-									                          	</div>
-									                        </div>
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row">
-									                              		<label 
-										                              		for="inputPassword3" 
-										                              		class="col-sm-4 col-form-label text-right"
-										                              	>
-									                              			Password
-									                              		</label>
-									                              		<div class="col-sm-8">
-									                              			
-									                                  		<input 
-										                                  		type="password" 
-										                                  		class="form-control" 
-										                                  		v-model="singleRestaurantData.restaurant.password" 
-										                                  		pattern=".{8,}" 
-										                                  		placeholder="Login Password" 
-										                                  		:class="!!errors.restaurant.password  ? 'is-invalid' : 'is-valid'"
-										                                  		@keyup="validateFormInput('restaurant.password')"
-										                                  	>
-
-									                                  		<div 
-									                                  			class="invalid-feedback" 
-									                                  		>
-																		        {{ errors.restaurant.password }}
-																		  	</div>
-
-									                              		</div>
-									                            	</div>
-									                          	</div>
-									                          	<div class="col-6">
-									                            	<div class="row">
-									                              		<label for="inputConfirmPassword3" class="col-sm-4 col-form-label text-right">
-									                              			Repeat Password
-									                              		</label>
-									                              		<div class="col-sm-8">
-									                              			
-									                                  		<input 
-										                                  		type="password" 
-										                                  		class="form-control" 
-										                                  		v-model="singleRestaurantData.restaurant.password_confirmation" 
-										                                  		pattern=".{8,}" 
-										                                  		placeholder="Repeat Password"
-										                                  		:class="!!errors.restaurant.password_confirmation  ? 'is-invalid' : 'is-valid'"
-										                                  		@keyup="validateFormInput('restaurant.password_confirmation')"
-										                                  	>
-
-									                                  		<div 
-									                                  			class="invalid-feedback"
-									                                  		>
-																		        {{ errors.restaurant.password_confirmation }}
-																		  	</div>
-										                                  		
-									                              		</div>
-									                            	</div>
 									                          	</div>
 									                        </div>
 
@@ -636,7 +572,10 @@
 										                                  		:multiple="true" 
 										                                  		:max="3" 
 										                                  		:required="true"
-										                                  		:class="!!errors.restaurant.restaurantCuisineObjectTags  ? 'is-invalid' : 'is-valid'"
+										                                  		:class="!errors.restaurant.restaurantCuisineObjectTags  ? 'is-valid' : 'is-invalid'" 
+										                                  		:allow-empty="false"
+										                                  		selectLabel = "Press/Click"
+										                                  		deselect-label="Can't remove single value"
 										                                  		@close="validateFormInput('restaurant.restaurantCuisineObjectTags')"
 									                                  		>
 										                                	</multiselect>
@@ -672,9 +611,8 @@
 										                                  	type="url" 
 										                                  	class="form-control" 
 										                                  	v-model="singleRestaurantData.restaurant.website" 
-										                                  	pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$" 
 										                                  	placeholder="Restaurant Website" 
-										                                  	:class="!!errors.restaurant.website  ? 'is-invalid' : 'is-valid'"
+										                                  	:class="!errors.restaurant.website  ? 'is-valid' : 'is-invalid'"
 										                                  	@keyup="validateFormInput('restaurant.website')"
 										                                >
 
@@ -752,7 +690,7 @@
 										                              	class="form-control" 
 										                              	:editor="editor" 
 										                              	v-model="singleRestaurantData.restaurant.address"
-										                              	:class="!!errors.restaurant.address  ? 'is-invalid' : 'is-valid'"
+										                              	:class="!errors.restaurant.address  ? 'is-valid' : 'is-invalid'"
 										                              	@blur="validateFormInput('restaurant.address')"
 										                            >
 									                              	</ckeditor>
@@ -774,11 +712,13 @@
 									        </div>
 
 									        <div class="row mb-2">
-									          	<div class="col-sm-12 text-right">
+									          	<div class="col-sm-6 text-left">
 								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="step-=1">
 									                    <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
 								                  	</button>
-									          
+								                </div>
+
+								                <div class="col-sm-6 text-right">
 								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
 									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
 								                  	</button>
@@ -817,7 +757,7 @@
 										                                  		min="100" 
 										                                  		max="5000" 
 										                                  		step="1" 
-										                                  		:class="!!errors.restaurant.min_order  ? 'is-invalid' : 'is-valid'"
+										                                  		:class="!errors.restaurant.min_order  ? 'is-valid' : 'is-invalid'"
 										                                  		@keyup="validateFormInput('restaurant.min_order')"
 										                                  	>
 										                                  		
@@ -877,7 +817,10 @@
 										                                  		:multiple="true" 
 										                                  		:max="3" 
 										                                  		:required="true"
-										                                  		:class="!!errors.restaurant.restaurantFoodObjectTags  ? 'is-invalid' : 'is-valid'"
+										                                  		:class="!errors.restaurant.restaurantFoodObjectTags  ? 'is-valid' : 'is-invalid'" 
+										                                  		:allow-empty="false"
+										                                  		selectLabel = "Press/Click"
+										                                  		deselect-label="Can't remove single value"
 										                                  		@close="validateFormInput('restaurant.restaurantFoodObjectTags')"
 									                                  		>
 
@@ -914,7 +857,10 @@
 									                                			:multiple="true" 
 									                                			:max="6" 
 									                                			:required="true"
-									                                			:class="!!errors.restaurant.restaurantMealObjectTags  ? 'is-invalid' : 'is-valid'"
+									                                			:class="!errors.restaurant.restaurantMealObjectTags  ? 'is-valid' : 'is-invalid'"
+									                                			:allow-empty="false"
+										                                  		selectLabel = "Press/Click"
+										                                  		deselect-label="Can't remove single value"
 									                                			@close="validateFormInput('restaurant.restaurantMealObjectTags')"
 								                                			>
 
@@ -947,11 +893,13 @@
 							       			</div>
 
 									        <div class="row mb-2">
-									          	<div class="col-sm-12 text-right">
+									          	<div class="col-sm-6 text-left">
 								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="step-=1">
 									                    <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
 								                  	</button>
-									          
+								                </div>
+
+								                <div class="col-sm-6 text-right">
 								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
 									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
 								                  	</button>
@@ -1055,7 +1003,7 @@
 									        </div>
 
 									        <div class="row mb-2">
-									          	<div class="col-sm-12 text-right">
+									          	<div class="col-sm-4 text-left">
 								                  	<button 
 									                  	type="button" 
 									                  	class="btn btn-outline-secondary btn-sm rounded-pill" 
@@ -1063,7 +1011,12 @@
 								                  	>
 								                    	<i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
 								                  	</button>
-									          
+								                </div>
+								                
+									          	<div class="col-sm-8 text-right">
+									                <div class="text-danger small" v-show="!submitForm">
+												  		Please input all required fields
+										          	</div>
 								                  	<button 
 									                  	type="submit" 
 									                  	class="btn btn-danger rounded-pill" 
@@ -1145,7 +1098,7 @@
 										                  	v-model="newRestaurantCuisine.name"
 										                  	placeholder="Cuisine Name"
 										                  	required="true" 
-										                  	:class="!!errors.newRestaurantCuisine.name  ? 'is-invalid' : 'is-valid'"
+										                  	:class="!errors.newRestaurantCuisine.name  ? 'is-valid' : 'is-invalid'"
 										                  	@keyup="validateFormInput('newRestaurantCuisine.name')"
 									                  	>
 									                  	
@@ -1161,7 +1114,157 @@
 									</div>
 								</div>
 							</div>
+
+							<div class="modal-footer justify-content-between">	
+								
+								<div class="col-sm-12 text-right">
+									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+								  		Please input all required fields
+								  	</span>
+								</div>
+								
+				              	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+				              		Close
+				              	</button>
+				              	<button 
+								  	type="submit" 
+								  	:disabled="!submitForm" 
+								  	class="btn btn-outline-light">
+							  		Add Cuisine
+								</button>
+								
+				            </div>
+						</form>
+					</div>
+				<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal-create-restaurant-category -->
+
+			<!-- /.modal-create-restaurant-admin -->
+			<div class="modal fade" id="modal-create-restaurant-admin">
+				<div class="modal-dialog">
+					<div class="modal-content bg-secondary">
+						<div class="modal-header">
+						  	<h4 class="modal-title">Add More Restaurant Admin</h4>
+						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						    	<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					  	<!-- form start -->
+					  	<form class="form-horizontal" v-on:submit.prevent="storeRestaurantAdmin" autocomplete="off">
+							<div class="modal-body text-dark">
+
+					      		<input type="hidden" name="_token" :value="csrf">
+
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="card card-outline">
+								            <div class="card-body">
+									              		
+								              	<div class="form-group row">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">User Name</label>
+									                <div class="col-sm-8">
+									                  	<input 
+										                  	type="text" class="form-control" 
+										                  	v-model="newRestaurantAdmin.user_name"
+										                  	placeholder="Restaurant Admin Name" 
+										                  	required="true" 
+										                  	:class="!errors.newRestaurantAdmin.user_name  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('newRestaurantAdmin.user_name')"
+									                  	>
+									                  	
+									                  	<div class="invalid-feedback">
+												        	{{ errors.newRestaurantAdmin.user_name }}
+												  		</div>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">Mobile</label>
+									                <div class="col-sm-8">
+									                  	<input 
+										                  	type="text" class="form-control" 
+										                  	v-model="newRestaurantAdmin.mobile"
+										                  	placeholder="Restaurant Admin Name" 
+										                  	required="true"  
+										                  	:class="!errors.newRestaurantAdmin.mobile  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('newRestaurantAdmin.mobile')"
+									                  	>
+									                  	
+									                  	<div class="invalid-feedback">
+												        	{{ errors.newRestaurantAdmin.mobile }}
+												  		</div>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">Email</label>
+									                <div class="col-sm-8">
+									                  	<input 
+										                  	type="text" class="form-control" 
+										                  	v-model="newRestaurantAdmin.email"
+										                  	placeholder="Restaurant Admin Name" 
+										                  	required="true"  
+										                  	:class="!errors.newRestaurantAdmin.email  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('newRestaurantAdmin.email')"
+									                  	>
+									                  	
+									                  	<div class="invalid-feedback">
+												        	{{ errors.newRestaurantAdmin.email }}
+												  		</div>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">Password</label>
+									                <div class="col-sm-8">
+									                  	<input 
+										                  	type="password" class="form-control" 
+										                  	v-model="newRestaurantAdmin.password"
+										                  	placeholder="Restaurant Admin Name" 
+										                  	required="true" 
+										                  	:class="!errors.newRestaurantAdmin.password  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('newRestaurantAdmin.password')"
+									                  	>
+									                  	
+									                  	<div class="invalid-feedback">
+												        	{{ errors.newRestaurantAdmin.password }}
+												  		</div>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">Repeat Password</label>
+									                <div class="col-sm-8">
+									                  	<input 
+										                  	type="password" class="form-control" 
+										                  	v-model="newRestaurantAdmin.password_confirmation"
+										                  	placeholder="Restaurant Admin Name" 
+										                  	required="true" 
+										                  	:class="!errors.newRestaurantAdmin.password_confirmation  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('newRestaurantAdmin.password_confirmation')"
+									                  	>
+									                  	
+									                  	<div class="invalid-feedback">
+												        	{{ errors.newRestaurantAdmin.password_confirmation }}
+												  		</div>
+									                </div>	
+								              	</div>
+									              	
+								            </div>
+								            <!-- /.card-body -->
+									    </div>
+									</div>
+								</div>
+							</div>
 							<div class="modal-footer justify-content-between">
+							  	<div class="col-sm-12 text-right">
+									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+								  		Please input all required fields
+								  	</span>
+								</div>
 							  	<button 
 								  	type="button" 
 								  	class="btn btn-outline-light" 
@@ -1173,7 +1276,7 @@
 								  	type="submit" 
 								  	:disabled="!submitForm" 
 								  	class="btn btn-outline-light">
-							  		Add Cuisine
+							  		Add Restaurant Admin
 								</button>
 							</div>
 						</form>
@@ -1182,7 +1285,7 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal-create-restaurant-category -->
+			<!-- /.modal-create-restaurant-admin -->
 			
 			<!-- modal-create-meal-tag -->
 			<div class="modal fade" id="modal-create-meal-tag">
@@ -1218,7 +1321,7 @@
 															v-model="newMeal.name" 
 															placeholder="Meal Name" 
 															required="true"
-															:class="!!errors.newMeal.name  ? 'is-invalid' : 'is-valid'"
+															:class="!errors.newMeal.name  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('newMeal.name')"
 									                  	>
 									                  	<div class="invalid-feedback">
@@ -1234,6 +1337,11 @@
 								</div>
 							</div>
 							<div class="modal-footer justify-content-between">
+								<div class="col-sm-12 text-right">
+									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+								  		Please input all required fields
+								  	</span>
+								</div>
 							  	<button 
 								  	type="button" 
 								  	class="btn btn-outline-light" 
@@ -1295,7 +1403,7 @@
 															v-model="newMenuCategory.name" 
 															placeholder="Menu Name" 
 															required="true"
-															:class="!!errors.newMenuCategory.name  ? 'is-invalid' : 'is-valid'"
+															:class="!errors.newMenuCategory.name  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('newMenuCategory.name')"
 									                	>
 									                	<div class="invalid-feedback">
@@ -1311,6 +1419,11 @@
 								</div>
 							</div>
 							<div class="modal-footer justify-content-between">
+								<div class="col-sm-12 text-right">
+									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+								  		Please input all required fields
+								  	</span>
+								</div>
 							  	<button 
 								  	type="button" 
 								  	class="btn btn-outline-light" 
@@ -1361,7 +1474,6 @@
 
 							  	<button 
 							  		type="submit" 
-							  		:disabled="!submitForm" 
 							  		class="btn btn-outline-light"
 							  	>
 							  		Delete
@@ -1400,7 +1512,6 @@
 
 							  	<button 
 							  		type="submit" 
-							  		:disabled="!submitForm" 
 							  		class="btn btn-outline-light"
 							  	>
 							  		Restore
@@ -1436,11 +1547,7 @@
     	restaurant : {
     		banner_preview : null,
 			name : null,
-			user_name : null,
 			mobile : null,
-			email : null,
-			password : null,
-			password_confirmation : null,
 			website : null,
 
 			address : null,
@@ -1450,6 +1557,7 @@
 			min_order : 100,
 			is_post_paid : false,
 			
+			restaurantAdmin : null,
 			restaurantCuisineTags : [],
 			restaurantFoodTags : [],
 			restaurantMealTags : [],
@@ -1462,9 +1570,10 @@
 			admin_approval : false,
     	},
 
-		restaurantCuisineObjectTags : [],
+		restaurantAdminObject : {},
     	restaurantFoodObjectTags : [],
     	restaurantMealObjectTags : [],
+		restaurantCuisineObjectTags : [],
 
     	service_schedule : {},
 		booking_break_schedule : {},
@@ -1486,11 +1595,25 @@
 
     	allMeals : [],
     	allMenuCategories : [],
+        allRestaurantAdmins : [],
         allRestaurantCuisines : [],
 
-    	newMeal : {},
-    	newMenuCategory : {},
-    	newRestaurantCuisine : {},
+    	newMeal : {
+    		// name : null,
+    	},
+    	newMenuCategory : {
+    		// name : null,
+    	},
+    	newRestaurantCuisine : {
+    		// name : null,
+    	},
+    	newRestaurantAdmin : {
+			// email : null,
+			// mobile : null,
+    		// user_name : null,
+			// password : null,
+			// password_confirmation : null,
+    	},
 
     	restaurantNewBanner : null,
 
@@ -1502,7 +1625,8 @@
     		newMeal : {},
     		restaurant : {},
     		newMenuCategory : {},
-    		newRestaurantCuisine : {}
+			newRestaurantAdmin : {},
+    		newRestaurantCuisine : {},
     	},
 
         singleRestaurantData : singleRestaurantData,
@@ -1527,8 +1651,9 @@
 		created(){
 			this.fetchAllMeals();
 			this.fetchAllRestaurants();
-			this.fetchAllRestaurantCuisines();
 			this.fetchAllMenuCategories();
+			this.fetchAllRestaurantAdmins();
+			this.fetchAllRestaurantCuisines();
 		},
 
 		mounted(){
@@ -1536,6 +1661,13 @@
 		},
 
 		watch : {
+			'singleRestaurantData.restaurantAdminObject' : function(restaurantAdminObject){
+
+				if (restaurantAdminObject) {
+					this.singleRestaurantData.restaurant.restaurantAdmin = restaurantAdminObject.id;
+				}else
+					this.singleRestaurantData.restaurant.restaurantAdmin = null;
+			},
 			'singleRestaurantData.restaurantCuisineObjectTags' : function(restaurantCuisineObjectTags){
 				let array = [];
 				$.each(restaurantCuisineObjectTags, function(key, value) {
@@ -1556,11 +1688,6 @@
 			     	array.push(value.id);
 			   	});
 		     	this.singleRestaurantData.restaurant.restaurantMealTags = array;
-			},
-			'singleRestaurantData.restaurant.name' : function(val){
-				if(typeof(val) !== 'undefined' && val !== null) {
-					this.singleRestaurantData.restaurant.user_name = val.replace(/\s/g, '');
-				}
 			},
 			'singleRestaurantData.service_schedule' : function(val){
 				this.singleRestaurantData.restaurant.service_schedule = val;
@@ -1649,6 +1776,7 @@
     			this.errors.restaurant = {};
 
 				this.singleRestaurantData.restaurant = {};
+				this.singleRestaurantData.restaurantAdminObject = {};
 				// this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
 				this.singleRestaurantData.restaurantCuisineObjectTags = 
@@ -1671,9 +1799,11 @@
 				axios
 					.post('/restaurants/'+ this.perPage, this.singleRestaurantData.restaurant)
 					.then(response => {
-						// console.log(response.data);
+
 						if (response.status == 200) {
+
 							this.singleRestaurantData.restaurant = {};
+							this.singleRestaurantData.restaurantAdminObject = {};
 							// this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
 							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
@@ -1699,6 +1829,8 @@
 
 				this.singleRestaurantData.restaurant = restaurant;
 
+				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
+
 				this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
 		    	this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
 		    	this.singleRestaurantData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
@@ -1712,6 +1844,8 @@
 				this.errors.restaurant = {};
 
 				this.singleRestaurantData.restaurant = restaurant;
+
+				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
 
 				this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
 		    	this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
@@ -1736,6 +1870,7 @@
 						if (response.status == 200) {
 							
 							this.singleRestaurantData.restaurant = {};
+							this.singleRestaurantData.restaurantAdminObject = {};
 							// this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
 							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
@@ -1783,6 +1918,8 @@
 					.then(response => {
 						if (response.status == 200) {
 							
+							this.singleRestaurantData.restaurant = {};
+
 							if (this.query === '') {
 								
 								this.allRestaurants = response.data;
@@ -1828,7 +1965,6 @@
 						if (response.status == 200) {
 
 							this.singleRestaurantData.restaurant = {};
-							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
 
 							if (this.query === '') {
 
@@ -1895,6 +2031,21 @@
 						if (response.status == 200) {
 							this.loading = false;
 							this.allRestaurantCuisines = response.data;
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			},
+			fetchAllRestaurantAdmins(){
+				this.loading = true;
+				axios
+					.get('/api/restaurant-admins')
+					.then(response => {
+						if (response.status == 200) {
+							this.loading = false;
+							this.allRestaurantAdmins = response.data;
+							// console.log(this.allRestaurantAdmins);
 						}
 					})
 					.catch(error => {
@@ -1989,6 +2140,27 @@
 				      	}
 					});
 			},
+			storeRestaurantAdmin(){
+
+				$('#modal-create-restaurant-admin').modal('hide');
+
+				axios
+					.post('/restaurant-admins', this.newRestaurantAdmin)
+					.then(response => {
+						if (response.status == 200) {
+							this.newRestaurantAdmin = {};
+							this.allRestaurantAdmins = response.data;
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+						if (error.response.status == 422) {
+							for (var x in error.response.data.errors) {
+								toastr.error(error.response.data.errors[x], "Wrong Input");
+							}
+				      	}
+					});
+			},
 			storeMenuCategory(){
 				$('#modal-create-menu-category').modal('hide');
 				axios
@@ -2033,7 +2205,21 @@
 			},
 			validateFormInput (formInputName) {
 				
+				this.submitForm = false;
+
 				switch(formInputName) {
+
+					case 'restaurant.restaurantAdminObject' :
+
+						if (!this.singleRestaurantData.restaurantAdminObject) {
+							this.errors.restaurant.restaurantAdminObject = 'Restaurant admin is required';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.restaurant, 'restaurantAdminObject');
+						}
+
+						break;
 
 					case 'restaurant.name' :
 
@@ -2043,34 +2229,10 @@
 						else if (!this.singleRestaurantData.restaurant.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
 							this.errors.restaurant.name = 'No special characters';
 						}
-						else
+						else {
+							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'name');
-
-						break;
-
-					case 'restaurant.user_name' :
-
-						if (!this.singleRestaurantData.restaurant.user_name) {
-							this.errors.restaurant.user_name = 'Username is required';
 						}
-						else if (!this.singleRestaurantData.restaurant.user_name.match(/^[_A-z0-9]*((-|_|\s)*[_A-z0-9])*$/g)) {
-							this.errors.restaurant.user_name = 'No specail characters';
-						}
-						else
-							this.$delete(this.errors.restaurant, 'user_name');
-
-						break;
-
-					case 'restaurant.email' :
-
-						if (!this.singleRestaurantData.restaurant.email) {
-							this.errors.restaurant.email = 'Email is required';
-						}
-						else if (!this.singleRestaurantData.restaurant.email.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
-							this.errors.restaurant.email = 'Invalid Email';
-						}
-						else
-							this.$delete(this.errors.restaurant, 'email');
 
 						break;
 
@@ -2082,28 +2244,10 @@
 						else if (!this.singleRestaurantData.restaurant.mobile.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
 							this.errors.restaurant.mobile = 'Invalid mobile number';
 						}
-						else
+						else {
+							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'mobile');
-
-						break;
-
-					case 'restaurant.password' :
-
-						if (this.singleRestaurantData.restaurant.password && this.singleRestaurantData.restaurant.password.length < 8) {
-							this.errors.restaurant.password = 'Password length has to be 8';
 						}
-						else
-							this.$delete(this.errors.restaurant, 'password');
-
-						break;
-
-					case 'restaurant.password_confirmation' :
-
-						if (this.singleRestaurantData.restaurant.password && this.singleRestaurantData.restaurant.password !== this.singleRestaurantData.restaurant.password_confirmation) {
-							this.errors.restaurant.password_confirmation = "Password doesn't match" ;
-						}
-						else
-							this.$delete(this.errors.restaurant, 'password_confirmation');
 
 						break;
 
@@ -2112,8 +2256,10 @@
 						if (this.singleRestaurantData.restaurantCuisineObjectTags.length===0) {
 							this.errors.restaurant.restaurantCuisineObjectTags = 'Type is required';
 						}
-						else
+						else {
+							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'restaurantCuisineObjectTags');
+						}
 
 						break;
 
@@ -2122,8 +2268,10 @@
 						if (this.singleRestaurantData.restaurant.website && !this.singleRestaurantData.restaurant.website.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)) {
 							this.errors.restaurant.website = 'Invalid url';
 						}
-						else
+						else {
+							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'website');
+						}
 
 						break;
 
@@ -2132,8 +2280,10 @@
 						if (!this.singleRestaurantData.restaurant.address) {
 							this.errors.restaurant.address = 'Address is required';
 						}
-						else
+						else {
+							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'address');
+						}
 
 						break;
 
@@ -2145,8 +2295,10 @@
 						else if (this.singleRestaurantData.restaurant.min_order < 100 || this.singleRestaurantData.restaurant.min_order > 5000) {
 							this.errors.restaurant.min_order = 'Value should be between 100 and 5000';
 						}
-						else
+						else {
+							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'min_order');
+						}
 
 						break;
 
@@ -2155,8 +2307,10 @@
 						if (this.singleRestaurantData.restaurantFoodObjectTags.length===0) {
 							this.errors.restaurant.restaurantFoodObjectTags = 'Food tag is required';
 						}
-						else
+						else {
+							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'restaurantFoodObjectTags');
+						}
 
 						break;
 
@@ -2165,14 +2319,14 @@
 						if (this.singleRestaurantData.restaurantMealObjectTags.length===0) {
 							this.errors.restaurant.restaurantMealObjectTags = 'Meal tag is required';
 						}
-						else
+						else {
+							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'restaurantMealObjectTags');
+						}
 
 						break;
 
 					case 'newRestaurantCuisine.name' :
-						
-						this.submitForm = false;
 
 						if (!this.newRestaurantCuisine.name) {
 							this.errors.newRestaurantCuisine.name = 'Cuisine name is required';
@@ -2188,8 +2342,6 @@
 						break;
 
 					case 'newMeal.name' :
-						
-						this.submitForm = false;
 
 						if (!this.newMeal.name) {
 							this.errors.newMeal.name = 'Meal name is required';
@@ -2205,8 +2357,6 @@
 						break;
 
 					case 'newMenuCategory.name' :
-						
-						this.submitForm = false;
 
 						if (!this.newMenuCategory.name) {
 							this.errors.newMenuCategory.name = 'Menu category name is required';
@@ -2221,12 +2371,81 @@
 
 						break;
 
+					case 'newRestaurantAdmin.user_name' :
+
+						if (!this.newRestaurantAdmin.user_name) {
+							this.errors.newRestaurantAdmin.user_name = 'Username is required';
+						}
+						else if (!this.newRestaurantAdmin.user_name.match(/^[_A-z0-9]*((-|_|\w)*[_A-z0-9])*$/g)) {
+							this.errors.newRestaurantAdmin.user_name = 'No space or specail characters';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.newRestaurantAdmin, 'user_name');
+						}
+
+						break;
+
+					case 'newRestaurantAdmin.email' :
+
+						if (!this.newRestaurantAdmin.email) {
+							this.errors.newRestaurantAdmin.email = 'Email is required';
+						}
+						else if (!this.newRestaurantAdmin.email.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
+							this.errors.newRestaurantAdmin.email = 'Invalid Email';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.newRestaurantAdmin, 'email');
+						}
+
+						break;
+
+					case 'newRestaurantAdmin.mobile' :
+
+						if (!this.newRestaurantAdmin.mobile) {
+							this.errors.newRestaurantAdmin.mobile = 'Mobile is required';
+						}
+						else if (!this.newRestaurantAdmin.mobile.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
+							this.errors.newRestaurantAdmin.mobile = 'Invalid mobile number';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.newRestaurantAdmin, 'mobile');
+						}
+
+						break;
+
+					case 'newRestaurantAdmin.password' :
+
+						if (this.newRestaurantAdmin.password && this.newRestaurantAdmin.password.length < 8) {
+							this.errors.newRestaurantAdmin.password = 'Password length has to be 8';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.newRestaurantAdmin, 'password');
+						}
+
+						break;
+
+					case 'newRestaurantAdmin.password_confirmation' :
+
+						if (this.newRestaurantAdmin.password && this.newRestaurantAdmin.password !== this.newRestaurantAdmin.password_confirmation) {
+							this.errors.newRestaurantAdmin.password_confirmation = "Password doesn't match" ;
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.newRestaurantAdmin, 'password_confirmation');
+						}
+
+						break;
+
 				}
 					 
 			},
 			checkRestaurantFormValidation(){
 
-				if (this.singleRestaurantData.restaurant.name && this.singleRestaurantData.restaurant.user_name && this.singleRestaurantData.restaurant.email && this.singleRestaurantData.restaurant.mobile && this.singleRestaurantData.restaurant.restaurantCuisineTags.length > 0 && this.singleRestaurantData.restaurant.address && this.singleRestaurantData.restaurant.min_order && this.singleRestaurantData.restaurant.restaurantFoodTags.length > 0 && this.singleRestaurantData.restaurant.restaurantMealTags.length > 0 && Object.keys(this.errors.restaurant).length === 0) {
+				if (this.singleRestaurantData.restaurant.restaurantAdmin && this.singleRestaurantData.restaurant.name && this.singleRestaurantData.restaurant.mobile && this.singleRestaurantData.restaurant.restaurantCuisineTags.length > 0 && this.singleRestaurantData.restaurant.address && this.singleRestaurantData.restaurant.min_order && this.singleRestaurantData.restaurant.restaurantFoodTags.length > 0 && this.singleRestaurantData.restaurant.restaurantMealTags.length > 0 && Object.keys(this.errors.restaurant).length === 0) {
 					
 					this.submitForm = true;
 				}
@@ -2242,14 +2461,14 @@
                 	this.createImage(files[0]);
 		      	}
 		      	else
-		      		this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
+		      		this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner = null;
 
 		      	return;
 			},
 			createImage(file) {
                 let reader = new FileReader();
                 reader.onload = (evnt) => {
-                    this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = evnt.target.result;
+                    this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner = evnt.target.result;
                 };
                 reader.readAsDataURL(file);
             }
