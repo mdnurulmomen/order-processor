@@ -18,8 +18,6 @@ Route::name('admin.')->group(function () {
 		Route::get('/', 'LoginController@showAdminLoginForm')->name('login');
 		Route::post('/', 'LoginController@adminLogin');
 	    
-	    Route::get('/home', 'HomeController@showAdminHome')->name('home');
-	    
 	    // For all other routes coming from vue
     	Route::get('/{any}', 'HomeController@showAdminHome');
 
