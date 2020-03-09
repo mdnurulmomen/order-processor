@@ -1773,6 +1773,7 @@
     			
     			this.step = 1;
     			this.editMode = false;
+    			this.submitForm = true;
     			this.errors.restaurant = {};
 
 				this.singleRestaurantData.restaurant = {};
@@ -1841,6 +1842,7 @@
 
 				this.step = 1;
 				this.editMode = true;
+				this.submitForm = true;
 				this.errors.restaurant = {};
 
 				this.singleRestaurantData.restaurant = restaurant;
@@ -2162,7 +2164,9 @@
 					});
 			},
 			storeMenuCategory(){
+
 				$('#modal-create-menu-category').modal('hide');
+				
 				axios
 					.post('/menu-categories', this.newMenuCategory)
 					.then(response => {
@@ -2181,7 +2185,9 @@
 					});
 			},
 			storeNewMeal(){
+
 				$('#modal-create-meal-tag').modal('hide');
+				
 				axios
 					.post('/meals', this.newMeal)
 					.then(response => {
