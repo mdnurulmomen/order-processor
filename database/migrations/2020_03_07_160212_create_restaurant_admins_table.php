@@ -19,6 +19,7 @@ class CreateRestaurantAdminsTable extends Migration
             $table->char('mobile', 13)->unique();
             $table->string('email', 50)->nullable()->unique();
             $table->string('password'); // Login with username / mobile
+            $table->softDeletes();
             $table->timestamps();
         });
     }
