@@ -39,7 +39,7 @@
       </ul>
 
       <!-- Brand Logo -->
-      <a href="{{ route('admin.home') }}" class="navbar-brand ml-1">
+      <a class="navbar-brand ml-1" onclick="showHomeComponent()">
         <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
              width="30" height="30"  style="opacity: .8">
         <span class="font-weight-light">Qupaid</span>
@@ -92,8 +92,8 @@
 
                 <!-- Menu Footer-->
                 <li class="user-footer">
-                  <div class="float-left">
-                    <a href="/profile" class="btn btn-default">Profile</a>
+                  <div class="float-left" onclick="showProfileComponent()">
+                    <a class="btn btn-default">Profile</a>
                   </div>
 
                   <div class="float-right">

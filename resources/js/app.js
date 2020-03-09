@@ -7,7 +7,6 @@
 // require('./bootstrap');
 
 window.Vue = require('vue');
-
 Vue.component('pagination', require('./components/admin/PaginationComponent.vue').default);
 /**
  * The following block of code may be used to automatically register your
@@ -59,6 +58,16 @@ const router = new VueRouter({
 		},
 	],
 });
+
+window.showHomeComponent = function() {
+    // Manually navigate to the route
+    router.push('/home');
+};
+
+window.showProfileComponent = function() {
+    // Manually navigate to the route
+    router.push('/profile');
+};
 
 
 /**
