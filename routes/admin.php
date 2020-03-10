@@ -43,8 +43,12 @@ Route::name('admin.')->group(function () {
 		    Route::get('/api/restaurant-cuisines/{perPage?}', 'FoodController@showAllRestaurantCuisines');
 		    Route::post('/restaurant-cuisines/{perPage?}', 'FoodController@createRestaurantCuisine');
 
-		    Route::get('/api/menu-categories{perPage?}', 'FoodController@showAllMenuCategories');
-		    Route::post('/menu-categories/{perPage?}', 'FoodController@createMenuCategory');
+		    Route::get('/api/menu-categories/{perPage?}', 'FoodController@showAllMenuCategories');
+		    Route::get('/api/menu-categories/search/{search}/{perPage}', 'FoodController@searchAllMenuCategories');
+		    Route::post('/menu-categories/{perPage?}', 'FoodController@createNewMenuCategory');
+		    Route::put('/menu-categories/{meal}/{perPage}', 'FoodController@updateMenuCategory');
+		    Route::delete('/menu-categories/{meal}/{perPage}', 'FoodController@deleteMenuCategory');
+		    Route::patch('/menu-categories/{meal}/{perPage}', 'FoodController@restoreMenuCategory');
 
 		    Route::get('/api/meals/{perPage?}', 'FoodController@showAllMeals');
 		    Route::get('/api/meals/search/{search}/{perPage}', 'FoodController@searchAllMeals');

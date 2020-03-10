@@ -79,7 +79,77 @@ class FoodController extends Controller
 		], 200);
 	}
 
-	public function showAllRestaurantCuisines($perPage = false)
+	public function showAllMenuCategories($perPage = false)
+	{
+	 	if ($perPage) {
+		 	return response()->json([
+				'current' => MenuCategory::paginate($perPage),
+				'trashed' => MenuCategory::onlyTrashed()->paginate($perPage),
+
+			], 200);
+	 	}
+
+	 	return response(MenuCategory::get(), 200);
+	}
+
+	public function createNewMenuCategory(Request $request, $perPage = false)
+	{
+	 	$request->validate([
+	    	'name'=>'required|unique:menu_categories,name|max:50'
+	 	]);
+
+	 	$newMenuCategory = MenuCategory::create(['name' => $request->name]);
+
+	 	return $this->showAllMenuCategories($perPage);
+	}
+
+	public function updateMenuCategory(Request $request, $menuCategory, $perPage)
+	{
+	 	$menuCategoryToUpdate = MenuCategory::find($menuCategory);
+
+	 	$request->validate([
+	    	'name'=>'required|max:50|unique:menu_categories,name,'.$menuCategoryToUpdate->id,
+	 	]);
+
+	 	$menuCategoryUpdated = $menuCategoryToUpdate->update([
+	 		'name' => $request->name
+	 	]);
+
+	 	return $this->showAllMenuCategories($perPage);
+	}
+
+	public function deleteMenuCategory($menuCategoryToDelete, $perPage)
+  	{
+     	MenuCategory::destroy($menuCategoryToDelete);
+     	return $this->showAllMenuCategories($perPage);
+  	}
+
+  	public function restoreMenuCategory($menuCategoryToRestore, $perPage)
+  	{
+     	$menuCategoryToStore = MenuCategory::onlyTrashed()->find($menuCategoryToRestore);
+     	$menuCategoryToStore->restore();
+         
+        return $this->showAllMenuCategories($perPage);
+  	}
+
+  	public function searchAllMenuCategories($search, $perPage)
+	{
+		$columnsToSearch = ['name'];
+
+		$query = MenuCategory::withTrashed();
+
+		foreach($columnsToSearch as $column)
+		{
+			$query->orWhere($column, 'like', "%$search%");
+		}
+
+		return response()->json([
+			'all' => $query->paginate($perPage),  
+		], 200);
+	}
+
+
+   	public function showAllRestaurantCuisines($perPage = false)
 	{
 	 	if ($perPage) {
 		 	return response()->json([
@@ -101,28 +171,4 @@ class FoodController extends Controller
 
 	 	return $this->showAllRestaurantCuisines($perPage ?? null);
 	}
-
-   	public function showAllMenuCategories($perPage = false)
-   	{
-   		if ($perPage) {
-		 	return response()->json([
-				'current' => Cuisine::paginate($perPage),
-				'trashed' => Cuisine::onlyTrashed()->paginate($perPage),
-
-			], 200);
-	 	}
-
-   		return response(MenuCategory::get(), 200);
-   	}
-
-   	public function createMenuCategory(Request $request, $perPage = false)
-   	{
-   		$request->validate([
-   			'name'=>'required|unique:menu_categories,name|max:50'
-   		]);
-
-   		$newCuisine = MenuCategory::create(['name' => $request->name]);
-
-   		return $this->showAllMenuCategories($perPage ?? null);
-   	}
 }
