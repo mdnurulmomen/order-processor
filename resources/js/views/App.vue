@@ -42,6 +42,16 @@
             </li>
 
             <li class="nav-item">
+              <router-link :to="{ name: 'admin.meals.index' }" v-bind:class="[(currentPage.includes('meals')) ? 'active' : '', 'nav-link']">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Meals
+                  <span class="right badge badge-danger">New</span>
+                </p>
+              </router-link>
+            </li>
+
+            <li class="nav-item">
               <router-link :to="{ name: 'admin.restaurants.index' }" v-bind:class="[(currentPage.includes('restaurants')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-th"></i>
                 <p>

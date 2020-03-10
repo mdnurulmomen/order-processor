@@ -24,6 +24,7 @@ import Dashboard2 from './components/admin/Dashboard2.vue';
 import Dashboard3 from './components/admin/Dashboard3.vue';
 import Profile from './components/admin/ProfileComponent.vue';
 import RestaurantIndexComponent from './components/admin/RestaurantIndexComponent.vue';
+import MealIndexComponent from './components/admin/MealIndexComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -55,6 +56,11 @@ const router = new VueRouter({
 			path: '/restaurants',
             name: 'admin.restaurants.index',
             component: RestaurantIndexComponent
+		},
+		{
+			path: '/meals',
+            name: 'admin.meals.index',
+            component: MealIndexComponent
 		},
 	],
 });

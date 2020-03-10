@@ -40,14 +40,18 @@ Route::name('admin.')->group(function () {
 		    Route::get('/api/restaurant-admins', 'RestaurantController@showAllRestaurantAdmins');
 		    Route::post('/restaurant-admins', 'RestaurantController@createRestaurantAdmin');
 
-		    Route::get('/api/restaurant-cuisines', 'RestaurantController@showAllRestaurantCuisines');
-		    Route::post('/restaurant-cuisines', 'RestaurantController@createRestaurantCuisine');
+		    Route::get('/api/restaurant-cuisines/{perPage?}', 'FoodController@showAllRestaurantCuisines');
+		    Route::post('/restaurant-cuisines/{perPage?}', 'FoodController@createRestaurantCuisine');
 
-		    Route::get('/api/menu-categories', 'RestaurantController@showAllMenuCategories');
-		    Route::post('/menu-categories', 'RestaurantController@createMenuCategory');
+		    Route::get('/api/menu-categories{perPage?}', 'FoodController@showAllMenuCategories');
+		    Route::post('/menu-categories/{perPage?}', 'FoodController@createMenuCategory');
 
-		    Route::get('/api/meals', 'RestaurantController@showAllMeals');
-		    Route::post('/meals', 'RestaurantController@createNewMeal');
+		    Route::get('/api/meals/{perPage?}', 'FoodController@showAllMeals');
+		    Route::get('/api/meals/search/{search}/{perPage}', 'FoodController@searchAllMeals');
+		    Route::post('/meals/{perPage?}', 'FoodController@createNewMeal');
+		    Route::put('/meals/{meal}/{perPage}', 'FoodController@updateMeal');
+		    Route::delete('/meals/{meal}/{perPage}', 'FoodController@deleteMeal');
+		    Route::patch('/meals/{meal}/{perPage}', 'FoodController@restoreMeal');
 
 		    Route::get('/api/restaurants/{perPage}', 'RestaurantController@showAllRestaurants');
 		    Route::get('/api/restaurants/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurants');
