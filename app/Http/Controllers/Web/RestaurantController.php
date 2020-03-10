@@ -142,7 +142,7 @@ class RestaurantController extends Controller
             'restaurantMealTags.*' => 'numeric|distinct',
 
             'has_parking'=>'required|boolean',
-            'is_self_service'=>'required|boolean',
+            'is_self_service'=>'nullable|boolean',
             // 'service_schedule'=>'required|unique:menu_categories,name|max:50',
             // 'booking_schedule_break'=>'required|unique:menu_categories,name|max:50',
          ]);

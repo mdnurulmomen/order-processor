@@ -1725,29 +1725,31 @@
 				this.restaurantsToShow = this.allRestaurants.trashed.data;
 				this.pagination = this.allRestaurants.trashed;
 			},
+			showListDataForSelectedTab(){
+				if (this.currentTab=='all') {
+					this.restaurantsToShow = this.allRestaurants.all.data;
+					this.pagination = response.data.all;
+				}else if (this.currentTab=='approved') {
+					this.restaurantsToShow = this.allRestaurants.approved.data;
+					this.pagination = response.data.approved;
+				}else if (this.currentTab=='nonApproved') {
+					this.restaurantsToShow = this.allRestaurants.nonApproved.data;
+					this.pagination = response.data.nonApproved;
+				}else {
+					this.restaurantsToShow = this.allRestaurants.trashed.data;
+					this.pagination = response.data.trashed;
+				}
+			},
 			fetchAllRestaurants(){
 				this.loading = true;
 				axios
 					.get('/api/restaurants/'+ this.perPage +'?page='+ this.pagination.current_page)
 					.then(response => {
-						if (response.status == 200) {
 							
+						if (response.status == 200) {
+							this.currentTab = 'all';
 							this.allRestaurants = response.data;
-
-							if (this.currentTab=='all') {
-								this.restaurantsToShow = this.allRestaurants.all.data;
-								this.pagination = response.data.all;
-							}else if (this.currentTab=='approved') {
-								this.restaurantsToShow = this.allRestaurants.approved.data;
-								this.pagination = response.data.approved;
-							}else if (this.currentTab=='nonApproved') {
-								this.restaurantsToShow = this.allRestaurants.nonApproved.data;
-								this.pagination = response.data.nonApproved;
-							}else {
-								this.restaurantsToShow = this.allRestaurants.trashed.data;
-								this.pagination = response.data.trashed;
-							}
-
+							this.showListDataForSelectedTab();
 							this.loading = false;
 
 						}
@@ -1812,8 +1814,7 @@
 							this.query = '';
 							this.currentTab = 'all';
 							this.allRestaurants = response.data;
-							this.restaurantsToShow = this.allRestaurants.all.data;
-							this.pagination = response.data.all;
+							this.showListDataForSelectedTab();
 							toastr.success(response.data.success, "Success");
 						}
 					})
@@ -1878,19 +1879,8 @@
 							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
 
 							if (this.query === '') {
-
 								this.allRestaurants = response.data;
-
-								if (this.currentTab=='all') {
-									this.restaurantsToShow = this.allRestaurants.all.data;
-									this.pagination = response.data.all;
-								}else if (this.currentTab=='approved') {
-									this.restaurantsToShow = this.allRestaurants.approved.data;
-									this.pagination = response.data.approved;
-								}else {
-									this.restaurantsToShow = this.allRestaurants.nonApproved.data;
-									this.pagination = response.data.nonApproved;
-								}
+								this.showListDataForSelectedTab();
 							}
 							else
 								this.searchData();
@@ -1923,19 +1913,8 @@
 							this.singleRestaurantData.restaurant = {};
 
 							if (this.query === '') {
-								
 								this.allRestaurants = response.data;
-
-								if (this.currentTab=='all') {
-									this.restaurantsToShow = this.allRestaurants.all.data;
-									this.pagination = response.data.all;
-								}else if (this.currentTab=='approved') {
-									this.restaurantsToShow = this.allRestaurants.approved.data;
-									this.pagination = response.data.approved;
-								}else {
-									this.restaurantsToShow = this.allRestaurants.nonApproved.data;
-									this.pagination = response.data.nonApproved;
-								}
+								this.showListDataForSelectedTab();
 							}
 							else
 								this.searchData();
@@ -1969,22 +1948,8 @@
 							this.singleRestaurantData.restaurant = {};
 
 							if (this.query === '') {
-
 								this.allRestaurants = response.data;
-
-								if (this.currentTab=='all') {
-									this.restaurantsToShow = this.allRestaurants.all.data;
-									this.pagination = response.data.all;
-								}else if (this.currentTab=='approved') {
-									this.restaurantsToShow = this.allRestaurants.approved.data;
-									this.pagination = response.data.approved;
-								}else if (this.currentTab=='nonApproved') {
-									this.restaurantsToShow = this.allRestaurants.nonApproved.data;
-									this.pagination = response.data.nonApproved;
-								}else {
-									this.restaurantsToShow = this.allRestaurants.trashed.data;
-									this.pagination = response.data.trashed;
-								}
+								this.showListDataForSelectedTab();
 							}
 							else
 								this.searchData();
