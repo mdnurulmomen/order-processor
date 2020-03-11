@@ -10,30 +10,6 @@ use App\Http\Controllers\Controller;
 
 class RestaurantController extends Controller
 {
-      public function showAllRestaurantAdmins()
-   	{
-   		return response(RestaurantAdmin::get(), 200);
-   	}
-
-   	public function createRestaurantAdmin(Request $request)
-   	{
-   		$request->validate([
-   			'user_name'=>'required|unique:restaurant_admins,user_name|string|max:50',
-            'email'=>'required|unique:restaurant_admins,email|email|string|max:50',
-            'mobile'=>'required|unique:restaurant_admins,mobile|max:13',
-            'password'=>'required|string|min:8|max:100|confirmed',
-   		]);
-
-   		$newRestaurantAdmin = RestaurantAdmin::create([
-            'user_name' => $request->user_name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'password' => Hash::make($request->password)
-         ]);
-
-   		return $this->showAllRestaurantAdmins();
-   	}
-
    	public function showAllRestaurants($perPage)
    	{
    		return response()->json([
@@ -186,5 +162,91 @@ class RestaurantController extends Controller
          $restorationToStore->restore();
          
          return $this->showAllRestaurants($perPage);
+      }
+
+      public function showAllRestaurantAdmins($perPage = false)
+      {
+         if ($perPage) {
+            return response()->json([
+               'current' => RestaurantAdmin::paginate($perPage),
+               'trashed' => RestaurantAdmin::onlyTrashed()->paginate($perPage),
+
+            ], 200);
+         }
+
+         return response(RestaurantAdmin::get(), 200);
+      }
+
+      public function createRestaurantAdmin(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'user_name'=>'required|unique:restaurant_admins,user_name|string|max:50',
+            'email'=>'required|unique:restaurant_admins,email|email|string|max:50',
+            'mobile'=>'required|unique:restaurant_admins,mobile|max:13',
+            'password'=>'required|string|min:8|max:100|confirmed',
+         ]);
+
+         $newRestaurantAdmin = RestaurantAdmin::create([
+            'user_name' => $request->user_name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'password' => Hash::make($request->password)
+         ]);
+
+         return $this->showAllRestaurantAdmins($perPage);
+      }
+
+      public function updateRestaurantAdmin(Request $request, $restaurantAdmin, $perPage)
+      {
+         $restaurantAdminToUpdate = RestaurantAdmin::find($restaurantAdmin);
+
+         $request->validate([
+            'user_name'=>'required|string|max:50|unique:restaurant_admins,user_name,'.$restaurantAdminToUpdate->id,
+            'email'=>'required|email|string|max:50|unique:restaurant_admins,email,'.$restaurantAdminToUpdate->id,
+            'mobile'=>'required|max:13|unique:restaurant_admins,mobile,'.$restaurantAdminToUpdate->id,
+            'password'=>'nullable|string|min:8|max:100|confirmed',
+         ]);
+
+         $restaurantAdminToUpdate->user_name = $request->user_name;        
+         $restaurantAdminToUpdate->email = $request->email;        
+         $restaurantAdminToUpdate->mobile = $request->mobile;
+
+         if ($request->password) {       
+            $restaurantAdminToUpdate->password = Hash::make($request->password);
+         }        
+
+         $restaurantAdminToUpdate->save();        
+
+         return $this->showAllRestaurantAdmins($perPage);
+      }
+
+      public function deleteRestaurantAdmin($restaurantAdminToDelete, $perPage)
+      {
+         RestaurantAdmin::destroy($restaurantAdminToDelete);
+         return $this->showAllRestaurantAdmins($perPage);
+      }
+
+      public function restoreRestaurantAdmin($restaurantAdminToRestore, $perPage)
+      {
+         $restaurantAdminToStore = RestaurantAdmin::onlyTrashed()->find($restaurantAdminToRestore);
+         $restaurantAdminToStore->restore();
+            
+           return $this->showAllRestaurantAdmins($perPage);
+      }
+
+      public function searchAllRestaurantAdmins($search, $perPage)
+      {
+         $columnsToSearch = ['user_name', 'mobile', 'email'];
+
+         $query = RestaurantAdmin::withTrashed();
+
+         foreach($columnsToSearch as $column)
+         {
+            $query->orWhere($column, 'like', "%$search%");
+         }
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
       }
 }

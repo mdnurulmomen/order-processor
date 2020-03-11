@@ -34,11 +34,9 @@ Route::name('admin.')->group(function () {
 		    
 		    Route::get('/api/profile', 'ProfileController@showAdminProfile');
 		    Route::post('/profile', 'ProfileController@updateAdminProfile');
+
 		    
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
-
-		    Route::get('/api/restaurant-admins', 'RestaurantController@showAllRestaurantAdmins');
-		    Route::post('/restaurant-admins', 'RestaurantController@createRestaurantAdmin');
 
 
 		    Route::get('/api/cuisines/{perPage?}', 'FoodController@showAllCuisines');
@@ -56,12 +54,22 @@ Route::name('admin.')->group(function () {
 		    Route::delete('/menu-categories/{meal}/{perPage}', 'FoodController@deleteMenuCategory');
 		    Route::patch('/menu-categories/{meal}/{perPage}', 'FoodController@restoreMenuCategory');
 
+
 		    Route::get('/api/meals/{perPage?}', 'FoodController@showAllMeals');
 		    Route::get('/api/meals/search/{search}/{perPage}', 'FoodController@searchAllMeals');
 		    Route::post('/meals/{perPage?}', 'FoodController@createNewMeal');
 		    Route::put('/meals/{meal}/{perPage}', 'FoodController@updateMeal');
 		    Route::delete('/meals/{meal}/{perPage}', 'FoodController@deleteMeal');
 		    Route::patch('/meals/{meal}/{perPage}', 'FoodController@restoreMeal');
+
+ 
+		    Route::get('/api/restaurant-admins/{perPage?}', 'RestaurantController@showAllRestaurantAdmins');
+		    Route::get('/api/restaurant-admins/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantAdmins');
+		    Route::post('/restaurant-admins/{perPage?}', 'RestaurantController@createRestaurantAdmin');
+		    Route::put('/restaurant-admins/{restaurantAdmin}/{perPage}', 'RestaurantController@updateRestaurantAdmin');
+		    Route::delete('/restaurant-admins/{restaurantAdmin}/{perPage}', 'RestaurantController@deleteRestaurantAdmin');
+		    Route::patch('/restaurant-admins/{restaurantAdmin}/{perPage}', 'RestaurantController@restoreRestaurantAdmin');
+
 
 		    Route::get('/api/restaurants/{perPage}', 'RestaurantController@showAllRestaurants');
 		    Route::get('/api/restaurants/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurants');
