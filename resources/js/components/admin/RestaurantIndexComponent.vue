@@ -1728,16 +1728,16 @@
 			showListDataForSelectedTab(){
 				if (this.currentTab=='all') {
 					this.restaurantsToShow = this.allRestaurants.all.data;
-					this.pagination = response.data.all;
+					this.pagination = this.allRestaurants.all;
 				}else if (this.currentTab=='approved') {
 					this.restaurantsToShow = this.allRestaurants.approved.data;
-					this.pagination = response.data.approved;
+					this.pagination = this.allRestaurants.approved;
 				}else if (this.currentTab=='nonApproved') {
 					this.restaurantsToShow = this.allRestaurants.nonApproved.data;
-					this.pagination = response.data.nonApproved;
+					this.pagination = this.allRestaurants.nonApproved;
 				}else {
 					this.restaurantsToShow = this.allRestaurants.trashed.data;
-					this.pagination = response.data.trashed;
+					this.pagination = this.allRestaurants.trashed;
 				}
 			},
 			fetchAllRestaurants(){
@@ -1993,7 +1993,7 @@
 			fetchAllRestaurantCuisines(){
 				this.loading = true;
 				axios
-					.get('/api/restaurant-cuisines')
+					.get('/api/cuisines')
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
@@ -2091,7 +2091,7 @@
 				$('#modal-create-restaurant-category').modal('hide');
 
 				axios
-					.post('/restaurant-cuisines', this.newRestaurantCuisine)
+					.post('/cuisines', this.newRestaurantCuisine)
 					.then(response => {
 						if (response.status == 200) {
 							this.newRestaurantCuisine = {};

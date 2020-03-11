@@ -366,8 +366,10 @@
 				if (val==='') {
 					this.fetchAllMeals();
 				}
-				else 
+				else {
+					this.pagination.current_page = 1;
 					this.searchData();
+				}
 			}
 		},
 
@@ -408,14 +410,18 @@
 				this.pagination.current_page = 1;
 				if (this.query === '') {
 					this.fetchAllMeals();
-				}else
+				}else {
+					this.pagination.current_page = 1;
 					this.searchData();
+				}
     		},
 			reload() {
 				if (this.query === '') {
 					this.fetchAllMeals();
-				}else
+				}else {
+					this.pagination.current_page = 1;
 					this.searchData();
+				}
     		},
 			showMealCreateModal(){
 
@@ -478,8 +484,10 @@
 								this.allMeals = response.data;
 								this.showDataListOfSelectedTab();
 							}
-							else
+							else {
+								this.pagination.current_page = 1;
 								this.searchData();
+							}
 
 							toastr.success(response.data.success, "Success");
 						}
@@ -511,8 +519,10 @@
 								this.allMeals = response.data;
 								this.showDataListOfSelectedTab();
 							}
-							else
+							else {
+								this.pagination.current_page = 1;
 								this.searchData();
+							}
 
 							toastr.success(response.data.success, "Deleted");
 						}
@@ -545,8 +555,10 @@
 								this.allMeals = response.data;
 								this.showDataListOfSelectedTab();
 							}
-							else
+							else {
+								this.pagination.current_page = 1;
 								this.searchData();
+							}
 
 							toastr.success(response.data.success, "Restored");
 						}
@@ -561,8 +573,6 @@
 					});
 			},
 		    searchData() {
-
-				this.pagination.current_page = 1;
 				
 				axios
 				.get(
