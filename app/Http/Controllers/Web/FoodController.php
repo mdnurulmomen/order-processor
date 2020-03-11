@@ -148,8 +148,7 @@ class FoodController extends Controller
 		], 200);
 	}
 
-
-   	public function showAllRestaurantCuisines($perPage = false)
+	public function showAllCuisines($perPage = false)
 	{
 	 	if ($perPage) {
 		 	return response()->json([
@@ -158,10 +157,11 @@ class FoodController extends Controller
 
 			], 200);
 	 	}
+
 	 	return response(Cuisine::get(), 200);
 	}
 
-	public function createRestaurantCuisine(Request $request, $perPage = false)
+	public function createNewCuisine(Request $request, $perPage = false)
 	{
 	 	$request->validate([
 	    	'name'=>'required|unique:cuisines,name|max:50'
@@ -169,6 +169,52 @@ class FoodController extends Controller
 
 	 	$newCuisine = Cuisine::create(['name' => $request->name]);
 
-	 	return $this->showAllRestaurantCuisines($perPage ?? null);
+	 	return $this->showAllCuisines($perPage);
 	}
+
+	public function updateCuisine(Request $request, $cuisine, $perPage)
+	{
+	 	$cuisineToUpdate = Cuisine::find($cuisine);
+
+	 	$request->validate([
+	    	'name'=>'required|max:50|unique:cuisines,name,'.$cuisineToUpdate->id,
+	 	]);
+
+	 	$cuisineUpdated = $cuisineToUpdate->update([
+	 		'name' => $request->name
+	 	]);
+
+	 	return $this->showAllCuisines($perPage);
+	}
+
+	public function deleteCuisine($cuisineToDelete, $perPage)
+  	{
+     	Cuisine::destroy($cuisineToDelete);
+     	return $this->showAllCuisines($perPage);
+  	}
+
+  	public function restoreCuisine($cuisineToRestore, $perPage)
+  	{
+     	$cuisineToStore = Cuisine::onlyTrashed()->find($cuisineToRestore);
+     	$cuisineToStore->restore();
+         
+        return $this->showAllCuisines($perPage);
+  	}
+
+  	public function searchAllCuisines($search, $perPage)
+	{
+		$columnsToSearch = ['name'];
+
+		$query = Cuisine::withTrashed();
+
+		foreach($columnsToSearch as $column)
+		{
+			$query->orWhere($column, 'like', "%$search%");
+		}
+
+		return response()->json([
+			'all' => $query->paginate($perPage),  
+		], 200);
+	}
+
 }

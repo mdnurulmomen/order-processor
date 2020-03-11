@@ -26,6 +26,7 @@ import Profile from './components/admin/ProfileComponent.vue';
 import RestaurantIndexComponent from './components/admin/RestaurantIndexComponent.vue';
 import MealIndexComponent from './components/admin/MealIndexComponent.vue';
 import MenuCategoryIndexComponent from './components/admin/MenuCategoryIndexComponent.vue';
+import CuisineIndexComponent from './components/admin/CuisineIndexComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -67,6 +68,11 @@ const router = new VueRouter({
 			path: '/menu-categories',
             name: 'admin.menuCategories.index',
             component: MenuCategoryIndexComponent
+		},
+		{
+			path: '/cuisines',
+            name: 'admin.cuisines.index',
+            component: CuisineIndexComponent
 		},
 	],
 });
