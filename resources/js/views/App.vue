@@ -42,11 +42,11 @@
             </li>
 
             <li class="nav-item">
-              <router-link :to="{ name: 'admin.restaurantAdmins.index' }" v-bind:class="[(currentPage.includes('restaurantAdmins')) ? 'active' : '', 'nav-link']">
+              <router-link :to="{ name: 'admin.restaurantAdmins.index' }" v-bind:class="[(currentPage.includes('restaurant-admins')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-user"></i>
                 <p>
                   Restaurant Admins
-                  <span class="right badge badge-danger">New</span>
+                  <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
               </router-link>
             </li>
@@ -56,17 +56,15 @@
                 <i class="nav-icon fas fa-utensils"></i>
                 <p>
                   Cuisines
-                  <span class="right badge badge-danger">New</span>
                 </p>
               </router-link>
             </li>
 
             <li class="nav-item">
-              <router-link :to="{ name: 'admin.menuCategories.index' }" v-bind:class="[(currentPage.includes('menuCategories')) ? 'active' : '', 'nav-link']">
+              <router-link :to="{ name: 'admin.menuCategories.index' }" v-bind:class="[(currentPage.includes('menu-categories')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-hamburger"></i>
                 <p>
                   Menu Categories
-                  <span class="right badge badge-danger">New</span>
                 </p>
               </router-link>
             </li>
@@ -76,7 +74,6 @@
                 <i class="nav-icon fas fa-clock"></i>
                 <p>
                   Meals
-                  <span class="right badge badge-danger">New</span>
                 </p>
               </router-link>
             </li>
@@ -86,7 +83,6 @@
                 <i class="nav-icon fas fa-hotel"></i>
                 <p>
                   Restaurants
-                  <span class="right badge badge-danger">New</span>
                 </p>
               </router-link>
             </li>
