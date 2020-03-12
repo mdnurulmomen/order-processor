@@ -43,7 +43,7 @@
 
             <li class="nav-item">
               <router-link :to="{ name: 'admin.restaurantAdmins.index' }" v-bind:class="[(currentPage.includes('restaurantAdmins')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-th"></i>
+                <i class="nav-icon fas fa-user"></i>
                 <p>
                   Restaurant Admins
                   <span class="right badge badge-danger">New</span>
@@ -53,7 +53,7 @@
 
             <li class="nav-item">
               <router-link :to="{ name: 'admin.cuisines.index' }" v-bind:class="[(currentPage.includes('cuisines')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-th"></i>
+                <i class="nav-icon fas fa-utensils"></i>
                 <p>
                   Cuisines
                   <span class="right badge badge-danger">New</span>
@@ -63,7 +63,7 @@
 
             <li class="nav-item">
               <router-link :to="{ name: 'admin.menuCategories.index' }" v-bind:class="[(currentPage.includes('menuCategories')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-th"></i>
+                <i class="nav-icon fas fa-hamburger"></i>
                 <p>
                   Menu Categories
                   <span class="right badge badge-danger">New</span>
@@ -73,7 +73,7 @@
 
             <li class="nav-item">
               <router-link :to="{ name: 'admin.meals.index' }" v-bind:class="[(currentPage.includes('meals')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-th"></i>
+                <i class="nav-icon fas fa-clock"></i>
                 <p>
                   Meals
                   <span class="right badge badge-danger">New</span>
@@ -83,7 +83,7 @@
 
             <li class="nav-item">
               <router-link :to="{ name: 'admin.restaurants.index' }" v-bind:class="[(currentPage.includes('restaurants')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-th"></i>
+                <i class="nav-icon fas fa-hotel"></i>
                 <p>
                   Restaurants
                   <span class="right badge badge-danger">New</span>
