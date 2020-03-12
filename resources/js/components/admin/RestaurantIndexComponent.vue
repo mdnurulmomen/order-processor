@@ -284,6 +284,11 @@
 							              			Restaurant Type :
 							              		</label>
 								                <div class="col-sm-6">
+								                	
+								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantCuisineObjectTags).length === 0">
+								                		No Cuisine Available
+								                	</p>
+								                	
 								                	<ul>
 													  	<li v-for="restaurantCuisineObjectTag in singleRestaurantData.restaurantCuisineObjectTags">
 													    	{{ restaurantCuisineObjectTag.name }}
@@ -296,6 +301,11 @@
 							              			Best Menu :
 							              		</label>
 								                <div class="col-sm-6">
+								                	
+								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantFoodObjectTags).length === 0">
+								                		No Menu Available
+								                	</p>
+								                	
 								                	<ul>
 													  	<li v-for="restaurantFoodObjectTag in singleRestaurantData.restaurantFoodObjectTags">
 													    	{{ restaurantFoodObjectTag.name }}
@@ -308,6 +318,11 @@
 							              			Available Meals :
 							              		</label>
 								                <div class="col-sm-6">
+								                  	
+								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantMealObjectTags).length === 0">
+								                		No Meal Available
+								                	</p>
+								                	
 								                  	<ul>
 													  	<li v-for="restaurantMealObjectTag in singleRestaurantData.restaurantMealObjectTags">
 													    	{{ restaurantMealObjectTag.name }}
@@ -805,7 +820,7 @@
 									                        <div class="form-group row">
 									                          	<div class="col-6">
 									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">Best Food Items</label>
+									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">Best Food Menu's</label>
 									                              		<div class="col-sm-6">
 									                        
 									                                  		<multiselect 
@@ -845,7 +860,7 @@
 									                          	</div>
 									                          	<div class="col-6">
 									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputMealTags3" class="col-sm-4 col-form-label text-right">Available Meals</label>
+									                              		<label for="inputMealTags3" class="col-sm-4 col-form-label text-right">Available Meal's</label>
 									                              		<div class="col-sm-6">
 									                            
 								                                			<multiselect 
