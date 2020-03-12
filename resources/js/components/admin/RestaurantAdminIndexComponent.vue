@@ -538,7 +538,7 @@
 							this.currentTab = 'current';
 							this.showDataListOfSelectedTab();
 
-							toastr.success(response.data.success, "Created");
+							toastr.success(response.data.success, "Added");
 						}
 					})
 					.catch(error => {

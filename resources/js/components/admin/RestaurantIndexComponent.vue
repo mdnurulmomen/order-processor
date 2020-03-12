@@ -1836,7 +1836,7 @@
 							this.currentTab = 'all';
 							this.allRestaurants = response.data;
 							this.showListDataForSelectedTab();
-							toastr.success(response.data.success, "Success");
+							toastr.success(response.data.success, "Added");
 						}
 					})
 					.catch(error => {

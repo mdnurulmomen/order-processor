@@ -450,7 +450,7 @@
 							this.currentTab = 'current';
 							this.showDataListOfSelectedTab();
 
-							toastr.success(response.data.success, "Success");
+							toastr.success(response.data.success, "Added");
 						}
 					})
 					.catch(error => {
@@ -489,7 +489,7 @@
 								this.searchData();
 							}
 
-							toastr.success(response.data.success, "Success");
+							toastr.success(response.data.success, "Updated");
 						}
 					})
 					.catch(error => {
