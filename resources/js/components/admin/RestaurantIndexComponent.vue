@@ -214,18 +214,24 @@
 							              		<label class="col-sm-6 text-right">
 							              			Restaurant Admin :
 							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleRestaurantData.restaurantAdminObject.user_name }}
-								                </div>	
+								                <div class="col-sm-6 text-danger small">
+								                  	{{ !singleRestaurantData.restaurantAdminObject ? 
+								                  		'No admin available or trashed' : 
+								                  		singleRestaurantData.restaurantAdminObject.user_name 
+								                  	}}
+								                </div>
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Admin Mobile
 							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleRestaurantData.restaurantAdminObject.mobile
-								                  		 }}
-								                </div>	
+
+								                <div class="col-sm-6 text-danger small">
+								                	{{ !singleRestaurantData.restaurantAdminObject ? 
+								                  		'No admin available or trashed' : 
+								                  		singleRestaurantData.restaurantAdminObject.mobile 
+								                  	}}
+								                </div>
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
