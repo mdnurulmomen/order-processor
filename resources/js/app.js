@@ -28,6 +28,7 @@ import MealIndexComponent from './components/admin/MealIndexComponent.vue';
 import MenuCategoryIndexComponent from './components/admin/MenuCategoryIndexComponent.vue';
 import CuisineIndexComponent from './components/admin/CuisineIndexComponent.vue';
 import RestaurantAdminIndexComponent from './components/admin/RestaurantAdminIndexComponent.vue';
+import NotFoundComponent from './components/admin/NotFoundComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -79,6 +80,17 @@ const router = new VueRouter({
 			path: '/restaurant-admins',
             name: 'admin.restaurantAdmins.index',
             component: RestaurantAdminIndexComponent
+		},
+
+		
+		{
+			path: '/404',
+            name: 'admin.routeNotFound',
+            component: NotFoundComponent
+		},
+		{
+			path: '*',
+            redirect : '/404'
 		},
 	],
 });
