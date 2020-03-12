@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,6 +20,11 @@ class RestaurantAdmin extends Model
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password'
     ];
+
+    public function restaurants()
+    {
+        return $this->hasMany(Restaurant::class, 'restaurant_admins_id', 'id');
+    }
 }

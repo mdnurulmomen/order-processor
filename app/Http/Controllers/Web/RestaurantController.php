@@ -222,7 +222,11 @@ class RestaurantController extends Controller
 
       public function deleteRestaurantAdmin($restaurantAdminToDelete, $perPage)
       {
-         RestaurantAdmin::destroy($restaurantAdminToDelete);
+         $restaurantAdminToDelete = RestaurantAdmin::find($restaurantAdminToDelete);
+
+         $restaurantAdminToDelete->restaurants()->delete();
+         $restaurantAdminToDelete->delete();
+
          return $this->showAllRestaurantAdmins($perPage);
       }
 
