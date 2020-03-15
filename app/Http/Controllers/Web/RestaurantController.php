@@ -52,9 +52,9 @@ class RestaurantController extends Controller
    			// 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
    			'min_order'=>'required|numeric|min:100|max:65535',
             'is_post_paid'=>'nullable|boolean',
-            'restaurantFoodTags' => 'present|array|max:3',
+            'restaurantFoodTags' => 'present|array|max:3|min:1',
             'restaurantFoodTags.*' => 'numeric|distinct',
-            'restaurantMealTags' => 'present|array|max:6',
+            'restaurantMealTags' => 'present|array|max:6|min:1',
             'restaurantMealTags.*' => 'numeric|distinct',
 
    			'has_parking'=>'nullable|boolean',
@@ -112,9 +112,9 @@ class RestaurantController extends Controller
             // 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'min_order'=>'required|numeric|min:100|max:65535',
             'is_post_paid'=>'required|boolean',
-            'restaurantFoodTags' => 'present|array|max:3',
+            'restaurantFoodTags' => 'present|array|max:3|min:1',
             'restaurantFoodTags.*' => 'numeric|distinct',
-            'restaurantMealTags' => 'present|array|max:6',
+            'restaurantMealTags' => 'present|array|max:6|min:1',
             'restaurantMealTags.*' => 'numeric|distinct',
 
             'has_parking'=>'required|boolean',

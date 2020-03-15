@@ -214,7 +214,10 @@
 							              		<label class="col-sm-6 text-right">
 							              			Restaurant Admin :
 							              		</label>
-								                <div class="col-sm-6 text-danger small">
+								                <div 
+								                	class="col-sm-6" 
+								                	:class="!singleRestaurantData.restaurantAdminObject ? 'text-danger small' : ''"
+								                >
 								                  	{{ !singleRestaurantData.restaurantAdminObject ? 
 								                  		'No admin available or trashed' : 
 								                  		singleRestaurantData.restaurantAdminObject.user_name 
@@ -223,10 +226,13 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Admin Mobile
+							              			Admin Mobile :
 							              		</label>
 
-								                <div class="col-sm-6 text-danger small">
+								                <div 
+								                	class="col-sm-6"
+								                	:class="!singleRestaurantData.restaurantAdminObject ? 'text-danger small' : ''"
+								                >
 								                	{{ !singleRestaurantData.restaurantAdminObject ? 
 								                  		'No admin available or trashed' : 
 								                  		singleRestaurantData.restaurantAdminObject.mobile 
@@ -292,7 +298,7 @@
 								                <div class="col-sm-6">
 								                	
 								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantCuisineObjectTags).length === 0">
-								                		No Cuisine Available
+								                		No cuisine available or deleted
 								                	</p>
 								                	
 								                	<ul>
@@ -309,7 +315,7 @@
 								                <div class="col-sm-6">
 								                	
 								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantFoodObjectTags).length === 0">
-								                		No Menu Available
+								                		No menu available or deleted
 								                	</p>
 								                	
 								                	<ul>
@@ -326,7 +332,7 @@
 								                <div class="col-sm-6">
 								                  	
 								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantMealObjectTags).length === 0">
-								                		No Meal Available
+								                		No meal available or deleted
 								                	</p>
 								                	
 								                  	<ul>
@@ -483,7 +489,7 @@
 									                                		<div 
 											                                  	class="invalid-feedback"
 											                                >
-																		        {{ errors.restaurant.restaurantFoodObjectTags }}
+																		        {{ errors.restaurant.restaurantAdminObject }}
 																		  	</div>
 
 									                              		</div>
