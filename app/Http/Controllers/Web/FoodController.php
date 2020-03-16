@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\Meal;
+use App\Models\Addon;
 use App\Models\Cuisine;
 use App\Models\MenuCategory;
 use Illuminate\Http\Request;
@@ -206,6 +207,75 @@ class FoodController extends Controller
 		$columnsToSearch = ['name'];
 
 		$query = Cuisine::withTrashed();
+
+		foreach($columnsToSearch as $column)
+		{
+			$query->orWhere($column, 'like', "%$search%");
+		}
+
+		return response()->json([
+			'all' => $query->paginate($perPage),  
+		], 200);
+	}
+
+	public function showAllAddons($perPage = false)
+	{
+	 	if ($perPage) {
+		 	return response()->json([
+				'current' => Addon::paginate($perPage),
+				'trashed' => Addon::onlyTrashed()->paginate($perPage),
+
+			], 200);
+	 	}
+
+	 	return response(Addon::get(), 200);
+	}
+
+	public function createNewAddon(Request $request, $perPage = false)
+	{
+	 	$request->validate([
+	    	'name'=>'required|unique:addons,name|max:50'
+	 	]);
+
+	 	$newAddon = Addon::create(['name' => $request->name]);
+
+	 	return $this->showAllAddons($perPage);
+	}
+
+	public function updateAddon(Request $request, $addon, $perPage)
+	{
+	 	$addonToUpdate = Addon::find($addon);
+
+	 	$request->validate([
+	    	'name'=>'required|max:50|unique:addons,name,'.$addonToUpdate->id,
+	 	]);
+
+	 	$addonUpdated = $addonToUpdate->update([
+	 		'name' => $request->name
+	 	]);
+
+	 	return $this->showAllAddons($perPage);
+	}
+
+	public function deleteAddon($addonToDelete, $perPage)
+  	{
+     	Addon::destroy($addonToDelete);
+     	return $this->showAllAddons($perPage);
+  	}
+
+  	public function restoreAddon($addonToRestore, $perPage)
+  	{
+     	$addonToStore = Addon::onlyTrashed()->find($addonToRestore);
+     	$addonToStore->restore();
+         
+        return $this->showAllAddons($perPage);
+  	}
+
+  	public function searchAllAddons($search, $perPage)
+	{
+		$columnsToSearch = ['name'];
+
+		$query = Addon::withTrashed();
 
 		foreach($columnsToSearch as $column)
 		{

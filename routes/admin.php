@@ -39,6 +39,14 @@ Route::name('admin.')->group(function () {
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
 
+		    Route::get('/api/add-ons/{perPage?}', 'FoodController@showAllAddons');
+		    Route::get('/api/add-ons/search/{search}/{perPage}', 'FoodController@searchAllAddons');
+		    Route::post('/add-ons/{perPage?}', 'FoodController@createNewAddon');
+		    Route::put('/add-ons/{addon}/{perPage}', 'FoodController@updateAddon');
+		    Route::delete('/add-ons/{addon}/{perPage}', 'FoodController@deleteAddon');
+		    Route::patch('/add-ons/{addon}/{perPage}', 'FoodController@restoreAddon');
+
+
 		    Route::get('/api/discounts/{perPage?}', 'RestaurantController@showAllDiscounts');
 		    Route::get('/api/discounts/search/{search}/{perPage}', 'RestaurantController@searchAllDiscounts');
 		    Route::post('/discounts/{perPage?}', 'RestaurantController@createNewDiscount');
