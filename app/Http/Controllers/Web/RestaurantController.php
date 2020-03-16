@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Models\Discount;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Models\RestaurantAdmin;
@@ -243,6 +244,75 @@ class RestaurantController extends Controller
          $columnsToSearch = ['user_name', 'mobile', 'email'];
 
          $query = RestaurantAdmin::withTrashed();
+
+         foreach($columnsToSearch as $column)
+         {
+            $query->orWhere($column, 'like', "%$search%");
+         }
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
+      public function showAllDiscounts($perPage = false)
+      {
+         if ($perPage) {
+            return response()->json([
+               'current' => Discount::paginate($perPage),
+               'trashed' => Discount::onlyTrashed()->paginate($perPage),
+
+            ], 200);
+         }
+
+         return response(Discount::get(), 200);
+      }
+
+      public function createNewDiscount(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'rate'=>'required|numeric|unique:discounts,rate|min:1|max:100'
+         ]);
+
+         $newCuisine = Discount::create(['rate' => $request->rate]);
+
+         return $this->showAllDiscounts($perPage);
+      }
+
+      public function updateDiscount(Request $request, $discount, $perPage)
+      {
+         $discountToUpdate = Discount::find($discount);
+
+         $request->validate([
+            'rate'=>'required|numeric|min:1|max:100|unique:discounts,rate,'.$discountToUpdate->id,
+         ]);
+
+         $discountUpdated = $discountToUpdate->update([
+            'rate' => $request->rate
+         ]);
+
+         return $this->showAllDiscounts($perPage);
+      }
+
+      public function deleteDiscount($discountToDelete, $perPage)
+      {
+         Discount::destroy($discountToDelete);
+         return $this->showAllDiscounts($perPage);
+      }
+
+      public function restoreDiscount($discountToRestore, $perPage)
+      {
+         $discountToRestore = Discount::onlyTrashed()->find($discountToRestore);
+         $discountToRestore->restore();
+            
+         return $this->showAllDiscounts($perPage);
+      }
+
+      public function searchAllDiscounts($search, $perPage)
+      {
+         $columnsToSearch = ['rate'];
+
+         $query = Discount::withTrashed();
 
          foreach($columnsToSearch as $column)
          {
