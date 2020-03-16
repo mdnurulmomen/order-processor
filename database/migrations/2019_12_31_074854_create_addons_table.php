@@ -15,7 +15,8 @@ class CreateAddonsTable extends Migration
     {
         Schema::create('addons', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('addon_name');
+            $table->string('name');
+            $table->softDeletes();
         });
     }
 
