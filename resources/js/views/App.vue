@@ -89,7 +89,7 @@
 
             <li class="nav-item">
               <router-link :to="{ name: 'admin.discounts.index' }" v-bind:class="[(currentPage.includes('discounts')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-hotel"></i>
+                <i class="nav-icon fas fa-percent"></i>
                 <p>
                   Discounts
                 </p>
@@ -98,7 +98,7 @@
 
             <li class="nav-item">
               <router-link :to="{ name: 'admin.addons.index' }" v-bind:class="[(currentPage.includes('add-ons')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-hotel"></i>
+                <i class="nav-icon fas fa-plus-square"></i>
                 <p>
                   Add-ons
                 </p>
@@ -107,9 +107,9 @@
 
             <li class="nav-item">
               <router-link :to="{ name: 'admin.kitchens.index' }" v-bind:class="[(currentPage.includes('kitchens')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-hotel"></i>
+                <i class="nav-icon fas fa-cheese"></i>
                 <p>
-                  kitchens
+                  Kitchens
                 </p>
               </router-link>
             </li>
