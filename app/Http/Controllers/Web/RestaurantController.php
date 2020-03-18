@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Models\Kitchen;
 use App\Models\Discount;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
@@ -11,32 +12,20 @@ use App\Http\Controllers\Controller;
 
 class RestaurantController extends Controller
 {
-   	public function showAllRestaurants($perPage)
+   	public function showAllRestaurants($perPage = false)
    	{
-   		return response()->json([
-            'all' => Restaurant::withTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-            'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-            'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-            'trashed' => Restaurant::onlyTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-            
-         ], 200);
-   	}
-
-      public function searchAllRestaurants($search, $perPage)
-      {
-         $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order'];
-
-         $query = Restaurant::withTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories']);
-
-         foreach($columnsToSearch as $column)
-         {
-            $query->orWhere($column, 'like', "%$search%");
+   		if ($perPage) {
+            return response()->json([
+               'all' => Restaurant::withTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+               'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+               'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+               'trashed' => Restaurant::onlyTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+               
+            ], 200);
          }
 
-         return response()->json([
-            'all' => $query->latest()->paginate($perPage),  
-         ], 200);
-      }
+         return response(Restaurant::with(['kitchen'])->latest()->get(), 200);
+   	}
 
    	public function createNewRestaurant(Request $request, $perPage)
    	{
@@ -163,6 +152,22 @@ class RestaurantController extends Controller
          $restorationToStore->restore();
          
          return $this->showAllRestaurants($perPage);
+      }
+
+      public function searchAllRestaurants($search, $perPage)
+      {
+         $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order'];
+
+         $query = Restaurant::withTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories']);
+
+         foreach($columnsToSearch as $column)
+         {
+            $query->orWhere($column, 'like', "%$search%");
+         }
+
+         return response()->json([
+            'all' => $query->latest()->paginate($perPage),  
+         ], 200);
       }
 
       public function showAllRestaurantAdmins($perPage = false)
@@ -318,6 +323,102 @@ class RestaurantController extends Controller
          {
             $query->orWhere($column, 'like', "%$search%");
          }
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
+      public function showAllRestaurantKitchens($perPage = false)
+      {
+         if ($perPage) {
+            return response()->json([
+               'current' => Kitchen::with(['restaurant'])->paginate($perPage),
+               'trashed' => Kitchen::onlyTrashed()->with(['restaurant'])->paginate($perPage),
+
+            ], 200);
+         }
+
+         //return response(Kitchen::get(), 200);
+      }
+
+      public function createRestaurantKitchen(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'user_name'=>'required|string|max:50|unique:kitchens,user_name',
+            'mobile'=>'required|unique:kitchens,mobile|max:13',
+            'email'=>'required|unique:kitchens,email|email|string|max:50',
+            'password'=>'required|string|min:8|max:100|confirmed',
+            'restaurant_id'=>'numeric|required|exists:restaurants,id',
+         ]);
+
+         $newRestaurantAdmin = Kitchen::create([
+            'user_name' => $request->user_name,
+            'mobile' => $request->mobile,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'restaurant_id' => $request->restaurant_id,
+         ]);
+
+         return $this->showAllRestaurantKitchens($perPage);
+      }
+
+      public function updateRestaurantKitchen(Request $request, $kitchenToUpdate, $perPage)
+      {
+         $restaurantKitchenToUpdate = Kitchen::find($kitchenToUpdate);
+
+         $request->validate([
+            'user_name'=>'required|string|max:50|unique:kitchens,user_name,'.$restaurantKitchenToUpdate->id,
+            'mobile'=>'required|max:13|unique:kitchens,mobile,'.$restaurantKitchenToUpdate->id,
+            'email'=>'required|email|string|max:50|unique:kitchens,email,'.$restaurantKitchenToUpdate->id,
+            'password'=>'nullable|string|min:8|max:100|confirmed',
+            'restaurant_id'=>'numeric|required|exists:restaurants,id',
+         ]);
+
+         $restaurantKitchenToUpdate->user_name = $request->user_name;        
+         $restaurantKitchenToUpdate->mobile = $request->mobile;
+         $restaurantKitchenToUpdate->email = $request->email;        
+
+         if ($request->password) {       
+            $restaurantKitchenToUpdate->password = Hash::make($request->password);
+         }        
+
+         $restaurantKitchenToUpdate->restaurant_id = $request->restaurant_id;        
+         $restaurantKitchenToUpdate->save();        
+
+         return $this->showAllRestaurantKitchens($perPage);
+      }
+
+      public function deleteRestaurantKitchen($kitchenToDelete, $perPage)
+      {
+         $restaurantKitchenToDelete = Kitchen::find($kitchenToDelete);
+         $restaurantKitchenToDelete->delete();
+
+         return $this->showAllRestaurantKitchens($perPage);
+      }
+
+      public function restoreRestaurantKitchen($kitchenToRestore, $perPage)
+      {
+         $restaurantKitchenToRestore = Kitchen::onlyTrashed()->find($kitchenToRestore);
+         $restaurantKitchenToRestore->restore();
+            
+           return $this->showAllRestaurantKitchens($perPage);
+      }
+
+      public function searchAllRestaurantKitchens($search, $perPage)
+      {
+         $columnsToSearch = ['user_name', 'mobile', 'email'];
+
+         $query = Kitchen::with('restaurant')->withTrashed();
+
+         foreach($columnsToSearch as $column)
+         {
+            $query->orWhere($column, 'like', "%$search%");
+         }
+         
+         $query->orWhereHas('restaurant', function($q)use ($search){
+            $q->where('name', 'like', "%$search%");
+         });
 
          return response()->json([
             'all' => $query->paginate($perPage),  

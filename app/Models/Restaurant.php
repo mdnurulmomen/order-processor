@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Cuisine;
+use App\Models\Kitchen;
 use App\Models\MenuCategory;
 use App\Models\RestaurantMeal;
 use App\Models\RestaurantAdmin;
@@ -76,5 +77,10 @@ class Restaurant extends Authenticatable
     public function restaurantMealCategories()
     {
         return $this->belongsToMany(Meal::class, 'restaurant_meals', 'restaurant_id', 'meal_id');
+    }
+
+    public function kitchen()
+    {
+        return $this->hasOne(Kitchen::class, 'restaurant_id', 'id');
     }    
 }

@@ -39,6 +39,14 @@ Route::name('admin.')->group(function () {
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
 
+		    Route::get('/api/restaurant-kitchens/{perPage?}', 'RestaurantController@showAllRestaurantKitchens');
+		    Route::get('/api/restaurant-kitchens/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantKitchens');
+		    Route::post('/restaurant-kitchens/{perPage?}', 'RestaurantController@createRestaurantKitchen');
+		    Route::put('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@updateRestaurantKitchen');
+		    Route::delete('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@deleteRestaurantKitchen');
+		    Route::patch('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@restoreRestaurantKitchen');
+
+
 		    Route::get('/api/add-ons/{perPage?}', 'FoodController@showAllAddons');
 		    Route::get('/api/add-ons/search/{search}/{perPage}', 'FoodController@searchAllAddons');
 		    Route::post('/add-ons/{perPage?}', 'FoodController@createNewAddon');
@@ -87,7 +95,7 @@ Route::name('admin.')->group(function () {
 		    Route::patch('/restaurant-admins/{restaurantAdmin}/{perPage}', 'RestaurantController@restoreRestaurantAdmin');
 
 
-		    Route::get('/api/restaurants/{perPage}', 'RestaurantController@showAllRestaurants');
+		    Route::get('/api/restaurants/{perPage?}', 'RestaurantController@showAllRestaurants');
 		    Route::get('/api/restaurants/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurants');
 		    Route::post('/restaurants/{perPage}', 'RestaurantController@createNewRestaurant');
 		    Route::put('/restaurants/{restaurant}/{perPage}', 'RestaurantController@updateRestaurant');
