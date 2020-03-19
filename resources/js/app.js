@@ -23,6 +23,7 @@ import Home from './components/admin/HomeComponent.vue';
 import Dashboard2 from './components/admin/Dashboard2.vue';
 import Dashboard3 from './components/admin/Dashboard3.vue';
 import Profile from './components/admin/ProfileComponent.vue';
+import Setting from './components/admin/SettingComponent.vue';
 import RestaurantIndexComponent from './components/admin/RestaurantIndexComponent.vue';
 import MealIndexComponent from './components/admin/MealIndexComponent.vue';
 import MenuCategoryIndexComponent from './components/admin/MenuCategoryIndexComponent.vue';
@@ -58,6 +59,11 @@ const router = new VueRouter({
 			path: '/profile',
             name: 'admin.profile',
             component: Profile
+		},
+		{
+			path: '/settings',
+            name: 'admin.setting',
+            component: Setting
 		},
 		{
 			path: '/restaurants',
@@ -122,6 +128,11 @@ window.showHomeComponent = function() {
 window.showProfileComponent = function() {
     // Manually navigate to the route
     router.push('/profile');
+};
+
+window.showSettingComponent = function() {
+    // Manually navigate to the route
+    router.push('/settings');
 };
 
 

@@ -91,16 +91,20 @@
                 </li>
 
                 <!-- Menu Footer-->
-                <li class="user-footer">
-                  <div class="float-left" onclick="showProfileComponent()">
-                    <a class="btn btn-default">Profile</a>
+                <li class="user-footer row">
+                  <div class="col-4" onclick="showProfileComponent()">
+                    <a class="btn btn-default btn-flat">Profile</a>
                   </div>
 
-                  <div class="float-right">
-                    <a class="btn btn-default" href="{{ route('admin.logout') }}"
+                  <div class="col-4" onclick="showSettingComponent()">
+                    <a class="btn btn-default btn-flat">Setting</a>
+                  </div>
+
+                  <div class="col-4">
+                    <a class="btn btn-default btn-flat" href="{{ route('admin.logout') }}"
                        onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
-                        {{ __('Sign out') }}
+                        {{ __('logout') }}
                     </a>
                     <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                         @csrf

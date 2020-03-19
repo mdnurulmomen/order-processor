@@ -35,7 +35,9 @@ Route::name('admin.')->group(function () {
 		    Route::get('/api/profile', 'ProfileController@showAdminProfile');
 		    Route::post('/profile', 'ProfileController@updateAdminProfile');
 
-		    
+		    Route::get('/api/settings', 'SettingController@showAdminSettings');
+		    Route::post('/settings', 'SettingController@updateAdminSettings');
+
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
 
