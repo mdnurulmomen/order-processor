@@ -13,49 +13,93 @@ class SettingController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function showAdminSettings()
+    public function showAllSettings()
     {
-        return response(ApplicationSetting::first(), 200);
+        return response(ApplicationSetting::firstOrCreate(['id' => 1]), 200);
     }
 
     /**
-     * Update Admin Profile.
+     * Update Settings.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function updateAdminSettings(Request $request)
+    public function updatePaymentSettings(Request $request)
     {   
         $request->validate([
-            'delivery_charge'=>'required|numeric',
-            'multiple_delivery_charge_percentage'=>'required|numeric|max:100',
-            'official_mail_address'=>'required|email',
-            'official_contact_address'=>'required|string',
-            'official_customer_care_number'=>'required|numeric',
             'vat_rate'=>'required|numeric|max:100',
             'official_bank'=>'required|string',
             'official_bank_account_holder_name'=>'required|string',
             'official_bank_account_number'=>'required|string',
             'merchant_number'=>'required|numeric',
-            // 'profile_picture'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         
-        $settings = ApplicationSetting::first();
+        $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
 
-        $settings->delivery_charge = $request->delivery_charge;
-        $settings->multiple_delivery_charge_percentage = $request->multiple_delivery_charge_percentage;
-        $settings->official_mail_address = $request->official_mail_address;
-        $settings->official_contact_address = $request->official_contact_address;
-        $settings->official_customer_care_number = $request->official_customer_care_number;
         $settings->vat_rate = $request->vat_rate;
         $settings->official_bank = $request->official_bank;
         $settings->official_bank_account_holder_name = $request->official_bank_account_holder_name;
         $settings->official_bank_account_number = $request->official_bank_account_number;
         $settings->merchant_number = $request->merchant_number;
+        $settings->admin_id = \Auth::guard('admin')->user()->id;
 
         $settings->save();
 
         return response()->json([
-            'success' => "Settings has been updated"
+            'success' => "Payment Settings has been updated"
+        ], 200);
+    }
+
+    public function updateContactSettings(Request $request)
+    {   
+        $request->validate([
+            'official_contact_address'=>'required|string',
+            'official_mail_address'=>'required|email',
+            'official_customer_care_number'=>'required|numeric',
+        ]);
+        
+        $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
+
+        $settings->official_contact_address = $request->official_contact_address;
+        $settings->official_mail_address = $request->official_mail_address;
+        $settings->official_customer_care_number = $request->official_customer_care_number;
+        $settings->admin_id = \Auth::guard('admin')->user()->id;
+
+        $settings->save();
+
+        return response()->json([
+            'success' => "Contact Settings has been updated"
+        ], 200);
+    }
+
+    public function updateDeliverySettings(Request $request)
+    {   
+        $request->validate([
+            'delivery_charge'=>'required|numeric',
+            'multiple_delivery_charge_percentage'=>'required|numeric|max:100',
+        ]);
+        
+        $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
+
+        $settings->delivery_charge = $request->delivery_charge;
+        $settings->multiple_delivery_charge_percentage = $request->multiple_delivery_charge_percentage;
+        $settings->admin_id = \Auth::guard('admin')->user()->id;
+
+        $settings->save();
+
+        return response()->json([
+            'success' => "Delivery Settings has been updated"
+        ], 200);
+    }
+
+    public function updateOtherSettings(Request $request)
+    {   
+        $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
+        $settings->favicon_icon = $request->favicon;
+        $settings->admin_id = \Auth::guard('admin')->user()->id;
+        $settings->save();
+
+        return response()->json([
+            'success' => "Media Settings has been updated"
         ], 200);
     }
 }

@@ -27,9 +27,9 @@ class ApplicationSetting extends Model
             }
             
             $imageObject = ImageIntervention::make($encodedImageFile);
-            $imageObject->save($directory.$this->id.'.png');
+            $imageObject->save($directory.'favicon.png');
 
-            $this->attributes['favicon'] = $directory.$this->id.'.png';
+            $this->attributes['favicon'] = $directory.'favicon.png';
         }
     }
 }

@@ -39,7 +39,7 @@
 						<div  v-show="!loading" class="col-sm-12">
 							<div class="card card-primary card-outline">
 								<!-- form start -->
-						      	<form class="form-horizontal" v-on:submit.prevent="updateSetting">
+						      	<form class="form-horizontal" v-on:submit.prevent="updatePaymentSetting">
 						      		
 						      		<input type="hidden" name="_token" :value="csrf">
 						            
@@ -95,15 +95,15 @@
 							                  	<input  
 							                  		type="text" 
 							                  		class="form-control" 
-							                  		v-model="applicationSettings.bank_account_number" 
+							                  		v-model="applicationSettings.official_bank_account_number" 
 							                  		placeholder="Bank Account Number" 
 							                  		required="true" 
-							                  		:class="!errors.applicationSettings.bank_account_number  ? 'is-valid' : 'is-invalid'"
-													@keyup="validateFormInput('bank_account_number')"
+							                  		:class="!errors.applicationSettings.official_bank_account_number  ? 'is-valid' : 'is-invalid'"
+													@keyup="validateFormInput('official_bank_account_number')"
 							                  	>
 
 							                  	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.bank_account_number }}
+										        	{{ errors.applicationSettings.official_bank_account_number }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -113,14 +113,14 @@
 							                  	<input 
 							                  		type="text" 
 							                  		class="form-control" 
-							                  		v-model="applicationSettings.bank_account_holder_name" 
+							                  		v-model="applicationSettings.official_bank_account_holder_name" 
 							                  		placeholder="Account Holder Number" 
 							                  		required="true" 
-							                  		:class="!errors.applicationSettings.bank_account_holder_name  ? 'is-valid' : 'is-invalid'"
-													@keyup="validateFormInput('bank_account_holder_name')"
+							                  		:class="!errors.applicationSettings.official_bank_account_holder_name  ? 'is-valid' : 'is-invalid'"
+													@keyup="validateFormInput('official_bank_account_holder_name')"
 							                  	>
 							                  	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.bank_account_holder_name }}
+										        	{{ errors.applicationSettings.official_bank_account_holder_name }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -145,7 +145,12 @@
 						            </div>
 						            <!-- /.card-body -->
 						            <div class="card-footer text-center">
-						              	<button type="submit" :disabled="loading" class="btn btn-primary">Update Payment Settings</button>
+						            	<div class="col-sm-12">
+											<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+										  		Please input all required fields
+										  	</span>
+										</div>
+						              	<button type="submit" :disabled="loading || !submitForm" class="btn btn-primary">Update Payment Settings</button>
 						            </div>
 						        	<!-- /.card-footer -->
 						      	</form>
@@ -159,7 +164,7 @@
 						<div  v-show="!loading" class="col-sm-12">
 							<div class="card card-primary card-outline">
 								<!-- form start -->
-						      	<form class="form-horizontal" v-on:submit.prevent="updateSetting">
+						      	<form class="form-horizontal" v-on:submit.prevent="updateContactSetting">
 						      		
 						      		<input type="hidden" name="_token" :value="csrf">
 						            
@@ -175,6 +180,7 @@
 									                  	class="form-control" 
 									                  	v-model="applicationSettings.official_customer_care_number" 
 									                  	placeholder="Official Customer Care Number" 
+									                  	required="true"  
 									                  	:class="!errors.applicationSettings.official_customer_care_number  ? 'is-valid' : 'is-invalid'"
 														@keyup="validateFormInput('official_customer_care_number')"
 									                  >
@@ -193,6 +199,7 @@
 									                  	class="form-control" 
 									                  	v-model="applicationSettings.official_mail_address" 
 									                  	placeholder="Mail Address" 
+									                  	required="true"  
 									                  	:class="!errors.applicationSettings.official_mail_address  ? 'is-valid' : 'is-invalid'"
 														@keyup="validateFormInput('official_mail_address')"
 									                  >
@@ -208,10 +215,10 @@
 							                <div class="col-sm-10">
 							                  	<ckeditor 
 					                              	class="form-control" 
+					                              	:class="!errors.applicationSettings.official_contact_address  ? 'is-valid' : 'is-invalid'"
 					                              	:editor="editor" 
 					                              	v-model="applicationSettings.official_contact_address" 
 					                              	placeholder="Contact Address" 
-					                              	:class="!errors.applicationSettings.official_contact_address  ? 'is-valid' : 'is-invalid'"
 					                              	@blur="validateFormInput('official_contact_address')"
 					                            >
 				                              	</ckeditor>
@@ -223,7 +230,12 @@
 						            </div>
 						            <!-- /.card-body -->
 						            <div class="card-footer text-center">
-						              	<button type="submit" :disabled="loading" class="btn btn-primary">Update Delivery Setting</button>
+						            	<div class="col-sm-12">
+											<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+										  		Please input all required fields
+										  	</span>
+										</div>
+						              	<button type="submit" :disabled="loading || !submitForm" class="btn btn-primary">Update Contact Setting</button>
 						            </div>
 						        	<!-- /.card-footer -->
 						      	</form>
@@ -237,7 +249,7 @@
 						<div  v-show="!loading" class="col-sm-12">
 							<div class="card card-primary card-outline">
 								<!-- form start -->
-						      	<form class="form-horizontal" v-on:submit.prevent="updateSetting">
+						      	<form class="form-horizontal" v-on:submit.prevent="updateDeliverySetting">
 						      		
 						      		<input type="hidden" name="_token" :value="csrf">
 						            
@@ -252,10 +264,10 @@
 									                  	type="number" 
 														class="form-control" 
 														v-model="applicationSettings.delivery_charge" 
-														min="1" 
+														min="0" 
 														step="1" 
-														placeholder="Delivery Charge" 
 														required="true"
+														placeholder="Delivery Charge" 		
 														:class="!errors.applicationSettings.delivery_charge  ? 'is-valid' : 'is-invalid'"
 														@keyup="validateFormInput('delivery_charge')"
 									                  >
@@ -299,7 +311,12 @@
 						            </div>
 						            <!-- /.card-body -->
 						            <div class="card-footer text-center">
-						              	<button type="submit" :disabled="loading" class="btn btn-primary">Update Delivery Setting</button>
+						            	<div class="col-sm-12">
+											<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+										  		Please input all required fields
+										  	</span>
+										</div>
+						              	<button type="submit" :disabled="loading || !submitForm" class="btn btn-primary">Update Delivery Setting</button>
 						            </div>
 						        	<!-- /.card-footer -->
 						      	</form>
@@ -314,19 +331,19 @@
 						<div  v-show="!loading" class="col-sm-12">
 							<div class="card card-primary card-outline">
 								<!-- form start -->
-						      	<form class="form-horizontal" v-on:submit.prevent="updateSetting">
+						      	<form class="form-horizontal" v-on:submit.prevent="updateOtherSetting">
 						      		
 						      		<input type="hidden" name="_token" :value="csrf">
 						            
 					              	<div class="card-body box-profile">
-
-					                	<div class="text-center mb-3">
-					                  		<img class="profile-user-img img-fluid img-circle" :src="applicationSettings.favicon_icon" alt="Application favicon">
-					                	</div>
-
-					                	<div class="row">
-						              		<!-- <label for="inputMobile3" class="col-sm-4 col-form-label text-right">Picture</label> -->
-							                <div class="col-sm-12">
+					                	<div class="row d-flex align-items-center text-center">
+						              		<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
+						              			Panel Favicon :
+						              		</label>
+						              		<div class="col-sm-4">
+						                  		<img class="profile-user-img img-fluid" :src="applicationSettings.favicon" alt="Application favicon">
+						                	</div>
+							                <div class="col-sm-4">
 							                  	<div class="input-group">
 								                    <div class="custom-file">
 								                        <input 
@@ -336,7 +353,7 @@
 								                        	v-on:change="onImageChange" 
 								                        	accept="image/*"
 								                        >
-								                        <label class="custom-file-label" for="exampleInputFile">Change Picture</label>
+								                        <label class="custom-file-label" for="exampleInputFile">Change Favicon</label>
 								                    </div>
 							                    </div>
 							                </div>
@@ -345,7 +362,7 @@
 					              	<!-- /.card-body -->
 						            
 						            <div class="card-footer text-center">
-						              	<button type="submit" :disabled="loading" class="btn btn-primary">Update Other</button>
+						              	<button type="submit" :disabled="loading || !submitForm" class="btn btn-primary">Update Media Settings</button>
 						            </div>
 						        	<!-- /.card-footer -->
 						      	</form>
@@ -376,31 +393,33 @@
 
 	    data() {
 	        return {
-
 	        	editor: ClassicEditor,
 
 	        	applicationSettings : {
-	        		vat_rate : null,
-	        		official_bank : null,
-	        		bank_account_number : null,
-	        		bank_account_holder_name : null,
-	        		merchant_number : null,
+	        		// vat_rate : null,
+	        		// official_bank : null,
+	        		// official_bank_account_number : null,
+	        		// official_bank_account_holder_name : null,
+	        		// merchant_number : null,
 	        		
-	        		official_customer_care_number : null,
-	        		official_mail_address : null,
-	        		official_contact_address : null,
+	        		// official_customer_care_number : null,
+	        		// official_mail_address : null,
+	        		// official_contact_address : null,
 
-	        		delivery_charge : null,
-	        		multiple_delivery_charge_percentage : null,
+	        		// delivery_charge : null,
+	        		// multiple_delivery_charge_percentage : null,
 
-	        		favicon_icon : null,
+	        		// favicon : null,
 	        	},
 
 	        	newFavicon : null,
 	        	loading : false,
-	        	errors : {},
+	        	errors : {
+	        		applicationSettings : {},
+	        	},
+
 	        	submitForm : true,
-	            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+	            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
 	        }
 		},
 		created(){
@@ -409,20 +428,97 @@
 		methods : {
 			fetchSettingData() {
 				this.loading = true;
-				this.applicationSettings = false;
 				axios
 					.get('/api/settings')
 					.then(response => {
 						this.loading = false;
-						this.applicationSettings = response.data;
+						this.applicationSettings = response.data || {};
 					});
 			},
-			updateSetting() {
+			updatePaymentSetting() {
 
-				this.applicationSettings.favicon_icon = this.newFavicon;
+				if (!this.applicationSettings.vat_rate || !this.applicationSettings.official_bank || !this.applicationSettings.official_bank_account_number || !this.applicationSettings.official_bank_account_holder_name || !this.applicationSettings.merchant_number) {
+
+					this.submitForm = false;
+					return;
+				}
 
 				axios
-					.post('/settings', this.applicationSettings)
+					.post('/payment-settings', this.applicationSettings)
+					.then(response => {
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					});
+			},
+			updateContactSetting() {
+
+				if (!this.applicationSettings.official_customer_care_number || !this.applicationSettings.official_mail_address || !this.applicationSettings.official_contact_address) {
+
+					this.submitForm = false;
+					return false;
+				}
+
+				axios
+					.post('/contact-settings', this.applicationSettings)
+					.then(response => {
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					});
+			},
+			updateDeliverySetting() {
+
+				if (!this.applicationSettings.delivery_charge || !this.applicationSettings.multiple_delivery_charge_percentage) {
+
+					this.submitForm = false;
+					return false;
+				}
+
+				axios
+					.post('/delivery-settings', this.applicationSettings)
+					.then(response => {
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					});
+			},
+			updateOtherSetting() {
+
+				this.applicationSettings.favicon = this.newFavicon;
+
+				axios
+					.post('/other-settings', this.applicationSettings)
 					.then(response => {
 						if (response.status == 200) {
 							toastr.success(response.data.success, "Success");
@@ -452,7 +548,7 @@
 			createImage(file) {
                 let reader = new FileReader();
                 reader.onload = (evnt) => {
-                    this.newFavicon = this.applicationSettings.favicon_icon = evnt.target.result;
+                    this.newFavicon = this.applicationSettings.favicon = evnt.target.result;
                 };
                 reader.readAsDataURL(file);
             },
@@ -468,7 +564,7 @@
 							this.errors.applicationSettings.vat_rate = 'Vat rate is required';
 						}
 						else if (this.applicationSettings.vat_rate < 0 || this.applicationSettings.vat_rate > 100 ) {
-							this.errors.applicationSettings.vat_rate = 'Rate should be 1 to 100';
+							this.errors.applicationSettings.vat_rate = 'Value should be between 1 and 100';
 						}
 						else{
 							this.submitForm = true;
@@ -479,54 +575,132 @@
 
 					case 'official_bank' :
 
-						if (!this.singleRestaurantAdminData.restaurantAdmin.email) {
-							this.errors.restaurantAdmin.email = 'Email is required';
+						if (!this.applicationSettings.official_bank) {
+							this.errors.applicationSettings.official_bank = 'Bank name is required';
 						}
-						else if (!this.singleRestaurantAdminData.restaurantAdmin.email.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
-							this.errors.restaurantAdmin.email = 'Invalid Email';
+						else if (!this.applicationSettings.official_bank.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+							this.errors.applicationSettings.official_bank = 'No special character';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantAdmin, 'email');
+							this.$delete(this.errors.applicationSettings, 'official_bank');
 						}
 
 						break;
 
-					case 'restaurantAdmin.mobile' :
+					case 'official_bank_account_number' :
 
-						if (!this.singleRestaurantAdminData.restaurantAdmin.mobile) {
-							this.errors.restaurantAdmin.mobile = 'Mobile is required';
+						if (!this.applicationSettings.official_bank_account_number) {
+							this.errors.applicationSettings.official_bank_account_number = 'Account number is required';
 						}
-						else if (!this.singleRestaurantAdminData.restaurantAdmin.mobile.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
-							this.errors.restaurantAdmin.mobile = 'Invalid mobile number';
+						else if (!this.applicationSettings.official_bank_account_number.match(/^[_A-z0-9]*((-|_|\s)*[_A-z0-9])*$/g)) {
+							this.errors.applicationSettings.official_bank_account_number = 'No special character';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantAdmin, 'mobile');
+							this.$delete(this.errors.applicationSettings, 'official_bank_account_number');
 						}
 
 						break;
 
-					case 'restaurantAdmin.password' :
+					case 'official_bank_account_holder_name' :
 
-						if (this.singleRestaurantAdminData.restaurantAdmin.password && this.singleRestaurantAdminData.restaurantAdmin.password.length < 8) {
-							this.errors.restaurantAdmin.password = 'Password length has to be 8';
+						if (!this.applicationSettings.official_bank_account_holder_name) {
+							this.errors.applicationSettings.official_bank_account_holder_name = 'Account holder name is required';
+						}
+						else if (!this.applicationSettings.official_bank_account_holder_name.match(/^[_A-z0-9]*((-|_|\s)*[_A-z0-9])*$/g)) {
+							this.errors.applicationSettings.official_bank_account_holder_name = 'No special character';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantAdmin, 'password');
+							this.$delete(this.errors.applicationSettings, 'official_bank_account_holder_name');
 						}
 
 						break;
 
-					case 'restaurantAdmin.password_confirmation' :
+					case 'merchant_number' :
 
-						if (this.singleRestaurantAdminData.restaurantAdmin.password && this.singleRestaurantAdminData.restaurantAdmin.password !== this.singleRestaurantAdminData.restaurantAdmin.password_confirmation) {
-							this.errors.restaurantAdmin.password_confirmation = "Password doesn't match" ;
+						if (!this.applicationSettings.merchant_number) {
+							this.errors.applicationSettings.merchant_number = 'Mobile is required';
+						}
+						else if (!this.applicationSettings.merchant_number.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
+							this.errors.applicationSettings.merchant_number = 'Invalid mobile number';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.applicationSettings, 'merchant_number');
+						}
+
+						break;
+
+					case 'official_customer_care_number' :
+
+						if (!this.applicationSettings.official_customer_care_number) {
+							this.errors.applicationSettings.official_customer_care_number = 'Customer care number is required';
+						}
+						else if (!this.applicationSettings.official_customer_care_number.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
+							this.errors.applicationSettings.official_customer_care_number = 'Invalid customer care number';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.applicationSettings, 'official_customer_care_number');
+						}
+
+						break;
+
+					case 'official_mail_address' :
+
+						if (!this.applicationSettings.official_mail_address) {
+							this.errors.applicationSettings.official_mail_address = 'Official mail is required';
+						}
+						else if (!this.applicationSettings.official_mail_address.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
+							this.errors.applicationSettings.official_mail_address = 'Invalid email';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantAdmin, 'password_confirmation');
+							this.$delete(this.errors.applicationSettings, 'official_mail_address');
+						}
+
+						break;
+
+					case 'official_contact_address' :
+
+						if (!this.applicationSettings.official_contact_address) {
+							this.errors.applicationSettings.official_contact_address = 'Official address is required';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.applicationSettings, 'official_contact_address');
+						}
+
+						break;
+
+					case 'delivery_charge' :
+
+						if (!this.applicationSettings.delivery_charge) {
+							this.errors.applicationSettings.delivery_charge = 'Delivery charge is required';
+						}
+						else if (this.applicationSettings.delivery_charge < 0 ) {
+							this.errors.applicationSettings.delivery_charge = 'Value should be positive number';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.applicationSettings, 'delivery_charge');
+						}
+
+						break;
+
+					case 'multiple_delivery_charge_percentage' :
+
+						if (!this.applicationSettings.multiple_delivery_charge_percentage) {
+							this.errors.applicationSettings.multiple_delivery_charge_percentage = 'Percentage is required';
+						}
+						else if (this.applicationSettings.multiple_delivery_charge_percentage < 0 ) {
+							this.errors.applicationSettings.multiple_delivery_charge_percentage = 'Value should be positive number';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.applicationSettings, 'multiple_delivery_charge_percentage');
 						}
 
 						break;
