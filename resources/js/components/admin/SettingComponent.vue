@@ -350,6 +350,7 @@
 								                        	type="file" 
 								                        	class="custom-file-input" 
 								                        	id="exampleInputFile" 
+								                        	required="true"  
 								                        	v-on:change="onImageChange" 
 								                        	accept="image/*"
 								                        >
