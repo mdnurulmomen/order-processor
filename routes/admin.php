@@ -44,6 +44,14 @@ Route::name('admin.')->group(function () {
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
 
+		    Route::get('/api/restaurant-deals/{perPage?}', 'RestaurantController@showAllRestaurantDeals');
+		    Route::get('/api/restaurant-deals/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantDeals');
+		    Route::post('/restaurant-deals/{perPage?}', 'RestaurantController@createRestaurantDeal');
+		    Route::put('/restaurant-deals/{restaurantDeal}/{perPage}', 'RestaurantController@updateRestaurantDeal');
+		    Route::delete('/restaurant-deals/{restaurantDeal}/{perPage}', 'RestaurantController@deleteRestaurantDeal');
+		    Route::patch('/restaurant-deals/{restaurantDeal}/{perPage}', 'RestaurantController@restoreRestaurantDeal');
+
+
 		    Route::get('/api/restaurant-kitchens/{perPage?}', 'RestaurantController@showAllRestaurantKitchens');
 		    Route::get('/api/restaurant-kitchens/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantKitchens');
 		    Route::post('/restaurant-kitchens/{perPage?}', 'RestaurantController@createRestaurantKitchen');

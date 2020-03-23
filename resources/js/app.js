@@ -33,6 +33,7 @@ import NotFoundComponent from './components/admin/NotFoundComponent.vue';
 import DiscountIndexComponent from './components/admin/DiscountIndexComponent.vue';
 import AddonIndexComponent from './components/admin/AddonIndexComponent.vue';
 import KitchenIndexComponent from './components/admin/KitchenIndexComponent.vue';
+import RestaurantDealIndexComponent from './components/admin/RestaurantDealIndexComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -104,6 +105,11 @@ const router = new VueRouter({
 			path: '/kitchens',
             name: 'admin.kitchens.index',
             component: KitchenIndexComponent
+		},
+		{
+			path: '/restaurant-deals',
+            name: 'admin.restaurantDeals.index',
+            component: RestaurantDealIndexComponent
 		},
 
 

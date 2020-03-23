@@ -114,6 +114,15 @@
               </router-link>
             </li>
 
+            <li class="nav-item">
+              <router-link :to="{ name: 'admin.restaurantDeals.index' }" v-bind:class="[(currentPage.includes('restaurant-deals')) ? 'active' : '', 'nav-link']">
+                <i class="nav-icon fas fa-cheese"></i>
+                <p>
+                  Restaurant Deals
+                </p>
+              </router-link>
+            </li>
+
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-copy"></i>

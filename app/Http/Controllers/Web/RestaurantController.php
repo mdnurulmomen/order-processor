@@ -6,6 +6,7 @@ use App\Models\Kitchen;
 use App\Models\Discount;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use App\Models\RestaurantDeal;
 use App\Models\RestaurantAdmin;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
@@ -24,7 +25,7 @@ class RestaurantController extends Controller
             ], 200);
          }
 
-         return response(Restaurant::with(['kitchen'])->latest()->get(), 200);
+         return response(Restaurant::latest()->get(), 200);
    	}
 
    	public function createNewRestaurant(Request $request, $perPage)
@@ -418,6 +419,107 @@ class RestaurantController extends Controller
          
          $query->orWhereHas('restaurant', function($q)use ($search){
             $q->where('name', 'like', "%$search%");
+         });
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
+      public function showAllRestaurantDeals($perPage = false)
+      {
+         if ($perPage) {
+            /*
+            return response()->json([
+               RestaurantDeal::with(['restaurant', 'discount'])->paginate($perPage),
+            ], 200);
+            */
+
+            return response(RestaurantDeal::with(['restaurant', 'discount'])->paginate($perPage), 200);
+         }
+         return response(RestaurantDeal::with(['restaurant', 'discount'])->get(), 200);
+      }
+
+      public function createRestaurantDeal(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'sale_percentage'=>'numeric|min:0|max:100',
+            'restaurant_promotional_discount'=>'numeric|min:0|max:100',
+            'native_discount'=>'numeric|min:0|max:100',
+            'discount_id'=>'required|numeric|exists:discounts,id',
+            'delivery_fee_addition'=>'boolean',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id|unique:restaurant_deals,restaurant_id',
+         ]);
+
+         $newRestaurantAdmin = RestaurantDeal::create([
+            'sale_percentage' => $request->sale_percentage,
+            'restaurant_promotional_discount' => $request->restaurant_promotional_discount,
+            'native_discount' => $request->native_discount,
+            'discount_id' => $request->discount_id,
+            'delivery_fee_addition' => $request->delivery_fee_addition,
+            'restaurant_id' => $request->restaurant_id,
+         ]);
+
+         return $this->showAllRestaurantDeals($perPage);
+      }
+
+      public function updateRestaurantDeal(Request $request, $restaurantDeal, $perPage)
+      {
+         $restaurantDealToUpdate = RestaurantDeal::find($restaurantDeal);
+
+         $request->validate([
+            'sale_percentage'=>'numeric|min:0|max:100',
+            'restaurant_promotional_discount'=>'numeric|min:0|max:100',
+            'native_discount'=>'numeric|min:0|max:100',
+            'discount_id'=>'required|numeric|exists:discounts,id',
+            'delivery_fee_addition'=>'boolean',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         $restaurantDealToUpdate->sale_percentage = $request->sale_percentage;        
+         $restaurantDealToUpdate->restaurant_promotional_discount = $request->restaurant_promotional_discount;
+         $restaurantDealToUpdate->native_discount = $request->native_discount;        
+         $restaurantDealToUpdate->discount_id = $request->discount_id;     
+         $restaurantDealToUpdate->delivery_fee_addition = $request->delivery_fee_addition;        
+         $restaurantDealToUpdate->restaurant_id = $request->restaurant_id;     
+         $restaurantDealToUpdate->save();        
+
+         return $this->showAllRestaurantDeals($perPage);
+      }
+
+      public function deleteRestaurantDeal($kitchenToDelete, $perPage)
+      {
+         $restaurantKitchenToDelete = RestaurantDeal::find($kitchenToDelete);
+         $restaurantKitchenToDelete->delete();
+
+         return $this->showAllRestaurantDeals($perPage);
+      }
+
+      public function restoreRestaurantDeal($kitchenToRestore, $perPage)
+      {
+         $restaurantKitchenToRestore = RestaurantDeal::onlyTrashed()->find($kitchenToRestore);
+         $restaurantKitchenToRestore->restore();
+            
+           return $this->showAllRestaurantDeals($perPage);
+      }
+
+      public function searchAllRestaurantDeals($search, $perPage)
+      {
+         $columnsToSearch = ['sale_percentage', 'restaurant_promotional_discount', 'native_discount'];
+
+         $query = RestaurantDeal::with(['restaurant', 'discount']);
+
+         foreach($columnsToSearch as $column)
+         {
+            $query->orWhere($column, 'like', "%$search%");
+         }
+         
+         $query->orWhereHas('restaurant', function($q)use ($search){
+            $q->where('name', 'like', "%$search%");
+         });
+
+         $query->orWhereHas('discount', function($q)use ($search){
+            $q->where('rate', 'like', "%$search%");
          });
 
          return response()->json([
