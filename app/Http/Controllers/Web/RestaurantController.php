@@ -429,12 +429,6 @@ class RestaurantController extends Controller
       public function showAllRestaurantDeals($perPage = false)
       {
          if ($perPage) {
-            /*
-            return response()->json([
-               RestaurantDeal::with(['restaurant', 'discount'])->paginate($perPage),
-            ], 200);
-            */
-
             return response(RestaurantDeal::with(['restaurant', 'discount'])->paginate($perPage), 200);
          }
          return response(RestaurantDeal::with(['restaurant', 'discount'])->get(), 200);
@@ -473,7 +467,7 @@ class RestaurantController extends Controller
             'native_discount'=>'numeric|min:0|max:100',
             'discount_id'=>'required|numeric|exists:discounts,id',
             'delivery_fee_addition'=>'boolean',
-            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id|unique:restaurant_deals,restaurant_id,'.$restaurantDealToUpdate->id,
          ]);
 
          $restaurantDealToUpdate->sale_percentage = $request->sale_percentage;        
@@ -508,6 +502,106 @@ class RestaurantController extends Controller
          $columnsToSearch = ['sale_percentage', 'restaurant_promotional_discount', 'native_discount'];
 
          $query = RestaurantDeal::with(['restaurant', 'discount']);
+
+         foreach($columnsToSearch as $column)
+         {
+            $query->orWhere($column, 'like', "%$search%");
+         }
+         
+         $query->orWhereHas('restaurant', function($q)use ($search){
+            $q->where('name', 'like', "%$search%");
+         });
+
+         $query->orWhereHas('discount', function($q)use ($search){
+            $q->where('rate', 'like', "%$search%");
+         });
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
+
+
+
+      public function showAllRestaurantMeals($restaurant, $perPage = false)
+      {
+         $restaurantToShow = Restaurant::find($restaurant);
+
+         if ($perPage) {
+            return response($restaurantToShow->meals->paginate($perPage), 200);
+         }
+         return response($restaurantToShow->meals->get(), 200);
+      }
+
+      public function createRestaurantMeal(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'sale_percentage'=>'numeric|min:0|max:100',
+            'restaurant_promotional_discount'=>'numeric|min:0|max:100',
+            'native_discount'=>'numeric|min:0|max:100',
+            'discount_id'=>'required|numeric|exists:discounts,id',
+            'delivery_fee_addition'=>'boolean',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id|unique:restaurant_meals,restaurant_id',
+         ]);
+
+         $newRestaurantAdmin = RestaurantMeal::create([
+            'sale_percentage' => $request->sale_percentage,
+            'restaurant_promotional_discount' => $request->restaurant_promotional_discount,
+            'native_discount' => $request->native_discount,
+            'discount_id' => $request->discount_id,
+            'delivery_fee_addition' => $request->delivery_fee_addition,
+            'restaurant_id' => $request->restaurant_id,
+         ]);
+
+         return $this->showAllRestaurantMeals($perPage);
+      }
+
+      public function updateRestaurantMeal(Request $request, $restaurantMeal, $perPage)
+      {
+         $restaurantMealToUpdate = RestaurantMeal::find($restaurantMeal);
+
+         $request->validate([
+            'sale_percentage'=>'numeric|min:0|max:100',
+            'restaurant_promotional_discount'=>'numeric|min:0|max:100',
+            'native_discount'=>'numeric|min:0|max:100',
+            'discount_id'=>'required|numeric|exists:discounts,id',
+            'delivery_fee_addition'=>'boolean',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         $restaurantMealToUpdate->sale_percentage = $request->sale_percentage;        
+         $restaurantMealToUpdate->restaurant_promotional_discount = $request->restaurant_promotional_discount;
+         $restaurantMealToUpdate->native_discount = $request->native_discount;        
+         $restaurantMealToUpdate->discount_id = $request->discount_id;     
+         $restaurantMealToUpdate->delivery_fee_addition = $request->delivery_fee_addition;        
+         $restaurantMealToUpdate->restaurant_id = $request->restaurant_id;     
+         $restaurantMealToUpdate->save();        
+
+         return $this->showAllRestaurantMeals($perPage);
+      }
+
+      public function deleteRestaurantMeal($kitchenToDelete, $perPage)
+      {
+         $restaurantKitchenToDelete = RestaurantMeal::find($kitchenToDelete);
+         $restaurantKitchenToDelete->delete();
+
+         return $this->showAllRestaurantMeals($perPage);
+      }
+
+      public function restoreRestaurantMeal($kitchenToRestore, $perPage)
+      {
+         $restaurantKitchenToRestore = RestaurantMeal::onlyTrashed()->find($kitchenToRestore);
+         $restaurantKitchenToRestore->restore();
+            
+           return $this->showAllRestaurantMeals($perPage);
+      }
+
+      public function searchAllRestaurantMeals($search, $perPage)
+      {
+         $columnsToSearch = ['sale_percentage', 'restaurant_promotional_discount', 'native_discount'];
+
+         $query = RestaurantMeal::with(['restaurant', 'discount']);
 
          foreach($columnsToSearch as $column)
          {

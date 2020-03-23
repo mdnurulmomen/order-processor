@@ -111,6 +111,11 @@ const router = new VueRouter({
             name: 'admin.restaurantDeals.index',
             component: RestaurantDealIndexComponent
 		},
+		{
+			path: '/restaurant-meals',
+            name: 'admin.restaurantMeals.index',
+            component: RestaurantMealIndexComponent
+		},
 
 
 		
