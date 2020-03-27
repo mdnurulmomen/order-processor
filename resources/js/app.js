@@ -34,6 +34,7 @@ import DiscountIndexComponent from './components/admin/DiscountIndexComponent.vu
 import AddonIndexComponent from './components/admin/AddonIndexComponent.vue';
 import KitchenIndexComponent from './components/admin/KitchenIndexComponent.vue';
 import RestaurantDealIndexComponent from './components/admin/RestaurantDealIndexComponent.vue';
+import RestaurantMealIndexComponent from './components/admin/RestaurantMealIndexComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);

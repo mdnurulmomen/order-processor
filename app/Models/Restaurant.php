@@ -6,7 +6,6 @@ use App\Models\Meal;
 use App\Models\Cuisine;
 use App\Models\Kitchen;
 use App\Models\MenuCategory;
-use App\Models\RestaurantMeal;
 use App\Models\RestaurantAdmin;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -83,10 +82,5 @@ class Restaurant extends Authenticatable
     public function kitchen()
     {
         return $this->hasOne(Kitchen::class, 'restaurant_id', 'id');
-    }
-
-    public function meals()
-    {
-        return $this->hasMany(RestaurantMeal::class, 'restaurant_id', 'id');
-    }    
+    }   
 }

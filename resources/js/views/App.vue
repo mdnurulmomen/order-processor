@@ -70,7 +70,7 @@
             </li>
 
             <li class="nav-item">
-              <router-link :to="{ name: 'admin.meals.index' }" v-bind:class="[(currentPage.includes('meals')) ? 'active' : '', 'nav-link']">
+              <router-link :to="{ name: 'admin.meals.index' }" v-bind:class="[(currentPage.includes('/meals')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-clock"></i>
                 <p>
                   Meals
@@ -119,6 +119,15 @@
                 <i class="nav-icon fas fa-cheese"></i>
                 <p>
                   Restaurant Deals
+                </p>
+              </router-link>
+            </li>
+
+            <li class="nav-item">
+              <router-link :to="{ name: 'admin.restaurantMeals.index' }" v-bind:class="[(currentPage.includes('restaurant-meals')) ? 'active' : '', 'nav-link']">
+                <i class="nav-icon fas fa-coffee"></i>
+                <p>
+                  Restaurant Meals
                 </p>
               </router-link>
             </li>
