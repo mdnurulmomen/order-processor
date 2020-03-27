@@ -463,6 +463,8 @@
 				this.submitForm = true;
 				this.errors.restaurantMeal = {};
 
+				this.restaurantsFiltered = this.allRestaurants;
+
 				this.singleRestaurantMealData.restaurantObject = {};
 				this.singleRestaurantMealData.mealObjects = [];
 
