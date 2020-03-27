@@ -577,4 +577,74 @@ class RestaurantController extends Controller
             'all' => $query->paginate($perPage),  
          ], 200);
       }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      public function showAllRestaurantCuisines($perPage = false)
+      {
+         if ($perPage) {
+            return response(Restaurant::where('admin_approval', 1)->with('restaurantCuisines')->paginate($perPage), 200);
+         }
+         return response(Restaurant::where('admin_approval', 1)->with('restaurantCuisines')->get(), 200);
+      }
+
+      public function createRestaurantCuisine(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'cuisine_id.*'=>'required|numeric|exists:cuisines,id',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         $restaurant = Restaurant::find($request->restaurant_id);
+         $restaurant->restaurantCuisines()->sync($request->cuisine_id);
+
+         return $this->showAllRestaurantCuisines($perPage);
+      }
+
+      public function updateRestaurantCuisine(Request $request, $restaurant, $perPage)
+      {
+         $restaurantToUpdate = Restaurant::find($restaurant);
+
+         $request->validate([
+            'cuisine_id.*'=>'required|numeric|exists:meals,id',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         $restaurantToUpdate->restaurantCuisines()->sync($request->cuisine_id);       
+
+         return $this->showAllRestaurantCuisines($perPage);
+      }
+
+      public function deleteRestaurantCuisine($restaurant, $perPage)
+      {
+         $restaurantToDelete = Restaurant::find($restaurant);
+         $restaurantToDelete->restaurantCuisines()->sync([]);  
+
+         return $this->showAllRestaurantCuisines($perPage);
+      }
+
+      public function searchAllRestaurantCuisines($search, $perPage)
+      {
+         $query = Restaurant::with('restaurantCuisines')
+                            ->orWhere('name', 'like', "%$search%")
+                            ->orWhereHas('restaurantCuisines', function($q)use ($search){
+                              $q->where('name', 'like', "%$search%");
+                            })
+                            ->where('admin_approval', 1);
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
 }
