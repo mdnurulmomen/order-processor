@@ -52,7 +52,7 @@
             </li>
 
             <li class="nav-item">
-              <router-link :to="{ name: 'admin.cuisines.index' }" v-bind:class="[(currentPage.includes('cuisines')) ? 'active' : '', 'nav-link']">
+              <router-link :to="{ name: 'admin.cuisines.index' }" v-bind:class="[(currentPage.includes('/cuisines')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-utensils"></i>
                 <p>
                   Cuisines
