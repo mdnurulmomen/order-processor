@@ -19,7 +19,7 @@ Route::name('admin.')->group(function () {
 		Route::post('/', 'LoginController@adminLogin');
 	    
 	    // For all other routes coming from vue
-    	Route::get('/{any}', 'HomeController@showAdminHome');
+    	Route::get('/{any}/{id?}', 'HomeController@showAdminHome')->where('id', '[0-9]+');
 
 		Route::group(['middleware' => ['auth:admin']], function () {
 		    
@@ -43,7 +43,17 @@ Route::name('admin.')->group(function () {
 
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
+
+		    Route::post('/restaurant-menu-categories/{perPage?}', 'RestaurantController@createRestaurantMenuCategory');
+
 		    
+		    Route::get('/api/restaurant-menu-items/{restaurant}/{perPage?}', 'RestaurantController@showRestaurantAllMenuItems');
+		    Route::get('/api/restaurant-menu-items/search/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMenuItems');
+		    Route::post('/restaurant-menu-items/{perPage?}', 'RestaurantController@createRestaurantMenuItem');
+		    Route::put('/restaurant-menu-items/{menuItem}/{perPage}', 'RestaurantController@updateRestaurantMenuItem');
+		    Route::delete('/restaurant-menu-items/{menuItem}/{perPage}', 'RestaurantController@deleteRestaurantMenuItem');
+
+
 		    Route::get('/api/restaurant-cuisines/{perPage?}', 'RestaurantController@showAllRestaurantCuisines');
 		    Route::get('/api/restaurant-cuisines/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantCuisines');
 		    Route::post('/restaurant-cuisines/{perPage?}', 'RestaurantController@createRestaurantCuisine');

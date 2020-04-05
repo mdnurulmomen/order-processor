@@ -36,6 +36,7 @@ import KitchenIndexComponent from './components/admin/KitchenIndexComponent.vue'
 import RestaurantDealIndexComponent from './components/admin/RestaurantDealIndexComponent.vue';
 import RestaurantMealIndexComponent from './components/admin/RestaurantMealIndexComponent.vue';
 import RestaurantCuisineIndexComponent from './components/admin/RestaurantCuisineIndexComponent.vue';
+import RestaurantMenuItemIndexComponent from './components/admin/RestaurantMenuItemIndexComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -123,7 +124,12 @@ const router = new VueRouter({
             name: 'admin.restaurantCuisines.index',
             component: RestaurantCuisineIndexComponent
 		},
-
+		{
+			path: '/restaurant-menu-items/:restaurant',
+		    name: 'admin.restaurantMenuItem.index',
+		    component: RestaurantMenuItemIndexComponent,
+		    props: true
+		},
 
 		
 		{
@@ -152,7 +158,6 @@ window.showSettingComponent = function() {
     // Manually navigate to the route
     router.push('/settings');
 };
-
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

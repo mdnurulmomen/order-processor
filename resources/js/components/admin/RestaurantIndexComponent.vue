@@ -99,9 +99,15 @@
 								    		<td>
 								      			<button type="button" @click="showRestaurantDetailModal(restaurant)" class="btn btn-info btn-sm">
 								        			<i class="fas fa-eye"></i>
+								        			View
+								      			</button>
+								      			<button type="button" @click="showRestaurantMenuList(restaurant)" class="btn btn-warning btn-sm">
+								        			<i class="fas fa-object-group"></i>
+								        			Menu-Items
 								      			</button>
 										      	<button type="button" v-show="restaurant.deleted_at === null" @click="showRestaurantEditModal(restaurant)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
+										        	Edit
 										      	</button>
 								      			<button
 								        			v-show="restaurant.deleted_at === null"
@@ -110,6 +116,7 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
+								        			Delete
 								      			</button>
 								      			<button
 								        			v-show="restaurant.deleted_at !== null"
@@ -118,6 +125,7 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-undo"></i>
+								        			Restore
 								      			</button>
 								    		</td>
 									  	</tr>
@@ -1853,6 +1861,12 @@
 							}
 				      	}
 					});
+			},
+			showRestaurantMenuList(restaurant) {
+				this.$router.push({
+			 		name: 'admin.restaurantMenuItem.index', 
+			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
+				});
 			},
 		    showRestaurantDetailModal(restaurant) {
 

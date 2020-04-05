@@ -8,8 +8,10 @@ use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Models\RestaurantDeal;
 use App\Models\RestaurantAdmin;
+use App\Models\RestaurantMenuItem;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Models\RestaurantMenuCategory;
 
 class RestaurantController extends Controller
 {
@@ -578,19 +580,6 @@ class RestaurantController extends Controller
          ], 200);
       }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
       public function showAllRestaurantCuisines($perPage = false)
       {
          if ($perPage) {
@@ -646,5 +635,126 @@ class RestaurantController extends Controller
          return response()->json([
             'all' => $query->paginate($perPage),  
          ], 200);
+      }
+
+      public function showRestaurantAllMenuItems($restaurant, $perPage = false)
+      {
+         if ($perPage) {
+            return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'restaurantMenuItems'])->paginate($perPage), 200);
+         }
+         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'restaurantMenuItems'])->get(), 200);
+      }
+
+      public function createRestaurantMenuItem(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'name'=>'required|string|max:255',
+            'detail'=>'nullable|string|max:255',
+            'has_variation'=>'boolean',
+            'has_addon'=>'boolean',
+            'price'=>'required|numeric|min:0|max:65535',
+            'customizable'=>'boolean',
+            'restaurant_menu_category_id'=>'required|numeric|exists:restaurant_menu_categories,id',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         $newMenuItem = RestaurantMenuItem::create([
+            'name' => $request->name,
+            'detail' => $request->detail,
+            'has_variation' => $request->has_variation ?? false,
+            'has_addon' => $request->has_addon ?? false,
+            'price' => $request->price,
+            'customizable' => $request->customizable ?? false,
+            'restaurant_menu_category_id' => $request->restaurant_menu_category_id,
+         ]);
+
+         return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
+      }
+
+      public function updateRestaurantMenuItem(Request $request, $menuItemId, $perPage)
+      {
+         $menuItemToUpdate = RestaurantMenuItem::find($menuItemId);
+
+         $request->validate([
+            'name'=>'required|string|max:255',
+            'detail'=>'nullable|string|max:255',
+            'has_variation'=>'boolean',
+            'has_addon'=>'boolean',
+            'price'=>'required|numeric|min:0|max:65535',
+            'customizable'=>'boolean',
+            'restaurant_menu_category_id'=>'required|numeric|exists:restaurant_menu_categories,id',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         $menuItemToUpdate->update([
+            'name' => $request->name,
+            'detail' => $request->detail,
+            'has_variation' => $request->has_variation ?? false,
+            'has_addon' => $request->has_addon ?? false,
+            'price' => $request->price,
+            'customizable' => $request->customizable ?? false,
+            'restaurant_menu_category_id' => $request->restaurant_menu_category_id,
+         ]);
+
+         return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
+      }
+
+      public function deleteRestaurantMenuItem($menuItemId, $perPage)
+      {
+         $menuItemToDelete = RestaurantMenuItem::find($menuItemId);
+         // $restaurant = $menuItemToDelete->restaurantMenuCategory->restaurant_id;
+         $menuItemToDelete->delete();  
+
+         return $this->showRestaurantAllMenuItems($restaurant, $perPage);
+      }
+
+      public function searchRestaurantAllMenuItems($restaurant, $search, $perPage)
+      {
+         $query = RestaurantMenuCategory::with(['menuCategory', 'restaurantMenuItems']);
+
+         $query->where( function( $subquery )use ($search){
+            $subquery->whereHas('restaurantMenuItems', function($q) use ($search){
+               $q->where("name", 'like', "%$search%");
+               $q->orWhere("detail", 'like', "%$search%");
+               $q->orWhere("price", 'like', "%$search%");
+            });
+            $subquery->orWhereHas('menuCategory', function($q) use ($search){
+               $q->where('name', 'like', "%$search%");
+            });
+         });
+
+         $query->where('restaurant_id', $restaurant);
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
+      public function createRestaurantMenuCategory(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'menu_category_id'=>'required|array|min:1',
+            "menu_category_id.*"  => "required|numeric|exists:menu_categories,id",
+            'serving_from'=>'nullable|string|max:255',
+            'serving_to'=>'nullable|string|max:255',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         for ($i=0; $i < count($request->menu_category_id) ; $i++) { 
+            
+            $alreadyExist = RestaurantMenuCategory::where('menu_category_id', $request->menu_category_id[$i])->where('restaurant_id', $request->restaurant_id)->first();
+
+            if (!$alreadyExist) {
+               
+               $newMenuItem = RestaurantMenuCategory::create([
+                  'menu_category_id' => $request->menu_category_id[$i],
+                  'serving_from' => $request->serving_from,
+                  'serving_to' => $request->serving_to,
+                  'restaurant_id' => $request->restaurant_id,
+               ]);
+            }
+         }
+
+         return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
       }
 }
