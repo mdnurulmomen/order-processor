@@ -699,7 +699,7 @@ class RestaurantController extends Controller
          return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
       }
 
-      public function deleteRestaurantMenuItem($menuItemId, $perPage)
+      public function deleteRestaurantMenuItem($restaurant, $menuItemId, $perPage)
       {
          $menuItemToDelete = RestaurantMenuItem::find($menuItemId);
          // $restaurant = $menuItemToDelete->restaurantMenuCategory->restaurant_id;

@@ -115,7 +115,7 @@
 
 												    	<tr v-show="!menuCategory.restaurant_menu_items.length">
 												    		<td colspan="8">
-													      		<div class="alert alert-danger" role="alert">No Menu</div>
+													      		<div class="alert alert-danger" role="alert">No Menu-Items</div>
 													    	</td>
 													  	</tr>
 										    		</tbody>
@@ -124,7 +124,7 @@
 									  	</tr>
 									  	<tr v-show="!restaurantAllMenuCategories.length">
 								    		<td colspan="8">
-									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No Menu Category Found or Trashed.</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -501,6 +501,40 @@
 									                </div>	
 									              	
 								              	</div>
+
+								              	<div class="form-group row">
+									              		
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Serving From</label>
+									                <div class="col-sm-8">
+									                	<multiselect 
+				                                  			v-model="singleRestaurantMenuItemData.restaurantNewMenuCategory.serving_from"
+				                                  			placeholder="Category Name" 
+					                                  		:options="restaurantScheduleHours" 
+					                                  		:show-labels="false"  
+					                                  		selectLabel = "Press/Click"
+					                                  		deselect-label="One selection is required"
+				                                  		>
+					                                	</multiselect>
+									                </div>	
+									              	
+								              	</div>
+
+								              	<div class="form-group row">
+									              		
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Serving to</label>
+									                <div class="col-sm-8">
+									                	<multiselect 
+				                                  			v-model="singleRestaurantMenuItemData.restaurantNewMenuCategory.serving_to"
+				                                  			placeholder="Category Name" 
+					                                  		:options="restaurantScheduleHours" 
+					                                  		:show-labels="false"  
+					                                  		selectLabel = "Press/Click"
+					                                  		deselect-label="One selection is required"
+				                                  		>
+					                                	</multiselect>
+									                </div>	
+									              	
+								              	</div>
 								            </div>
 								            <!-- /.card-body -->
 									    </div>
@@ -635,6 +669,7 @@
 
     	restaurantAllMenuCategories : [],
     	restaurantArrayToAddNewMenuCategory : [],
+    	restaurantScheduleHours : ['6.00', '7.00', '8.00', '9.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '24.00'],
 
     	pagination: {
         	current_page: 1
@@ -655,7 +690,7 @@
 		props : {
 			restaurantName : {
 		      	type: String,
-		      	default: 'Restaurant'
+		      	default: 'Current Restaurant'
 		    },
 		},
 
@@ -741,7 +776,6 @@
 
 							this.restaurantAllMenuCategories = response.data.data;
 							this.pagination = response.data;
-
 						}
 					})
 					.catch(error => {
@@ -884,7 +918,7 @@
 				$("#modal-restaurantMenuItem-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/restaurant-menu-items/'+ this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
+					.delete('/restaurant-menu-items/' + this.$route.params.restaurant + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
