@@ -160,92 +160,29 @@
 									<div class="col-sm-12">
 										<div class="card card-outline">
 								            <div class="card-body">
-								              	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
-								              			Sale Percentage :
-								              		</label>
-									                <div class="col-sm-8">
-									                  	<div class="input-group mb-3">
-															<input 
-																type="number" 
-																class="form-control" 
-																v-model="singleRestaurantDealData.restaurantDeal.sale_percentage" 
-																min="0" 
-																max="100" 
-																step=".1" 
-																placeholder="Sale Percentage" 
-																:class="!errors.restaurantDeal.sale_percentage  ? 'is-valid' : 'is-invalid'"
-																@keyup="validateFormInput('restaurantDeal.sale_percentage')"
-										                	>
-															<div class="input-group-append">
-																<span class="input-group-text">
-																	%
-																</span>
-															</div>
-										                	<div class="invalid-feedback">
-													        	{{ errors.restaurantDeal.sale_percentage }}
-													  		</div>
-														</div>
-									                </div>	
-									              	
-								              	</div>
 
-								              	<div class="form-group row">	
+								            	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
-								              			Promotional Discount :
+								              			Restaurant Name :
 								              		</label>
 									                <div class="col-sm-8">
-									                  	<div class="input-group mb-3">
-															<input 
-																type="number" 
-																class="form-control" 
-																v-model="singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount" 
-																min="0" 
-																max="100" 
-																step=".1" 
-																placeholder="Promotional Percentage" 
-																:class="!errors.restaurantDeal.restaurant_promotional_discount  ? 'is-valid' : 'is-invalid'"
-																@keyup="validateFormInput('restaurantDeal.restaurant_promotional_discount')"
-										                	>
-															<div class="input-group-append">
-																<span class="input-group-text">
-																	%
-																</span>
-															</div>
-										                	<div class="invalid-feedback">
-													        	{{ errors.restaurantDeal.restaurant_promotional_discount }}
-													  		</div>
-														</div>
-									                </div>	
-									              	
-								              	</div>
-
-								              	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
-								              			Native Discount :
-								              		</label>
-									                <div class="col-sm-8">
-									                  	<div class="input-group mb-3">
-															<input 
-																type="number" 
-																class="form-control" 
-																v-model="singleRestaurantDealData.restaurantDeal.native_discount" 
-																min="0" 
-																max="100" 
-																step=".1" 
-																placeholder="Sale Percentage" 
-																:class="!errors.restaurantDeal.native_discount  ? 'is-valid' : 'is-invalid'"
-																@keyup="validateFormInput('restaurantDeal.native_discount')"
-										                	>
-															<div class="input-group-append">
-																<span class="input-group-text">
-																	%
-																</span>
-															</div>
-										                	<div class="invalid-feedback">
-													        	{{ errors.restaurantDeal.native_discount }}
-													  		</div>
-														</div>
+									                  	<multiselect 
+				                                  			v-model="singleRestaurantDealData.restaurantObject"
+				                                  			placeholder="Restaurant Name" 
+					                                  		label="name" 
+					                                  		track-by="id" 
+					                                  		:options="allRestaurants" 
+					                                  		:required="true"
+					                                  		:class="!errors.restaurantDeal.restaurant  ? 'is-valid' : 'is-invalid'"
+					                                  		:allow-empty="false"
+					                                  		selectLabel = "Press/Click"
+					                                  		deselect-label="Can't remove single value"
+					                                  		@close="validateFormInput('restaurantDeal.restaurant')"
+				                                  		>
+					                                	</multiselect>
+									                	<div class="invalid-feedback">
+												        	{{ errors.restaurantDeal.restaurant }}
+												  		</div>
 									                </div>	
 								              	</div>
 
@@ -276,6 +213,93 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              			Restaurant Promotional :
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<div class="input-group mb-3">
+															<input 
+																type="number" 
+																class="form-control" 
+																v-model.number="singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount" 
+																min="0" 
+																max="100" 
+																step=".1" 
+																placeholder="Promotional Percentage" 
+																:class="!errors.restaurantDeal.restaurant_promotional_discount  ? 'is-valid' : 'is-invalid'"
+																@keyup="validateFormInput('restaurantDeal.restaurant_promotional_discount')"
+										                	>
+															<div class="input-group-append">
+																<span class="input-group-text">
+																	%
+																</span>
+															</div>
+										                	<div class="invalid-feedback">
+													        	{{ errors.restaurantDeal.restaurant_promotional_discount }}
+													  		</div>
+														</div>
+									                </div>
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              			Qupaid Native :
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<div class="input-group mb-3">
+															<input 
+																type="number" 
+																class="form-control" 
+																v-model.number="singleRestaurantDealData.restaurantDeal.native_discount" 
+																min="0" 
+																max="100" 
+																step=".1" 
+																placeholder="Sale Percentage" 
+																:class="!errors.restaurantDeal.native_discount  ? 'is-valid' : 'is-invalid'"
+																@keyup="validateFormInput('restaurantDeal.native_discount')"
+										                	>
+															<div class="input-group-append">
+																<span class="input-group-text">
+																	%
+																</span>
+															</div>
+										                	<div class="invalid-feedback">
+													        	{{ errors.restaurantDeal.native_discount }}
+													  		</div>
+														</div>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              			Sale Percentage :
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<div class="input-group mb-3">
+															<input 
+																type="number" 
+																class="form-control" 
+																v-model.number="singleRestaurantDealData.restaurantDeal.sale_percentage" 
+																min="0" 
+																max="100" 
+																step=".1" 
+																placeholder="Sale Percentage" 
+																:class="!errors.restaurantDeal.sale_percentage  ? 'is-valid' : 'is-invalid'"
+																@keyup="validateFormInput('restaurantDeal.sale_percentage')"
+										                	>
+															<div class="input-group-append">
+																<span class="input-group-text">
+																	%
+																</span>
+															</div>
+										                	<div class="invalid-feedback">
+													        	{{ errors.restaurantDeal.sale_percentage }}
+													  		</div>
+														</div>
+									                </div> 	
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
 								              			Delivery Fee :
 								              		</label>
 									                <div class="col-sm-8">
@@ -292,30 +316,6 @@
 									                </div>	
 								              	</div>
 
-								              	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
-								              			Restaurant Name :
-								              		</label>
-									                <div class="col-sm-8">
-									                  	<multiselect 
-				                                  			v-model="singleRestaurantDealData.restaurantObject"
-				                                  			placeholder="Restaurant Name" 
-					                                  		label="name" 
-					                                  		track-by="id" 
-					                                  		:options="allRestaurants" 
-					                                  		:required="true"
-					                                  		:class="!errors.restaurantDeal.restaurant  ? 'is-valid' : 'is-invalid'"
-					                                  		:allow-empty="false"
-					                                  		selectLabel = "Press/Click"
-					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantDeal.restaurant')"
-				                                  		>
-					                                	</multiselect>
-									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantDeal.restaurant }}
-												  		</div>
-									                </div>	
-								              	</div>
 								            </div>
 								            <!-- /.card-body -->
 									    </div>
@@ -621,6 +621,8 @@
 
 						if (this.singleRestaurantDealData.restaurantDeal.sale_percentage < 0 || this.singleRestaurantDealData.restaurantDeal.sale_percentage > 100) {
 							this.errors.restaurantDeal.sale_percentage = 'Value should be between 0 and 100';
+						}else if (this.singleRestaurantDealData.restaurantDeal.sale_percentage < this.singleRestaurantDealData.restaurantDeal.native_discount) {
+							this.errors.restaurantDeal.sale_percentage = 'Value should be greater or equal to native discount';
 						}
 						else{
 							this.submitForm = true;
@@ -633,7 +635,12 @@
 					case 'restaurantDeal.restaurant_promotional_discount' :
 
 						if (this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount < 0 || this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount > 100) {
+							
 							this.errors.restaurantDeal.restaurant_promotional_discount = 'Value should be between 0 and 100';
+						}
+						else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
+
+							this.errors.restaurantDeal.restaurant_promotional_discount = 'Promotional with Native discount should be equal to Net discount';
 						}
 						else{
 							this.submitForm = true;
@@ -646,6 +653,9 @@
 
 						if (this.singleRestaurantDealData.restaurantDeal.native_discount < 0 || this.singleRestaurantDealData.restaurantDeal.native_discount > 100) {
 							this.errors.restaurantDeal.native_discount = 'Value should be between 0 and 100';
+						}else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
+
+							this.errors.restaurantDeal.native_discount = 'Promotional with Native discount should be equal to Net discount';
 						}
 						else{
 							this.submitForm = true;
@@ -658,6 +668,9 @@
 
 						if (Object.keys(this.singleRestaurantDealData.discountObject).length === 0) {
 							this.errors.restaurantDeal.discount = 'Discount rate is required';
+						}else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
+
+							this.errors.restaurantDeal.discount = 'Promotional with Native discount should be equal to Net discount';
 						}
 						else{
 							this.submitForm = true;

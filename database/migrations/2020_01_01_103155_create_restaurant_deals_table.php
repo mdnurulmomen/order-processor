@@ -21,6 +21,7 @@ class CreateRestaurantDealsTable extends Migration
             $table->unsignedTinyInteger('discount_id')->default(0);
             $table->boolean('delivery_fee_addition')->default(true);
             $table->unsignedMediumInteger('restaurant_id')->unique();
+            $table->softDeletes();
         });
     }
 

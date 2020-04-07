@@ -145,14 +145,18 @@ class RestaurantController extends Controller
 
       public function deleteRestaurant($restaurantToDelete, $perPage)
       {
-         Restaurant::destroy($restaurantToDelete);
+         $expectedRestaurant = Restaurant::find($restaurantToDelete);
+         $expectedRestaurant->deal()->delete();
+         $expectedRestaurant->delete();
+         
          return $this->showAllRestaurants($perPage);
       }
 
       public function restoreRestaurant($restaurantToRestore, $perPage)
       {
-         $restorationToStore = Restaurant::onlyTrashed()->find($restaurantToRestore);
-         $restorationToStore->restore();
+         $expectedRestaurant = Restaurant::onlyTrashed()->find($restaurantToRestore);
+         $expectedRestaurant->deal()->restore();
+         $expectedRestaurant->restore();
          
          return $this->showAllRestaurants($perPage);
       }
@@ -443,7 +447,7 @@ class RestaurantController extends Controller
             'restaurant_promotional_discount'=>'numeric|min:0|max:100',
             'native_discount'=>'numeric|min:0|max:100',
             'discount_id'=>'required|numeric|exists:discounts,id',
-            'delivery_fee_addition'=>'boolean',
+            'delivery_fee_addition'=>'nullable|boolean',
             'restaurant_id'=>'required|numeric|exists:restaurants,id|unique:restaurant_deals,restaurant_id',
          ]);
 
@@ -452,7 +456,7 @@ class RestaurantController extends Controller
             'restaurant_promotional_discount' => $request->restaurant_promotional_discount,
             'native_discount' => $request->native_discount,
             'discount_id' => $request->discount_id,
-            'delivery_fee_addition' => $request->delivery_fee_addition,
+            'delivery_fee_addition' => $request->delivery_fee_addition ?? false,
             'restaurant_id' => $request->restaurant_id,
          ]);
 
@@ -468,7 +472,7 @@ class RestaurantController extends Controller
             'restaurant_promotional_discount'=>'numeric|min:0|max:100',
             'native_discount'=>'numeric|min:0|max:100',
             'discount_id'=>'required|numeric|exists:discounts,id',
-            'delivery_fee_addition'=>'boolean',
+            'delivery_fee_addition'=>'nullable|boolean',
             'restaurant_id'=>'required|numeric|exists:restaurants,id|unique:restaurant_deals,restaurant_id,'.$restaurantDealToUpdate->id,
          ]);
 
@@ -476,7 +480,7 @@ class RestaurantController extends Controller
          $restaurantDealToUpdate->restaurant_promotional_discount = $request->restaurant_promotional_discount;
          $restaurantDealToUpdate->native_discount = $request->native_discount;        
          $restaurantDealToUpdate->discount_id = $request->discount_id;     
-         $restaurantDealToUpdate->delivery_fee_addition = $request->delivery_fee_addition;        
+         $restaurantDealToUpdate->delivery_fee_addition = $request->delivery_fee_addition ?? false;        
          $restaurantDealToUpdate->restaurant_id = $request->restaurant_id;     
          $restaurantDealToUpdate->save();        
 

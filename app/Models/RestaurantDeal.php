@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Models\Discount;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RestaurantDeal extends Model
 {
-   	public $timestamps = false;
+   	use SoftDeletes;
+
+    public $timestamps = false;
 
    	/**
      * The attributes that are mass assignable.
