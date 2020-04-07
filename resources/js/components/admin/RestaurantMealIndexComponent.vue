@@ -67,8 +67,9 @@
 							                		Meal not available or trashed
 							                	</p>
 
-								    			<ul>
-													<li v-for="meal in restaurant.restaurant_meal_categories" :key="meal.id">
+								    			<ul v-show="restaurant.restaurant_meal_categories.length">
+													<li v-for="meal in restaurant.restaurant_meal_categories" 
+														:key="meal.id">
 													
 														{{ meal.name }}
 													
@@ -523,6 +524,12 @@
 				$("#modal-createOrEdit-restaurantMeal").modal("show");
 			},
 			updateRestaurantMeal(){
+
+				if (!this.singleRestaurantMealData.restaurantMeal.restaurant_id || this.singleRestaurantMealData.restaurantMeal.meal_id.length === 0) {
+					
+					this.submitForm = false;
+					return;
+				}
 
 				$('#modal-createOrEdit-restaurantMeal').modal('hide');
 				
