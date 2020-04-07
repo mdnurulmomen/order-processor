@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Models\MenuCategory;
 use App\Models\RestaurantMenuItem;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RestaurantMenuCategory extends Model
 {
-   	public $timestamps = false;
+   	use SoftDeletes;
+    
+    public $timestamps = false;
     
     /**
      * The attributes that are mass assignable.

@@ -121,13 +121,17 @@ class FoodController extends Controller
 
 	public function deleteMenuCategory($menuCategoryToDelete, $perPage)
   	{
-     	MenuCategory::destroy($menuCategoryToDelete);
+     	$expectedMenuCategory = MenuCategory::find($menuCategoryToDelete);
+     	$expectedMenuCategory->restaurantMenuCategories()->delete();
+     	$expectedMenuCategory->delete();
+     	
      	return $this->showAllMenuCategories($perPage);
   	}
 
   	public function restoreMenuCategory($menuCategoryToRestore, $perPage)
   	{
      	$menuCategoryToStore = MenuCategory::onlyTrashed()->find($menuCategoryToRestore);
+     	$menuCategoryToStore->restaurantMenuCategories()->restore();
      	$menuCategoryToStore->restore();
          
         return $this->showAllMenuCategories($perPage);

@@ -19,6 +19,7 @@ class CreateRestaurantMenuCategoriesTable extends Migration
             $table->string('serving_from')->nullable();
             $table->string('serving_to')->nullable();
             $table->unsignedMediumInteger('restaurant_id');
+            $table->softDeletes();
         });
     }
 
