@@ -524,6 +524,12 @@
 			},
 			updateRestaurantCuisine(){
 
+				if (!this.singleRestaurantCuisineData.restaurantCuisine.restaurant_id || this.singleRestaurantCuisineData.restaurantCuisine.cuisine_id.length === 0) {
+					
+					this.submitForm = false;
+					return;
+				}
+				
 				$('#modal-createOrEdit-restaurantCuisine').modal('hide');
 				
 				axios
