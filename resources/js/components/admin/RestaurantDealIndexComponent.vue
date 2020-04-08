@@ -645,6 +645,7 @@
 						else{
 							this.submitForm = true;
 							this.$delete(this.errors.restaurantDeal, 'restaurant_promotional_discount');
+							this.$delete(this.errors.restaurantDeal, 'discount');
 						}
 
 						break;
@@ -660,6 +661,8 @@
 						else{
 							this.submitForm = true;
 							this.$delete(this.errors.restaurantDeal, 'native_discount');
+							this.$delete(this.errors.restaurantDeal, 'restaurant_promotional_discount');
+							this.$delete(this.errors.restaurantDeal, 'discount');
 						}
 
 						break;
