@@ -600,7 +600,7 @@
 					.delete('/restaurant-admins/'+this.singleRestaurantAdminData.restaurantAdmin.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
-							
+
 							this.singleRestaurantAdminData.restaurantAdmin = {};
 
 							if (this.query === '') {

@@ -146,8 +146,11 @@ class RestaurantController extends Controller
       public function deleteRestaurant($restaurantToDelete, $perPage)
       {
          $expectedRestaurant = Restaurant::find($restaurantToDelete);
-         $expectedRestaurant->deal()->delete();
-         $expectedRestaurant->delete();
+         
+         if ($expectedRestaurant) {
+            $expectedRestaurant->deal()->delete();
+            $expectedRestaurant->delete();
+         }
          
          return $this->showAllRestaurants($perPage);
       }
@@ -155,8 +158,11 @@ class RestaurantController extends Controller
       public function restoreRestaurant($restaurantToRestore, $perPage)
       {
          $expectedRestaurant = Restaurant::onlyTrashed()->find($restaurantToRestore);
-         $expectedRestaurant->deal()->restore();
-         $expectedRestaurant->restore();
+         
+         if ($expectedRestaurant) {
+            $expectedRestaurant->deal()->restore(); 
+            $expectedRestaurant->restore();
+         }
          
          return $this->showAllRestaurants($perPage);
       }
@@ -237,7 +243,10 @@ class RestaurantController extends Controller
       {
          $restaurantAdminToDelete = RestaurantAdmin::find($restaurantAdminToDelete);
 
-         $restaurantAdminToDelete->restaurants()->delete();
+         foreach ($restaurantAdminToDelete->restaurants as $restaurant) {
+            $this->deleteRestaurant($restaurant->id, $perPage);
+         }
+
          $restaurantAdminToDelete->delete();
 
          return $this->showAllRestaurantAdmins($perPage);
@@ -246,9 +255,14 @@ class RestaurantController extends Controller
       public function restoreRestaurantAdmin($restaurantAdminToRestore, $perPage)
       {
          $restaurantAdminToStore = RestaurantAdmin::onlyTrashed()->find($restaurantAdminToRestore);
+
+         foreach ($restaurantAdminToStore->restaurants()->withTrashed()->get() as $restaurant) {
+            $this->restoreRestaurant($restaurant->id, $perPage);
+         }
+
          $restaurantAdminToStore->restore();
             
-           return $this->showAllRestaurantAdmins($perPage);
+         return $this->showAllRestaurantAdmins($perPage);
       }
 
       public function searchAllRestaurantAdmins($search, $perPage)
