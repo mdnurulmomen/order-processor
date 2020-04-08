@@ -284,11 +284,7 @@ class RestaurantController extends Controller
       public function showAllDiscounts($perPage = false)
       {
          if ($perPage) {
-            return response()->json([
-               'current' => Discount::paginate($perPage),
-               'trashed' => Discount::onlyTrashed()->paginate($perPage),
-
-            ], 200);
+            return response(Discount::paginate($perPage), 200);
          }
 
          return response(Discount::get(), 200);
@@ -320,33 +316,10 @@ class RestaurantController extends Controller
          return $this->showAllDiscounts($perPage);
       }
 
-      public function deleteDiscount($discountToDelete, $perPage)
-      {
-         Discount::destroy($discountToDelete);
-         return $this->showAllDiscounts($perPage);
-      }
-
-      public function restoreDiscount($discountToRestore, $perPage)
-      {
-         $discountToRestore = Discount::onlyTrashed()->find($discountToRestore);
-         $discountToRestore->restore();
-            
-         return $this->showAllDiscounts($perPage);
-      }
-
       public function searchAllDiscounts($search, $perPage)
       {
-         $columnsToSearch = ['rate'];
-
-         $query = Discount::withTrashed();
-
-         foreach($columnsToSearch as $column)
-         {
-            $query->orWhere($column, 'like', "%$search%");
-         }
-
          return response()->json([
-            'all' => $query->paginate($perPage),  
+            'all' => Discount::where('rate', 'like', "%$search%")->paginate($perPage),  
          ], 200);
       }
 
@@ -423,7 +396,7 @@ class RestaurantController extends Controller
          $restaurantKitchenToRestore = Kitchen::onlyTrashed()->find($kitchenToRestore);
          $restaurantKitchenToRestore->restore();
             
-           return $this->showAllRestaurantKitchens($perPage);
+         return $this->showAllRestaurantKitchens($perPage);
       }
 
       public function searchAllRestaurantKitchens($search, $perPage)
@@ -451,6 +424,7 @@ class RestaurantController extends Controller
          if ($perPage) {
             return response(RestaurantDeal::with(['restaurant', 'discount'])->paginate($perPage), 200);
          }
+
          return response(RestaurantDeal::with(['restaurant', 'discount'])->get(), 200);
       }
 
@@ -501,20 +475,25 @@ class RestaurantController extends Controller
          return $this->showAllRestaurantDeals($perPage);
       }
 
-      public function deleteRestaurantDeal($kitchenToDelete, $perPage)
+      public function deleteRestaurantDeal($dealToDelete, $perPage)
       {
-         $restaurantKitchenToDelete = RestaurantDeal::find($kitchenToDelete);
-         $restaurantKitchenToDelete->delete();
+         $restaurantDealToDelete = RestaurantDeal::find($dealToDelete);
+         $restaurantDealToDelete->delete();
 
          return $this->showAllRestaurantDeals($perPage);
       }
 
-      public function restoreRestaurantDeal($kitchenToRestore, $perPage)
+      public function restoreRestaurantDeal($dealToRestore, $perPage)
       {
-         $restaurantKitchenToRestore = RestaurantDeal::onlyTrashed()->find($kitchenToRestore);
-         $restaurantKitchenToRestore->restore();
+         $restaurantDealToRestore = RestaurantDeal::onlyTrashed()->find($dealToRestore);
+
+         if ($restaurantDealToRestore && $restaurantDealToRestore->restaurant && $restaurantDealToRestore->discount) {
+
+            $restaurantDealToRestore->restore();
+
+         }
             
-           return $this->showAllRestaurantDeals($perPage);
+         return $this->showAllRestaurantDeals($perPage);
       }
 
       public function searchAllRestaurantDeals($search, $perPage)
@@ -546,6 +525,7 @@ class RestaurantController extends Controller
          if ($perPage) {
             return response(Restaurant::where('admin_approval', 1)->with('restaurantMealCategories')->paginate($perPage), 200);
          }
+
          return response(Restaurant::where('admin_approval', 1)->with('restaurantMealCategories')->get(), 200);
       }
 
@@ -603,6 +583,7 @@ class RestaurantController extends Controller
          if ($perPage) {
             return response(Restaurant::where('admin_approval', 1)->with('restaurantCuisines')->paginate($perPage), 200);
          }
+
          return response(Restaurant::where('admin_approval', 1)->with('restaurantCuisines')->get(), 200);
       }
 
@@ -660,6 +641,7 @@ class RestaurantController extends Controller
          if ($perPage) {
             return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'restaurantMenuItems'])->paginate($perPage), 200);
          }
+
          return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'restaurantMenuItems'])->get(), 200);
       }
 

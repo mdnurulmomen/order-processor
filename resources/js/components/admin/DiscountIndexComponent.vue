@@ -43,18 +43,7 @@
 						<div class="card-body">
 							<div class="mb-3">
 								<div class="row">
-									<div class="col-sm-6">
-									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
-											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentDiscounts">Current</a>
-											</li>
-											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedDiscounts">Trashed</a>
-											</li>
-										</ul>
-									</div>
-
-									<div class="col-sm-6 float-right was-validated">
+									<div class="col-sm-12 was-validated">
 									  	<input 
 									  		type="text" 
 									  		v-model="query" 
@@ -78,35 +67,19 @@
 										</tr>
 									</thead>
 									<tbody>
-									  	<tr v-show="discountsToShow.length"
-									    	v-for="(discount, index) in discountsToShow"
+									  	<tr v-show="allDiscounts.length"
+									    	v-for="(discount, index) in allDiscounts"
 									    	:key="discount.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ discount.rate}}</td>
 								    		<td>
-										      	<button type="button" v-show="discount.deleted_at === null" @click="showDiscountEditModal(discount)" class="btn btn-primary btn-sm">
+										      	<button type="button" @click="showDiscountEditModal(discount)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
 										      	</button>
-								      			<button
-								        			v-show="discount.deleted_at === null"
-								        			type="button"
-								        			@click="showDiscountDeletionModal(discount)"
-								        			class="btn btn-danger btn-sm"
-							      				>
-								        			<i class="fas fa-trash-alt"></i>
-								      			</button>
-								      			<button
-								        			v-show="discount.deleted_at !== null"
-								        			type="button"
-								        			@click="showDiscountRestoreModal(discount)"
-								        			class="btn btn-danger btn-sm"
-							      				>
-								        			<i class="fas fa-undo"></i>
-								      			</button>
 								    		</td>
 									  	</tr>
-									  	<tr v-show="!discountsToShow.length">
+									  	<tr v-show="!allDiscounts.length">
 								    		<td colspan="6">
 									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
 									    	</td>
@@ -242,83 +215,6 @@
 			</div>
 			<!-- /.modal-createOrEdit-discount-->
 
-			<!-- modal-discount-delete-confirmation -->
-			<div class="modal fade" id="modal-discount-delete-confirmation">
-				<div class="modal-dialog">
-					<div class="modal-content bg-danger">
-						<div class="modal-header">
-						  	<h4 class="modal-title">Discount Deletion</h4>
-						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						    	<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="destroyDiscount" autocomplete="off">
-							<div class="modal-body">
-					      		<input 
-					      			type="hidden" 
-					      			rate="_token" 
-					      			:value="csrf"
-					      		>
-					      		<h5>Are you sure want to delete discount ?? </h5>
-					      		<h5 class="text-secondary"><small>But once you want, you can retreive it from bin.</small></h5>
-							</div>
-							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-
-							  	<button 
-							  		type="submit" 
-							  		class="btn btn-outline-light"
-							  	>
-							  		Delete
-							  	</button>
-							</div>
-						</form>
-					</div>
-				<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /modal-discount-delete-confirmation -->
-
-			<!-- modal-discount-restore-confirmation -->
-			<div class="modal fade" id="modal-discount-restore-confirmation">
-				<div class="modal-dialog">
-					<div class="modal-content bg-danger">
-						<div class="modal-header">
-						  	<h4 class="modal-title">Discount Restoration</h4>
-						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						    	<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="restoreDiscount()" autocomplete="off">
-							<div class="modal-body">
-					      		<input 
-					      			type="hidden" 
-					      			rate="_token" 
-					      			:value="csrf"
-					      		>
-					      		<h5>Are you sure want to restore discount ?? </h5>
-							</div>
-							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-
-							  	<button 
-							  		type="submit" 
-							  		class="btn btn-outline-light"
-							  	>
-							  		Restore
-							  	</button>
-							</div>
-						</form>
-					</div>
-				<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal-discount-restore-confirmation -->
-
 	    </section>
 
 	</div>
@@ -347,7 +243,6 @@
     	
     	currentTab : 'current',
     	allDiscounts : [],
-    	discountsToShow : [],
 
     	pagination: {
         	current_page: 1
@@ -385,23 +280,7 @@
 		},
 
 		methods : {
-			showCurrentDiscounts(){
-				this.currentTab = 'current';
-				this.showDataListOfSelectedTab();
-			},
-			showTrashedDiscounts(){
-				this.currentTab = 'trashed';
-				this.showDataListOfSelectedTab();
-			},
-			showDataListOfSelectedTab(){
-				if (this.currentTab=='current') {
-					this.discountsToShow = this.allDiscounts.current.data;
-					this.pagination = this.allDiscounts.current;
-				}else {
-					this.discountsToShow = this.allDiscounts.trashed.data;
-					this.pagination = this.allDiscounts.trashed;
-				}
-			},
+			
 			fetchAllDiscounts(){
 				this.loading = true;
 				axios
@@ -409,8 +288,8 @@
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
-							this.allDiscounts = response.data;
-							this.showDataListOfSelectedTab();
+							this.allDiscounts = response.data.data;
+							this.pagination = response.data;
 						}
 					})
 					.catch(error => {
@@ -455,11 +334,10 @@
 						if (response.status == 200) {
 							this.singleDiscountData.discount = {};
 
-							this.allDiscounts = response.data;
-
 							this.query = '';
-							this.currentTab = 'current';
-							this.showDataListOfSelectedTab();
+							
+							this.allDiscounts = response.data.data;
+							this.pagination = response.data;
 
 							toastr.success(response.data.success, "Added");
 						}
@@ -492,8 +370,8 @@
 							this.singleDiscountData.discount = {};
 
 							if (this.query === '') {
-								this.allDiscounts = response.data;
-								this.showDataListOfSelectedTab();
+								this.allDiscounts = response.data.data;
+								this.pagination = response.data;
 							}
 							else {
 								this.pagination.current_page = 1;
@@ -511,78 +389,6 @@
 				      	}
 					});
 			},
-			showDiscountDeletionModal(discount) {
-				this.singleDiscountData.discount = discount;
-				$("#modal-discount-delete-confirmation").modal("show");
-			},
-			destroyDiscount(){
-
-				$("#modal-discount-delete-confirmation").modal("hide");
-
-				axios
-					.delete('/discounts/'+this.singleDiscountData.discount.id+'/'+this.perPage)
-					.then(response => {
-						if (response.status == 200) {
-							
-							this.singleDiscountData.discount = {};
-
-							if (this.query === '') {
-								this.allDiscounts = response.data;
-								this.showDataListOfSelectedTab();
-							}
-							else {
-								this.pagination.current_page = 1;
-								this.searchData();
-							}
-
-							toastr.success(response.data.success, "Deleted");
-						}
-					})
-					.catch(error => {
-						console.log(error);
-						if (error.response.status == 422) {
-							for (var x in error.response.data.errors) {
-								toastr.error(error.response.data.errors[x], "Wrong Input");
-							}
-				      	}
-					});
-			},
-			showDiscountRestoreModal(discount) {
-				this.singleDiscountData.discount = discount;
-				$("#modal-discount-restore-confirmation").modal("show");
-			},
-			restoreDiscount(){
-
-				$("#modal-discount-restore-confirmation").modal("hide");
-
-				axios
-					.patch('/discounts/'+this.singleDiscountData.discount.id+'/'+this.perPage)
-					.then(response => {
-						if (response.status == 200) {
-							
-							this.singleDiscountData.discount = {};
-
-							if (this.query === '') {
-								this.allDiscounts = response.data;
-								this.showDataListOfSelectedTab();
-							}
-							else {
-								this.pagination.current_page = 1;
-								this.searchData();
-							}
-
-							toastr.success(response.data.success, "Restored");
-						}
-					})
-					.catch(error => {
-						console.log(error);
-						if (error.response.status == 422) {
-							for (var x in error.response.data.errors) {
-								toastr.error(error.response.data.errors[x], "Wrong Input");
-							}
-				      	}
-					});
-			},
 		    searchData() {
 				
 				axios
@@ -592,9 +398,8 @@
 				    this.pagination.current_page
 				)
 				.then(response => {
-					this.allDiscounts = response.data;
-					this.discountsToShow = this.allDiscounts.all.data;
-					this.pagination = this.allDiscounts.all;
+					this.allDiscounts = response.data.all.data;
+					this.pagination = response.data.all;
 				})
 				.catch(e => {
 					console.log(e);
