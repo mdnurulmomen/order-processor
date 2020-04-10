@@ -149,6 +149,7 @@ class RestaurantController extends Controller
          
          if ($expectedRestaurant) {
             $expectedRestaurant->deal()->delete();
+            $expectedRestaurant->kitchen()->delete();
             $expectedRestaurant->delete();
          }
          
@@ -160,7 +161,8 @@ class RestaurantController extends Controller
          $expectedRestaurant = Restaurant::onlyTrashed()->find($restaurantToRestore);
          
          if ($expectedRestaurant) {
-            $expectedRestaurant->deal()->restore(); 
+            $expectedRestaurant->deal()->restore();
+            $expectedRestaurant->kitchen()->restore();
             $expectedRestaurant->restore();
          }
          

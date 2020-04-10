@@ -74,7 +74,7 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Username</th>
-											<th scope="col">Kitchen of (Restaurant Name)</th>
+											<th scope="col">Owner Restaurant Name</th>
 											<th scope="col">Mobile</th>
 											<th scope="col">Email</th>
 											<th scope="col">Action</th>
@@ -87,7 +87,7 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ kitchen.user_name}}</td>
-								    		<td>{{ kitchen.restaurant.name }}</td>
+								    		<td>{{ kitchen.restaurant ? kitchen.restaurant.name : 'Trashed' }}</td>
 								    		<td>{{ kitchen.mobile}}</td>
 								    		<td>{{ kitchen.email}}</td>
 								    		<td>
@@ -103,13 +103,18 @@
 								        			<i class="fas fa-trash-alt"></i>
 								      			</button>
 								      			<button
-								        			v-show="kitchen.deleted_at !== null"
+								        			v-show="kitchen.deleted_at !== null && kitchen.restaurant !== null"
 								        			type="button"
 								        			@click="showKitchenRestoreModal(kitchen)"
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-undo"></i>
 								      			</button>
+								      			<p 	class="text-danger" 
+								      				v-show="kitchen.restaurant === null"
+								      			>
+								      				Restore Restaurant
+								      			</p>
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!kitchensToShow.length">
