@@ -33,7 +33,7 @@ class RestaurantController extends Controller
    	public function createNewRestaurant(Request $request, $perPage)
    	{
    		$request->validate([
-   			'restaurantAdmin'=>'required',
+   			'restaurant_admins_id'=>'required',
             'name'=>'required|unique:restaurants,name|string|max:50',
    			'mobile'=>'required|unique:restaurants,mobile|max:13',
             'restaurantCuisineTags' => 'present|array|max:3',
@@ -60,7 +60,7 @@ class RestaurantController extends Controller
 
    		$newRestaurant = new Restaurant();
          $newRestaurant->admin_approval = $request->admin_approval ?? 0;
-         $newRestaurant->restaurant_admins_id = $request->restaurantAdmin;
+         $newRestaurant->restaurant_admins_id = $request->restaurant_admins_id;
          
          $newRestaurant->name = $request->name;
          $newRestaurant->mobile = $request->mobile;
@@ -93,7 +93,7 @@ class RestaurantController extends Controller
          $restaurantToUpdate = Restaurant::find($restaurant);
 
          $request->validate([
-            'restaurantAdmin'=>'required',
+            'restaurant_admins_id'=>'required',
             'name'=>'required|string|max:50|unique:restaurants,name,'.$restaurantToUpdate->id,
             'mobile'=>'required|max:13|unique:restaurants,mobile,'.$restaurantToUpdate->id,
             'restaurantCuisineTags' => 'present|array|max:3',
@@ -117,7 +117,7 @@ class RestaurantController extends Controller
          ]);
 
          $restaurantToUpdate->admin_approval = $request->admin_approval ?? 0;
-         $restaurantToUpdate->restaurant_admins_id = $request->restaurantAdmin;
+         $restaurantToUpdate->restaurant_admins_id = $request->restaurant_admins_id;
          
          $restaurantToUpdate->name = $request->name;
          $restaurantToUpdate->mobile = $request->mobile;

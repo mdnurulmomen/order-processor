@@ -119,7 +119,7 @@
 								        			Delete
 								      			</button>
 								      			<button
-								        			v-show="restaurant.deleted_at !== null"
+								        			v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin !== null"
 								        			type="button"
 								        			@click="showRestaurantRestoreModal(restaurant)"
 								        			class="btn btn-danger btn-sm"
@@ -127,6 +127,10 @@
 								        			<i class="fas fa-undo"></i>
 								        			Restore
 								      			</button>
+								      			<p 	class="text-danger" 
+								      				v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin === null">
+								      				Restore Restaurant Admin
+								      			</p>
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!restaurantsToShow.length">
@@ -227,7 +231,7 @@
 								                	:class="!singleRestaurantData.restaurantAdminObject ? 'text-danger small' : ''"
 								                >
 								                  	{{ !singleRestaurantData.restaurantAdminObject ? 
-								                  		'No admin available or trashed' : 
+								                  		'Admin has been trashed' : 
 								                  		singleRestaurantData.restaurantAdminObject.user_name 
 								                  	}}
 								                </div>
@@ -242,7 +246,7 @@
 								                	:class="!singleRestaurantData.restaurantAdminObject ? 'text-danger small' : ''"
 								                >
 								                	{{ !singleRestaurantData.restaurantAdminObject ? 
-								                  		'No admin available or trashed' : 
+								                  		'Admin has been trashed' : 
 								                  		singleRestaurantData.restaurantAdminObject.mobile 
 								                  	}}
 								                </div>
@@ -672,7 +676,7 @@
 									        <div class="row mb-2">
 									          	<div class="col-sm-12 text-right">
 									          		<div class="text-danger small" v-show="!submitForm">
-												  		Please input all required fields
+												  		Please input required fields
 										          	</div>
 								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
 								                    	<i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
@@ -757,6 +761,9 @@
 								                </div>
 
 								                <div class="col-sm-6 text-right">
+								                	<div class="text-danger small" v-show="!submitForm">
+												  		Please input required fields
+										          	</div>
 								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
 									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
 								                  	</button>
@@ -938,6 +945,9 @@
 								                </div>
 
 								                <div class="col-sm-6 text-right">
+								                	<div class="text-danger small" v-show="!submitForm">
+												  		Please input required fields
+										          	</div>
 								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
 									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
 								                  	</button>
@@ -1053,7 +1063,7 @@
 								                
 									          	<div class="col-sm-8 text-right">
 									                <div class="text-danger small" v-show="!submitForm">
-												  		Please input all required fields
+												  		Please input required fields
 										          	</div>
 								                  	<button 
 									                  	type="submit" 
@@ -2216,12 +2226,6 @@
 			},
 			nextPage (event) {
 
-				if (this.checkRestaurantFormValidation()) {
-
-					this.step += 1;
-
-				}
-
 				this.validateFormInput ('restaurant.restaurantAdminObject');
 				this.validateFormInput ('restaurant.name');
 				this.validateFormInput ('restaurant.mobile');
@@ -2231,6 +2235,12 @@
 				this.validateFormInput ('restaurant.min_order');
 				this.validateFormInput ('restaurant.restaurantFoodObjectTags');
 				this.validateFormInput ('restaurant.restaurantMealObjectTags');
+
+				if (this.checkRestaurantFormValidation()) {
+
+					this.step += 1;
+
+				}
 				
 				return;
 
