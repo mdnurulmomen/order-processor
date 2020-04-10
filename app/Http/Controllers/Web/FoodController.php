@@ -59,7 +59,12 @@ class FoodController extends Controller
   	public function restoreMeal($mealToRestore, $perPage)
   	{
      	$mealToStore = Meal::onlyTrashed()->find($mealToRestore);
-     	$mealToStore->restore();
+
+     	if ($mealToStore) {
+     		
+     		$mealToStore->restore();
+     	
+     	}
          
         return $this->showAllMeals($perPage);
   	}
@@ -122,8 +127,13 @@ class FoodController extends Controller
 	public function deleteMenuCategory($menuCategoryToDelete, $perPage)
   	{
      	$expectedMenuCategory = MenuCategory::find($menuCategoryToDelete);
-     	$expectedMenuCategory->restaurantMenuCategories()->delete();
-     	$expectedMenuCategory->delete();
+
+     	if ($expectedMenuCategory) {
+     		
+	     	$expectedMenuCategory->restaurantMenuCategories()->delete();
+	     	$expectedMenuCategory->delete();
+     	
+     	}
      	
      	return $this->showAllMenuCategories($perPage);
   	}
@@ -131,8 +141,13 @@ class FoodController extends Controller
   	public function restoreMenuCategory($menuCategoryToRestore, $perPage)
   	{
      	$menuCategoryToStore = MenuCategory::onlyTrashed()->find($menuCategoryToRestore);
-     	$menuCategoryToStore->restaurantMenuCategories()->restore();
-     	$menuCategoryToStore->restore();
+
+     	if ($menuCategoryToStore) {
+
+	     	$menuCategoryToStore->restaurantMenuCategories()->restore();
+	     	$menuCategoryToStore->restore();
+
+     	}
          
         return $this->showAllMenuCategories($perPage);
   	}
@@ -201,7 +216,12 @@ class FoodController extends Controller
   	public function restoreCuisine($cuisineToRestore, $perPage)
   	{
      	$cuisineToStore = Cuisine::onlyTrashed()->find($cuisineToRestore);
-     	$cuisineToStore->restore();
+
+     	if ($cuisineToStore) {
+     		
+     		$cuisineToStore->restore();
+     	
+     	}
          
         return $this->showAllCuisines($perPage);
   	}
@@ -270,8 +290,13 @@ class FoodController extends Controller
   	public function restoreAddon($addonToRestore, $perPage)
   	{
      	$addonToStore = Addon::onlyTrashed()->find($addonToRestore);
-     	$addonToStore->restore();
-         
+
+     	if ($addonToStore) {
+     		
+     		$addonToStore->restore();
+
+     	}
+
         return $this->showAllAddons($perPage);
   	}
 

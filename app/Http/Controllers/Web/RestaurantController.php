@@ -243,11 +243,15 @@ class RestaurantController extends Controller
       {
          $restaurantAdminToDelete = RestaurantAdmin::find($restaurantAdminToDelete);
 
-         foreach ($restaurantAdminToDelete->restaurants as $restaurant) {
-            $this->deleteRestaurant($restaurant->id, $perPage);
-         }
+         if ($restaurantAdminToDelete) {
 
-         $restaurantAdminToDelete->delete();
+            foreach ($restaurantAdminToDelete->restaurants as $restaurant) {
+               $this->deleteRestaurant($restaurant->id, $perPage);
+            }
+
+            $restaurantAdminToDelete->delete();
+
+         }
 
          return $this->showAllRestaurantAdmins($perPage);
       }
@@ -256,11 +260,15 @@ class RestaurantController extends Controller
       {
          $restaurantAdminToStore = RestaurantAdmin::onlyTrashed()->find($restaurantAdminToRestore);
 
-         foreach ($restaurantAdminToStore->restaurants()->withTrashed()->get() as $restaurant) {
-            $this->restoreRestaurant($restaurant->id, $perPage);
-         }
+         if ($restaurantAdminToStore) {
+            
+            foreach ($restaurantAdminToStore->restaurants()->withTrashed()->get() as $restaurant) {
+               $this->restoreRestaurant($restaurant->id, $perPage);
+            }
 
-         $restaurantAdminToStore->restore();
+            $restaurantAdminToStore->restore();
+
+         }
             
          return $this->showAllRestaurantAdmins($perPage);
       }
@@ -386,7 +394,12 @@ class RestaurantController extends Controller
       public function deleteRestaurantKitchen($kitchenToDelete, $perPage)
       {
          $restaurantKitchenToDelete = Kitchen::find($kitchenToDelete);
-         $restaurantKitchenToDelete->delete();
+
+         if ($restaurantKitchenToDelete) {
+            
+            $restaurantKitchenToDelete->delete();
+            
+         }
 
          return $this->showAllRestaurantKitchens($perPage);
       }
@@ -394,8 +407,13 @@ class RestaurantController extends Controller
       public function restoreRestaurantKitchen($kitchenToRestore, $perPage)
       {
          $restaurantKitchenToRestore = Kitchen::onlyTrashed()->find($kitchenToRestore);
-         $restaurantKitchenToRestore->restore();
+
+         if ($restaurantKitchenToRestore) {
             
+            $restaurantKitchenToRestore->restore();
+
+         }
+   
          return $this->showAllRestaurantKitchens($perPage);
       }
 
@@ -481,7 +499,7 @@ class RestaurantController extends Controller
 
       public function searchAllRestaurantDeals($search, $perPage)
       {
-         $query = Restaurant::with(['deal', 'deal.discount']);
+         $query = Restaurant::withTrashed()->with(['deal', 'deal.discount']);
 
          $query->where('name', 'like', "%$search%");
 
@@ -541,7 +559,12 @@ class RestaurantController extends Controller
       public function deleteRestaurantMeal($restaurant, $perPage)
       {
          $restaurantToDelete = Restaurant::find($restaurant);
-         $restaurantToDelete->restaurantMealCategories()->sync([]);  
+
+         if ($restaurantToDelete) {
+            
+            $restaurantToDelete->restaurantMealCategories()->sync([]);  
+
+         }
 
          return $this->showAllRestaurantMeals($perPage);
       }
@@ -599,7 +622,12 @@ class RestaurantController extends Controller
       public function deleteRestaurantCuisine($restaurant, $perPage)
       {
          $restaurantToDelete = Restaurant::find($restaurant);
-         $restaurantToDelete->restaurantCuisines()->sync([]);  
+
+         if ($restaurantToDelete) {
+            
+            $restaurantToDelete->restaurantCuisines()->sync([]);  
+         
+         }
 
          return $this->showAllRestaurantCuisines($perPage);
       }
@@ -685,7 +713,12 @@ class RestaurantController extends Controller
       {
          $menuItemToDelete = RestaurantMenuItem::find($menuItemId);
          // $restaurant = $menuItemToDelete->restaurantMenuCategory->restaurant_id;
-         $menuItemToDelete->delete();  
+          
+         if ($menuItemToDelete ) {
+
+            $menuItemToDelete->delete();
+         
+         }
 
          return $this->showRestaurantAllMenuItems($restaurant, $perPage);
       }
