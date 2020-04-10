@@ -671,6 +671,9 @@
 
 									        <div class="row mb-2">
 									          	<div class="col-sm-12 text-right">
+									          		<div class="text-danger small" v-show="!submitForm">
+												  		Please input all required fields
+										          	</div>
 								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
 								                    	<i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
 								                  	</button>
@@ -1592,7 +1595,7 @@
 			min_order : 100,
 			is_post_paid : false,
 			
-			restaurantAdmin : null,
+			restaurant_admins_id : null,
 			restaurantCuisineTags : [],
 			restaurantFoodTags : [],
 			restaurantMealTags : [],
@@ -1699,9 +1702,9 @@
 			'singleRestaurantData.restaurantAdminObject' : function(restaurantAdminObject){
 
 				if (restaurantAdminObject) {
-					this.singleRestaurantData.restaurant.restaurantAdmin = restaurantAdminObject.id;
+					this.singleRestaurantData.restaurant.restaurant_admins_id = restaurantAdminObject.id;
 				}else
-					this.singleRestaurantData.restaurant.restaurantAdmin = null;
+					this.singleRestaurantData.restaurant.restaurant_admins_id = null;
 			},
 			'singleRestaurantData.restaurantCuisineObjectTags' : function(restaurantCuisineObjectTags){
 				let array = [];
@@ -2212,8 +2215,25 @@
 					});
 			},
 			nextPage (event) {
-				this.checkRestaurantFormValidation();
-				this.step += 1;
+
+				if (this.checkRestaurantFormValidation()) {
+
+					this.step += 1;
+
+				}
+
+				this.validateFormInput ('restaurant.restaurantAdminObject');
+				this.validateFormInput ('restaurant.name');
+				this.validateFormInput ('restaurant.mobile');
+				this.validateFormInput ('restaurant.restaurantCuisineObjectTags');
+				this.validateFormInput ('restaurant.website');
+				this.validateFormInput ('restaurant.address');
+				this.validateFormInput ('restaurant.min_order');
+				this.validateFormInput ('restaurant.restaurantFoodObjectTags');
+				this.validateFormInput ('restaurant.restaurantMealObjectTags');
+				
+				return;
+
 			},
 			validateFormInput (formInputName) {
 				
@@ -2223,7 +2243,7 @@
 
 					case 'restaurant.restaurantAdminObject' :
 
-						if (!this.singleRestaurantData.restaurantAdminObject) {
+						if (Object.keys(this.singleRestaurantData.restaurantAdminObject).length === 0) {
 							this.errors.restaurant.restaurantAdminObject = 'Restaurant admin is required';
 						}
 						else {
@@ -2455,14 +2475,31 @@
 				}
 					 
 			},
-			checkRestaurantFormValidation(){
+			checkRestaurantFormValidation() {
 
-				if (this.singleRestaurantData.restaurant.restaurantAdmin && this.singleRestaurantData.restaurant.name && this.singleRestaurantData.restaurant.mobile && this.singleRestaurantData.restaurant.restaurantCuisineTags.length > 0 && this.singleRestaurantData.restaurant.address && this.singleRestaurantData.restaurant.min_order && this.singleRestaurantData.restaurant.restaurantFoodTags.length > 0 && this.singleRestaurantData.restaurant.restaurantMealTags.length > 0 && Object.keys(this.errors.restaurant).length === 0) {
-					
-					this.submitForm = true;
+				if (this.step == 1 && this.singleRestaurantData.restaurant.restaurant_admins_id && this.singleRestaurantData.restaurant.name && this.singleRestaurantData.restaurant.mobile && this.singleRestaurantData.restaurant.restaurantCuisineTags.length > 0) {
+
+					return this.submitForm = true;				
+
 				}
-				else
-					this.submitForm = false;
+				else if (this.step == 2 && this.singleRestaurantData.restaurant.address) {
+
+					return this.submitForm = true;
+
+				}
+				else if (this.step == 3 && this.singleRestaurantData.restaurant.min_order && this.singleRestaurantData.restaurant.restaurantFoodTags.length > 0 && this.singleRestaurantData.restaurant.restaurantMealTags.length > 0) {
+
+					return this.submitForm = true;					
+
+				}
+				else if (this.step == 4 && Object.keys(this.errors.restaurant).length === 0) {
+
+					return this.submitForm = true;
+
+				}
+
+				return	this.submitForm = false;
+
 			},
 			onBannerChange(evnt){
 
