@@ -422,10 +422,14 @@ class RestaurantController extends Controller
       public function showAllRestaurantDeals($perPage = false)
       {
          if ($perPage) {
-            return response(RestaurantDeal::with(['restaurant', 'discount'])->paginate($perPage), 200);
+            return response()->json([
+               'current' => Restaurant::with(['deal', 'deal.discount'])->paginate($perPage),
+               'trashed' => Restaurant::onlyTrashed()->with(['deal', 'deal.discount'])->paginate($perPage),
+
+            ], 200);
          }
 
-         return response(RestaurantDeal::with(['restaurant', 'discount'])->get(), 200);
+         return response(Restaurant::with(['deal', 'deal.discount'])->get(), 200);
       }
 
       public function createRestaurantDeal(Request $request, $perPage = false)
@@ -475,43 +479,21 @@ class RestaurantController extends Controller
          return $this->showAllRestaurantDeals($perPage);
       }
 
-      public function deleteRestaurantDeal($dealToDelete, $perPage)
-      {
-         $restaurantDealToDelete = RestaurantDeal::find($dealToDelete);
-         $restaurantDealToDelete->delete();
-
-         return $this->showAllRestaurantDeals($perPage);
-      }
-
-      public function restoreRestaurantDeal($dealToRestore, $perPage)
-      {
-         $restaurantDealToRestore = RestaurantDeal::onlyTrashed()->find($dealToRestore);
-
-         if ($restaurantDealToRestore && $restaurantDealToRestore->restaurant && $restaurantDealToRestore->discount) {
-
-            $restaurantDealToRestore->restore();
-
-         }
-            
-         return $this->showAllRestaurantDeals($perPage);
-      }
-
       public function searchAllRestaurantDeals($search, $perPage)
       {
-         $columnsToSearch = ['sale_percentage', 'restaurant_promotional_discount', 'native_discount'];
+         $query = Restaurant::with(['deal', 'deal.discount']);
 
-         $query = RestaurantDeal::with(['restaurant', 'discount']);
+         $query->where('name', 'like', "%$search%");
 
-         foreach($columnsToSearch as $column)
-         {
-            $query->orWhere($column, 'like', "%$search%");
-         }
-         
-         $query->orWhereHas('restaurant', function($q)use ($search){
-            $q->where('name', 'like', "%$search%");
+         $query->orWhereHas('deal', function($q) use ($search){
+  
+            $q->where('sale_percentage', 'like', "%$search%")
+              ->orWhere('restaurant_promotional_discount', 'like', "%$search%")
+              ->orWhere('native_discount', 'like', "%$search%"); 
+
          });
-
-         $query->orWhereHas('discount', function($q)use ($search){
+         
+         $query->orWhereHas('deal.discount', function($q) use ($search){
             $q->where('rate', 'like', "%$search%");
          });
 

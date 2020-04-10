@@ -17,34 +17,32 @@
 		
 			<div class="row" v-show="!loading">
 				<div class="col-sm-12">
-	              	
-					<!--
-					// For those who has only to view
-					<vue-bootstrap4-table 
-						:rows="restaurantDeals" 
-						:columns="columns" 
-						:config="config"
-						:actions="actions"
-					>
-
-					</vue-bootstrap4-table> 
-					-->
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">Restaurant Deal List</h2>
+							<h2 class="lead float-left mt-1">Restaurant Deals</h2>
 
-                        	<button type="button" @click="showRestaurantDealCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button type="button" @click="showDealCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                Add Restaurant Deal
+                                Add Deal
 					      	</button>
 						</div>
 
 						<div class="card-body">
 							<div class="mb-3">
 								<div class="row">
+									<div class="col-sm-6">
+									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
+											<li class="nav-item flex-fill">
+												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentDeals">Current</a>
+											</li>
+											<li class="nav-item flex-fill">
+												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedDeals">Trashed</a>
+											</li>
+										</ul>
+									</div>
 
-									<div class="col-sm-12 float-right was-validated">
+									<div class="col-sm-6 float-right was-validated">
 									  	<input 
 									  		type="text" 
 									  		v-model="query" 
@@ -67,32 +65,50 @@
 											<th scope="col">Sale Percentage</th>
 											<th scope="col">Promotional Discount</th>
 											<th scope="col">Native Discount</th>
-											<th scope="col">Delivery Charge Available</th>
 											<th scope="col">Net Discount</th>
+											<th scope="col">Delivery Charge Available</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
 									<tbody>
 									  	<tr v-show="restaurantDealsToShow.length"
-									    	v-for="(restaurantDeal, index) in restaurantDealsToShow"
-									    	:key="restaurantDeal.id"
+									    	v-for="(restaurant, index) in restaurantDealsToShow"
+									    	:key="restaurant.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ restaurantDeal.restaurant.name || 'Restaurant trashed' }}</td>
-								    		<td>{{ restaurantDeal.sale_percentage}}</td>
-								    		<td>{{ restaurantDeal.restaurant_promotional_discount }}</td>
-								    		<td>{{ restaurantDeal.native_discount }}</td>
-								    		<td>{{ restaurantDeal.delivery_fee_addition ? 'Yes' : 'No' }}</td>
-								    		<td>{{ restaurantDeal.discount.rate || 'Discount trashed' }}</td>
+								    		<td>{{ restaurant.name || 'Trashed' }}</td>
 								    		<td>
-										      	<button type="button" @click="showRestaurantDealEditModal(restaurantDeal)" class="btn btn-primary btn-sm">
+								    			{{ restaurant.deal ? restaurant.deal.sale_percentage : 'No Deal' }}
+								    		</td>
+								    		<td>
+								    			{{ restaurant.deal ? restaurant.deal.restaurant_promotional_discount : 'No Deal' }}
+								    		</td>
+								    		<td>
+								    			{{ restaurant.deal ? restaurant.deal.native_discount : 'No Deal' }}
+								    		</td>
+								    		<td>
+								    			{{ restaurant.deal ? restaurant.deal.discount.rate : 'No Deal' }}
+								    		</td>
+								    		<td>
+								    			{{ restaurant.deal ? (restaurant.deal.delivery_fee_addition ? 'Yes' : 'No') : 'No Deal' }}
+								    		</td>
+								    		<td>
+										      	<button type="button" 
+										      			v-show="restaurant.deal !== null" 
+										      			@click="showRestaurantDealEditModal(restaurant)" 
+										      			class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
+										        	Edit
 										      	</button>
+										      	<p 	class="text-danger" 
+										      		v-show="restaurant.deleted_at !== null">
+										      		Trashed Restaurant
+										      	</p>
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!restaurantDealsToShow.length">
 								    		<td colspan="8">
-									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No deal found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -132,12 +148,12 @@
 				</div>	
 			</div>
 
-			<!-- /.modal-createOrEdit-restaurantDeal -->
-			<div class="modal fade" id="modal-createOrEdit-restaurantDeal">
+			<!-- /.modal-createOrEdit-deal -->
+			<div class="modal fade" id="modal-createOrEdit-deal">
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Restaurant Deal</h4>
+						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Deal</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -162,10 +178,10 @@
 								            <div class="card-body">
 
 								            	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
 								              			Restaurant Name :
 								              		</label>
-									                <div class="col-sm-8">
+									                <div class="col-sm-7">
 									                  	<multiselect 
 				                                  			v-model="singleRestaurantDealData.restaurantObject"
 				                                  			placeholder="Restaurant Name" 
@@ -187,10 +203,10 @@
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
 								              			Net Discount :
 								              		</label>
-									                <div class="col-sm-8">
+									                <div class="col-sm-7">
 									                  	<multiselect 
 				                                  			v-model="singleRestaurantDealData.discountObject"
 				                                  			placeholder="Discount Rate" 
@@ -212,10 +228,10 @@
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
 								              			Restaurant Promotional :
 								              		</label>
-									                <div class="col-sm-8">
+									                <div class="col-sm-7">
 									                  	<div class="input-group mb-3">
 															<input 
 																type="number" 
@@ -241,10 +257,10 @@
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
 								              			Qupaid Native :
 								              		</label>
-									                <div class="col-sm-8">
+									                <div class="col-sm-7">
 									                  	<div class="input-group mb-3">
 															<input 
 																type="number" 
@@ -270,10 +286,10 @@
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
 								              			Sale Percentage :
 								              		</label>
-									                <div class="col-sm-8">
+									                <div class="col-sm-7">
 									                  	<div class="input-group mb-3">
 															<input 
 																type="number" 
@@ -299,10 +315,10 @@
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputDealName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
 								              			Delivery Fee :
 								              		</label>
-									                <div class="col-sm-8">
+									                <div class="col-sm-7">
 									                  	<toggle-button 
 					                                    	:sync="true" 
 					                                    	v-model="singleRestaurantDealData.restaurantDeal.delivery_fee_addition" 
@@ -350,7 +366,7 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal-createOrEdit-restaurantDeal-->
+			<!-- /.modal-createOrEdit-deal-->
 
 	    </section>
 
@@ -364,19 +380,20 @@
 	import Multiselect from 'vue-multiselect';
 	import { ToggleButton } from 'vue-js-toggle-button';
 
-	var restaurantDealListData = {
-
+	var dealListData = {
       	query : '',
     	perPage : 10,
     	loading : false,
     	submitForm : true,
 
     	editMode : false,
-
+    	
+    	currentTab : 'current',
+    	allRestaurantDeals : [],
     	restaurantDealsToShow : [],
 
     	pagination: {
-        	current_page: 1,
+        	current_page: 1
       	},
 
     	errors : {
@@ -385,8 +402,10 @@
 
         singleRestaurantDealData : {
         	
+        	restaurantObject : {},
+
         	restaurantDeal : {
-				// id : null,
+        		// id : null,
 				// sale_percentage : null,
 				// restaurant_promotional_discount : null,
 				// native_discount : null,
@@ -395,7 +414,6 @@
 				// restaurant_id : null,
         	},
 
-        	restaurantObject : {},
         	discountObject : {},
     	},
 
@@ -406,7 +424,7 @@
     };
 
 	export default {
-		
+
 		// Local registration of components
 		components: { 
 			Multiselect, // short form of Multiselect : Multiselect
@@ -415,7 +433,7 @@
 		},
 
 	    data() {
-	        return restaurantDealListData;
+	        return dealListData;
 		},
 
 		created(){
@@ -439,6 +457,7 @@
 					this.singleRestaurantDealData.restaurantDeal.discount_id = null;
 			},
 			query : function(val){
+
 				if (val==='') {
 					this.fetchAllRestaurantDeals();
 				}
@@ -446,10 +465,30 @@
 					this.pagination.current_page = 1;
 					this.searchData();
 				}
+
 			}
 		},
 
 		methods : {
+			showCurrentDeals(){
+				this.currentTab = 'current';
+				this.showDataListOfSelectedTab();
+			},
+			showTrashedDeals(){
+				this.currentTab = 'trashed';
+				this.showDataListOfSelectedTab();
+			},
+			showDataListOfSelectedTab(){
+				if (this.currentTab=='current') {
+					this.restaurantDealsToShow = this.allRestaurantDeals.current.data;
+					this.pagination = this.allRestaurantDeals.current;
+					console.log(this.restaurantDealsToShow);
+				}else {
+					this.restaurantDealsToShow = this.allRestaurantDeals.trashed.data;
+					this.pagination = this.allRestaurantDeals.trashed;
+					console.log(this.restaurantDealsToShow);
+				}
+			},
 			fetchAllDiscounts(){
 				this.loading = true;
 				axios
@@ -485,8 +524,8 @@
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
-							this.restaurantDealsToShow = response.data.data;
-							this.pagination = response.data;
+							this.allRestaurantDeals = response.data;
+							this.showDataListOfSelectedTab();
 						}
 					})
 					.catch(error => {
@@ -510,17 +549,19 @@
 					this.searchData();
 				}
     		},
-			showRestaurantDealCreateModal(){
+			showDealCreateModal(){
+
 				this.editMode = false;
 				this.submitForm = true;
 
 				this.errors.restaurantDeal = {};
 
+				// this.singleRestaurantDealData = {};
 				this.singleRestaurantDealData.restaurantDeal = {};
 				this.singleRestaurantDealData.discountObject = {};
 				this.singleRestaurantDealData.restaurantObject = {};
 
-				$('#modal-createOrEdit-restaurantDeal').modal('show');
+				$('#modal-createOrEdit-deal').modal('show');
 			},
     		storeRestaurantDeal(){
 
@@ -530,7 +571,7 @@
 					return;
 				}
 
-				$('#modal-createOrEdit-restaurantDeal').modal('hide');
+				$('#modal-createOrEdit-deal').modal('hide');
 				
 				axios
 					.post('/restaurant-deals/'+ this.perPage, this.singleRestaurantDealData.restaurantDeal)
@@ -538,9 +579,16 @@
 
 						if (response.status == 200) {
 
+							// this.singleRestaurantDealData = {};
+							this.singleRestaurantDealData.restaurantDeal = {};
+							this.singleRestaurantDealData.discountObject = {};
+							this.singleRestaurantDealData.restaurantObject = {};
+
+							this.allRestaurantDeals = response.data;
+
 							this.query = '';
-							this.restaurantDealsToShow = response.data.data;
-							this.pagination = response.data;
+							this.currentTab = 'current';
+							this.showDataListOfSelectedTab();
 
 							toastr.success(response.data.success, "Added");
 						}
@@ -553,21 +601,27 @@
 				      	}
 					});
 			},
-			showRestaurantDealEditModal(restaurantDeal) {
+			showRestaurantDealEditModal(restaurant) {
 				this.editMode = true;
 				this.submitForm = true;
 
 				this.errors.restaurantDeal = {};
 
-				this.singleRestaurantDealData.restaurantDeal = restaurantDeal;
-				this.singleRestaurantDealData.discountObject = restaurantDeal.discount;
-				this.singleRestaurantDealData.restaurantObject = restaurantDeal.restaurant;
+				this.singleRestaurantDealData.restaurantDeal = restaurant.deal;
+				this.singleRestaurantDealData.restaurantObject = restaurant;
+				this.singleRestaurantDealData.discountObject = restaurant.deal.discount;
 
-				$("#modal-createOrEdit-restaurantDeal").modal("show");
+				$("#modal-createOrEdit-deal").modal("show");
 			},
 			updateRestaurantDeal(){
 
-				$('#modal-createOrEdit-restaurantDeal').modal('hide');
+				if (Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0 || Object.keys(this.singleRestaurantDealData.discountObject).length === 0) {
+					
+					this.submitForm = false;
+					return;
+				}
+
+				$('#modal-createOrEdit-deal').modal('hide');
 				
 				axios
 					.put('/restaurant-deals/' + this.singleRestaurantDealData.restaurantDeal.id + '/' + this.perPage, this.singleRestaurantDealData.restaurantDeal)
@@ -575,9 +629,14 @@
 
 						if (response.status == 200) {
 
+							// this.singleRestaurantDealData = {};
+							this.singleRestaurantDealData.restaurantDeal = {};
+							this.singleRestaurantDealData.discountObject = {};
+							this.singleRestaurantDealData.restaurantObject = {};
+
 							if (this.query === '') {
-								this.restaurantDealsToShow = response.data.data;
-								this.pagination = response.data;
+								this.allRestaurantDeals = response.data;
+								this.showDataListOfSelectedTab();
 							}
 							else {
 								this.pagination.current_page = 1;
@@ -604,8 +663,9 @@
 				    this.pagination.current_page
 				)
 				.then(response => {
-					this.restaurantDealsToShow = response.data.all.data;
-					this.pagination = response.data.all;
+					this.allRestaurantDeals = response.data;
+					this.restaurantDealsToShow = this.allRestaurantDeals.all.data;
+					this.pagination = this.allRestaurantDeals.all;
 				})
 				.catch(e => {
 					console.log(e);
@@ -617,52 +677,14 @@
 
 				switch(formInputName) {
 
-					case 'restaurantDeal.sale_percentage' :
+					case 'restaurantDeal.restaurant' :
 
-						if (this.singleRestaurantDealData.restaurantDeal.sale_percentage < 0 || this.singleRestaurantDealData.restaurantDeal.sale_percentage > 100) {
-							this.errors.restaurantDeal.sale_percentage = 'Value should be between 0 and 100';
-						}else if (this.singleRestaurantDealData.restaurantDeal.sale_percentage < this.singleRestaurantDealData.restaurantDeal.native_discount) {
-							this.errors.restaurantDeal.sale_percentage = 'Value should be greater or equal to native discount';
+						if (Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0) {
+							this.errors.restaurantDeal.restaurant = 'Restaurant name is required';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantDeal, 'sale_percentage');
-						}
-
-						break;
-
-
-					case 'restaurantDeal.restaurant_promotional_discount' :
-
-						if (this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount < 0 || this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount > 100) {
-							
-							this.errors.restaurantDeal.restaurant_promotional_discount = 'Value should be between 0 and 100';
-						}
-						else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
-
-							this.errors.restaurantDeal.restaurant_promotional_discount = 'Promotional with Native discount should be equal to Net discount';
-						}
-						else{
-							this.submitForm = true;
-							this.$delete(this.errors.restaurantDeal, 'restaurant_promotional_discount');
-							this.$delete(this.errors.restaurantDeal, 'discount');
-						}
-
-						break;
-
-					case 'restaurantDeal.native_discount' :
-
-						if (this.singleRestaurantDealData.restaurantDeal.native_discount < 0 || this.singleRestaurantDealData.restaurantDeal.native_discount > 100) {
-							this.errors.restaurantDeal.native_discount = 'Value should be between 0 and 100';
-						}else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
-
-							this.errors.restaurantDeal.native_discount = 'Promotional with Native discount should be equal to Net discount';
-						}
-						else{
-							this.submitForm = true;
-							this.$delete(this.errors.restaurantDeal, 'native_discount');
-							this.$delete(this.errors.restaurantDeal, 'restaurant_promotional_discount');
-							this.$delete(this.errors.restaurantDeal, 'discount');
+							this.$delete(this.errors.restaurantDeal, 'restaurant');
 						}
 
 						break;
@@ -682,14 +704,53 @@
 
 						break;
 
-					case 'restaurantDeal.restaurant' :
+					case 'restaurantDeal.restaurant_promotional_discount' :
 
-						if (Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0) {
-							this.errors.restaurantDeal.restaurant = 'Restaurant name is required';
+						if (this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount < 0 || this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount > 100) {
+							
+							this.errors.restaurantDeal.restaurant_promotional_discount = 'Value should be between 0 and 100';
+						}
+						else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
+
+							this.errors.restaurantDeal.restaurant_promotional_discount = 'Promotional with Native discount should be equal to Net discount';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantDeal, 'restaurant');
+							this.$delete(this.errors.restaurantDeal, 'discount');
+							this.$delete(this.errors.restaurantDeal, 'restaurant_promotional_discount');
+							this.$delete(this.errors.restaurantDeal, 'native_discount');
+						}
+
+						break;
+
+					case 'restaurantDeal.native_discount' :
+
+						if (this.singleRestaurantDealData.restaurantDeal.native_discount < 0 || this.singleRestaurantDealData.restaurantDeal.native_discount > 100) {
+
+							this.errors.restaurantDeal.native_discount = 'Value should be between 0 and 100';
+						}else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
+
+							this.errors.restaurantDeal.native_discount = 'Promotional with Native discount should be equal to Net discount';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.restaurantDeal, 'discount');
+							this.$delete(this.errors.restaurantDeal, 'restaurant_promotional_discount');
+							this.$delete(this.errors.restaurantDeal, 'native_discount');
+						}
+
+						break;
+
+					case 'restaurantDeal.sale_percentage' :
+
+						if (this.singleRestaurantDealData.restaurantDeal.sale_percentage < 0 || this.singleRestaurantDealData.restaurantDeal.sale_percentage > 100) {
+							this.errors.restaurantDeal.sale_percentage = 'Value should be between 0 and 100';
+						}else if (this.singleRestaurantDealData.restaurantDeal.sale_percentage < this.singleRestaurantDealData.restaurantDeal.native_discount) {
+							this.errors.restaurantDeal.sale_percentage = 'Value should be greater or equal to native discount';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.restaurantDeal, 'sale_percentage');
 						}
 
 						break;
@@ -697,7 +758,6 @@
 				}
 	 
 			},
-
 		}
   	}
 

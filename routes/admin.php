@@ -96,8 +96,6 @@ Route::name('admin.')->group(function () {
 		    Route::get('/api/discounts/search/{search}/{perPage}', 'RestaurantController@searchAllDiscounts');
 		    Route::post('/discounts/{perPage?}', 'RestaurantController@createNewDiscount');
 		    Route::put('/discounts/{discount}/{perPage}', 'RestaurantController@updateDiscount');
-		    Route::delete('/discounts/{discount}/{perPage}', 'RestaurantController@deleteDiscount');
-		    Route::patch('/discounts/{discount}/{perPage}', 'RestaurantController@restoreDiscount');
 
 
 		    Route::get('/api/cuisines/{perPage?}', 'FoodController@showAllCuisines');
