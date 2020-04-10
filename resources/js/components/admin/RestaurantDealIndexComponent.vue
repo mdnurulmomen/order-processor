@@ -482,11 +482,9 @@
 				if (this.currentTab=='current') {
 					this.restaurantDealsToShow = this.allRestaurantDeals.current.data;
 					this.pagination = this.allRestaurantDeals.current;
-					console.log(this.restaurantDealsToShow);
 				}else {
 					this.restaurantDealsToShow = this.allRestaurantDeals.trashed.data;
 					this.pagination = this.allRestaurantDeals.trashed;
-					console.log(this.restaurantDealsToShow);
 				}
 			},
 			fetchAllDiscounts(){
