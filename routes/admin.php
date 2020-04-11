@@ -76,6 +76,14 @@ Route::name('admin.')->group(function () {
 		    Route::patch('/restaurant-deals/{restaurantDeal}/{perPage}', 'RestaurantController@restoreRestaurantDeal');
 
 
+		    Route::get('/api/restaurant-waiters/{perPage?}', 'RestaurantController@showAllRestaurantWaiters');
+		    Route::get('/api/restaurant-waiters/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantWaiters');
+		    Route::post('/restaurant-waiters/{perPage?}', 'RestaurantController@createRestaurantWaiter');
+		    Route::put('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@updateRestaurantWaiter');
+		    Route::delete('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@deleteRestaurantWaiter');
+		    Route::patch('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@restoreRestaurantWaiter');
+
+
 		    Route::get('/api/restaurant-kitchens/{perPage?}', 'RestaurantController@showAllRestaurantKitchens');
 		    Route::get('/api/restaurant-kitchens/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantKitchens');
 		    Route::post('/restaurant-kitchens/{perPage?}', 'RestaurantController@createRestaurantKitchen');

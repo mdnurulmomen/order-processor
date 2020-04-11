@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Models\Waiter;
 use App\Models\Kitchen;
 use App\Models\Discount;
 use App\Models\Restaurant;
@@ -150,6 +151,7 @@ class RestaurantController extends Controller
          if ($expectedRestaurant) {
             $expectedRestaurant->deal()->delete();
             $expectedRestaurant->kitchen()->delete();
+            $expectedRestaurant->waiters()->delete();
             $expectedRestaurant->delete();
          }
          
@@ -163,6 +165,7 @@ class RestaurantController extends Controller
          if ($expectedRestaurant) {
             $expectedRestaurant->deal()->restore();
             $expectedRestaurant->kitchen()->restore();
+            $expectedRestaurant->waiters()->restore();
             $expectedRestaurant->restore();
          }
          
@@ -424,6 +427,124 @@ class RestaurantController extends Controller
          $columnsToSearch = ['user_name', 'mobile', 'email'];
 
          $query = Kitchen::with('restaurant')->withTrashed();
+
+         foreach($columnsToSearch as $column)
+         {
+            $query->orWhere($column, 'like', "%$search%");
+         }
+         
+         $query->orWhereHas('restaurant', function($q)use ($search){
+            $q->where('name', 'like', "%$search%");
+         });
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
+      public function showAllRestaurantWaiters($perPage = false)
+      {
+         if ($perPage) {
+            return response()->json([
+               'current' => Waiter::with(['restaurant'])->paginate($perPage),
+               'trashed' => Waiter::onlyTrashed()->with(['restaurant'])->paginate($perPage),
+
+            ], 200);
+         }
+
+         //return response(Waiter::get(), 200);
+      }
+
+      public function createRestaurantWaiter(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'first_name'=>'nullable|string|max:50',
+            'last_name'=>'nullable|string|max:50',
+            'user_name'=>'required|string|max:50|unique:waiters,user_name',
+            'mobile'=>'required|unique:waiters,mobile|max:13',
+            'email'=>'required|unique:waiters,email|email|string|max:50',
+            'password'=>'required|string|min:8|max:100|confirmed',
+            'restaurant_id'=>'numeric|required|exists:restaurants,id',
+            'admin_approval'=>'nullable|boolean',
+         ]);
+
+         $newRestaurantAdmin = Waiter::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'user_name' => $request->user_name,
+            'mobile' => $request->mobile,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'restaurant_id' => $request->restaurant_id,
+            'admin_approval' => $request->admin_approval ?? false,
+         ]);
+
+         return $this->showAllRestaurantWaiters($perPage);
+      }
+
+      public function updateRestaurantWaiter(Request $request, $waiterToUpdate, $perPage)
+      {
+         $restaurantWaiterToUpdate = Waiter::find($waiterToUpdate);
+
+         $request->validate([
+            'first_name'=>'nullable|string|max:50',
+            'last_name'=>'nullable|string|max:50',
+            'user_name'=>'required|string|max:50|unique:waiters,user_name,'.$restaurantWaiterToUpdate->id,
+            'mobile'=>'required|max:13|unique:waiters,mobile,'.$restaurantWaiterToUpdate->id,
+            'email'=>'required|email|string|max:50|unique:waiters,email,'.$restaurantWaiterToUpdate->id,
+            'password'=>'nullable|string|min:8|max:100|confirmed',
+            'restaurant_id'=>'numeric|required|exists:restaurants,id',
+            'admin_approval'=>'nullable|boolean',
+         ]);
+
+         $restaurantWaiterToUpdate->first_name = $request->first_name;      
+         $restaurantWaiterToUpdate->last_name = $request->last_name;      
+         $restaurantWaiterToUpdate->user_name = $request->user_name;      
+         $restaurantWaiterToUpdate->mobile = $request->mobile;
+         $restaurantWaiterToUpdate->email = $request->email;        
+
+         if ($request->password) {       
+            $restaurantWaiterToUpdate->password = Hash::make($request->password);
+         }        
+
+         $restaurantWaiterToUpdate->restaurant_id = $request->restaurant_id;        
+         $restaurantWaiterToUpdate->admin_approval = $request->admin_approval ?? false;        
+         $restaurantWaiterToUpdate->save();        
+
+         return $this->showAllRestaurantWaiters($perPage);
+      }
+
+      public function deleteRestaurantWaiter($waiterToDelete, $perPage)
+      {
+         $restaurantWaiterToDelete = Waiter::find($waiterToDelete);
+
+         if ($restaurantWaiterToDelete) {
+            
+            $restaurantWaiterToDelete->delete();
+            
+         }
+
+         return $this->showAllRestaurantWaiters($perPage);
+      }
+
+      public function restoreRestaurantWaiter($waiterToRestore, $perPage)
+      {
+         $restaurantWaiterToRestore = Waiter::onlyTrashed()->find($waiterToRestore);
+
+         if ($restaurantWaiterToRestore) {
+            
+            $restaurantWaiterToRestore->restore();
+
+         }
+   
+         return $this->showAllRestaurantWaiters($perPage);
+      }
+
+      public function searchAllRestaurantWaiters($search, $perPage)
+      {
+         $columnsToSearch = ['first_name', 'last_name', 'user_name', 'mobile', 'email'];
+
+         $query = Waiter::with('restaurant')->withTrashed();
 
          foreach($columnsToSearch as $column)
          {
