@@ -211,7 +211,6 @@
 					                                  		:options="allCuisines" 
 					                                  		:required="true" 
 					                                  		:multiple="true" 
-					                                  		:max="6" 
 					                                  		:class="!errors.restaurantCuisine.cuisine ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
