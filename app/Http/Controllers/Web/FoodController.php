@@ -7,6 +7,7 @@ use App\Models\Addon;
 use App\Models\Cuisine;
 use App\Models\MenuCategory;
 use Illuminate\Http\Request;
+use App\Models\ItemVariation;
 use App\Http\Controllers\Controller;
 
 class FoodController extends Controller
@@ -305,6 +306,79 @@ class FoodController extends Controller
 		$columnsToSearch = ['name'];
 
 		$query = Addon::withTrashed();
+
+		foreach($columnsToSearch as $column)
+		{
+			$query->orWhere($column, 'like', "%$search%");
+		}
+
+		return response()->json([
+			'all' => $query->paginate($perPage),  
+		], 200);
+	}
+
+	public function showAllVariations($perPage = false)
+	{
+	 	if ($perPage) {
+		 	return response()->json([
+				'current' => ItemVariation::paginate($perPage),
+				'trashed' => ItemVariation::onlyTrashed()->paginate($perPage),
+			], 200);
+	 	}
+
+	 	return response(ItemVariation::get(), 200);
+	}
+
+	public function createNewVariation(Request $request, $perPage = false)
+	{
+	 	$request->validate([
+	    	'variation_name'=>'required|unique:item_variations,variation_name|max:50'
+	 	]);
+
+	 	$newVariation = ItemVariation::create(['variation_name' => $request->variation_name]);
+
+	 	return $this->showAllVariations($perPage);
+	}
+
+	public function updateVariation(Request $request, $variation, $perPage)
+	{
+	 	$variationToUpdate = ItemVariation::find($variation);
+
+	 	$request->validate([
+	    	'variation_name'=>'required|max:50|unique:item_variations,variation_name,'.$variationToUpdate->id,
+	 	]);
+
+	 	$variationToUpdate = $variationToUpdate->update([
+	 		'variation_name' => $request->variation_name
+	 	]);
+
+	 	return $this->showAllVariations($perPage);
+	}
+
+	public function deleteVariation($variationToDelete, $perPage)
+  	{
+     	ItemVariation::destroy($variationToDelete);
+     	return $this->showAllVariations($perPage);
+  	}
+
+  	public function restoreVariation($variationToRestore, $perPage)
+  	{
+     	$variationToStore = ItemVariation::onlyTrashed()->find($variationToRestore);
+
+     	if ($variationToStore) {
+     		
+     		$variationToStore->restore();
+
+     	}
+
+        return $this->showAllVariations($perPage);
+  	}
+
+  	public function searchAllVariations($search, $perPage)
+	{
+		$columnsToSearch = ['variation_name'];
+
+		$query = ItemVariation::withTrashed();
 
 		foreach($columnsToSearch as $column)
 		{

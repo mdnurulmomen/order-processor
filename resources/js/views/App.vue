@@ -75,6 +75,12 @@
                   </router-link>
                 </li>
                 <li class="nav-item">
+                  <router-link :to="{ name: 'admin.waiters.index' }"  class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Restaurant Waiters</p>
+                  </router-link>
+                </li>
+                <li class="nav-item">
                   <router-link :to="{ name: 'admin.restaurantCuisines.index' }"  class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurant Cuisines</p>
@@ -84,12 +90,6 @@
                   <router-link :to="{ name: 'admin.kitchens.index' }"  class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurant Kitchens</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.waiters.index' }"  class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurant Waiters</p>
                   </router-link>
                 </li>
               </ul>
@@ -120,6 +120,12 @@
                   <router-link :to="{ name: 'admin.addons.index' }"  class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Add-ons</p>
+                  </router-link>
+                </li>
+                <li class="nav-item">
+                  <router-link :to="{ name: 'admin.itemVariations.index' }"  class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Item Variations</p>
                   </router-link>
                 </li>
                 <li class="nav-item">

@@ -100,6 +100,14 @@ Route::name('admin.')->group(function () {
 		    Route::patch('/add-ons/{addon}/{perPage}', 'FoodController@restoreAddon');
 
 
+		    Route::get('/api/item-variations/{perPage?}', 'FoodController@showAllVariations');
+		    Route::get('/api/item-variations/search/{search}/{perPage}', 'FoodController@searchAllVariations');
+		    Route::post('/item-variations/{perPage?}', 'FoodController@createNewVariation');
+		    Route::put('/item-variations/{item}/{perPage}', 'FoodController@updateVariation');
+		    Route::delete('/item-variations/{item}/{perPage}', 'FoodController@deleteVariation');
+		    Route::patch('/item-variations/{item}/{perPage}', 'FoodController@restoreVariation');
+
+
 		    Route::get('/api/discounts/{perPage?}', 'RestaurantController@showAllDiscounts');
 		    Route::get('/api/discounts/search/{search}/{perPage}', 'RestaurantController@searchAllDiscounts');
 		    Route::post('/discounts/{perPage?}', 'RestaurantController@createNewDiscount');
