@@ -357,6 +357,7 @@ class RestaurantController extends Controller
             'email'=>'required|unique:kitchens,email|email|string|max:50',
             'password'=>'required|string|min:8|max:100|confirmed',
             'restaurant_id'=>'numeric|required|exists:restaurants,id',
+            'admin_approval'=>'nullable|boolean',
          ]);
 
          $newRestaurantAdmin = Kitchen::create([
@@ -365,6 +366,7 @@ class RestaurantController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'restaurant_id' => $request->restaurant_id,
+            'admin_approval' => $request->admin_approval ?? false,
          ]);
 
          return $this->showAllRestaurantKitchens($perPage);
@@ -380,6 +382,7 @@ class RestaurantController extends Controller
             'email'=>'required|email|string|max:50|unique:kitchens,email,'.$restaurantKitchenToUpdate->id,
             'password'=>'nullable|string|min:8|max:100|confirmed',
             'restaurant_id'=>'numeric|required|exists:restaurants,id',
+            'admin_approval'=>'nullable|boolean',
          ]);
 
          $restaurantKitchenToUpdate->user_name = $request->user_name;        
@@ -391,6 +394,7 @@ class RestaurantController extends Controller
          }        
 
          $restaurantKitchenToUpdate->restaurant_id = $request->restaurant_id;        
+         $restaurantKitchenToUpdate->admin_approval = $request->admin_approval ?? false;        
          $restaurantKitchenToUpdate->save();        
 
          return $this->showAllRestaurantKitchens($perPage);

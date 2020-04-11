@@ -77,6 +77,7 @@
 											<th scope="col">Owner Restaurant Name</th>
 											<th scope="col">Mobile</th>
 											<th scope="col">Email</th>
+											<th scope="col">Approval</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -90,6 +91,7 @@
 								    		<td>{{ kitchen.restaurant ? kitchen.restaurant.name : 'Trashed' }}</td>
 								    		<td>{{ kitchen.mobile}}</td>
 								    		<td>{{ kitchen.email}}</td>
+								    		<td>{{ kitchen.admin_approval ? 'Approved' : 'Not-Approved'}}</td>
 								    		<td>
 										      	<button type="button" v-show="kitchen.deleted_at === null" @click="showKitchenEditModal(kitchen)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
@@ -118,7 +120,7 @@
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!kitchensToShow.length">
-								    		<td colspan="6">
+								    		<td colspan="7">
 									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
 									    	</td>
 									  	</tr>
@@ -312,6 +314,24 @@
 												  		</div>
 									                </div>	
 								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label for="inputWaiterName3" class="col-sm-4 col-form-label text-right">
+								              			Admin Approval
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<toggle-button 
+				                                  			:sync="true" 
+				                                  			v-model="singleKitchenData.kitchen.admin_approval" 
+				                                  			value="true" 
+				                                  			:width="130"  
+				                                  			:height="30" 
+				                                  			:font-size="15" 
+				                                  			:color="{checked: 'green', unchecked: 'red'}" 
+				                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
+			                                  			/>
+									                </div>	
+								              	</div>
 								            </div>
 								            <!-- /.card-body -->
 									    </div>
@@ -435,17 +455,17 @@
 
 	import axios from 'axios';
 	import Multiselect from 'vue-multiselect';
+	import { ToggleButton } from 'vue-js-toggle-button';
 
 	var singleKitchenData = {
 
     	kitchen : {
-			// id : null,
-			// user_name : null,
-			// email : null,
-			// mobile : null,
-			// password : null,
-			// restaurant_id : null,
-			// deleted_at : null,
+			user_name : null,
+			mobile : null,
+			email : null,
+			password : null,
+			restaurant_id : null,
+			admin_approval : false,
     	},
 
     	restaurantObject : {
@@ -487,6 +507,7 @@
 
 	    components: { 
 			Multiselect, // short form of Multiselect : Multiselect
+			ToggleButton : ToggleButton,
 		},
 
 	    data() {
