@@ -872,31 +872,76 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+      public function showAllRestaurantMenuCategories($perPage = false)
+      {
+         if ($perPage) {
+            return response(Restaurant::where('admin_approval', 1)->with('restaurantMenuCategories')->paginate($perPage), 200);
+         }
+
+         return response(Restaurant::where('admin_approval', 1)->with('restaurantMenuCategories')->get(), 200);
+      }
+
       public function createRestaurantMenuCategory(Request $request, $perPage = false)
       {
          $request->validate([
             'menu_category_id'=>'required|array|min:1',
-            "menu_category_id.*"  => "required|numeric|exists:menu_categories,id",
-            'serving_from'=>'nullable|string|max:255',
-            'serving_to'=>'nullable|string|max:255',
+            'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
+            'serving_from'=>'nullable|string|max:20',
+            'serving_to'=>'nullable|string|max:20',
             'restaurant_id'=>'required|numeric|exists:restaurants,id',
          ]);
 
-         for ($i=0; $i < count($request->menu_category_id) ; $i++) { 
-            
-            $alreadyExist = RestaurantMenuCategory::where('menu_category_id', $request->menu_category_id[$i])->where('restaurant_id', $request->restaurant_id)->first();
+         $expectedRestaurant = Restaurant::find($request->restaurant_id);
 
-            if (!$alreadyExist) {
-               
-               $newMenuItem = RestaurantMenuCategory::create([
-                  'menu_category_id' => $request->menu_category_id[$i],
-                  'serving_from' => $request->serving_from,
-                  'serving_to' => $request->serving_to,
-                  'restaurant_id' => $request->restaurant_id,
-               ]);
-            }
+         $expectedRestaurant->restaurantMenuCategories()->syncWithoutDetaching($request->menu_category_id);
+         
+         $expectedRestaurant->restaurantMenuCategories()->update([
+            'serving_from'=>$request->serving_from,
+            'serving_to'=>$request->serving_to,
+         ]);
+
+         if ($request->from_menu_item_index) {
+            return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
          }
+         else
+            return $this->showAllRestaurantMenuCategories($perPage);
+      }
 
-         return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
+      public function updateRestaurantMenuCategory(Request $request, $restaurant, $perPage)
+      {
+         $restaurantToUpdate = Restaurant::find($restaurant);
+
+         $request->validate([
+            'menu_category_id'=>'required|array|min:1',
+            'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
+            'serving_from'=>'nullable|string|max:20',
+            'serving_to'=>'nullable|string|max:20',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         $restaurantToUpdate->restaurantMenuCategories()->sync($request->menu_category_id);
+
+         $restaurantToUpdate->restaurantMenuCategories()->update([
+            'serving_from'=>$request->serving_from,
+            'serving_to'=>$request->serving_to,
+         ]);
+
+         RestaurantMenuItem::whereNotIn('restaurant_menu_category_id', RestaurantMenuCategory::get()->pluck('id'))->delete();
+
+         return $this->showAllRestaurantMenuCategories($perPage);
+      }
+
+      public function searchAllRestaurantMenuCategories($search, $perPage)
+      {
+         $query = Restaurant::with('restaurantMenuCategories')
+                            ->where('name', 'like', "%$search%")
+                            ->orWhereHas('restaurantMenuCategories', function($q)use ($search){
+                              $q->where('name', 'like', "%$search%");
+                            })
+                            ->where('admin_approval', 1);
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
       }
 }

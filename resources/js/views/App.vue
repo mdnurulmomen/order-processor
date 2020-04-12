@@ -92,11 +92,17 @@
                     <p>Restaurant Kitchens</p>
                   </router-link>
                 </li>
+                <li class="nav-item">
+                  <router-link :to="{ name: 'admin.restaurantMenuCategories.index' }"  class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Rst Menu-Categories</p>
+                  </router-link>
+                </li>
               </ul>
             </li>
 
             <li class="nav-item has-treeview menu-open">
-              <a href="#" v-bind:class="[(currentPage.includes('/cuisines') || currentPage.includes('menu-categories') || currentPage.includes('/meals') || currentPage.includes('/add-ons')) ? 'active' : '', 'nav-link']">
+              <a href="#" v-bind:class="[(currentPage.includes('/cuisines') || currentPage.includes('/menu-categories') || currentPage.includes('/meals') || currentPage.includes('/add-ons')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-utensils"></i>
                 <p>
                   Food Items

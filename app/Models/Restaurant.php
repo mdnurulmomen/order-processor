@@ -73,7 +73,7 @@ class Restaurant extends Authenticatable
 
     public function restaurantMenuCategories()
     {
-        return $this->belongsToMany(MenuCategory::class, 'restaurant_menu_categories', 'restaurant_id', 'menu_category_id');
+        return $this->belongsToMany(MenuCategory::class, 'restaurant_menu_categories', 'restaurant_id', 'menu_category_id')->withPivot('id', 'serving_from', 'serving_to');
     }
 
     public function restaurantMealCategories()

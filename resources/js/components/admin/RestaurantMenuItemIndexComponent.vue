@@ -457,7 +457,7 @@
 								            <div class="card-body">
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Menu Names</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Menu Category Names</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="singleRestaurantMenuItemData.restaurantNewMenuCategoryObjects"
@@ -638,9 +638,10 @@
 
     	restaurantNewMenuCategory : {
 			menu_category_id : [],
-    		serving_from : null,
-    		serving_to : null,
+    		serving_from : '10.00',
+    		serving_to : '22.00',
     		restaurant_id : null,
+    		from_menu_item_index : true,
     	},
 
     	restaurantMenuItem : {
@@ -669,7 +670,7 @@
 
     	restaurantAllMenuCategories : [],
     	restaurantArrayToAddNewMenuCategory : [],
-    	restaurantScheduleHours : ['6.00', '7.00', '8.00', '9.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '24.00'],
+    	restaurantScheduleHours : ['6.00', '7.00', '8.00', '9.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '24.00', '1.00', '2.00'],
 
     	pagination: {
         	current_page: 1
@@ -743,7 +744,8 @@
 				   	});
 			     	this.singleRestaurantMenuItemData.restaurantNewMenuCategory.menu_category_id = array;
 
-				}else
+				}
+				else
 					this.singleRestaurantMenuItemData.restaurantNewMenuCategory.menu_category_id = [];
 			},
 		},
@@ -764,7 +766,6 @@
 						console.log(error);
 					});
 			},
-
 			fetchRestaurantAllMenuItems(){
 				this.loading = true;
 				axios
@@ -967,6 +968,8 @@
 				this.errors.restaurantNewMenuCategory = {};
 
 				this.singleRestaurantMenuItemData.restaurantNewMenuCategory = {};
+				this.singleRestaurantMenuItemData.restaurantNewMenuCategory.from_menu_item_index = true;
+				
 				this.singleRestaurantMenuItemData.restaurantNewMenuCategoryObjects = [];
 
 				this.singleRestaurantMenuItemData.restaurantObjectToAddMenuCategory = {
