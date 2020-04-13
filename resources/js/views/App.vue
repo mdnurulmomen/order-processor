@@ -42,7 +42,7 @@
             </li>
 
             <li class="nav-item has-treeview menu-open">
-              <a href="#" v-bind:class="[(currentPage.includes('restaurant-admins') || currentPage.includes('restaurants') || currentPage.includes('kitchens') || currentPage.includes('restaurant-deals') || currentPage.includes('restaurant-meals') || currentPage.includes('restaurant-cuisines')) ? 'active' : '', 'nav-link']">
+              <a href="#" v-bind:class="[(currentPage.includes('restaurant-admins') || currentPage.includes('restaurants') || currentPage.includes('kitchens') || currentPage.includes('restaurant-deals') || currentPage.includes('restaurant-meals') || currentPage.includes('restaurant-cuisines') || currentPage.includes('/waiters') || currentPage.includes('/restaurant-menu-categories')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-hotel"></i>
                 <p>
                   Restaurants
@@ -51,49 +51,49 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurants.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.restaurants.index' }" v-bind:class="[(currentPage.includes('/restaurants')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurants</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantDeals.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.restaurantDeals.index' }" v-bind:class="[(currentPage.includes('/restaurant-deals')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurant Deals</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantMeals.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.restaurantMeals.index' }" v-bind:class="[(currentPage.includes('/restaurant-meals')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurant Meals</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantAdmins.index' }" class="nav-link">
+                  <router-link :to="{ name: 'admin.restaurantAdmins.index' }" v-bind:class="[(currentPage.includes('/restaurant-admins')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurant Admins</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.waiters.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.waiters.index' }"  v-bind:class="[(currentPage.includes('/waiters')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurant Waiters</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantCuisines.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.restaurantCuisines.index' }" v-bind:class="[(currentPage.includes('/restaurant-cuisines')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurant Cuisines</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.kitchens.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.kitchens.index' }"  v-bind:class="[(currentPage.includes('/kitchens')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurant Kitchens</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantMenuCategories.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.restaurantMenuCategories.index' }"  v-bind:class="[(currentPage.includes('/restaurant-menu-categories')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Rst Menu-Categories</p>
                   </router-link>
@@ -102,7 +102,7 @@
             </li>
 
             <li class="nav-item has-treeview menu-open">
-              <a href="#" v-bind:class="[(currentPage.includes('/cuisines') || currentPage.includes('/menu-categories') || currentPage.includes('/meals') || currentPage.includes('/add-ons')) ? 'active' : '', 'nav-link']">
+              <a href="#" v-bind:class="[(currentPage.includes('/cuisines') || currentPage.includes('/menu-categories') || currentPage.includes('/meals') || currentPage.includes('/add-ons') || currentPage.includes('/item-variations')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-utensils"></i>
                 <p>
                   Food Items
@@ -111,31 +111,31 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.meals.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.meals.index' }"    v-bind:class="[(currentPage.includes('/meals')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Meals</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.cuisines.index' }" class="nav-link">
+                  <router-link :to="{ name: 'admin.cuisines.index' }"   v-bind:class="[(currentPage.includes('/cuisines')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Cuisines</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.addons.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.addons.index' }"    v-bind:class="[(currentPage.includes('/add-ons')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Add-ons</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.itemVariations.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.itemVariations.index' }"  v-bind:class="[(currentPage.includes('/item-variations')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Item Variations</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.menuCategories.index' }"  class="nav-link">
+                  <router-link :to="{ name: 'admin.menuCategories.index' }"  v-bind:class="[(currentPage.includes('/menu-categories')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Menu Categories</p>
                   </router-link>
@@ -144,7 +144,7 @@
             </li>
 
             <li class="nav-item">
-              <router-link :to="{ name: 'admin.discounts.index' }" v-bind:class="[(currentPage.includes('discounts')) ? 'active' : '', 'nav-link']">
+              <router-link :to="{ name: 'admin.discounts.index' }" v-bind:class="[(currentPage.includes('/discounts')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-percent"></i>
                 <p>
                   Discounts
