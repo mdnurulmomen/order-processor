@@ -136,7 +136,11 @@ class RestaurantController extends Controller
          // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
          $restaurantToUpdate->restaurantCuisines()->sync($request->restaurantCuisineTags);
          $restaurantToUpdate->restaurantMenuCategories()->sync($request->restaurantFoodTags);
-         $restaurantToUpdate->restaurantMealCategories()->sync($request->restaurantMealTags);  
+         $restaurantToUpdate->restaurantMealCategories()->sync($request->restaurantMealTags);
+
+         // Deleting menu items with restaurant old menu categories;
+         RestaurantMenuItem::whereNotIn('restaurant_menu_category_id', RestaurantMenuCategory::get()->pluck('id'))->delete();
+
          $restaurantToUpdate->banner_preview = $request->banner_preview;
          
          $restaurantToUpdate->save();
@@ -187,6 +191,8 @@ class RestaurantController extends Controller
             'all' => $query->latest()->paginate($perPage),  
          ], 200);
       }
+
+
 
       public function showAllRestaurantAdmins($perPage = false)
       {
@@ -294,6 +300,8 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+
+
       public function showAllDiscounts($perPage = false)
       {
          if ($perPage) {
@@ -335,6 +343,8 @@ class RestaurantController extends Controller
             'all' => Discount::where('rate', 'like', "%$search%")->paginate($perPage),  
          ], 200);
       }
+
+
 
       public function showAllRestaurantKitchens($perPage = false)
       {
@@ -445,6 +455,8 @@ class RestaurantController extends Controller
             'all' => $query->paginate($perPage),  
          ], 200);
       }
+
+
 
       public function showAllRestaurantWaiters($perPage = false)
       {
@@ -564,6 +576,8 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+
+
       public function showAllRestaurantDeals($perPage = false)
       {
          if ($perPage) {
@@ -647,6 +661,8 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+
+
       public function showAllRestaurantMeals($perPage = false)
       {
          if ($perPage) {
@@ -709,6 +725,8 @@ class RestaurantController extends Controller
             'all' => $query->paginate($perPage),  
          ], 200);
       }
+
+
 
       public function showAllRestaurantCuisines($perPage = false)
       {
@@ -773,13 +791,15 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+
+
       public function showRestaurantAllMenuItems($restaurant, $perPage = false)
       {
          if ($perPage) {
-            return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'restaurantMenuItems'])->paginate($perPage), 200);
+            return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage), 200);
          }
 
-         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'restaurantMenuItems'])->get(), 200);
+         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->get(), 200);
       }
 
       public function createRestaurantMenuItem(Request $request, $perPage = false)
@@ -872,6 +892,8 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+      
+
       public function showAllRestaurantMenuCategories($perPage = false)
       {
          if ($perPage) {
@@ -879,56 +901,6 @@ class RestaurantController extends Controller
          }
 
          return response(Restaurant::where('admin_approval', 1)->with('restaurantMenuCategories')->get(), 200);
-      }
-
-      public function createRestaurantMenuCategory(Request $request, $perPage = false)
-      {
-         $request->validate([
-            'menu_category_id'=>'required|array|min:1',
-            'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
-            'serving_from'=>'nullable|string|max:20',
-            'serving_to'=>'nullable|string|max:20',
-            'restaurant_id'=>'required|numeric|exists:restaurants,id',
-         ]);
-
-         $expectedRestaurant = Restaurant::find($request->restaurant_id);
-
-         $expectedRestaurant->restaurantMenuCategories()->syncWithoutDetaching($request->menu_category_id);
-         
-         $expectedRestaurant->restaurantMenuCategories()->update([
-            'serving_from'=>$request->serving_from,
-            'serving_to'=>$request->serving_to,
-         ]);
-
-         if ($request->from_menu_item_index) {
-            return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
-         }
-         else
-            return $this->showAllRestaurantMenuCategories($perPage);
-      }
-
-      public function updateRestaurantMenuCategory(Request $request, $restaurant, $perPage)
-      {
-         $restaurantToUpdate = Restaurant::find($restaurant);
-
-         $request->validate([
-            'menu_category_id'=>'required|array|min:1',
-            'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
-            'serving_from'=>'nullable|string|max:20',
-            'serving_to'=>'nullable|string|max:20',
-            'restaurant_id'=>'required|numeric|exists:restaurants,id',
-         ]);
-
-         $restaurantToUpdate->restaurantMenuCategories()->sync($request->menu_category_id);
-
-         $restaurantToUpdate->restaurantMenuCategories()->update([
-            'serving_from'=>$request->serving_from,
-            'serving_to'=>$request->serving_to,
-         ]);
-
-         RestaurantMenuItem::whereNotIn('restaurant_menu_category_id', RestaurantMenuCategory::get()->pluck('id'))->delete();
-
-         return $this->showAllRestaurantMenuCategories($perPage);
       }
 
       public function searchAllRestaurantMenuCategories($search, $perPage)
@@ -944,4 +916,135 @@ class RestaurantController extends Controller
             'all' => $query->paginate($perPage),  
          ], 200);
       }
+
+
+
+      public function showRestaurantAllMenuCategories($restaurant, $perPage = false)
+      {
+         if ($perPage) {
+            return response()->json([
+               'current' => RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage),
+               'trashed' => RestaurantMenuCategory::onlyTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage),
+
+            ], 200);
+
+
+            return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage), 200);
+         }
+
+         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'restaurantMenuItems'])->get(), 200);
+      }
+
+      public function createRestaurantMenuCategory(Request $request, $perPage = false)
+      {
+         $request->validate([
+            'menu_category_id'=>'required|array|min:1',
+            'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
+            'serving_from'=>'nullable|string|max:20',
+            'serving_to'=>'nullable|string|max:20',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         $expectedRestaurant = Restaurant::find($request->restaurant_id);
+
+         foreach ($request->menu_category_id as $restaurantNewMenuCategory) {
+            
+            if ($expectedRestaurant->restaurantMenuCategories()->where('menu_category_id', $restaurantNewMenuCategory)->count()) {
+               
+               $expectedRestaurant->restaurantMenuCategories()->where('menu_category_id', $restaurantNewMenuCategory)->update([
+                  'serving_from' => $request->serving_from,
+                  'serving_to' => $request->serving_to,
+               ]);
+            }
+
+            else{
+
+               $expectedRestaurant->restaurantMenuCategories()->syncWithoutDetaching([
+                  $restaurantNewMenuCategory => [
+                     'serving_from' => $request->serving_from,
+                     'serving_to' => $request->serving_to,
+                  ]
+               ]);
+
+            }
+
+         }
+
+         if ($request->from_menu_item_index) {
+            return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
+         }
+         else if ($request->from_menu_category_index) {
+            return $this->showAllRestaurantMenuCategories($perPage);
+         }
+         else
+            return $this->showRestaurantAllMenuCategories($request->restaurant_id, $perPage);
+      }
+
+      public function updateRestaurantMenuCategory(Request $request, $menuCategory, $perPage)
+      {
+         $restaurantMenuCategoryToUpdate = RestaurantMenuCategory::find($menuCategory);
+
+         $request->validate([
+            'menu_category_id'=>'required|array|min:1',
+            'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
+            'serving_from'=>'nullable|string|max:20',
+            'serving_to'=>'nullable|string|max:20',
+            'restaurant_id'=>'required|numeric|exists:restaurants,id',
+         ]);
+
+         // As editing single restaurantMenuCategroy from request
+         $restaurantMenuCategoryToUpdate->menu_category_id = $request->menu_category_id[0];
+         $restaurantMenuCategoryToUpdate->serving_from = $request->serving_from;
+         $restaurantMenuCategoryToUpdate->serving_to = $request->serving_to;
+
+         $restaurantMenuCategoryToUpdate->save();
+
+         return $this->showRestaurantAllMenuCategories($request->restaurant_id, $perPage);
+      }
+
+      public function deleteRestaurantMenuCategory($menuCategory, $perPage)
+      {
+         $restaurantMenuItemToDelete = RestaurantMenuCategory::find($menuCategory);
+          
+         if ($restaurantMenuItemToDelete ) {
+
+            $restaurantMenuItemToDelete->restaurantMenuItems()->delete();
+            $restaurantMenuItemToDelete->delete();
+         
+         }
+
+         return $this->showRestaurantAllMenuCategories($restaurantMenuItemToDelete->restaurant_id, $perPage);
+      }
+
+      public function restoreRestaurantMenuCategory($menuCategory, $perPage)
+      {
+         $restaurantMenuItemToRestore = RestaurantMenuCategory::onlyTrashed()->find($menuCategory);
+          
+         if ($restaurantMenuItemToRestore ) {
+
+            $restaurantMenuItemToRestore->restore();
+         
+         }
+
+         return $this->showRestaurantAllMenuCategories($restaurantMenuItemToRestore->restaurant_id, $perPage);
+      }
+
+      public function searchRestaurantAllMenuCategories($restaurant, $search, $perPage)
+      {
+         $query = RestaurantMenuCategory::withTrashed()
+                                          ->with(['menuCategory', 'restaurantMenuItems'])
+                                          ->where("serving_from", 'like', "%$search%")
+                                          ->orWhere("serving_to", 'like', "%$search%");
+         
+         $query->orWhereHas('menuCategory', function($q) use ($search){
+            $q->where('name', 'like', "%$search%");
+         });
+
+         $query->where('restaurant_id', $restaurant);
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
 }

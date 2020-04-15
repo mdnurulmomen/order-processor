@@ -20,7 +20,12 @@
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">{{ restaurantName }} Menu-Items</h2>
+							<h2 class="lead float-left mt-1">{{ restaurantAllMenuCategories.length ? restaurantAllMenuCategories[0].restaurant.name : restaurantName }} Menu-Items</h2>
+
+                        	<button type="button" @click="showRestaurantAllMenuCategories" class="btn btn-default btn-sm float-right mb-2 ml-1">
+					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                Added Menu-Categories
+					      	</button>
 
                         	<button type="button" @click="showRestaurantMenuItemCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -170,7 +175,7 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} {{ restaurantName }} Menu-Item</h4>
+						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} {{ restaurantAllMenuCategories.length ? restaurantAllMenuCategories[0].restaurant.name : restaurantName }} Menu-Item</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -815,6 +820,15 @@
 				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurant;
 
 				$('#modal-createOrEdit-restaurantMenuItem').modal('show');
+			},
+			showRestaurantAllMenuCategories(){
+				this.$router.push({
+			 		name: 'admin.restaurantMenuCategoryDetail.index', 
+			 		params: { 
+			 			restaurant : this.$route.params.restaurant, 
+			 			restaurantName : this.restaurantAllMenuCategories.length ? this.restaurantAllMenuCategories[0].restaurant.name : restaurantName 
+			 		}, 
+				});
 			},
     		storeRestaurantMenuItem(){
 

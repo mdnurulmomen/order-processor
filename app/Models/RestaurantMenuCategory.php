@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Restaurant;
 use App\Models\MenuCategory;
 use App\Models\RestaurantMenuItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RestaurantMenuCategory extends Model
-{
-   	use SoftDeletes;
-    
+{   
+    use SoftDeletes;
+
     public $timestamps = false;
     
     /**
@@ -22,7 +23,12 @@ class RestaurantMenuCategory extends Model
         'id'
     ];
 
-   	public function menuCategory()
+   	public function restaurant()
+    {
+      return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');
+    }
+
+    public function menuCategory()
    	{
    		return $this->belongsTo(MenuCategory::class, 'menu_category_id', 'id');
    	}
