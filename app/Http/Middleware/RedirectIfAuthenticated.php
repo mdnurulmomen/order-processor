@@ -22,7 +22,8 @@ class RedirectIfAuthenticated
 
             switch ($guard) {
                 case 'admin':
-                    return redirect()->route('admin.home');
+                    // return redirect()->route('admin.home');
+                    return redirect(RouteServiceProvider::HOME);
                     break;
 
                 case 'restaurant':
