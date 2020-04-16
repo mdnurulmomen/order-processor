@@ -418,6 +418,13 @@
 						if (response.status == 200) {
 							this.loading = false;
 							this.allRestaurants = response.data;
+
+							this.allRestaurants = this.allRestaurants.filter(
+								object => {
+							  		return object.admin_approval == true;
+								}
+							);
+
 							this.restaurantsFiltered = this.allRestaurants;
 						}
 					})

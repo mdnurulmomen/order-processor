@@ -286,7 +286,7 @@ class RestaurantController extends Controller
       {
          $columnsToSearch = ['user_name', 'mobile', 'email'];
 
-         $query = RestaurantAdmin::withTrashed();
+         $query = RestaurantAdmin::withTrashed()->with(['restaurants']);
 
          foreach($columnsToSearch as $column)
          {
@@ -664,10 +664,10 @@ class RestaurantController extends Controller
       public function showAllRestaurantMeals($perPage = false)
       {
          if ($perPage) {
-            return response(Restaurant::where('admin_approval', 1)->with('restaurantMealCategories')->paginate($perPage), 200);
+            return response(Restaurant::with('restaurantMealCategories')->paginate($perPage), 200);
          }
 
-         return response(Restaurant::where('admin_approval', 1)->with('restaurantMealCategories')->get(), 200);
+         return response(Restaurant::with('restaurantMealCategories')->get(), 200);
       }
 
       public function createRestaurantMeal(Request $request, $perPage = false)
@@ -678,7 +678,15 @@ class RestaurantController extends Controller
          ]);
 
          $restaurant = Restaurant::find($request->restaurant_id);
-         $restaurant->restaurantMealCategories()->sync($request->meal_id);
+
+         foreach ($request->meal_id as $restaurantNewMeal) {
+            
+            if (!$restaurant->restaurantMealCategories()->where('meal_id', $restaurantNewMeal)->count()) {
+               
+               $restaurant->restaurantMealCategories()->syncWithoutDetaching([$restaurantNewMeal]);
+            }
+
+         }
 
          return $this->showAllRestaurantMeals($perPage);
       }
@@ -716,8 +724,7 @@ class RestaurantController extends Controller
                             ->where('name', 'like', "%$search%")
                             ->orWhereHas('restaurantMealCategories', function($q)use ($search){
                               $q->where('name', 'like', "%$search%");
-                            })
-                            ->where('admin_approval', 1);
+                            });
 
          return response()->json([
             'all' => $query->paginate($perPage),  
@@ -729,10 +736,10 @@ class RestaurantController extends Controller
       public function showAllRestaurantCuisines($perPage = false)
       {
          if ($perPage) {
-            return response(Restaurant::where('admin_approval', 1)->with('restaurantCuisines')->paginate($perPage), 200);
+            return response(Restaurant::with('restaurantCuisines')->paginate($perPage), 200);
          }
 
-         return response(Restaurant::where('admin_approval', 1)->with('restaurantCuisines')->get(), 200);
+         return response(Restaurant::with('restaurantCuisines')->get(), 200);
       }
 
       public function createRestaurantCuisine(Request $request, $perPage = false)
@@ -743,7 +750,15 @@ class RestaurantController extends Controller
          ]);
 
          $restaurant = Restaurant::find($request->restaurant_id);
-         $restaurant->restaurantCuisines()->sync($request->cuisine_id);
+
+         foreach ($request->cuisine_id as $restaurantNewCuisine) {
+            
+            if (!$restaurant->restaurantCuisines()->where('cuisine_id', $restaurantNewCuisine)->count()) {
+               
+               $restaurant->restaurantCuisines()->syncWithoutDetaching([$restaurantNewCuisine]);
+            }
+
+         }
 
          return $this->showAllRestaurantCuisines($perPage);
       }
@@ -781,8 +796,7 @@ class RestaurantController extends Controller
                             ->orWhere('name', 'like', "%$search%")
                             ->orWhereHas('restaurantCuisines', function($q)use ($search){
                               $q->where('name', 'like', "%$search%");
-                            })
-                            ->where('admin_approval', 1);
+                            });
 
          return response()->json([
             'all' => $query->paginate($perPage),  
@@ -895,10 +909,10 @@ class RestaurantController extends Controller
       public function showAllRestaurantMenuCategories($perPage = false)
       {
          if ($perPage) {
-            return response(Restaurant::where('admin_approval', 1)->with('restaurantMenuCategories')->paginate($perPage), 200);
+            return response(Restaurant::with('restaurantMenuCategories')->paginate($perPage), 200);
          }
 
-         return response(Restaurant::where('admin_approval', 1)->with('restaurantMenuCategories')->get(), 200);
+         return response(Restaurant::with('restaurantMenuCategories')->get(), 200);
       }
 
       public function searchAllRestaurantMenuCategories($search, $perPage)
@@ -907,8 +921,7 @@ class RestaurantController extends Controller
                             ->where('name', 'like', "%$search%")
                             ->orWhereHas('restaurantMenuCategories', function($q)use ($search){
                               $q->where('name', 'like', "%$search%");
-                            })
-                            ->where('admin_approval', 1);
+                            });
 
          return response()->json([
             'all' => $query->paginate($perPage),  
@@ -925,7 +938,6 @@ class RestaurantController extends Controller
                'trashed' => RestaurantMenuCategory::onlyTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage),
 
             ], 200);
-
 
             return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage), 200);
          }
