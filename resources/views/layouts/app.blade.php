@@ -87,7 +87,7 @@
 
     <script type="text/javascript">
 
-        @if ($errors->any())
+        @if ($errors->has('usernameOrEmailOrMobile'))
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -95,6 +95,16 @@
                 width: '30%',
                 showConfirmButton: false,
             })
+
+        @elseif ($errors->any() && !$errors->has('usernameOrEmailOrMobile'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Wrong Input !',
+                width: '30%',
+                showConfirmButton: false,
+            })
+
         @endif
 
     </script>
