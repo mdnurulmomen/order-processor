@@ -24,7 +24,7 @@
 
                         	<button type="button" @click="showRestaurantMenuCategoryCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                Add More menu category
+                                Add More menu categories
 					      	</button>
 						</div>
 

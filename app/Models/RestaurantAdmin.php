@@ -25,6 +25,6 @@ class RestaurantAdmin extends Model
 
     public function restaurants()
     {
-        return $this->hasMany(Restaurant::class, 'restaurant_admins_id', 'id');
+        return $this->hasMany(Restaurant::class, 'restaurant_admins_id', 'id')->withTrashed();
     }
 }

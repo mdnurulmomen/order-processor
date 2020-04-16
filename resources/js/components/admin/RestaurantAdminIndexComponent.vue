@@ -76,6 +76,7 @@
 											<th scope="col">Username</th>
 											<th scope="col">Mobile</th>
 											<th scope="col">Email</th>
+											<th scope="col">Number Restaurants</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -85,9 +86,18 @@
 									    	:key="restaurantAdmin.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ restaurantAdmin.user_name}}</td>
-								    		<td>{{ restaurantAdmin.mobile}}</td>
-								    		<td>{{ restaurantAdmin.email}}</td>
+								    		<td>
+								    			{{ restaurantAdmin.user_name}}
+								    		</td>
+								    		<td>
+								    			{{ restaurantAdmin.mobile}}
+								    		</td>
+								    		<td>
+								    			{{ restaurantAdmin.email}}
+								    		</td>
+								    		<td>
+								    			{{ restaurantAdmin.restaurants.length}}
+								    		</td>
 								    		<td>
 										      	<button type="button" v-show="restaurantAdmin.deleted_at === null" @click="showRestaurantAdminEditModal(restaurantAdmin)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>

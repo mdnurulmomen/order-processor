@@ -153,7 +153,6 @@ class RestaurantController extends Controller
          $expectedRestaurant = Restaurant::find($restaurantToDelete);
          
          if ($expectedRestaurant) {
-            $expectedRestaurant->deal()->delete();
             $expectedRestaurant->kitchen()->delete();
             $expectedRestaurant->waiters()->delete();
             $expectedRestaurant->delete();
@@ -167,7 +166,6 @@ class RestaurantController extends Controller
          $expectedRestaurant = Restaurant::onlyTrashed()->find($restaurantToRestore);
          
          if ($expectedRestaurant) {
-            $expectedRestaurant->deal()->restore();
             $expectedRestaurant->kitchen()->restore();
             $expectedRestaurant->waiters()->restore();
             $expectedRestaurant->restore();
@@ -198,8 +196,8 @@ class RestaurantController extends Controller
       {
          if ($perPage) {
             return response()->json([
-               'current' => RestaurantAdmin::paginate($perPage),
-               'trashed' => RestaurantAdmin::onlyTrashed()->paginate($perPage),
+               'current' => RestaurantAdmin::with(['restaurants'])->paginate($perPage),
+               'trashed' => RestaurantAdmin::onlyTrashed()->with(['restaurants'])->paginate($perPage),
 
             ], 200);
          }
@@ -602,7 +600,7 @@ class RestaurantController extends Controller
             'restaurant_id'=>'required|numeric|exists:restaurants,id|unique:restaurant_deals,restaurant_id',
          ]);
 
-         $newRestaurantAdmin = RestaurantDeal::create([
+         $newRestaurantDeal = RestaurantDeal::create([
             'sale_percentage' => $request->sale_percentage,
             'restaurant_promotional_discount' => $request->restaurant_promotional_discount,
             'native_discount' => $request->native_discount,
