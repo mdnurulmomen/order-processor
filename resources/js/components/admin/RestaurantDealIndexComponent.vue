@@ -76,7 +76,15 @@
 									    	:key="restaurant.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ restaurant.name || 'Trashed' }}</td>
+								    		<td>
+								    			{{ restaurant.name || 'Trashed' }}
+								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge ml-1']"
+								    			>
+								    				{{ 
+								    					restaurant.admin_approval ? 'Approved' : 'Not-approved' 
+								    				}}
+								    			</span>
+								    		</td>
 								    		<td>
 								    			{{ restaurant.deal ? restaurant.deal.sale_percentage : 'No Deal' }}
 								    		</td>

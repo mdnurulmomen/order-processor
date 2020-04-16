@@ -41,7 +41,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -62,7 +61,15 @@
 									    	:key="restaurant.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ restaurant.name }}</td>
+								    		<td>
+								    			{{ restaurant.name }}
+								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge ml-1']"
+								    			>
+								    				{{ 
+								    					restaurant.admin_approval ? 'Approved' : 'Not-approved' 
+								    				}}
+								    			</span>
+								    		</td>
 								    		<td>
 							    				<p class="small text-danger" v-show="restaurant.restaurant_menu_categories.length === 0">
 							                		Menu-Category not available or trashed

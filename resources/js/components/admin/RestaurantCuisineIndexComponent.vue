@@ -61,7 +61,15 @@
 									    	:key="restaurant.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ restaurant.name }}</td>
+								    		<td>
+								    			{{ restaurant.name }}
+								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge ml-1']"
+								    			>
+								    				{{ 
+								    					restaurant.admin_approval ? 'Approved' : 'Not-approved' 
+								    				}}
+								    			</span>
+								    		</td>
 								    		<td>
 							    				<p class="small text-danger" v-show="restaurant.restaurant_cuisines.length === 0">
 							                		Cuisine not available or trashed
@@ -416,6 +424,13 @@
 						if (response.status == 200) {
 							this.loading = false;
 							this.allRestaurants = response.data;
+						/*
+							this.allRestaurants = this.allRestaurants.filter(
+								object => {
+							  		return object.admin_approval == true;
+								}
+							);
+						*/
 							this.restaurantsFiltered = this.allRestaurants;
 						}
 					})

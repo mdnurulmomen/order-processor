@@ -83,6 +83,7 @@
 											<!-- <th scope="col">Email</th> -->
 											<th scope="col">Phone</th>
 											<th scope="col">Website</th>
+											<th scope="col">Status</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -96,6 +97,11 @@
 								    		<!-- <td>{{ restaurant.email }}</td> -->
 								    		<td>{{ restaurant.mobile }}</td>
 								    		<td>{{ restaurant.website }}</td>
+								    		<td>
+								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']">
+								    				{{ restaurant.admin_approval ? 'Approved' : 'Not-approved' }}
+								    			</span>		
+								    		</td>
 								    		<td>
 								      			<button type="button" @click="showRestaurantDetailModal(restaurant)" class="btn btn-info btn-sm">
 								        			<i class="fas fa-eye"></i>

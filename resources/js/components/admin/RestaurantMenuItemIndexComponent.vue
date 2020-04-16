@@ -23,8 +23,8 @@
 							<h2 class="lead float-left mt-1">{{ restaurantAllMenuCategories.length ? restaurantAllMenuCategories[0].restaurant.name : restaurantName }} Menu-Items</h2>
 
                         	<button type="button" @click="showRestaurantAllMenuCategories" class="btn btn-default btn-sm float-right mb-2 ml-1">
-					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                Added Menu-Categories
+					        	<i class="fa fa-eye" aria-hidden="true"></i>
+                                View Added Menu-Categories
 					      	</button>
 
                         	<button type="button" @click="showRestaurantMenuItemCreateModal" class="btn btn-secondary btn-sm float-right mb-2">

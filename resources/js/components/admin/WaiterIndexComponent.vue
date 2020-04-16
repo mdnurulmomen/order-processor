@@ -77,7 +77,7 @@
 											<th scope="col">Owner Restaurant Name</th>
 											<th scope="col">Mobile</th>
 											<th scope="col">Email</th>
-											<th scope="col">Approved</th>
+											<th scope="col">Waiter Approved</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -88,10 +88,28 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ waiter.user_name}}</td>
-								    		<td>{{ waiter.restaurant ? waiter.restaurant.name : 'Trashed' }}</td>
+								    		<td>
+								    			{{ 
+								    				waiter.restaurant ? waiter.restaurant.name : 'Trashed' 
+								    			}}
+								    			<span v-show="waiter.restaurant" 
+								    				  :class="[waiter.restaurant ? waiter.restaurant.admin_approval ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"
+								    			>
+								    				{{ 
+								    					waiter.restaurant ? waiter.restaurant.admin_approval ? 'Approved' : 'Not-approved' : '' 
+								    				}}
+								    			</span>
+								    		</td>
 								    		<td>{{ waiter.mobile}}</td>
 								    		<td>{{ waiter.email}}</td>
-								    		<td>{{ waiter.admin_approval ? 'Approved' : 'Not-approved' }}</td>
+								    		<td>
+								    			<span :class="[waiter.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
+								    			>
+								    				{{ 
+								    					waiter.admin_approval ? 'Approved' : 'Not-approved' 
+								    				}}
+								    			</span>
+								    		</td>
 								    		<td>
 										      	<button type="button" v-show="waiter.deleted_at === null" @click="showWaiterEditModal(waiter)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>

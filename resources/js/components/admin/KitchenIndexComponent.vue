@@ -17,18 +17,6 @@
 		
 			<div class="row" v-show="!loading">
 				<div class="col-sm-12">
-	              	
-					<!--
-					// For those who has only to view
-					<vue-bootstrap4-table 
-						:rows="restaurantKitchens" 
-						:columns="columns" 
-						:config="config"
-						:actions="actions"
-					>
-
-					</vue-bootstrap4-table> 
-					-->
 
 					<div class="card">
 						<div class="card-header">
@@ -63,7 +51,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -77,7 +64,7 @@
 											<th scope="col">Owner Restaurant Name</th>
 											<th scope="col">Mobile</th>
 											<th scope="col">Email</th>
-											<th scope="col">Approval</th>
+											<th scope="col">Kitchen Approval</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -88,10 +75,28 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ kitchen.user_name}}</td>
-								    		<td>{{ kitchen.restaurant ? kitchen.restaurant.name : 'Trashed' }}</td>
+								    		<td>
+								    			{{ 
+								    				kitchen.restaurant ? kitchen.restaurant.name : 'Trashed' 
+								    			}}
+								    			<span v-show="kitchen.restaurant" 
+								    				  :class="[kitchen.restaurant ? kitchen.restaurant.admin_approval ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"
+								    			>
+								    				{{ 
+								    					kitchen.restaurant ? kitchen.restaurant.admin_approval ? 'Approved' : 'Not-approved' : '' 
+								    				}}
+								    			</span>
+								    		</td>
 								    		<td>{{ kitchen.mobile}}</td>
 								    		<td>{{ kitchen.email}}</td>
-								    		<td>{{ kitchen.admin_approval ? 'Approved' : 'Not-Approved'}}</td>
+								    		<td>
+								    			<span :class="[kitchen.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
+								    			>
+								    				{{ 
+								    					kitchen.admin_approval ? 'Approved' : 'Not-approved' 
+								    				}}
+								    			</span>
+								    		</td>
 								    		<td>
 										      	<button type="button" v-show="kitchen.deleted_at === null" @click="showKitchenEditModal(kitchen)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
