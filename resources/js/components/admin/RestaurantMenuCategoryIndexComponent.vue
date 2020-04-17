@@ -86,9 +86,15 @@
 								    		</td>
 								    		<td>
 								    			<button type="button" @click="showRestaurantMenuCategoryDetails(restaurant)" class="btn btn-primary btn-sm">
-										        	<i class="fas fa-edit"></i>
-										        	View Details
+										        	<i class="fas fa-eye"></i>
+										        	View Category Details
 										      	</button>
+
+										      	<button type="button" @click="showRestaurantMenuList(restaurant)" class="btn btn-warning btn-sm">
+										        	<i class="fas fa-eye"></i>
+										        	View Menu-Items
+										      	</button>
+
 										      	<!-- 
 										      	<button type="button" @click="showRestaurantMenuCategoryEditModal(restaurant)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
@@ -642,6 +648,12 @@
 						break;
 				}
 	 
+			},
+			showRestaurantMenuList(restaurant) {
+				this.$router.push({
+			 		name: 'admin.restaurantMenuItem.index', 
+			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
+				});
 			},
 
 		}
