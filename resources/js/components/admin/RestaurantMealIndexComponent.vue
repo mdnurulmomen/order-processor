@@ -15,7 +15,10 @@
 				</div>
 			</div>
 		
-			<div class="row" v-show="!loading">
+			<div 
+				class="row" 
+				v-show="!loading"
+			>
 				<div class="col-sm-12">
 
 					<div class="card">
@@ -40,7 +43,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -101,7 +103,9 @@
 									  	</tr>
 									  	<tr v-show="!allRestaurantMeals.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No Meal or Restaurant found.</div>
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No Meal or Restaurant found.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -109,7 +113,11 @@
 							</div>	
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
-									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+									<select 
+										class="form-control" 
+										v-model="perPage" 
+										@change="changeNumberContents()"
+									>
 										<option>10</option>
 										<option>20</option>
 										<option>30</option>
@@ -147,7 +155,9 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Restaurant-Meal</h4>
+						  	<h4 class="modal-title">
+						  		{{ editMode ? 'Edit' : 'Create' }} Restaurant-Meal
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -197,7 +207,9 @@
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantMeal.restaurant }}
+												        	{{ 
+												        		errors.restaurantMeal.restaurant 
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -222,7 +234,6 @@
 					                                  		:options="allMeals" 
 					                                  		:required="true" 
 					                                  		:multiple="true" 
-					                                  		:max="6" 
 					                                  		:class="!errors.restaurantMeal.meal ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
@@ -284,18 +295,28 @@
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="destroyRestaurantMeal" autocomplete="off">
+					  	<form 
+						  	class="form-horizontal" 
+						  	v-on:submit.prevent="destroyRestaurantMeal" 
+						  	autocomplete="off"
+					  	>
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to delete restaurant meal ?? </h5>
-					      		<h5 class="text-secondary"><small>But once you want, you can retreive it from bin.</small></h5>
+					      		<h5>Are you sure want to delete restaurant meal ??</h5>
+					      		<h5 class="text-secondary">
+					      			<small>
+					      				But once you want, you can retreive it from bin.
+					      			</small>
+					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 

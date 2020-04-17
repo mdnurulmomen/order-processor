@@ -17,24 +17,15 @@
 		
 			<div class="row" v-show="!loading">
 				<div class="col-sm-12">
-	              	
-					<!--
-					// For those who has only to view
-					<vue-bootstrap4-table 
-						:rows="restaurantWaiters" 
-						:columns="columns" 
-						:config="config"
-						:actions="actions"
-					>
-
-					</vue-bootstrap4-table> 
-					-->
 
 					<div class="card">
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">Waiter List</h2>
 
-                        	<button type="button" @click="showWaiterCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button type="button" 
+                    				@click="showWaiterCreateModal" 
+                    				class="btn btn-secondary btn-sm float-right mb-2"
+                    		>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Waiter
 					      	</button>
@@ -44,12 +35,24 @@
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-sm-6">
-									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
+									  	<ul class="nav nav-tabs mb-2" 
+									  		v-show="query === ''"
+									  	>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentWaiters">Current</a>
+												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showCurrentWaiters"
+												>
+													Current
+												</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedWaiters">Trashed</a>
+												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showTrashedWaiters"
+												>
+													Trashed
+												</a>
 											</li>
 										</ul>
 									</div>
@@ -63,7 +66,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -100,8 +102,8 @@
 								    				}}
 								    			</span>
 								    		</td>
-								    		<td>{{ waiter.mobile}}</td>
-								    		<td>{{ waiter.email}}</td>
+								    		<td>{{ waiter.mobile }}</td>
+								    		<td>{{ waiter.email }}</td>
 								    		<td>
 								    			<span :class="[waiter.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>
@@ -136,13 +138,15 @@
 								      			<p 	class="text-danger" 
 								      				v-show="waiter.restaurant === null"
 								      			>
-								      				Restore Restaurant
+								      				Trashed Restaurant
 								      			</p>
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!waitersToShow.length">
 								    		<td colspan="7">
-									      		<div class="alert alert-danger" role="alert">Sorry, No waiter found.</div>
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No waiter found.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -150,7 +154,10 @@
 							</div>	
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
-									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+									<select class="form-control" 
+											v-model="perPage" 
+											@change="changeNumberContents()"
+									>
 										<option>1</option>
 										<option>2</option>
 										<option>3</option>
@@ -187,7 +194,9 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Waiter</h4>
+						  	<h4 class="modal-title">
+						  		{{ editMode ? 'Edit' : 'Create' }} Waiter
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -448,10 +457,16 @@
 					      			:value="csrf"
 					      		>
 					      		<h5>Are you sure want to delete this waiter ?? </h5>
-					      		<h5 class="text-secondary"><small>But once you want, you can retreive it from bin.</small></h5>
+					      		<h5 class="text-secondary">
+					      			<small>
+					      				But once you want, you can retreive it from bin.
+					      			</small>
+					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 

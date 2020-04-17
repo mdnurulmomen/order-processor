@@ -5,7 +5,10 @@
 
 		<section>
 
-			<div class="row justify-content-center vh-100" v-show="loading">
+			<div 
+				class="row justify-content-center vh-100" 
+				v-show="loading"
+			>
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
 					  	<div class="overlay dark">
@@ -15,14 +18,23 @@
 				</div>
 			</div>
 		
-			<div class="row" v-show="!loading">
+			<div 
+				class="row" 
+				v-show="!loading"
+			>
 				<div class="col-sm-12">
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">All Restaurant Menu Categories</h2>
+							<h2 class="lead float-left mt-1">
+								All Restaurant Menu Categories
+							</h2>
 							 
-                        	<button type="button" @click="showRestaurantMenuCategoryCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button 
+                        		type="button" 
+                        		@click="showRestaurantMenuCategoryCreateModal"
+                        	 	class="btn btn-secondary btn-sm float-right mb-2"
+                        	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Restaurant-menu-categories
 					      	</button>
@@ -60,7 +72,9 @@
 									    	v-for="(restaurant, index) in allRestaurantMenuCategories"
 									    	:key="restaurant.id"
 									  	>
-									    	<td scope="row">{{ index + 1 }}</td>
+									    	<td scope="row">
+									    		{{ index + 1 }}
+									    	</td>
 								    		<td>
 								    			{{ restaurant.name }}
 								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge ml-1']"
@@ -71,13 +85,19 @@
 								    			</span>
 								    		</td>
 								    		<td>
-							    				<p class="small text-danger" v-show="restaurant.restaurant_menu_categories.length === 0">
+							    				<p 
+								    				class="small text-danger" 
+								    				v-show="restaurant.restaurant_menu_categories.length === 0"
+							    				>
 							                		Menu-Category not available or trashed
 							                	</p>
 
-								    			<ul v-show="restaurant.restaurant_menu_categories.length">
+								    			<ul 
+								    				v-show="restaurant.restaurant_menu_categories.length"
+								    			>
 													<li v-for="menuCategory in restaurant.restaurant_menu_categories" 
-														:key="menuCategory.id">
+														:key="menuCategory.id"
+													>
 													
 														{{ menuCategory.name }}
 													
@@ -85,12 +105,20 @@
 												</ul>
 								    		</td>
 								    		<td>
-								    			<button type="button" @click="showRestaurantMenuCategoryDetails(restaurant)" class="btn btn-primary btn-sm">
+								    			<button 
+									    			type="button" 
+									    			@click="showRestaurantMenuCategoryDetails(restaurant)" 
+									    			class="btn btn-primary btn-sm"
+								    			>
 										        	<i class="fas fa-eye"></i>
 										        	View Category Details
 										      	</button>
 
-										      	<button type="button" @click="showRestaurantMenuList(restaurant)" class="btn btn-warning btn-sm">
+										      	<button 
+											      	type="button" 
+											      	@click="showRestaurantMenuList(restaurant)" 
+											      	class="btn btn-warning btn-sm"
+										      	>
 										        	<i class="fas fa-eye"></i>
 										        	View Menu-Items
 										      	</button>
@@ -103,7 +131,8 @@
  												-->
 								    		</td>
 									  	</tr>
-									  	<tr v-show="!allRestaurantMenuCategories.length">
+									  	<tr v-show="!allRestaurantMenuCategories.length"
+									  	>
 								    		<td colspan="6">
 									      		<div class="alert alert-danger" role="alert">Sorry, No Category or Restaurant found.</div>
 									    	</td>
@@ -113,7 +142,11 @@
 							</div>	
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
-									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+									<select 
+										class="form-control" 
+										v-model="perPage" 
+										@change="changeNumberContents()"
+									>
 										<option>10</option>
 										<option>20</option>
 										<option>30</option>
@@ -152,7 +185,12 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Restaurant Menu-Category</h4>
+						  	<h4 class="modal-title">
+						  		{{ 
+						  			editMode ? 'Edit' : 'Create' 
+						  		}} 
+						  		Restaurant Menu-Category
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -181,7 +219,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Restaurant Name : 
+								              			Restaurant Name
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -214,7 +252,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Menu-Category Name : 
+								              			Menu-Category Name 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -227,7 +265,6 @@
 					                                  		:options="allMenuCategories" 
 					                                  		:required="true" 
 					                                  		:multiple="true" 
-					                                  		:max="6" 
 					                                  		:class="!errors.restaurantMenuCategory.menuCategory ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
@@ -237,7 +274,9 @@
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantMenuCategory.menuCategory }}
+												        	{{
+												        		errors.restaurantMenuCategory.menuCategory
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -245,7 +284,9 @@
 
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Serving From</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
+								              			Serving From
+								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_from"
@@ -261,7 +302,9 @@
 
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Serving To</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
+								              			Serving To
+								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_to"
@@ -282,7 +325,10 @@
 							</div>
 							<div class="modal-footer justify-content-between">
 								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+									<span 
+										class="text-danger p-0 m-0 small" 
+										v-show="!submitForm"
+									>
 								  		Please input all required fields
 								  	</span>
 								</div>

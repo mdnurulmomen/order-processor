@@ -28,14 +28,16 @@
 							</h2>
 
                         	<button type="button" 
-                        			@click="showRestaurantAllMenuCategories" class="btn btn-default btn-sm float-right mb-2 ml-1">
+                        			@click="showRestaurantAllMenuCategories" class="btn btn-default btn-sm float-right mb-2 ml-1"
+                        	>
 					        	<i class="fa fa-eye" aria-hidden="true"></i>
                                 Added Menu-Categories
 					      	</button>
 
                         	<button type="button" 
                         			@click="showRestaurantMenuItemCreateModal"
-                        			class="btn btn-secondary btn-sm float-right mb-2">
+                        			class="btn btn-secondary btn-sm float-right mb-2"
+                        	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Menu-Item
 					      	</button>
@@ -78,7 +80,7 @@
 									  	>  		
 								  			<td colspan="8">
 									    		<p class="font-weight-bold font-italic">
-									    			{{ menuCategory.menu_category ? menuCategory.menu_category.name : 'Menu Category Trashed' }}
+									    			{{ menuCategory.menu_category ? menuCategory.menu_category.name : 'Trashed Menu Category' }}
 									    		</p>
 										    	<table class="table">
 										    		<tbody>
@@ -125,9 +127,12 @@
 												    		</td>
 												    	</tr>
 
-												    	<tr v-show="!menuCategory.restaurant_menu_items.length">
+												    	<tr v-show="!menuCategory.restaurant_menu_items.length"
+												    	>
 												    		<td colspan="8">
-													      		<div class="alert alert-danger" role="alert">No Menu-Items Found</div>
+													      		<div class="alert alert-danger" role="alert">
+													      			No Menu-Items Found
+													      		</div>
 													    	</td>
 													  	</tr>
 										    		</tbody>
@@ -136,7 +141,9 @@
 									  	</tr>
 									  	<tr v-show="!restaurantAllMenuCategories.length">
 								    		<td colspan="8">
-									      		<div class="alert alert-danger" role="alert">Sorry, No Menu Category Found or Trashed.</div>
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No Menu Category Found or Trashed.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -144,7 +151,10 @@
 							</div>	
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
-									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+									<select class="form-control" 
+											v-model="perPage" 
+											@change="changeNumberContents()"
+									>
 										<option>10</option>
 										<option>20</option>
 										<option>30</option>
@@ -258,7 +268,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Item Name : 
+								              			Item Name 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -286,7 +296,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Item Detail : 
+								              			Item Detail 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -307,7 +317,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Price : 
+								              			Price
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -336,7 +346,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Variations : 
+								              			Variations
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -362,7 +372,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Addons : 
+								              			Addons
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -388,7 +398,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Customizable : 
+								              			Customizable 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -415,7 +425,9 @@
 							</div>
 							<div class="modal-footer justify-content-between">
 								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+									<span class="text-danger p-0 m-0 small" 
+										  v-show="!submitForm"
+									>
 								  		Please input all required fields
 								  	</span>
 								</div>
@@ -473,7 +485,9 @@
 								            <div class="card-body">
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Menu Category Names</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
+								              			Menu Category Names
+								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="singleRestaurantMenuItemData.restaurantNewMenuCategoryObjects"
@@ -492,7 +506,9 @@
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantNewMenuCategory.menuCategory }}
+												        	{{ 
+												        		errors.restaurantNewMenuCategory.menuCategory 
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -500,7 +516,9 @@
 
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Restaurant Name</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
+								              			Restaurant Name
+								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="singleRestaurantMenuItemData.restaurantObjectToAddMenuCategory"
@@ -520,7 +538,9 @@
 
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Serving From</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
+								              			Serving From
+								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="singleRestaurantMenuItemData.restaurantNewMenuCategory.serving_from"
@@ -537,7 +557,9 @@
 
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Serving to</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
+								              			Serving to
+								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="singleRestaurantMenuItemData.restaurantNewMenuCategory.serving_to"
@@ -559,7 +581,9 @@
 							</div>
 							<div class="modal-footer justify-content-between">
 								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+									<span class="text-danger p-0 m-0 small" 
+										  v-show="!submitForm"
+									>
 								  		Please input all required fields
 								  	</span>
 								</div>
@@ -598,18 +622,27 @@
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="destroyRestaurantMenuItem" autocomplete="off">
+					  	<form class="form-horizontal" 
+				  			  v-on:submit.prevent="destroyRestaurantMenuItem" 
+				  			  autocomplete="off"
+				  		>
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to delete menu-item ?? </h5>
-					      		<h5 class="text-secondary"><small>Once you delete, you can't retreive it again.</small></h5>
+					      		<h5>Are you sure want to delete menu-item ??</h5>
+					      		<h5 class="text-secondary">
+					      			<small>
+						      			Once you delete, you can't retreive it again.
+						      		</small>
+					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 

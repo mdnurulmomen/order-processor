@@ -5,7 +5,10 @@
 
 		<section>
 
-			<div class="row justify-content-center vh-100" v-show="loading">
+			<div 
+				class="row justify-content-center vh-100" 
+				v-show="loading"
+			>
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
 					  	<div class="overlay dark">
@@ -15,19 +18,35 @@
 				</div>
 			</div>
 		
-			<div class="row" v-show="!loading">
+			<div 
+				class="row" 
+				v-show="!loading"
+			>
 				<div class="col-sm-12">
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">{{ this.restaurantMenuCategoriesToShow.length ? this.restaurantMenuCategoriesToShow[0].restaurant.name : restaurantName }} Menu Categories</h2>
+							<h2 class="lead float-left mt-1">
+								{{ 
+									this.restaurantMenuCategoriesToShow.length ? this.restaurantMenuCategoriesToShow[0].restaurant.name : restaurantName 
+								}} 
+								Menu Categories
+							</h2>
 
-                        	<button type="button" @click="showRestaurantMenuList" class="btn btn-default btn-sm float-right ml-1">
+                        	<button 
+	                        	type="button" 
+	                        	@click="showRestaurantMenuList" 
+	                        	class="btn btn-default btn-sm float-right ml-1"
+                        	>
 			        			<i class="fas fa-eye"></i>
 			        			View Menu-Items
 			      			</button>
 
-                        	<button type="button" @click="showRestaurantMenuCategoryCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button 
+	                        	type="button" 
+	                        	@click="showRestaurantMenuCategoryCreateModal" 
+	                        	class="btn btn-secondary btn-sm float-right mb-2"
+                        	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add More menu categories
 					      	</button>
@@ -37,12 +56,26 @@
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-sm-6">
-									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
+									  	<ul class="nav nav-tabs mb-2" 
+									  		v-show="query === ''"
+									  	>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showRestaurantCurrentMenuCategories">Current</a>
+												<a 
+													:class="[{ 'active': currentTab=='current' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showRestaurantCurrentMenuCategories"
+												>
+													Current
+												</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showRestaurantTrashedMenuCategories">Trashed</a>
+												<a 
+													:class="[{ 'active': currentTab=='trashed' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showRestaurantTrashedMenuCategories"
+												>
+													Trashed
+												</a>
 											</li>
 										</ul>
 									</div>
@@ -56,7 +89,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -80,7 +112,9 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>
-								    			{{ restaurantMenuCategory.menu_category ? restaurantMenuCategory.menu_category.name : 'Trashed Menu-Category' }}
+								    			{{ 
+								    				restaurantMenuCategory.menu_category ? restaurantMenuCategory.menu_category.name : 'Trashed Menu-Category' 
+								    			}}
 								    		</td>
 								    		<td>
 								    			{{ restaurantMenuCategory.serving_from }}
@@ -89,7 +123,9 @@
 								    			{{ restaurantMenuCategory.serving_to }}
 								    		</td>
 								    		<td>
-								    			{{ restaurantMenuCategory.restaurant_menu_items.length }}
+								    			{{ 
+								    				restaurantMenuCategory.restaurant_menu_items.length 
+								    			}}
 								    		</td>
 								    		<td>
 										      	 
@@ -122,7 +158,9 @@
 									  	</tr>
 									  	<tr v-show="!restaurantMenuCategoriesToShow.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No Menu Category found.</div>
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No Menu Category found.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -168,7 +206,9 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} {{ restaurantName }} Menu-Category</h4>
+						  	<h4 class="modal-title">
+						  		{{ editMode ? 'Edit' : 'Create' }} {{ restaurantName }} Menu-Category
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -197,7 +237,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Restaurant Name : 
+								              			Restaurant Name
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -218,7 +258,9 @@
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantMenuCategory.restaurant }}
+												        	{{ 
+												        		errors.restaurantMenuCategory.restaurant 
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -230,7 +272,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Menu-Category Name : 
+								              			Menu-Category Name
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -252,7 +294,9 @@
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantMenuCategory.menuCategory }}
+												        	{{
+												        		errors.restaurantMenuCategory.menuCategory 
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -260,7 +304,9 @@
 
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Serving From</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
+								              			Serving From
+								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_from"
@@ -277,7 +323,9 @@
 
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Serving To</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
+								              			Serving To
+								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_to"
@@ -338,15 +386,22 @@
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="destroyRestaurantMenuCategory" autocomplete="off">
+					  	<form class="form-horizontal" 
+						  	v-on:submit.prevent="destroyRestaurantMenuCategory" 
+						  	autocomplete="off"
+					  	>
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to delete menu-category ?? </h5>
-					      		<h5 class="text-secondary"><small>But once you want, you can retreive it from bin.</small></h5>
+					      		<h5>Are you sure want to delete menu-category ??</h5>
+					      		<h5 class="text-secondary">
+					      			<small>
+					      				But once you want, you can retreive it from bin.
+					      			</small>
+					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
 							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
@@ -371,20 +426,25 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-danger">
 						<div class="modal-header">
-						  	<h4 class="modal-title">Restaurant-Menu-Category Restoration</h4>
+						  	<h4 class="modal-title">
+						  		Restaurant-Menu-Category Restoration
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="restoreRestaurantMenuCategory" autocomplete="off">
+					  	<form class="form-horizontal" 
+						  	v-on:submit.prevent="restoreRestaurantMenuCategory" 
+						  	autocomplete="off"
+						>
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to restore meal ?? </h5>
+					      		<h5>Are you sure want to restore meal ??</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
 							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>

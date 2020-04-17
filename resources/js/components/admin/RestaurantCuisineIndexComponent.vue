@@ -22,7 +22,11 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">Restaurant Cuisine List</h2>
 
-                        	<button type="button" @click="showRestaurantCuisineCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button 
+	                        	type="button" 
+	                        	@click="showRestaurantCuisineCreateModal" 
+	                        	class="btn btn-secondary btn-sm float-right mb-2"
+                        	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Restaurant-Cuisine
 					      	</button>
@@ -40,7 +44,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -76,7 +79,9 @@
 							                	</p>
 
 								    			<ul>
-													<li v-for="cuisine in restaurant.restaurant_cuisines" :key="cuisine.id">
+													<li v-for="cuisine in restaurant.restaurant_cuisines" 
+														:key="cuisine.id"
+													>
 													
 														{{ cuisine.name }}
 													
@@ -84,7 +89,11 @@
 												</ul>
 								    		</td>
 								    		<td>
-										      	<button type="button" @click="showRestaurantCuisineEditModal(restaurant)" class="btn btn-primary btn-sm">
+										      	<button 
+										      		type="button" 
+										      		@click="showRestaurantCuisineEditModal(restaurant)" 
+										      		class="btn btn-primary btn-sm"
+										      	>
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
@@ -100,7 +109,7 @@
 									  	</tr>
 									  	<tr v-show="!allRestaurantCuisines.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No cuisine found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No cuisine or restaurant found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -146,7 +155,9 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Restaurant-Cuisine</h4>
+						  	<h4 class="modal-title">
+						  		{{ editMode ? 'Edit' : 'Create' }} Restaurant-Cuisine
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -196,7 +207,9 @@
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantCuisine.restaurant }}
+												        	{{ 
+												        		errors.restaurantCuisine.restaurant 
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -230,7 +243,9 @@
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantCuisine.cuisine }}
+												        	{{ 
+												        		errors.restaurantCuisine.cuisine 
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -243,7 +258,10 @@
 							</div>
 							<div class="modal-footer justify-content-between">
 								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+									<span 
+										class="text-danger p-0 m-0 small" 
+										v-show="!submitForm"
+									>
 								  		Please input all required fields
 								  	</span>
 								</div>
@@ -282,15 +300,23 @@
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="destroyRestaurantCuisine" autocomplete="off">
+					  	<form 
+						  	class="form-horizontal" 
+						  	v-on:submit.prevent="destroyRestaurantCuisine" 
+						  	autocomplete="off"
+					  	>
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to delete restaurant cuisine ?? </h5>
-					      		<h5 class="text-secondary"><small>But once you want, you can retreive it from bin.</small></h5>
+					      		<h5>Are you sure want to delete restaurant cuisine ??</h5>
+					      		<h5 class="text-secondary">
+					      			<small>
+					      				But once you want, you can retreive it from bin.
+					      			</small>
+					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
 							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>

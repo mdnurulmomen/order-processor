@@ -22,7 +22,11 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">Restaurant Deals</h2>
 
-                        	<button type="button" @click="showDealCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button 
+                        		type="button" 
+	                        	@click="showDealCreateModal" 
+	                        	class="btn btn-secondary btn-sm float-right mb-2"
+                        	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Deal
 					      	</button>
@@ -32,12 +36,26 @@
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-sm-6">
-									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
+									  	<ul class="nav nav-tabs mb-2" 
+									  		v-show="query === ''"
+									  	>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentDeals">Current</a>
+												<a 
+													:class="[{ 'active': currentTab=='current' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showCurrentDeals"
+												>
+													Current
+												</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedDeals">Trashed</a>
+												<a 
+													:class="[{ 'active': currentTab=='trashed' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showTrashedDeals"
+												>
+													Trashed
+												</a>
 											</li>
 										</ul>
 									</div>
@@ -51,7 +69,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -116,7 +133,9 @@
 									  	</tr>
 									  	<tr v-show="!restaurantDealsToShow.length">
 								    		<td colspan="8">
-									      		<div class="alert alert-danger" role="alert">Sorry, No deal found.</div>
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No deal found.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -124,7 +143,11 @@
 							</div>	
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
-									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+									<select 
+										class="form-control" 
+										v-model="perPage" 
+										@change="changeNumberContents()"
+									>
 										<option>10</option>
 										<option>20</option>
 										<option>30</option>
@@ -190,7 +213,7 @@
 
 								            	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
-								              			Restaurant Name :
+								              			Restaurant Name
 								              		</label>
 									                <div class="col-sm-7">
 									                  	<multiselect 
@@ -208,14 +231,16 @@
 				                                  		>
 					                                	</multiselect>
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantDeal.restaurant }}
+												        	{{ 
+												        		errors.restaurantDeal.restaurant 
+												        	}}
 												  		</div>
 									                </div>	
 								              	</div>
 
 								              	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
-								              			Net Discount :
+								              			Net Discount
 								              		</label>
 									                <div class="col-sm-7">
 									                  	<multiselect 
@@ -233,14 +258,16 @@
 				                                  		>
 					                                	</multiselect>
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantDeal.discount }}
+												        	{{
+												        		errors.restaurantDeal.discount 
+												        	}}
 												  		</div>
 									                </div>	
 								              	</div>
 
 								              	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
-								              			Restaurant Promotional :
+								              			Restaurant Promotional
 								              		</label>
 									                <div class="col-sm-7">
 									                  	<div class="input-group mb-3">
@@ -261,7 +288,9 @@
 																</span>
 															</div>
 										                	<div class="invalid-feedback">
-													        	{{ errors.restaurantDeal.restaurant_promotional_discount }}
+													        	{{ 
+													        		errors.restaurantDeal.restaurant_promotional_discount 
+													        	}}
 													  		</div>
 														</div>
 									                </div>
@@ -269,7 +298,7 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
-								              			Qupaid Native :
+								              			Qupaid Native
 								              		</label>
 									                <div class="col-sm-7">
 									                  	<div class="input-group mb-3">
@@ -290,7 +319,9 @@
 																</span>
 															</div>
 										                	<div class="invalid-feedback">
-													        	{{ errors.restaurantDeal.native_discount }}
+													        	{{ 
+													        		errors.restaurantDeal.native_discount 
+													        	}}
 													  		</div>
 														</div>
 									                </div>	
@@ -298,7 +329,7 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
-								              			Sale Percentage :
+								              			Sale Percentage
 								              		</label>
 									                <div class="col-sm-7">
 									                  	<div class="input-group mb-3">
@@ -319,7 +350,9 @@
 																</span>
 															</div>
 										                	<div class="invalid-feedback">
-													        	{{ errors.restaurantDeal.sale_percentage }}
+													        	{{ 
+													        		errors.restaurantDeal.sale_percentage 
+													        	}}
 													  		</div>
 														</div>
 									                </div> 	
@@ -327,7 +360,7 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
-								              			Delivery Fee :
+								              			Delivery Fee
 								              		</label>
 									                <div class="col-sm-7">
 									                  	<toggle-button 

@@ -22,7 +22,11 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">Kitchen List</h2>
 
-                        	<button type="button" @click="showKitchenCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button 
+	                        	type="button" 
+	                        	@click="showKitchenCreateModal" 
+	                        	class="btn btn-secondary btn-sm float-right mb-2"
+                        	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Kitchen
 					      	</button>
@@ -34,10 +38,22 @@
 									<div class="col-sm-6">
 									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentKitchens">Current</a>
+												<a 
+													:class="[{ 'active': currentTab=='current' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showCurrentKitchens"
+												>
+													Current
+												</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedKitchens">Trashed</a>
+												<a 
+													:class="[{ 'active': currentTab=='trashed' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showTrashedKitchens"
+												>
+													Trashed
+												</a>
 											</li>
 										</ul>
 									</div>
@@ -137,7 +153,11 @@
 							</div>	
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
-									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+									<select 
+										class="form-control" 
+										v-model="perPage" 
+										@change="changeNumberContents()"
+									>
 										<option>10</option>
 										<option>20</option>
 										<option>30</option>
@@ -174,7 +194,9 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Kitchen</h4>
+						  	<h4 class="modal-title">
+						  		{{ editMode ? 'Edit' : 'Create' }} Kitchen
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -217,7 +239,9 @@
 				                                  		>
 					                                	</multiselect>
 									                	<div class="invalid-feedback">
-												        	{{ errors.kitchen.restaurant }}
+												        	{{ 
+												        		errors.kitchen.restaurant 
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -238,7 +262,9 @@
 															@keyup="validateFormInput('kitchen.user_name')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.kitchen.user_name }}
+												        	{{ 
+												        		errors.kitchen.user_name 
+												        	}}
 												  		</div>
 									                </div>	
 								              	</div>
@@ -318,7 +344,9 @@
 															@keyup="validateFormInput('kitchen.password_confirmation')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.kitchen.password_confirmation }}
+												        	{{ 
+												        		errors.kitchen.password_confirmation 
+												        	}}
 												  		</div>
 									                </div>	
 								              	</div>
@@ -387,7 +415,11 @@
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="destroyKitchen" autocomplete="off">
+					  	<form 
+						  	class="form-horizontal" 
+						  	v-on:submit.prevent="destroyKitchen" 
+						  	autocomplete="off"
+					  	>
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
@@ -395,10 +427,16 @@
 					      			:value="csrf"
 					      		>
 					      		<h5>Are you sure want to delete this kitchen ?? </h5>
-					      		<h5 class="text-secondary"><small>But once you want, you can retreive it from bin.</small></h5>
+					      		<h5 class="text-secondary">
+					      			<small>
+					      				But once you want, you can retreive it from bin.
+					      			</small>
+					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 
@@ -426,17 +464,23 @@
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="restoreKitchen()" autocomplete="off">
+					  	<form 
+						  	class="form-horizontal" 
+						  	v-on:submit.prevent="restoreKitchen()" 
+						  	autocomplete="off"
+					  	>
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to restore kitchen ?? </h5>
+					      		<h5>Are you sure want to restore kitchen ??</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 

@@ -46,10 +46,22 @@
 									<div class="col-sm-6">
 									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentRestaurantAdmins">Current</a>
+												<a 
+													:class="[{ 'active': currentTab=='current' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showCurrentRestaurantAdmins"
+												>
+													Current
+												</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedRestaurantAdmins">Trashed</a>
+												<a 
+													:class="[{ 'active': currentTab=='trashed' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showTrashedRestaurantAdmins"
+												>
+													Trashed
+												</a>
 											</li>
 										</ul>
 									</div>
@@ -63,7 +75,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -85,7 +96,9 @@
 									    	v-for="(restaurantAdmin, index) in restaurantAdminsToShow"
 									    	:key="restaurantAdmin.id"
 									  	>
-									    	<td scope="row">{{ index + 1 }}</td>
+									    	<td scope="row">
+									    		{{ index + 1 }}
+									    	</td>
 								    		<td>
 								    			{{ restaurantAdmin.user_name}}
 								    		</td>
@@ -170,7 +183,9 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Restaurant Admin</h4>
+						  	<h4 class="modal-title">
+						  		{{ editMode ? 'Edit' : 'Create' }} Restaurant Admin
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -208,7 +223,9 @@
 															@keyup="validateFormInput('restaurantAdmin.user_name')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantAdmin.user_name }}
+												        	{{ 
+												        		errors.restaurantAdmin.user_name 
+												        	}}
 												  		</div>
 									                </div>	
 									              	
@@ -250,7 +267,9 @@
 															@keyup="validateFormInput('restaurantAdmin.email')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantAdmin.email }}
+												        	{{ 
+												        		errors.restaurantAdmin.email 
+												        	}}
 												  		</div>
 									                </div>	
 								              	</div>
@@ -341,18 +360,28 @@
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="destroyRestaurantAdmin" autocomplete="off">
+					  	<form 
+						  	class="form-horizontal" 
+						  	v-on:submit.prevent="destroyRestaurantAdmin" 
+						  	autocomplete="off"
+					  	>
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to delete this admin ?? </h5>
-					      		<h5 class="text-secondary"><small>But once you want, you can retreive it from bin.</small></h5>
+					      		<h5>Are you sure want to delete this admin ??</h5>
+					      		<h5 class="text-secondary">
+					      			<small>
+					      				But once you want, you can retreive it from bin.
+					      			</small>
+					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 
@@ -387,7 +416,7 @@
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to restore restaurant admin ?? </h5>
+					      		<h5>Are you sure want to restore restaurant admin ??</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
 							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>

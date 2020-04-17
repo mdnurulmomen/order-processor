@@ -44,18 +44,45 @@
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-sm-6">
-									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
+									  	<ul 
+										  	class="nav nav-tabs mb-2" 
+										  	v-show="query === ''"
+									  	>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='all' }, 'nav-link']" data-toggle="tab" @click="showAllRestaurants">All</a>
+												<a 
+													:class="[{ 'active': currentTab=='all' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showAllRestaurants"
+												>
+													All
+												</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='approved' }, 'nav-link']" data-toggle="tab" @click="showApprovedRestaurants">Approved</a>
+												<a 
+													:class="[{ 'active': currentTab=='approved' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showApprovedRestaurants"
+												>
+													Approved
+												</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='nonApproved' }, 'nav-link']" data-toggle="tab" @click="showNonApprovedRestaurants">Non-Approved</a>
+												<a 
+													:class="[{ 'active': currentTab=='nonApproved' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showNonApprovedRestaurants"
+												>
+													Non-Approved
+												</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedRestaurants">Trashed</a>
+												<a 
+													:class="[{ 'active': currentTab=='trashed' }, 'nav-link']" 
+													data-toggle="tab" 
+													@click="showTrashedRestaurants"
+												>
+													Trashed
+												</a>
 											</li>
 										</ul>
 									</div>
@@ -98,18 +125,21 @@
 								    		<td>{{ restaurant.mobile }}</td>
 								    		<td>{{ restaurant.website }}</td>
 								    		<td>
-								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']">
-								    				{{ restaurant.admin_approval ? 'Approved' : 'Not-approved' }}
+								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
+								    			>
+								    				{{ 
+								    					restaurant.admin_approval ? 'Approved' : 'Not-approved' 
+								    				}}
 								    			</span>		
 								    		</td>
 								    		<td>
 								      			<button type="button" @click="showRestaurantDetailModal(restaurant)" class="btn btn-info btn-sm">
 								        			<i class="fas fa-eye"></i>
-								        			View
+								        			Details
 								      			</button>
 								      			<button type="button" @click="showRestaurantMenuList(restaurant)" class="btn btn-warning btn-sm">
-								        			<i class="fas fa-object-group"></i>
-								        			Menu-Items
+								        			<i class="fas fa-eye"></i>
+								        			Menu-items
 								      			</button>
 										      	<button type="button" v-show="restaurant.deleted_at === null" @click="showRestaurantEditModal(restaurant)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
@@ -135,7 +165,7 @@
 								      			</button>
 								      			<p 	class="text-danger" 
 								      				v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin === null">
-								      				Restore Restaurant Admin
+								      				Trashed Admin
 								      			</p>
 								    		</td>
 									  	</tr>
