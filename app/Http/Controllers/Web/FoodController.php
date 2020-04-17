@@ -51,15 +51,22 @@ class FoodController extends Controller
 	 	return $this->showAllMeals($perPage);
 	}
 
-	public function deleteMeal($mealToDelete, $perPage)
+	public function deleteMeal($meal, $perPage)
   	{
-     	Meal::destroy($mealToDelete);
+     	$mealToDelete = Meal::find($meal);
+
+     	if ($mealToDelete) {
+
+     		$mealToDelete->delete();
+
+     	}
+
      	return $this->showAllMeals($perPage);
   	}
 
-  	public function restoreMeal($mealToRestore, $perPage)
+  	public function restoreMeal($meal, $perPage)
   	{
-     	$mealToStore = Meal::onlyTrashed()->find($mealToRestore);
+     	$mealToStore = Meal::onlyTrashed()->find($meal);
 
      	if ($mealToStore) {
      		
@@ -85,6 +92,8 @@ class FoodController extends Controller
 			'all' => $query->paginate($perPage),  
 		], 200);
 	}
+
+
 
 	public function showAllMenuCategories($perPage = false)
 	{
@@ -125,23 +134,23 @@ class FoodController extends Controller
 	 	return $this->showAllMenuCategories($perPage);
 	}
 
-	public function deleteMenuCategory($menuCategoryToDelete, $perPage)
+	public function deleteMenuCategory($menuCategory, $perPage)
   	{
-     	$expectedMenuCategory = MenuCategory::find($menuCategoryToDelete);
+     	$menuCategoryToDelete = MenuCategory::find($menuCategory);
 
-     	if ($expectedMenuCategory) {
+     	if ($menuCategoryToDelete) {
      		
-	     	$expectedMenuCategory->restaurantMenuCategories()->delete();
-	     	$expectedMenuCategory->delete();
+	     	$menuCategoryToDelete->restaurantMenuCategories()->delete();
+	     	$menuCategoryToDelete->delete();
      	
      	}
      	
      	return $this->showAllMenuCategories($perPage);
   	}
 
-  	public function restoreMenuCategory($menuCategoryToRestore, $perPage)
+  	public function restoreMenuCategory($menuCategory, $perPage)
   	{
-     	$menuCategoryToStore = MenuCategory::onlyTrashed()->find($menuCategoryToRestore);
+     	$menuCategoryToStore = MenuCategory::onlyTrashed()->find($menuCategory);
 
      	if ($menuCategoryToStore) {
 
@@ -168,6 +177,8 @@ class FoodController extends Controller
 			'all' => $query->paginate($perPage),  
 		], 200);
 	}
+
+
 
 	public function showAllCuisines($perPage = false)
 	{
@@ -208,15 +219,22 @@ class FoodController extends Controller
 	 	return $this->showAllCuisines($perPage);
 	}
 
-	public function deleteCuisine($cuisineToDelete, $perPage)
+	public function deleteCuisine($cuisine, $perPage)
   	{
-     	Cuisine::destroy($cuisineToDelete);
+     	$cuisineToDelete = Cuisine::find($cuisine);
+
+     	if ($cuisineToDelete) {
+     		
+     		$cuisineToDelete->delete();
+
+     	}
+
      	return $this->showAllCuisines($perPage);
   	}
 
-  	public function restoreCuisine($cuisineToRestore, $perPage)
+  	public function restoreCuisine($cuisine, $perPage)
   	{
-     	$cuisineToStore = Cuisine::onlyTrashed()->find($cuisineToRestore);
+     	$cuisineToStore = Cuisine::onlyTrashed()->find($cuisine);
 
      	if ($cuisineToStore) {
      		
@@ -242,6 +260,8 @@ class FoodController extends Controller
 			'all' => $query->paginate($perPage),  
 		], 200);
 	}
+
+
 
 	public function showAllAddons($perPage = false)
 	{
@@ -282,15 +302,22 @@ class FoodController extends Controller
 	 	return $this->showAllAddons($perPage);
 	}
 
-	public function deleteAddon($addonToDelete, $perPage)
+	public function deleteAddon($addon, $perPage)
   	{
-     	Addon::destroy($addonToDelete);
+     	$addonToDelete = Addon::find($addon);
+
+     	if ($addonToDelete) {
+     		
+     		$addonToDelete->delete();
+
+     	}
+
      	return $this->showAllAddons($perPage);
   	}
 
-  	public function restoreAddon($addonToRestore, $perPage)
+  	public function restoreAddon($addon, $perPage)
   	{
-     	$addonToStore = Addon::onlyTrashed()->find($addonToRestore);
+     	$addonToStore = Addon::onlyTrashed()->find($addon);
 
      	if ($addonToStore) {
      		
@@ -316,6 +343,8 @@ class FoodController extends Controller
 			'all' => $query->paginate($perPage),  
 		], 200);
 	}
+
+
 
 	public function showAllVariations($perPage = false)
 	{
@@ -355,9 +384,16 @@ class FoodController extends Controller
 	 	return $this->showAllVariations($perPage);
 	}
 
-	public function deleteVariation($variationToDelete, $perPage)
+	public function deleteVariation($variation, $perPage)
   	{
-     	ItemVariation::destroy($variationToDelete);
+     	$variationToDelete = ItemVariation::find($variation);
+
+     	if ($variationToDelete) {
+     		
+     		$variationToDelete->delete();
+
+     	}
+
      	return $this->showAllVariations($perPage);
   	}
 

@@ -165,10 +165,12 @@ class RestaurantController extends Controller
       {
          $expectedRestaurant = Restaurant::onlyTrashed()->find($restaurantToRestore);
          
-         if ($expectedRestaurant) {
+         if ($expectedRestaurant && $expectedRestaurant->restaurantAdmin()->exists()) {
+
             $expectedRestaurant->kitchen()->restore();
             $expectedRestaurant->waiters()->restore();
             $expectedRestaurant->restore();
+
          }
          
          return $this->showAllRestaurants($perPage);
@@ -271,9 +273,11 @@ class RestaurantController extends Controller
 
          if ($restaurantAdminToStore) {
             
+            /*
             foreach ($restaurantAdminToStore->restaurants()->withTrashed()->get() as $restaurant) {
                $this->restoreRestaurant($restaurant->id, $perPage);
             }
+            */
 
             $restaurantAdminToStore->restore();
 
@@ -425,7 +429,7 @@ class RestaurantController extends Controller
       {
          $restaurantKitchenToRestore = Kitchen::onlyTrashed()->find($kitchenToRestore);
 
-         if ($restaurantKitchenToRestore) {
+         if ($restaurantKitchenToRestore && $restaurantKitchenToRestore->restaurant()->exists()) {
             
             $restaurantKitchenToRestore->restore();
 
@@ -545,7 +549,7 @@ class RestaurantController extends Controller
       {
          $restaurantWaiterToRestore = Waiter::onlyTrashed()->find($waiterToRestore);
 
-         if ($restaurantWaiterToRestore) {
+         if ($restaurantWaiterToRestore && $restaurantWaiterToRestore->restaurant()->exists()) {
             
             $restaurantWaiterToRestore->restore();
 
@@ -1015,7 +1019,7 @@ class RestaurantController extends Controller
       {
          $restaurantMenuItemToDelete = RestaurantMenuCategory::find($menuCategory);
           
-         if ($restaurantMenuItemToDelete ) {
+         if ($restaurantMenuItemToDelete) {
 
             $restaurantMenuItemToDelete->restaurantMenuItems()->delete();
             $restaurantMenuItemToDelete->delete();
@@ -1029,7 +1033,7 @@ class RestaurantController extends Controller
       {
          $restaurantMenuItemToRestore = RestaurantMenuCategory::onlyTrashed()->find($menuCategory);
           
-         if ($restaurantMenuItemToRestore ) {
+         if ($restaurantMenuItemToRestore && $restaurantMenuItemToRestore->menuCategory()->exists()) {
 
             $restaurantMenuItemToRestore->restore();
          

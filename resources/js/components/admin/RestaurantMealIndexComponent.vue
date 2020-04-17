@@ -101,7 +101,7 @@
 									  	</tr>
 									  	<tr v-show="!allRestaurantMeals.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No Meal found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No Meal or Restaurant found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>

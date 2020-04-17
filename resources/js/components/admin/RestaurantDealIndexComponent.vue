@@ -102,7 +102,7 @@
 								    		</td>
 								    		<td>
 										      	<button type="button" 
-										      			v-show="restaurant.deal !== null" 
+										      			v-show="restaurant.deleted_at === null && restaurant.deal !== null" 
 										      			@click="showRestaurantDealEditModal(restaurant)" 
 										      			class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>

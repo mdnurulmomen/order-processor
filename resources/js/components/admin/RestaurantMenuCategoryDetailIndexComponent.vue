@@ -80,7 +80,7 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>
-								    			{{ restaurantMenuCategory.menu_category.name }}
+								    			{{ restaurantMenuCategory.menu_category ? restaurantMenuCategory.menu_category.name : 'Trashed Menu-Category' }}
 								    		</td>
 								    		<td>
 								    			{{ restaurantMenuCategory.serving_from }}
@@ -93,7 +93,9 @@
 								    		</td>
 								    		<td>
 										      	 
-										      	<button type="button" @click="showRestaurantMenuCategoryEditModal(restaurantMenuCategory)" class="btn btn-primary btn-sm">
+										      	<button type="button" 
+										      		v-show="restaurantMenuCategory.deleted_at === null && restaurantMenuCategory.menu_category !== null"
+										      		@click="showRestaurantMenuCategoryEditModal(restaurantMenuCategory)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
@@ -106,11 +108,15 @@
 										      	</button>
 
 										      	<button type="button" 
-										      		v-show="restaurantMenuCategory.deleted_at !== null"
+										      		v-show="restaurantMenuCategory.deleted_at !== null && restaurantMenuCategory.menu_category !== null"
 										      		@click="showRestaurantMenuCategoryRestoreModal(restaurantMenuCategory)" class="btn btn-danger btn-sm">
 										        	<i class="fas fa-restore"></i>
 										        	Restore
 										      	</button>
+
+										      	<p class="text-danger" v-show="restaurantMenuCategory.menu_category === null">
+										      		Restore Menu-Category
+										      	</p>
  												
 								    		</td>
 									  	</tr>
@@ -641,7 +647,11 @@
 				this.restaurantSingleMenuCategoryData.restaurantMenuCategory = restaurantMenuCategory;
 
 				var array = [];
-				array.push(restaurantMenuCategory.menu_category);
+				
+				if (restaurantMenuCategory.menu_category) {
+					array.push(restaurantMenuCategory.menu_category);
+				}
+
 				this.restaurantSingleMenuCategoryData.menuCategoryObjects = array;
 
 				$("#modal-createOrEdit-restaurantMenuCategory").modal("show");
