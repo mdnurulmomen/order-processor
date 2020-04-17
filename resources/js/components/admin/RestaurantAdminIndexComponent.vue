@@ -101,6 +101,7 @@
 								    		<td>
 										      	<button type="button" v-show="restaurantAdmin.deleted_at === null" @click="showRestaurantAdminEditModal(restaurantAdmin)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
+										        	Edit
 										      	</button>
 								      			<button
 								        			v-show="restaurantAdmin.deleted_at === null"
@@ -109,6 +110,7 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
+								        			Delete
 								      			</button>
 								      			<button
 								        			v-show="restaurantAdmin.deleted_at !== null"
@@ -117,12 +119,13 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-undo"></i>
+								        			Restore
 								      			</button>
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!restaurantAdminsToShow.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No Admin found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>

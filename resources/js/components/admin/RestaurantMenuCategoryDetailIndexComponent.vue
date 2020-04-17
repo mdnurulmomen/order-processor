@@ -22,6 +22,11 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">{{ this.restaurantMenuCategoriesToShow.length ? this.restaurantMenuCategoriesToShow[0].restaurant.name : restaurantName }} Menu Categories</h2>
 
+                        	<button type="button" @click="showRestaurantMenuList" class="btn btn-default btn-sm float-right ml-1">
+			        			<i class="fas fa-eye"></i>
+			        			View Menu-Items
+			      			</button>
+
                         	<button type="button" @click="showRestaurantMenuCategoryCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add More menu categories
@@ -833,6 +838,15 @@
 					this.restaurantMenuCategoriesToShow = this.restaurantAllMenuCategories.trashed.data;
 					this.pagination = this.restaurantAllMenuCategories.trashed;
 				}
+			},
+			showRestaurantMenuList() {
+				this.$router.push({
+			 		name: 'admin.restaurantMenuItem.index', 
+			 		params: { 
+			 			restaurant : this.restaurantSingleMenuCategoryData.restaurantObject.id, 
+			 			restaurantName : this.restaurantSingleMenuCategoryData.restaurantObject.name 
+			 		}, 
+				});
 			},
 
 		}

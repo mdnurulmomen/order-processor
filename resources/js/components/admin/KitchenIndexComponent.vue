@@ -100,6 +100,7 @@
 								    		<td>
 										      	<button type="button" v-show="kitchen.deleted_at === null" @click="showKitchenEditModal(kitchen)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
+										        	Edit
 										      	</button>
 								      			<button
 								        			v-show="kitchen.deleted_at === null"
@@ -108,6 +109,7 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
+								        			Delete
 								      			</button>
 								      			<button
 								        			v-show="kitchen.deleted_at !== null && kitchen.restaurant !== null"
@@ -116,6 +118,7 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-undo"></i>
+								        			Restore
 								      			</button>
 								      			<p 	class="text-danger" 
 								      				v-show="kitchen.restaurant === null"
@@ -126,7 +129,7 @@
 									  	</tr>
 									  	<tr v-show="!kitchensToShow.length">
 								    		<td colspan="7">
-									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No kitchen found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>

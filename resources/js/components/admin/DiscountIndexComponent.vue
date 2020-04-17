@@ -76,12 +76,13 @@
 								    		<td>
 										      	<button type="button" @click="showDiscountEditModal(discount)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
+										        	Edit
 										      	</button>
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!allDiscounts.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No discount found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>

@@ -120,7 +120,7 @@
 
 												    	<tr v-show="!menuCategory.restaurant_menu_items.length">
 												    		<td colspan="8">
-													      		<div class="alert alert-danger" role="alert">No Menu-Items</div>
+													      		<div class="alert alert-danger" role="alert">No Menu-Items Found</div>
 													    	</td>
 													  	</tr>
 										    		</tbody>
@@ -204,7 +204,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Menu-Category
+								              			Menu-Category : 
 								              		</label>
 
 									                <div class="col-sm-5">
@@ -247,7 +247,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Item Name
+								              			Item Name : 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -275,7 +275,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Item Detail
+								              			Item Detail : 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -296,7 +296,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Price
+								              			Price : 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -325,7 +325,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Variations
+								              			Variations : 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -351,7 +351,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Addons
+								              			Addons : 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -377,7 +377,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Customizable
+								              			Customizable : 
 								              		</label>
 
 									                <div class="col-sm-8">

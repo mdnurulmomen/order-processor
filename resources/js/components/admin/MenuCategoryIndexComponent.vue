@@ -87,6 +87,7 @@
 								    		<td>
 										      	<button type="button" v-show="menuCategory.deleted_at === null" @click="showMenuCategoryEditModal(menuCategory)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
+										        	Edit
 										      	</button>
 								      			<button
 								        			v-show="menuCategory.deleted_at === null"
@@ -95,6 +96,7 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
+								        			Delete
 								      			</button>
 								      			<button
 								        			v-show="menuCategory.deleted_at !== null"
@@ -103,12 +105,13 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-undo"></i>
+								        			Restore
 								      			</button>
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!menuCategoriesToShow.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No menu-category found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>

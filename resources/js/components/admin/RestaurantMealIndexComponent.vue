@@ -87,6 +87,7 @@
 								    		<td>
 										      	<button type="button" @click="showRestaurantMealEditModal(restaurant)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
+										        	Edit
 										      	</button>
 								      			<button 
 								        			type="button" 
@@ -94,12 +95,13 @@
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
+								        			Delete
 								      			</button>
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!allRestaurantMeals.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No Meal found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>

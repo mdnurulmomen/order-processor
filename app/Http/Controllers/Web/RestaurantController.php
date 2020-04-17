@@ -701,7 +701,6 @@ class RestaurantController extends Controller
          ]);
 
          $restaurantToUpdate->restaurantMealCategories()->sync($request->meal_id);       
-
          return $this->showAllRestaurantMeals($perPage);
       }
 
@@ -1042,7 +1041,7 @@ class RestaurantController extends Controller
       public function searchRestaurantAllMenuCategories($restaurant, $search, $perPage)
       {
          $query = RestaurantMenuCategory::withTrashed()
-                                          ->with(['menuCategory', 'restaurantMenuItems'])
+                                          ->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])
                                           ->where("serving_from", 'like', "%$search%")
                                           ->orWhere("serving_to", 'like', "%$search%");
          
