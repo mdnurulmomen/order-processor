@@ -147,13 +147,11 @@ const router = new VueRouter({
 			path: '/restaurant-menu-items/:restaurant',
 		    name: 'admin.restaurantMenuItem.index',
 		    component: RestaurantMenuItemIndexComponent,
-		    props: true
 		},
 		{
 			path: '/restaurant-menu-category-details/:restaurant',
 		    name: 'admin.restaurantMenuCategoryDetail.index',
 		    component: RestaurantMenuCategoryDetailIndexComponent,
-		    props: true
 		},
 
 		

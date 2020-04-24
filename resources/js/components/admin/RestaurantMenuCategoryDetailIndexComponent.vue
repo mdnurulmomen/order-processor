@@ -28,28 +28,29 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">
 								{{ 
-									this.restaurantMenuCategoriesToShow.length ? this.restaurantMenuCategoriesToShow[0].restaurant.name : restaurantName 
-								}} 
+									restaurantNameFromData
+								}}
+								 
 								Menu Categories
 							</h2>
 
                         	<button 
 	                        	type="button" 
-	                        	@click="showRestaurantMenuList" 
-	                        	class="btn btn-default btn-sm float-right ml-1"
-                        	>
-			        			<i class="fas fa-eye"></i>
-			        			View Menu-Items
-			      			</button>
-
-                        	<button 
-	                        	type="button" 
 	                        	@click="showRestaurantMenuCategoryCreateModal" 
-	                        	class="btn btn-secondary btn-sm float-right mb-2"
+	                        	class="btn btn-secondary btn-sm float-right mb-2 ml-1"
                         	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add More menu categories
 					      	</button>
+
+					      	<button 
+	                        	type="button" 
+	                        	@click="showRestaurantMenuList" 
+	                        	class="btn btn-default btn-sm float-right"
+                        	>
+			        			<i class="fas fa-eye"></i>
+			        			View Menu-Items
+			      			</button>
 						</div>
 
 						<div class="card-body">
@@ -207,7 +208,8 @@
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
-						  		{{ editMode ? 'Edit' : 'Create' }} {{ restaurantName }} Menu-Category
+						  		{{ editMode ? 'Edit' : 'Create' }} 
+						  		{{ restaurantNameFromData }} Menu-Category
 						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
@@ -526,13 +528,6 @@
 
 	export default {
 
-		props : {
-			restaurantName : {
-		      	type: String,
-		      	default: 'Current Restaurant'
-		    },
-		},
-
 		// Local registration of components
 		components: {
 			Multiselect, // short form of Multiselect : Multiselect
@@ -546,7 +541,7 @@
 
 			this.restaurantSingleMenuCategoryData.restaurantObject = {
 				id : this.$route.params.restaurant,		
-				name : this.restaurantName,
+				name : this.restaurantNameFromData,
 			};
 
 			var array = [];
@@ -555,6 +550,18 @@
 
 			this.fetchAllMenuCategories();
 			this.fetchRestaurantAllMenuCategories();
+		},
+
+		computed: {
+		    // a computed getter
+		    restaurantNameFromData: function () {
+		      // `this` points to the vm instance
+		      if (this.restaurantMenuCategoriesToShow.length) {
+	      		return this.restaurantMenuCategoriesToShow[0].restaurant.name;
+		      }
+
+		      return 'Current Restaurant';
+		    }
 		},
 
 		watch : {
@@ -914,7 +921,6 @@
 			 		name: 'admin.restaurantMenuItem.index', 
 			 		params: { 
 			 			restaurant : this.restaurantSingleMenuCategoryData.restaurantObject.id, 
-			 			restaurantName : this.restaurantSingleMenuCategoryData.restaurantObject.name 
 			 		}, 
 				});
 			},
