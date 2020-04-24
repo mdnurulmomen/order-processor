@@ -22,24 +22,25 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">
 								{{ 
-									restaurantAllMenuCategories.length ? restaurantAllMenuCategories[0].restaurant.name : restaurantName 
-								}} 
+									restaurantNameFromData 
+								}}
+
 								Menu-Items
 							</h2>
 
                         	<button type="button" 
-                        			@click="showRestaurantAllMenuCategories" class="btn btn-default btn-sm float-right mb-2 ml-1"
-                        	>
-					        	<i class="fa fa-eye" aria-hidden="true"></i>
-                                Added Menu-Categories
-					      	</button>
-
-                        	<button type="button" 
                         			@click="showRestaurantMenuItemCreateModal"
-                        			class="btn btn-secondary btn-sm float-right mb-2"
+                        			class="btn btn-secondary btn-sm float-right mb-2 ml-1"
                         	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Menu-Item
+					      	</button>
+
+                        	<button type="button" 
+                        			@click="showRestaurantAllMenuCategories" class="btn btn-default btn-sm float-right mb-2"
+                        	>
+					        	<i class="fa fa-eye" aria-hidden="true"></i>
+                                Added Menu-Categories
 					      	</button>
 						</div>
 
@@ -61,31 +62,34 @@
 							</div>
 							<div class="table-responsive">
 								<table class="table table-hover table-bordered text-center">
-									<thead>
-										<tr>
-											<th scope="col">#</th>
-											<th scope="col">Menu Item</th>
-											<th scope="col">Detail</th>
-											<th scope="col">Variations</th>
-											<th scope="col">Addons</th>
-											<th scope="col">Price</th>
-											<th scope="col">Customizable</th>
-											<th scope="col">Action</th>
-										</tr>
-									</thead>
+									
 									<tbody>
 									  	<tr v-show="restaurantAllMenuCategories.length"
-									    	v-for="(menuCategory, index) in restaurantAllMenuCategories"
-									    	:key="menuCategory.id"
+									    	v-for="(restaurantMenuCategory, index) in restaurantAllMenuCategories"
+									    	:key="restaurantMenuCategory.id"
 									  	>  		
 								  			<td colspan="8">
 									    		<p class="font-weight-bold font-italic">
-									    			{{ menuCategory.menu_category ? menuCategory.menu_category.name : 'Trashed Menu Category' }}
+									    			{{ 
+									    				restaurantMenuCategory.menu_category ? restaurantMenuCategory.menu_category.name : 'Trashed Menu Category' 
+									    			}}
 									    		</p>
 										    	<table class="table">
+										    		<thead>
+														<tr>
+															<th scope="col">#</th>
+															<th scope="col">Menu Item</th>
+															<th scope="col">Detail</th>
+															<th scope="col">Variations</th>
+															<th scope="col">Addons</th>
+															<th scope="col">Price</th>
+															<th scope="col">Customizable</th>
+															<th scope="col">Action</th>
+														</tr>
+													</thead>
 										    		<tbody>
-												    	<tr v-show="menuCategory.restaurant_menu_items.length" 
-													    	v-for="(menuItem, index) in menuCategory.restaurant_menu_items" 
+												    	<tr v-show="restaurantMenuCategory.restaurant_menu_items.length" 
+													    	v-for="(menuItem, index) in restaurantMenuCategory.restaurant_menu_items" 
 													    	:key="menuItem.id"
 													  	>
 													    	<td scope="row">
@@ -93,18 +97,102 @@
 													    	</td>
 												    		<td>
 												    			{{ menuItem.name }}
+
+												    			<span 
+														    		class="badge badge-danger" 
+														    		v-show="menuItem.deleted_at"
+														    	>
+														    		outdated
+														    	</span>
+
 												    		</td>
 												    		<td>
-												    			<span v-html="menuItem.detail"></span>
+												    			<span 
+												    				v-html="menuItem.detail"
+												    			>
+												    				
+												    			</span>
 												    		</td>
 												    		<td>
-												    			{{ menuItem.has_variation ? 'Available' : 'Not-Available' }}
+												    			<ul class="text-left" 
+												    				v-show="menuItem.has_variation"
+												    			>
+																  	<li v-for="itemVariation in menuItem.restaurant_menu_item_variations" 
+																  		:key="itemVariation.id"
+																  	>
+																    	
+																    	{{ 
+																    		itemVariation.variation_name 
+																    	}}
+
+																    	<span 
+																    		class="badge badge-danger" 
+																    		v-show="itemVariation.pivot.deleted_at"
+																    	>
+																    		outdated
+																    	</span>
+																  	</li>
+																</ul>
+
+												    			<p class="text-danger" 
+												    				v-show="!menuItem.has_variation"
+												    			>
+												    				Not-Available
+												    			</p>
 												    		</td>
 												    		<td>
-												    			{{ menuItem.has_addon ? 'Available' : 'Not-Available' }}
+												    			
+												    			<ul class="text-left" 
+												    				v-show="menuItem.has_addon"
+												    			>
+																  	<li v-for="addonItem in menuItem.restaurant_menu_item_addons" 
+																  		:key="addonItem.id"
+																  	>
+																    	
+																    	{{ 
+																    		addonItem.name 
+																    	}}
+
+																    	<span 
+																    		class="badge badge-danger" 
+																    		v-show="addonItem.pivot.deleted_at"
+																    	>
+																    		outdated
+																    	</span>
+																  	</li>
+																</ul>
+
+												    			<p class="text-danger" 
+												    				v-show="!menuItem.has_addon"
+												    			>
+												    				Not-Available
+												    			</p>
+
 												    		</td>
 												    		<td>
-												    			{{ menuItem.price }}
+												    			<ul class="text-left" 
+												    				v-show="menuItem.restaurant_menu_item_variations.length"
+												    			>
+																  	<li v-for="itemVariation in menuItem.restaurant_menu_item_variations" 
+																  		:key="itemVariation.id"
+																  	>
+																    	
+																    	{{ 
+																    		itemVariation.pivot.price 
+																    	}}
+
+																    	<span 
+																    		class="badge badge-danger" 
+																    		v-show="itemVariation.pivot.deleted_at"
+																    	>
+																    		outdated
+																    	</span>
+																  	</li>
+																</ul>
+
+												    			{{ 
+												    				!menuItem.has_variation ? menuItem.price : ''
+												    			}}
 												    		</td>
 												    		<td>
 												    			{{ menuItem.customizable ? 'Customizable' : 'Not-Customizable' }}
@@ -112,22 +200,32 @@
 
 												    		<td>
 														      	<button type="button" 
+														      			v-show="!menuItem.deleted_at" 
 														      			@click="showRestaurantMenuItemEditModal(menuItem)" 
 														      			class="btn btn-primary btn-sm">
 														        	<i class="fas fa-edit"></i>
 														        	Edit
 														      	</button>
 												      			<button type="button" 
+												      					v-show="!menuItem.deleted_at"  
 												        				@click="showRestaurantMenuItemDeletionModal(menuItem)"
 												        				class="btn btn-danger btn-sm"
 											      				>
 												        			<i class="fas fa-trash-alt"></i>
 												        			Delete
 												      			</button>
+												      			<button type="button" 
+												      					v-show="menuItem.deleted_at"  
+												        				@click="showRestaurantMenuItemRestoreModal(menuItem)"
+												        				class="btn btn-danger btn-sm"
+											      				>
+												        			<i class="fas fa-undo-alt"></i>
+												        			Restore
+												      			</button>
 												    		</td>
 												    	</tr>
 
-												    	<tr v-show="!menuCategory.restaurant_menu_items.length"
+												    	<tr v-show="!restaurantMenuCategory.restaurant_menu_items.length"
 												    	>
 												    		<td colspan="8">
 													      		<div class="alert alert-danger" role="alert">
@@ -193,8 +291,13 @@
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
-						  		{{ editMode ? 'Edit' : 'Create' }} {{ restaurantAllMenuCategories.length ? restaurantAllMenuCategories[0].restaurant.name : restaurantName 
+						  		{{ 
+						  			editMode ? 'Edit' : 'Create' 
 						  		}} 
+						  		{{ 
+						  			restaurantNameFromData 
+						  		}}
+
 						  		Menu-Item
 						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -237,23 +340,26 @@
 					                                  		:custom-label="menuCategoryName" 
 					                                  		track-by="id" 
 					                                  		:required="true"
-					                                  		:class="!errors.restaurantMenuItem.menuCategory  ? 'is-valid' : 'is-invalid'"
+					                                  		:class="!errors.restaurantMenuItem.restaurantMenuCategory  ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
 					                                  		deselect-label="One selection is required"
-					                                  		@close="validateFormInput('restaurantMenuItem.menuCategory')"
+					                                  		@close="validateFormInput('restaurantMenuItem.restaurantMenuCategory')"
 				                                  		>
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantMenuItem.menuCategory }}
+												        	{{ 
+												        		errors.restaurantMenuItem.restaurantMenuCategory 
+												        	}}
 												  		</div>
 									                </div>
 
 									                <div class="col-sm-3 align-self-center">
-					                                	<button type="button" 
-										        				@click="showRestaurantAddMenuCategoryCreateModal"
-										        				class="btn btn-secondary btn-sm p-0"
+					                                	<button 
+					                                		type="button" 
+										        			@click="showRestaurantAddMenuCategoryCreateModal"
+										        			class="btn btn-secondary btn-sm p-0"
 									      				>
 										        			<i class="fa fa-plus-circle" aria-hidden="true"></i>
 										        			More Category
@@ -283,7 +389,9 @@
 															@keyup="validateFormInput('restaurantMenuItem.name')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantMenuItem.name }}
+												        	{{ 
+												        		errors.restaurantMenuItem.name 
+												        	}}
 												  		</div>
 
 									                </div>	
@@ -317,35 +425,6 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Price
-								              		</label>
-
-									                <div class="col-sm-8">
-									                  	
-									                  	<input 
-															type="number" 
-															class="form-control" 
-															v-model="singleRestaurantMenuItemData.restaurantMenuItem.price" 
-															placeholder="Item Price" 
-															required="true" 
-															min="0" 
-															:class="!errors.restaurantMenuItem.price  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('restaurantMenuItem.price')"
-									                	>
-									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantMenuItem.price }}
-												  		</div>
-
-									                </div>	
-									              	
-								              	</div>
-
-								              	<div class="form-group row">
-									              		
-								              		<label 
-								              			for="inputMenuName3" 
-								              			class="col-sm-4 col-form-label text-right"
-								              		>
 								              			Variations
 								              		</label>
 
@@ -361,6 +440,116 @@
 				                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
 				                                    		:labels="{checked: 'Available', unchecked: 'Not-Available' }"
 				                                    	/>
+
+									                </div>	
+									              	
+								              	</div>
+
+								              	<div 
+								              		class="card card-body mb-4" 
+								              		v-show="singleRestaurantMenuItemData.restaurantMenuItem.has_variation"
+								              	>
+									              	<div 
+									              		class="form-group row" 
+									              		v-for="(value, index) in variationIndex"
+									              	>
+									              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right mb-2">
+									              			Variation Name
+									              		</label>
+										                <div class="col-sm-8 mb-2">
+										                	<multiselect 
+					                                  			v-model="variationObjects[index]"
+					                                  			placeholder="Variation Name" 
+						                                  		:options="allVariations" 
+						                                  		label="variation_name" 
+						                                  		track-by="id" 
+						                                  		:key="index"
+						                                  		:required="true"
+						                                  		:allow-empty="false"
+						                                  		selectLabel = "Press/Click"
+						                                  		deselect-label="One selection is required"
+					                                  		>
+						                                	</multiselect>
+										                </div>	
+									              	 		
+									              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right mb-2">
+									              			Variation Price
+									              		</label>
+										                <div class="col-sm-8 mb-2">
+										                	<input 
+																type="number" 
+																class="form-control" 
+																v-model.number="price_item_variations[index]" 
+																placeholder="Item Price" 
+																:key="index" 
+																:required="singleRestaurantMenuItemData.restaurantMenuItem.has_variation ? true : false" 
+																min="0" 
+																:class="!errors.restaurantMenuItem.price  ? 'is-valid' : 'is-invalid'"
+																@keyup="validateFormInput('restaurantMenuItem.price')"
+										                	>
+										                	<div class="invalid-feedback">
+													        	{{ 
+													        		errors.restaurantMenuItem.price 
+													        	}}
+													  		</div>
+										                </div>	
+									              	</div>
+
+
+									              	<div class="">
+
+									              		<div class="col-sm-12 text-right">
+												        	
+												        	<i 
+													        	class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
+													        	aria-hidden="true" 
+													        	@click="variationIndex.push(variationIndex[variationIndex.length-1]+1)"
+												        	>
+												        		
+												        	</i>
+									              		
+												        	<i 
+												        		class="fas fa-minus-circle fa-2x  rounded-circle bg-info" aria-hidden="true" 
+												        		@click="variationIndex.pop();variationObjects.pop();price_item_variations.pop()" 
+									              				v-show="variationIndex.length>2" 
+												        	>
+												        		
+												        	</i>
+
+									              		</div>
+
+									              	</div>
+								              	</div>
+
+								              	<div 
+								              		class="form-group row" 
+								              		v-show="!singleRestaurantMenuItemData.restaurantMenuItem.has_variation"
+								              	>
+									              		
+								              		<label 
+								              			for="inputMenuName3" 
+								              			class="col-sm-4 col-form-label text-right"
+								              		>
+								              			Price
+								              		</label>
+
+									                <div class="col-sm-8">
+									                  	
+									                  	<input 
+															type="number" 
+															class="form-control" 
+															v-model="singleRestaurantMenuItemData.restaurantMenuItem.price" 
+															placeholder="Item Price" 
+															:required="singleRestaurantMenuItemData.restaurantMenuItem.has_variation ? false : true" 
+															min="0" 
+															:class="!errors.restaurantMenuItem.price  ? 'is-valid' : 'is-invalid'"
+															@keyup="validateFormInput('restaurantMenuItem.price')"
+									                	>
+									                	<div class="invalid-feedback">
+												        	{{ 
+												        		errors.restaurantMenuItem.price 
+												        	}}
+												  		</div>
 
 									                </div>	
 									              	
@@ -391,6 +580,93 @@
 									                </div>	
 									              	
 								              	</div>
+
+								              	<div 
+								              		class="card card-body mb-4" 
+								              		v-show="singleRestaurantMenuItemData.restaurantMenuItem.has_addon"
+								              	>
+									              	<div 
+									              		class="form-group row" 
+									              		v-for="(value, index) in addonIndex"
+									              	>
+									              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right mb-2">
+									              			Addon Name
+									              		</label>
+										                <div class="col-sm-8 mb-2">
+										                	<multiselect 
+					                                  			v-model="addonObjects[index]"
+					                                  			placeholder="Addon Name" 
+						                                  		:options="allAddons" 
+						                                  		label="name" 
+						                                  		track-by="id" 
+						                                  		:key="index"
+						                                  		:required="true"
+						                                  		:allow-empty="false"
+						                                  		selectLabel = "Press/Click"
+						                                  		deselect-label="One selection is required"
+					                                  		>
+						                                	</multiselect>
+										                </div>	
+									              	 		
+									              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right mb-2">
+									              			Addon Price
+									              		</label>
+										                <div class="col-sm-8 mb-2">
+										                	<input 
+																type="number" 
+																class="form-control" 
+																v-model.number="price_addon_items[index]" 
+																placeholder="Addon Price" 
+																:key="index" 
+																:required="singleRestaurantMenuItemData.restaurantMenuItem.has_addon ? true : false" 
+																min="0" 
+																:class="!errors.restaurantMenuItem.price  ? 'is-valid' : 'is-invalid'"
+																@keyup="validateFormInput('restaurantMenuItem.price')"
+										                	>
+										                	<div class="invalid-feedback">
+													        	{{ 
+													        		errors.restaurantMenuItem.price 
+													        	}}
+													  		</div>
+										                </div>	
+									              	</div>
+
+
+									              	<div class="">
+
+									              		<div class="col-sm-12 text-right">
+												        	
+												        	<i 
+													        	class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
+													        	aria-hidden="true" 
+													        	@click="addonIndex.push(addonIndex[addonIndex.length-1]+1)"
+												        	>
+												        		
+												        	</i>
+									              		
+												        	<i 
+												        		class="fas fa-minus-circle fa-2x  rounded-circle bg-info" aria-hidden="true" 
+												        		@click="addonIndex.pop();addonObjects.pop();price_addon_items.pop()" 
+									              				v-show="addonIndex.length>1" 
+												        	>
+												        		
+												        	</i>
+
+									              		</div>
+									              		
+									              	</div>
+
+								              	</div>
+
+
+
+
+
+
+
+
+
+
 
 								              	<div class="form-group row">
 									              		
@@ -659,6 +935,49 @@
 			</div>
 			<!-- /modal-restaurantMenuItem-delete-confirmation -->
 
+			<!-- modal-restaurantMenuItem-restore-confirmation -->
+			<div class="modal fade" id="modal-restaurantMenuItem-restore-confirmation">
+				<div class="modal-dialog">
+					<div class="modal-content bg-danger">
+						<div class="modal-header">
+						  	<h4 class="modal-title">Restaurant-Menu Restore</h4>
+						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						    	<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					  	<!-- form start -->
+					  	<form class="form-horizontal" 
+				  			  v-on:submit.prevent="restoreRestaurantMenuItem" 
+				  			  autocomplete="off"
+				  		>
+							<div class="modal-body">
+					      		<input 
+					      			type="hidden" 
+					      			name="_token" 
+					      			:value="csrf"
+					      		>
+					      		<h5>Are you sure want to restore menu-item ??</h5>
+							</div>
+							<div class="modal-footer justify-content-between">
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
+
+							  	<button 
+							  		type="submit" 
+							  		class="btn btn-outline-light"
+							  	>
+							  		Restore
+							  	</button>
+							</div>
+						</form>
+					</div>
+				<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /modal-restaurantMenuItem-restore-confirmation -->
+
 	    </section>
 
 	</div>
@@ -674,6 +993,9 @@
 	import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 	var singleRestaurantMenuItemData = {
+
+    	// variationIndex : [0, 1],
+    	// variationObjects : [{}, {}],
 
     	restaurantNewMenuCategoryObjects : [],
 
@@ -701,6 +1023,12 @@
 			has_addon : false,
 			customizable : false,
 			restaurant_menu_category_id : null,
+
+			variations_id : [],
+			price_item_variations : [],
+
+			addons_id : [],
+			price_addon_items : [],
     	}
     };
 
@@ -714,12 +1042,25 @@
 
     	editor: ClassicEditor,
 
-    	allMenuCategories : [],
+    	allVariations : [],
+    	variationObjects : [],
+    	price_item_variations : [],
+    	variationIndex : [0, 1],
 
+    	allAddons : [],
+    	addonObjects : [],
+    	price_addon_items : [],
+    	addonIndex : [0],
+    	
+    	allMenuCategories : [],
 
     	restaurantAllMenuCategories : [],
     	restaurantArrayToAddNewMenuCategory : [],
-    	restaurantScheduleHours : ['6.00', '7.00', '8.00', '9.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '24.00', '1.00', '2.00'],
+
+    	restaurantScheduleHours : [
+    		'6.00', '7.00', '8.00', '9.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '24.00', '1.00', '2.00'
+    	],
+
 
     	pagination: {
         	current_page: 1
@@ -737,13 +1078,6 @@
 
 	export default {
 
-		props : {
-			restaurantName : {
-		      	type: String,
-		      	default: 'Current Restaurant'
-		    },
-		},
-
 		// Local registration of components
 		components: {
 			Multiselect, // short form of Multiselect : Multiselect
@@ -756,11 +1090,26 @@
 		},
 
 		created(){
+			this.fetchAllAddons();
+			this.fetchAllVariations();
 			this.fetchAllMenuCategories();
 			this.fetchRestaurantAllMenuItems();
 		},
 
+		computed: {
+		    // a computed getter
+		    restaurantNameFromData: function () {
+		      // `this` points to the vm instance
+		      if (this.restaurantAllMenuCategories.length) {
+	      		return this.restaurantAllMenuCategories[0].restaurant.name;
+		      }
+
+		      return 'Current Restaurant';
+		    }
+		},
+
 		watch : {
+
 			query : function(val){
 				if (val==='') {
 					this.fetchRestaurantAllMenuItems();
@@ -769,6 +1118,32 @@
 					this.pagination.current_page = 1;
 					this.searchData();
 				}
+			},
+			variationObjects : function(variationObjects){
+				if (variationObjects.length > 0) {
+					
+					let array = [];
+					$.each(variationObjects, function(key, value) {
+				     	array.push(value.id);
+				   	});
+			     	this.singleRestaurantMenuItemData.restaurantMenuItem.variations_id = array;
+
+				}
+				else
+					this.singleRestaurantMenuItemData.restaurantMenuItem.variations_id = [];
+			},
+			addonObjects : function(addonObjects){
+				if (addonObjects.length > 0) {
+					
+					let array = [];
+					$.each(addonObjects, function(key, value) {
+				     	array.push(value.id);
+				   	});
+			     	this.singleRestaurantMenuItemData.restaurantMenuItem.addons_id = array;
+
+				}
+				else
+					this.singleRestaurantMenuItemData.restaurantMenuItem.addons_id = [];
 			},
 			'singleRestaurantMenuItemData.restaurantMenuCategoryObject' : function(restaurantMenuCategoryObject){
 
@@ -797,10 +1172,39 @@
 				else
 					this.singleRestaurantMenuItemData.restaurantNewMenuCategory.menu_category_id = [];
 			},
+
 		},
 
 		methods : {
 
+			fetchAllAddons(){
+				this.loading = true;
+				axios
+					.get('/api/add-ons/')
+					.then(response => {
+						if (response.status == 200) {
+							this.loading = false;
+							this.allAddons = response.data;
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			},
+			fetchAllVariations(){
+				this.loading = true;
+				axios
+					.get('/api/item-variations/')
+					.then(response => {
+						if (response.status == 200) {
+							this.loading = false;
+							this.allVariations = response.data;
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			},
 			fetchAllMenuCategories(){
 				this.loading = true;
 				axios
@@ -854,29 +1258,29 @@
 					this.searchData();
 				}
     		},
+    		showRestaurantAllMenuCategories(){
+				this.$router.push({
+			 		name: 'admin.restaurantMenuCategoryDetail.index', 
+			 		params: { 
+			 			restaurant : this.$route.params.restaurant,
+			 		}, 
+				});
+			},
 			showRestaurantMenuItemCreateModal(){
 				this.editMode = false;
 				this.submitForm = true;
 				this.errors.restaurantMenuItem = {};
 
 				this.singleRestaurantMenuItemData.restaurantMenuCategoryObject = {};
+				
 				this.singleRestaurantMenuItemData.restaurantMenuItem = {};
 				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurant;
 
 				$('#modal-createOrEdit-restaurantMenuItem').modal('show');
 			},
-			showRestaurantAllMenuCategories(){
-				this.$router.push({
-			 		name: 'admin.restaurantMenuCategoryDetail.index', 
-			 		params: { 
-			 			restaurant : this.$route.params.restaurant, 
-			 			restaurantName : this.restaurantAllMenuCategories.length ? this.restaurantAllMenuCategories[0].restaurant.name : this.restaurantName
-			 		}, 
-				});
-			},
     		storeRestaurantMenuItem(){
 
-    			if (!this.singleRestaurantMenuItemData.restaurantMenuItem.name || !this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_menu_category_id) {
+    			if (!this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_menu_category_id || !this.singleRestaurantMenuItemData.restaurantMenuItem.name) {
 					
 					this.submitForm = false;
 					return;
@@ -884,6 +1288,10 @@
 
 				$('#modal-createOrEdit-restaurantMenuItem').modal('hide');
 				
+				this.singleRestaurantMenuItemData.restaurantMenuItem.price_item_variations = this.price_item_variations;
+
+				this.singleRestaurantMenuItemData.restaurantMenuItem.price_addon_items = this.price_addon_items;
+
 				axios
 					.post('/restaurant-menu-items/'+ this.perPage, this.singleRestaurantMenuItemData.restaurantMenuItem)
 					.then(response => {
@@ -925,17 +1333,63 @@
 				this.singleRestaurantMenuItemData.restaurantMenuItem = menuItem;
 				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurant;
 
+				if (menuItem.has_variation && menuItem.restaurant_menu_item_variations.length) {
+
+					this.variationIndex = [];
+					this.variationObjects = [];
+					this.price_item_variations = [];
+
+					menuItem.restaurant_menu_item_variations.forEach(
+						(value, index) => {
+
+							if (value.pivot.deleted_at===null) {
+
+							    this.variationIndex.push(index);
+							    this.variationObjects.push(value);
+							    this.price_item_variations.push(value.pivot.price);
+							
+							}
+						}
+					);
+
+				}
+
+				if (menuItem.has_addon && menuItem.restaurant_menu_item_addons.length) {
+
+					this.addonIndex = [];
+					this.addonObjects = [];
+					this.addon_item_addons = [];
+
+					menuItem.restaurant_menu_item_addons.forEach(
+						(value, index) => {
+
+							if (value.pivot.deleted_at===null) {
+
+							    this.addonIndex.push(index);
+							    this.addonObjects.push(value);
+							    this.price_addon_items.push(value.pivot.price);
+							
+							}
+						}
+					);
+
+				}
+
 				$('#modal-createOrEdit-restaurantMenuItem').modal('show');
 			},
 			updateRestaurantMenuItem(){
 
-				if (!this.singleRestaurantMenuItemData.restaurantMenuItem.name || !this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_menu_category_id) {
+				if (!this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_menu_category_id || !this.singleRestaurantMenuItemData.restaurantMenuItem.name) {
 					
 					this.submitForm = false;
 					return;
 				}
 
 				$('#modal-createOrEdit-restaurantMenuItem').modal('hide');
+
+				this.singleRestaurantMenuItemData.restaurantMenuItem.price_item_variations = this.price_item_variations;
+
+				this.singleRestaurantMenuItemData.restaurantMenuItem.price_addon_items = this.price_addon_items;
 				
 				axios
 					.put('/restaurant-menu-items/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage, this.singleRestaurantMenuItemData.restaurantMenuItem)
@@ -958,6 +1412,7 @@
 							toastr.success(response.data.success, "Updated");
 							
 						}
+						
 					})
 					.catch(error => {
 						if (error.response.status == 422) {
@@ -1004,6 +1459,42 @@
 				      	}
 					});
 			},
+			showRestaurantMenuItemRestoreModal(menuItem) {
+				this.singleRestaurantMenuItemData.restaurantMenuItem = menuItem;
+				$("#modal-restaurantMenuItem-restore-confirmation").modal("show");
+			},
+			restoreRestaurantMenuItem(){
+
+				$("#modal-restaurantMenuItem-restore-confirmation").modal("hide");
+
+				axios
+					.patch('/restaurant-menu-items/' + this.$route.params.restaurant + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
+					.then(response => {
+						if (response.status == 200) {
+							
+							this.singleRestaurantMenuItemData.restaurantMenuItem = {};
+
+							if (this.query === '') {
+								this.restaurantAllMenuCategories = response.data.data;
+								this.pagination = response.data;
+							}
+							else {
+								this.pagination.current_page = 1;
+								this.searchData();
+							}
+
+							toastr.success(response.data.success, "Restored");
+						}
+					})
+					.catch(error => {
+						console.log(error);
+						if (error.response.status == 422) {
+							for (var x in error.response.data.errors) {
+								toastr.error(error.response.data.errors[x], "Wrong Input");
+							}
+				      	}
+					});
+			},
 		    searchData() {
 				
 				axios
@@ -1031,12 +1522,13 @@
 				this.singleRestaurantMenuItemData.restaurantNewMenuCategoryObjects = [];
 
 				this.singleRestaurantMenuItemData.restaurantObjectToAddMenuCategory = {
-		    		name : this.restaurantName, 
+		    		name : this.restaurantNameFromData, 
 					id : this.$route.params.restaurant 
 		    	};
 
 				var array = [];
 				array.push(this.singleRestaurantMenuItemData.restaurantObjectToAddMenuCategory);
+
 				this.restaurantArrayToAddNewMenuCategory = array;
 
 				$('#modal-add-menu-category').modal('show');
@@ -1083,14 +1575,14 @@
 
 				switch(formInputName) {
 
-					case 'restaurantMenuItem.menuCategory' :
+					case 'restaurantMenuItem.restaurantMenuCategory' :
 
 						if (Object.keys(this.singleRestaurantMenuItemData.restaurantMenuCategoryObject).length === 0) {
-							this.errors.restaurantMenuItem.menuCategory = 'Menu category is required';
+							this.errors.restaurantMenuItem.restaurantMenuCategory = 'Menu category is required';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantMenuItem, 'menuCategory');
+							this.$delete(this.errors.restaurantMenuItem, 'restaurantMenuCategory');
 						}
 
 						break;
