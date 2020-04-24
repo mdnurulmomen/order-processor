@@ -18,6 +18,7 @@ class CreateRestaurantMenuItemAddonsTable extends Migration
             $table->unsignedSmallInteger('addon_id');
             $table->unsignedSmallInteger('price');
             $table->unsignedMediumInteger('restaurant_menu_item_id');
+            $table->softDeletes();
         });
     }
 

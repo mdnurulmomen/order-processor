@@ -18,6 +18,7 @@ class CreateRestaurantMenuItemVariationsTable extends Migration
             $table->unsignedSmallInteger('variation_id');
             $table->unsignedSmallInteger('price');
             $table->unsignedMediumInteger('restaurant_menu_item_id');
+            $table->softDeletes();
         });
     }
 

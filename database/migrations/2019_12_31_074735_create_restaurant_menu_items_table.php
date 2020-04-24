@@ -23,6 +23,7 @@ class CreateRestaurantMenuItemsTable extends Migration
             $table->boolean('customizable')->default(true);
             $table->boolean('item_stock')->default(true);
             $table->unsignedMediumInteger('restaurant_menu_category_id');
+            $table->softDeletes();
         });
     }
 
