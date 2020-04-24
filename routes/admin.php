@@ -50,6 +50,7 @@ Route::name('admin.')->group(function () {
 		    Route::post('/restaurant-menu-items/{perPage?}', 'RestaurantController@createRestaurantMenuItem');
 		    Route::put('/restaurant-menu-items/{menuItem}/{perPage}', 'RestaurantController@updateRestaurantMenuItem');
 		    Route::delete('/restaurant-menu-items/{restaurant}/{menuItem}/{perPage}', 'RestaurantController@deleteRestaurantMenuItem');
+		    Route::patch('/restaurant-menu-items/{restaurant}/{menuItem}/{perPage}', 'RestaurantController@restoreRestaurantMenuItem');
 
 
 		    Route::get('/api/restaurant-cuisines/{perPage?}', 'RestaurantController@showAllRestaurantCuisines');
