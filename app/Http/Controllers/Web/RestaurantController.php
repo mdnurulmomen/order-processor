@@ -13,6 +13,8 @@ use App\Models\RestaurantMenuItem;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Models\RestaurantMenuCategory;
+use App\Models\RestaurantMenuItemAddon;
+use App\Models\RestaurantMenuItemVariation;
 
 class RestaurantController extends Controller
 {
@@ -685,7 +687,7 @@ class RestaurantController extends Controller
 
          foreach ($request->meal_id as $restaurantNewMeal) {
             
-            if (!$restaurant->restaurantMealCategories()->where('meal_id', $restaurantNewMeal)->count()) {
+            if (!$restaurant->restaurantMealCategories()->wherePivot('meal_id', $restaurantNewMeal)->count()) {
                
                $restaurant->restaurantMealCategories()->syncWithoutDetaching([$restaurantNewMeal]);
             }
@@ -756,7 +758,7 @@ class RestaurantController extends Controller
 
          foreach ($request->cuisine_id as $restaurantNewCuisine) {
             
-            if (!$restaurant->restaurantCuisines()->where('cuisine_id', $restaurantNewCuisine)->count()) {
+            if (!$restaurant->restaurantCuisines()->wherePivot('cuisine_id', $restaurantNewCuisine)->count()) {
                
                $restaurant->restaurantCuisines()->syncWithoutDetaching([$restaurantNewCuisine]);
             }
@@ -811,7 +813,7 @@ class RestaurantController extends Controller
       public function showRestaurantAllMenuItems($restaurant, $perPage = false)
       {
          if ($perPage) {
-            return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage), 200);
+            return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems.restaurantMenuItemVariations', 'restaurantMenuItems.restaurantMenuItemAddons'])->paginate($perPage), 200);
          }
 
          return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->get(), 200);
@@ -824,7 +826,7 @@ class RestaurantController extends Controller
             'detail'=>'nullable|string|max:255',
             'has_variation'=>'boolean',
             'has_addon'=>'boolean',
-            'price'=>'required|numeric|min:0|max:65535',
+            'price'=>'nullable|numeric|min:0|max:65535',
             'customizable'=>'boolean',
             'restaurant_menu_category_id'=>'required|numeric|exists:restaurant_menu_categories,id',
             'restaurant_id'=>'required|numeric|exists:restaurants,id',
@@ -835,24 +837,64 @@ class RestaurantController extends Controller
             'detail' => $request->detail,
             'has_variation' => $request->has_variation ?? false,
             'has_addon' => $request->has_addon ?? false,
-            'price' => $request->price,
+            'price' => $request->price ?? 0,
             'customizable' => $request->customizable ?? false,
             'restaurant_menu_category_id' => $request->restaurant_menu_category_id,
          ]);
 
+         if ($newMenuItem->has_variation) {
+
+            for ($i=0; $i < count($request->variations_id); $i++) { 
+               
+               $newMenuItem->restaurantMenuItemVariations()
+                           ->syncWithoutDetaching([
+                              $request->variations_id[$i] => [
+                                 'price' => $request->price_item_variations[$i]
+                              ]
+                           ]
+               );
+
+            }
+
+            $newMenuItem->update([
+               'price' => min($request->price_item_variations)
+            ]);
+
+         }
+
+         if ($newMenuItem->has_addon) {
+
+            for ($i=0; $i < count($request->addons_id); $i++) { 
+               
+               $newMenuItem->restaurantMenuItemAddons()
+                           ->syncWithoutDetaching([
+                              $request->addons_id[$i] => [
+                                 'price' => $request->price_addon_items[$i]
+                              ]
+                           ]
+               );
+
+            }
+
+            $newMenuItem->update([
+               'price' => min($request->price_addon_items)
+            ]);
+
+         }
+
          return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
       }
 
-      public function updateRestaurantMenuItem(Request $request, $menuItemId, $perPage)
+      public function updateRestaurantMenuItem(Request $request, $menuItem, $perPage)
       {
-         $menuItemToUpdate = RestaurantMenuItem::find($menuItemId);
+         $menuItemToUpdate = RestaurantMenuItem::find($menuItem);
 
          $request->validate([
             'name'=>'required|string|max:255',
             'detail'=>'nullable|string|max:255',
             'has_variation'=>'boolean',
             'has_addon'=>'boolean',
-            'price'=>'required|numeric|min:0|max:65535',
+            'price'=>'nullable|numeric|min:0|max:65535',
             'customizable'=>'boolean',
             'restaurant_menu_category_id'=>'required|numeric|exists:restaurant_menu_categories,id',
             'restaurant_id'=>'required|numeric|exists:restaurants,id',
@@ -863,22 +905,146 @@ class RestaurantController extends Controller
             'detail' => $request->detail,
             'has_variation' => $request->has_variation ?? false,
             'has_addon' => $request->has_addon ?? false,
-            'price' => $request->price,
+            'price' => $request->price ?? 0,
             'customizable' => $request->customizable ?? false,
             'restaurant_menu_category_id' => $request->restaurant_menu_category_id,
          ]);
 
+         if ($menuItemToUpdate->has_variation) {
+
+            // Deleting temporarily all related variations
+            RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)
+                                       ->delete();
+
+            for ($i=0; $i<count($request->variations_id); $i++) { 
+               
+               /*
+               $alreadyExist = $menuItemToUpdate->restaurantMenuItemVariations()
+                                                ->wherePivot('variation_id', $request->variations_id[$i])
+                                                ->count();
+               */
+
+               $existingVariation = RestaurantMenuItemVariation::withTrashed()
+                                    ->where('restaurant_menu_item_id', $menuItem)
+                                    ->where('variation_id', $request->variations_id[$i])
+                                    ->first();
+
+               if ($existingVariation) {
+                  
+               /*
+                  $menuItemToUpdate->restaurantMenuItemVariations()
+                                   ->wherePivot('variation_id', $request->variations_id[$i])
+                                   ->update([
+                                       'price' => $request->price_item_variations[$i],
+                                       'restaurant_menu_item_variations.deleted_at' => NULL,
+                                    ]);
+               */
+              
+                  $existingVariation->update([
+                     'price' => $request->price_item_variations[$i],
+                     'deleted_at' => NULL,
+                  ]);
+                                   
+               }
+
+               else {
+
+                  $menuItemToUpdate->restaurantMenuItemVariations()
+                                   ->attach($request->variations_id[$i], [
+                                       'price' => $request->price_item_variations[$i]
+                                    ]
+                                 );
+
+               }
+
+            }
+
+            $menuItemToUpdate->update([
+               'price' => min($request->price_item_variations)
+            ]);
+
+         }
+
+         if ($menuItemToUpdate->has_addon) {
+
+            // Deleting temporarily all related variations
+            RestaurantMenuItemAddon::where('restaurant_menu_item_id', $menuItem)
+                                       ->delete();
+
+            for ($i=0; $i<count($request->addons_id); $i++) { 
+               
+               /*
+               $alreadyExist = $menuItemToUpdate->restaurantMenuItemAddons()
+                                                ->wherePivot('addon_id', $request->addons_id[$i])
+                                                ->count();
+               */
+
+               $existingAddon = RestaurantMenuItemAddon::withTrashed()
+                                    ->where('restaurant_menu_item_id', $menuItem)
+                                    ->where('addon_id', $request->addons_id[$i])
+                                    ->first();
+
+               if ($existingAddon) {
+                  
+               /*
+                  $menuItemToUpdate->restaurantMenuItemAddons()
+                                   ->wherePivot('addon_id', $request->addons_id[$i])
+                                   ->update([
+                                       'price' => $request->price_addon_items[$i],
+                                       'restaurant_menu_item_addons.deleted_at' => NULL,
+                                    ]);
+               */
+              
+                  $existingAddon->update([
+                     'price' => $request->price_addon_items[$i],
+                     'deleted_at' => NULL,
+                  ]);
+                                   
+               }
+
+               else {
+
+                  $menuItemToUpdate->restaurantMenuItemAddons()
+                                   ->attach($request->addons_id[$i], [
+                                       'price' => $request->price_addon_items[$i]
+                                    ]
+                                 );
+
+               }
+
+            }
+
+            $menuItemToUpdate->update([
+               'price' => min($request->price_addon_items)
+            ]);
+
+         }
+
          return $this->showRestaurantAllMenuItems($request->restaurant_id, $perPage);
       }
 
-      public function deleteRestaurantMenuItem($restaurant, $menuItemId, $perPage)
+      public function deleteRestaurantMenuItem($restaurant, $menuItem, $perPage)
       {
-         $menuItemToDelete = RestaurantMenuItem::find($menuItemId);
-         // $restaurant = $menuItemToDelete->restaurantMenuCategory->restaurant_id;
+         $menuItemToDelete = RestaurantMenuItem::find($menuItem);
           
          if ($menuItemToDelete ) {
 
+            // Variation deletion aint needed as not showing this menu-item anymore
+            // RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)->delete();
             $menuItemToDelete->delete();
+         
+         }
+
+         return $this->showRestaurantAllMenuItems($restaurant, $perPage);
+      }
+
+      public function restoreRestaurantMenuItem($restaurant, $menuItem, $perPage)
+      {
+         $menuItemToRestore = RestaurantMenuItem::withTrashed()->find($menuItem);
+          
+         if ($menuItemToRestore ) {
+
+            $menuItemToRestore->restore();
          
          }
 
@@ -887,17 +1053,21 @@ class RestaurantController extends Controller
 
       public function searchRestaurantAllMenuItems($restaurant, $search, $perPage)
       {
-         $query = RestaurantMenuCategory::with(['menuCategory', 'restaurantMenuItems']);
+         $query = RestaurantMenuCategory::with(['restaurant', 'menuCategory', 'restaurantMenuItems.restaurantMenuItemVariations', 'restaurantMenuItems.restaurantMenuItemAddons']);
 
          $query->where( function( $subquery )use ($search){
-            $subquery->whereHas('restaurantMenuItems', function($q) use ($search){
+
+            $subquery->whereHas('menuCategory', function($q) use ($search){
+               $q->where('name', 'like', "%$search%");
+            });
+            $subquery->orWhereHas('restaurantMenuItems.restaurantMenuItemVariations', function($q) use ($search){
                $q->where("name", 'like', "%$search%");
                $q->orWhere("detail", 'like', "%$search%");
                $q->orWhere("price", 'like', "%$search%");
+
+               $q->orWhere("variation_name", 'like', "%$search%");
             });
-            $subquery->orWhereHas('menuCategory', function($q) use ($search){
-               $q->where('name', 'like', "%$search%");
-            });
+         
          });
 
          $query->where('restaurant_id', $restaurant);
@@ -964,7 +1134,7 @@ class RestaurantController extends Controller
             
             if ($expectedRestaurant->restaurantMenuCategories()->where('menu_category_id', $restaurantNewMenuCategory)->count()) {
                
-               $expectedRestaurant->restaurantMenuCategories()->where('menu_category_id', $restaurantNewMenuCategory)->update([
+               $expectedRestaurant->restaurantMenuCategories()->wherePivot('menu_category_id', $restaurantNewMenuCategory)->update([
                   'serving_from' => $request->serving_from,
                   'serving_to' => $request->serving_to,
                ]);
