@@ -37,6 +37,7 @@ class CreateRidersTable extends Migration
             $table->string('approver_type')->nullable();
             $table->string('approver_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
