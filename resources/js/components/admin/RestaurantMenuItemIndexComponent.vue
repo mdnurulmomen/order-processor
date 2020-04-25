@@ -487,6 +487,7 @@
 																:key="index" 
 																:required="singleRestaurantMenuItemData.restaurantMenuItem.has_variation ? true : false" 
 																min="0" 
+																step=".1"  
 																:class="!errors.restaurantMenuItem.price  ? 'is-valid' : 'is-invalid'"
 																@keyup="validateFormInput('restaurantMenuItem.price')"
 										                	>
@@ -545,6 +546,7 @@
 															placeholder="Item Price" 
 															:required="singleRestaurantMenuItemData.restaurantMenuItem.has_variation ? false : true" 
 															min="0" 
+															step=".1" 
 															:class="!errors.restaurantMenuItem.price  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('restaurantMenuItem.price')"
 									                	>
@@ -623,6 +625,7 @@
 																:key="index" 
 																:required="singleRestaurantMenuItemData.restaurantMenuItem.has_addon ? true : false" 
 																min="0" 
+																step=".1" 
 																:class="!errors.restaurantMenuItem.price  ? 'is-valid' : 'is-invalid'"
 																@keyup="validateFormInput('restaurantMenuItem.price')"
 										                	>
@@ -1279,6 +1282,14 @@
 				this.singleRestaurantMenuItemData.restaurantMenuItem = {};
 				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurant;
 
+				this.variationIndex = [0, 1];
+				this.variationObjects = [];
+				this.price_item_variations = [];
+
+				this.addonIndex = [0];
+				this.addonObjects = [];
+				this.price_addon_items = [];
+
 				$('#modal-createOrEdit-restaurantMenuItem').modal('show');
 			},
     		storeRestaurantMenuItem(){
@@ -1361,7 +1372,7 @@
 
 					this.addonIndex = [];
 					this.addonObjects = [];
-					this.addon_item_addons = [];
+					this.price_addon_items = [];
 
 					menuItem.restaurant_menu_item_addons.forEach(
 						(value, index) => {
