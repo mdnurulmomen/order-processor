@@ -16,12 +16,12 @@ class CreateRidersTable extends Migration
         Schema::create('riders', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->string('first_name')->nullable();
-            $table->string('second_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('user_name')->unique();
             $table->string('email')->nullable()->unique();
             $table->char('mobile', 13)->unique();
             $table->string('password');
-            $table->timestamp('birth_date')->nullable();
+            $table->date('birth_date')->nullable();
             $table->string('gender')->default('male');
             $table->string('profile_pic_preview');
             $table->string('present_address')->nullable(); // house, road, area

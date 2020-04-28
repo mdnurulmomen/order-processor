@@ -143,6 +143,32 @@
               </ul>
             </li>
 
+            <li class="nav-item has-treeview menu-open">
+              <a 
+                href="#" 
+                v-bind:class="[(currentPage.includes('/delivery-men') || currentPage.includes('/delivery-men')) ? 'active' : '', 'nav-link']"
+              >
+                <i class="nav-icon fas fa-bicycle"></i>
+                <p>
+                  Delivery-Men
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'admin.deliveryMen.index' }" 
+                    v-bind:class="[(currentPage.includes('/delivery-men')) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Riders</p>
+                  </router-link>
+                </li>
+
+              </ul>
+            </li>
+
             <li class="nav-item">
               <router-link :to="{ name: 'admin.discounts.index' }" v-bind:class="[(currentPage.includes('/discounts')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-percent"></i>

@@ -157,6 +157,14 @@ Route::name('admin.')->group(function () {
 		    Route::patch('/restaurant-admins/{restaurantAdmin}/{perPage}', 'RestaurantController@restoreRestaurantAdmin');
 
 
+		    Route::get('/api/delivery-men/{perPage?}', 'DeliveryController@showAllDeliveryMen');
+		    Route::get('/api/delivery-men/search/{search}/{perPage}', 'DeliveryController@searchAllDeliveryMen');
+		    Route::post('/delivery-men/{perPage?}', 'DeliveryController@createDeliveryMan');
+		    Route::put('/delivery-men/{deliveryMan}/{perPage}', 'DeliveryController@updateDeliveryMan');
+		    Route::delete('/delivery-men/{deliveryMan}/{perPage}', 'DeliveryController@deleteDeliveryMan');
+		    Route::patch('/delivery-men/{deliveryMan}/{perPage}', 'DeliveryController@restoreDeliveryMan');
+
+
 		    Route::get('/api/restaurants/{perPage?}', 'RestaurantController@showAllRestaurants');
 		    Route::get('/api/restaurants/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurants');
 		    Route::post('/restaurants/{perPage}', 'RestaurantController@createNewRestaurant');
