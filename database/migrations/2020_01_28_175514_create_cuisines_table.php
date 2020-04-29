@@ -15,8 +15,8 @@ class CreateCuisinesTable extends Migration
     {
         Schema::create('cuisines', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->softDeletes();
             $table->string('name', 50)->unique();
+            $table->softDeletes();
         });
     }
 
