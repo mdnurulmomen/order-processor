@@ -20,7 +20,7 @@ class ApplicationSetting extends Model
     {
         if ($encodedImageFile) {
 
-            $directory = "uploads/admin/images/application/";
+            $directory = "uploads/application/";
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0777, true);

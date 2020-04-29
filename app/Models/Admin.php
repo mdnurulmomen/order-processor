@@ -44,7 +44,7 @@ class Admin extends Authenticatable
     {
         if ($encodedImageFile) {
 
-            $directory = "uploads/admin/images/profile/";
+            $directory = "uploads/admin/";
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0777, true);

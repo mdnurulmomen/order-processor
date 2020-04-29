@@ -37,7 +37,7 @@ class Rider extends Model
     {
         if ($encodedImageFile) {
 
-            $directory = "uploads/delivery_man/images/profile/";
+            $directory = "uploads/delivery_man/profile/";
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0777, true);
@@ -54,7 +54,7 @@ class Rider extends Model
     {
         if ($encodedImageFile) {
 
-            $directory = "uploads/delivery_man/images/national_id/";
+            $directory = "uploads/delivery_man/national_id/";
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0777, true);
@@ -71,7 +71,7 @@ class Rider extends Model
     {
         if ($encodedImageFile) {
 
-            $directory = "uploads/delivery_man/images/national_id/";
+            $directory = "uploads/delivery_man/national_id/";
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0777, true);

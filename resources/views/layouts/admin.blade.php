@@ -10,7 +10,7 @@
   <title>Qupaid | Admin</title>
 
   <!-- Favicon Icon -->
-  <link rel="icon" type="image/gif" href="uploads/admin/images/application/favicon.png" sizes="16x16">
+  <link rel="icon" type="image/gif" href="uploads/application/favicon.png" sizes="16x16">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   <!-- Font Awesome Icons -->

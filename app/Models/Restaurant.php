@@ -48,7 +48,7 @@ class Restaurant extends Authenticatable
     {
         if ($encodedImageFile) {
 
-            $directory = "uploads/admin/images/restaurant/";
+            $directory = "uploads/restaurant/";
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0777, true);
