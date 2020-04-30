@@ -5,7 +5,10 @@
 
 		<section>
 
-			<div class="row justify-content-center vh-100" v-show="loading">
+			<div 
+				class="row justify-content-center vh-100" 
+				v-show="loading"
+			>
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
 					  	<div class="overlay dark">
@@ -15,7 +18,10 @@
 				</div>
 			</div>
 		
-			<div class="row" v-show="!loading">
+			<div 
+				class="row" 
+				v-show="!loading"
+			>
 				<div class="col-sm-12">
 
 					<div class="card">
@@ -80,7 +86,7 @@
 							    				  :class="[coupon.status ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>
 								    				{{ 
-								    					coupon.status ? 'Open' : 'Close'
+								    					coupon.status ? 'Published' : 'Unpublished'
 								    				}}
 								    			</span>
 								    		</td>
@@ -98,7 +104,9 @@
 									  	</tr>
 									  	<tr v-show="!allCoupons.length">
 								    		<td colspan="7">
-									      		<div class="alert alert-danger" role="alert">Sorry, No coupon found.</div>
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No coupon found.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -186,7 +194,9 @@
 															@keyup="validateFormInput('coupon.coupon_code')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.coupon.coupon_code }}
+												        	{{ 
+												        		errors.coupon.coupon_code 
+												        	}}
 												  		</div>
 														
 									                </div>	
@@ -218,7 +228,9 @@
 																</span>
 															</div>
 										                	<div class="invalid-feedback">
-													        	{{ errors.coupon.percentage }}
+													        	{{ 
+													        		errors.coupon.percentage 
+													        	}}
 													  		</div>
 														</div>
 									                </div>	
@@ -237,6 +249,7 @@
 															class="form-control" 
 															v-model="singleCouponData.coupon.min_order" 
 															min="100" 
+															max="255" 
 															step=".1" 
 															placeholder="Coupon Rate" 
 															required="true"
@@ -264,6 +277,7 @@
 																class="form-control" 
 																v-model="singleCouponData.coupon.max_discount_per_order" 
 																min="1" 
+																max="255" 
 																step=".1" 
 																placeholder="Coupon Rate" 
 																required="true"
@@ -329,7 +343,7 @@
 				                                  			:height="30" 
 				                                  			:font-size="15" 
 				                                  			:color="{checked: 'green', unchecked: 'red'}" 
-				                                  			:labels="{checked: 'Open', unchecked: 'Close' }"
+				                                  			:labels="{checked: 'Published', unchecked: 'Unpublished' }"
 			                                  			/>
 									                </div>	
 								              	</div>
@@ -701,8 +715,11 @@
 
 					case 'coupon.min_order' :
 
-						if (!this.singleCouponData.coupon.min_order || this.singleCouponData.coupon.min_order < 1) {
-							this.errors.coupon.min_order = 'Minimum order is required';
+						if (!this.singleCouponData.coupon.min_order) {
+							this.errors.coupon.min_order = 'Min. order is required';
+						}
+						else if (this.singleCouponData.coupon.min_order < 1 || this.singleCouponData.coupon.min_order > 255 ) {
+							this.errors.coupon.min_order = 'Value should be between 1 and 255';
 						}
 						else{
 							this.submitForm = true;
@@ -713,8 +730,11 @@
 
 					case 'coupon.max_discount_per_order' :
 
-						if (!this.singleCouponData.coupon.max_discount_per_order || this.singleCouponData.coupon.max_discount_per_order < 1) {
+						if (!this.singleCouponData.coupon.max_discount_per_order) {
 							this.errors.coupon.max_discount_per_order = 'Max discount is required';
+						}
+						else if (this.singleCouponData.coupon.max_discount_per_order < 1 || this.singleCouponData.coupon.max_discount_per_order > 255 ) {
+							this.errors.coupon.max_discount_per_order = 'Value should be between 1 and 255';
 						}
 						else{
 							this.submitForm = true;

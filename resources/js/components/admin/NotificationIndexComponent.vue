@@ -81,7 +81,7 @@
 								    		</td>
 								    		<td>
 								    			<img 
-								    				class="profile-user-img img-fluid img-circle" 
+								    				class="profile-user-img img-fluid" 
 								    				:src="notification.banner" alt="Notification Banner"
 								    			>
 								    		</td>
@@ -95,7 +95,7 @@
 								    				  :class="[notification.status ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>
 								    				{{ 
-								    					notification.status ? 'Open' : 'Closed'
+								    					notification.status ? 'Published' : 'Unpublished'
 								    				}}
 								    			</span>
 								    		</td>
@@ -286,7 +286,7 @@
 				                                  			:height="30" 
 				                                  			:font-size="15" 
 				                                  			:color="{checked: 'green', unchecked: 'red'}" 
-				                                  			:labels="{checked: 'On', unchecked: 'Off' }"
+				                                  			:labels="{checked: 'Published', unchecked: 'Unpublished' }"
 			                                  			/>
 									                </div>	
 								              	</div>

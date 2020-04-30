@@ -52,8 +52,6 @@ class DiscountController extends Controller
 	}
 
 
-
-
 	public function showAllCoupons($perPage = false)
 	{
 		if ($perPage) {

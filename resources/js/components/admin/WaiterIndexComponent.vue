@@ -5,7 +5,10 @@
 
 		<section>
 
-			<div class="row justify-content-center vh-100" v-show="loading">
+			<div 
+				class="row justify-content-center vh-100" 
+				v-show="loading"
+			>
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
 					  	<div class="overlay dark">
@@ -15,12 +18,17 @@
 				</div>
 			</div>
 		
-			<div class="row" v-show="!loading">
+			<div 
+				class="row" 
+				v-show="!loading"
+			>
 				<div class="col-sm-12">
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">Waiter List</h2>
+							<h2 class="lead float-left mt-1">
+								Waiter List
+							</h2>
 
                         	<button type="button" 
                     				@click="showWaiterCreateModal" 
@@ -135,7 +143,8 @@
 								        			<i class="fas fa-undo"></i>
 								        			Restore
 								      			</button>
-								      			<p 	class="text-danger" 
+								      			<p 	
+								      				class="text-danger" 
 								      				v-show="waiter.restaurant === null"
 								      			>
 								      				Trashed Restaurant
@@ -158,10 +167,10 @@
 											v-model="perPage" 
 											@change="changeNumberContents()"
 									>
-										<option>1</option>
-										<option>2</option>
-										<option>3</option>
-										<option>5</option>
+										<option>10</option>
+										<option>20</option>
+										<option>30</option>
+										<option>50</option>
 									</select>
 								</div>
 								<div class="col-sm-2">

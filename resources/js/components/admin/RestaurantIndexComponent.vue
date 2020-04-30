@@ -123,7 +123,11 @@
 								    		<td>{{ restaurant.name}}</td>
 								    		<!-- <td>{{ restaurant.email }}</td> -->
 								    		<td>{{ restaurant.mobile }}</td>
-								    		<td>{{ restaurant.website }}</td>
+								    		<td>
+								    			{{ 
+								    				restaurant.website || 'No Website' 
+								    			}}
+								    		</td>
 								    		<td>
 								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>

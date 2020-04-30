@@ -5,7 +5,10 @@
 
 		<section>
 
-			<div class="row justify-content-center vh-100" v-show="loading">
+			<div 
+				class="row justify-content-center vh-100" 
+				v-show="loading"
+			>
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
 					  	<div class="overlay dark">
@@ -17,22 +20,12 @@
 		
 			<div class="row" v-show="!loading">
 				<div class="col-sm-12">
-	              	
-					<!--
-					// For those who has only to view
-					<vue-bootstrap4-table 
-						:rows="discounts" 
-						:columns="columns" 
-						:config="config"
-						:actions="actions"
-					>
-
-					</vue-bootstrap4-table> 
-					-->
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">Discount List</h2>
+							<h2 class="lead float-left mt-1">
+								Discount List
+							</h2>
 
                         	<button type="button" @click="showDiscountCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -52,7 +45,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -63,7 +55,9 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Rate</th>
+										<!-- 
 											<th scope="col">Action</th>
+										 -->
 										</tr>
 									</thead>
 									<tbody>
@@ -73,16 +67,22 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ discount.rate}}</td>
+							    		<!-- 
 								    		<td>
 										      	<button type="button" @click="showDiscountEditModal(discount)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
 								    		</td>
+							    		 -->
 									  	</tr>
-									  	<tr v-show="!allDiscounts.length">
-								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No discount found.</div>
+									  	<tr 
+									  		v-show="!allDiscounts.length"
+									  	>
+								    		<td colspan="2">
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No discount found.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -130,9 +130,14 @@
 						  	<h4 class="modal-title">
 						  		{{ editMode ? 'Edit' : 'Create' }} Discount
 						  	</h4>
-						  	<p class="small ml-2 mt-2" v-show="editMode">
+					  	<!-- 
+						  	<p 
+							  	class="small ml-2 mt-2" 
+							  	v-show="editMode"
+						  	>
 						  		(Updation may hamper related deals & offers)
 						  	</p>
+ 						-->
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -157,7 +162,9 @@
 								            <div class="card-body">
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputDiscountRate3" class="col-sm-4 col-form-label text-right">Discount Rate</label>
+								              		<label for="inputDiscountRate3" class="col-sm-4 col-form-label text-right">
+								              			Discount Rate
+								              		</label>
 									                <div class="col-sm-8">
 									                	<div class="input-group mb-3">
 															<input 
@@ -247,7 +254,6 @@
 
     	editMode : false,
     	
-    	currentTab : 'current',
     	allDiscounts : [],
 
     	pagination: {
@@ -356,6 +362,7 @@
 				      	}
 					});
 			},
+		/*
 			showDiscountEditModal(discount) {
 				this.editMode = true;
 				this.submitForm = true;
@@ -363,6 +370,7 @@
 				this.singleDiscountData.discount = discount;
 				$("#modal-createOrEdit-discount").modal("show");
 			},
+		
 			updateDiscount(){
 
 				$('#modal-createOrEdit-discount').modal('hide');
@@ -395,6 +403,7 @@
 				      	}
 					});
 			},
+		*/
 		    searchData() {
 				
 				axios

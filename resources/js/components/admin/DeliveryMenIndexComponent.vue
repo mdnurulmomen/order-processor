@@ -23,7 +23,9 @@
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">Delivery-Men List</h2>
+							<h2 class="lead float-left mt-1">
+								Delivery-Men List
+							</h2>
 
                         	<button type="button" 
                     				@click="showDeliveryManCreateModal" 
@@ -38,7 +40,8 @@
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-sm-6">
-									  	<ul class="nav nav-tabs mb-2" 
+									  	<ul 
+									  		class="nav nav-tabs mb-2" 
 									  		v-show="query === ''"
 									  	>
 											<li class="nav-item flex-fill">
@@ -402,6 +405,7 @@
 																value="male" 
 																v-model="singleDeliveryManData.deliveryMan.gender" 
 																:checked="singleDeliveryManData.deliveryMan.gender === 'male'" 
+																required="true" 
 															>
 															<label class="custom-control-label" for="customControlValidation2">
 																Male
@@ -439,7 +443,8 @@
 										                        	class="form-control custom-file-input" 
 										                        	v-on:change="onProfilePicChange" 
 										                        	accept="image/*" 
-										                        	:class="!errors.deliveryMan.profile_pic_preview  ? 'is-valid' : 'is-invalid'"
+										                        	:class="!errors.deliveryMan.profile_pic_preview  ? 'is-valid' : 'is-invalid'" 
+										                        	:required="!editMode" 
 										                        >
 										                        <label class="custom-file-label" for="exampleInputFile">
 										                        	Change Picture
@@ -514,7 +519,8 @@
 										                        	class="form-control custom-file-input" 
 										                        	v-on:change="onNIDFrontChange" 
 										                        	accept="image/*" 
-										                        	:class="!errors.deliveryMan.nid_front_preview  ? 'is-valid' : 'is-invalid'"
+										                        	:class="!errors.deliveryMan.nid_front_preview  ? 'is-valid' : 'is-invalid'" 
+										                        	:required="!editMode" 
 										                        >
 										                        <label class="custom-file-label" for="exampleInputFile">
 										                        	Change NID Front
@@ -547,7 +553,8 @@
 										                        	class="form-control custom-file-input"  
 										                        	v-on:change="onNIDBackChange" 
 										                        	accept="image/*" 
-										                        	:class="!errors.deliveryMan.nid_back_preview  ? 'is-valid' : 'is-invalid'"
+										                        	:class="!errors.deliveryMan.nid_back_preview  ? 'is-valid' : 'is-invalid'" 
+										                        	:required="!editMode" 
 										                        >
 										                        <label class="custom-file-label" for="exampleInputFile">Change NID Back</label>
 										                    </div>
@@ -972,9 +979,11 @@
 			},
     		storeDeliveryMan(){
 
-				if (!this.singleDeliveryManData.deliveryMan.gender || !this.singleDeliveryManData.deliveryMan.present_address || !this.singleDeliveryManData.deliveryMan.profile_pic_preview || !this.singleDeliveryManData.deliveryMan.nid_front_preview || !this.singleDeliveryManData.deliveryMan.nid_back_preview) {
+				if (!this.singleDeliveryManData.deliveryMan.present_address) {
 					
 					this.submitForm = false;
+					this.errors.deliveryMan.present_address = 'Address is required';
+					
 					return;
 				}
 				
@@ -1019,9 +1028,11 @@
 			},
 			updateDeliveryMan(){				
 
-				if (!this.singleDeliveryManData.deliveryMan.gender || !this.singleDeliveryManData.deliveryMan.present_address) {
+				if (!this.singleDeliveryManData.deliveryMan.present_address) {
 					
 					this.submitForm = false;
+					this.errors.deliveryMan.present_address = 'Address is required';
+					
 					return;
 				}
 
