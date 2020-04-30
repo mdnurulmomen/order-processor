@@ -165,6 +165,14 @@ Route::name('admin.')->group(function () {
 		    Route::patch('/delivery-men/{deliveryMan}/{perPage}', 'DeliveryController@restoreDeliveryMan');
 
 
+		    Route::get('/api/notifications/{perPage?}', 'NotificationController@showAllNotifications');
+		    Route::get('/api/notifications/search/{search}/{perPage}', 'NotificationController@searchAllNotifications');
+		    Route::post('/notifications/{perPage?}', 'NotificationController@createNotification');
+		    Route::put('/notifications/{notification}/{perPage}', 'NotificationController@updateNotification');
+		    Route::delete('/notifications/{notification}/{perPage}', 'NotificationController@deleteNotification');
+		    // Route::patch('/notifications/{notification}/{perPage}', 'NotificationController@restoreNotification');
+
+
 		    Route::get('/api/restaurants/{perPage?}', 'RestaurantController@showAllRestaurants');
 		    Route::get('/api/restaurants/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurants');
 		    Route::post('/restaurants/{perPage}', 'RestaurantController@createNewRestaurant');

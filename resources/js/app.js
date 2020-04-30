@@ -42,6 +42,7 @@ import RestaurantMenuCategoryIndexComponent from './components/admin/RestaurantM
 import RestaurantCuisineIndexComponent from './components/admin/RestaurantCuisineIndexComponent.vue';
 import RestaurantMenuItemIndexComponent from './components/admin/RestaurantMenuItemIndexComponent.vue';
 import RestaurantMenuCategoryDetailIndexComponent from './components/admin/RestaurantMenuCategoryDetailIndexComponent.vue';
+import NotificationIndexComponent from './components/admin/NotificationIndexComponent.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -158,6 +159,11 @@ const router = new VueRouter({
 			path: '/delivery-men',
             name: 'admin.deliveryMen.index',
             component: DeliveryMenIndexComponent
+		},
+		{
+			path: '/notifications',
+            name: 'admin.notifications.index',
+            component: NotificationIndexComponent
 		},
 
 		

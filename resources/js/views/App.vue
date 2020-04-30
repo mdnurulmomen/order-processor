@@ -169,6 +169,32 @@
               </ul>
             </li>
 
+            <li class="nav-item has-treeview menu-open">
+              <a 
+                href="#" 
+                v-bind:class="[(currentPage.includes('/notifications') || currentPage.includes('/notifications')) ? 'active' : '', 'nav-link']"
+              >
+                <i class="nav-icon fas fa-bell"></i>
+                <p>
+                  Notifications
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'admin.notifications.index' }" 
+                    v-bind:class="[(currentPage.includes('/notifications')) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Notifications</p>
+                  </router-link>
+                </li>
+
+              </ul>
+            </li>
+
             <li class="nav-item">
               <router-link :to="{ name: 'admin.discounts.index' }" v-bind:class="[(currentPage.includes('/discounts')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-percent"></i>
