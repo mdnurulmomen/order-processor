@@ -195,13 +195,40 @@
               </ul>
             </li>
 
-            <li class="nav-item">
-              <router-link :to="{ name: 'admin.discounts.index' }" v-bind:class="[(currentPage.includes('/discounts')) ? 'active' : '', 'nav-link']">
+            <li class="nav-item has-treeview menu-open">
+              <a 
+                href="#" 
+                v-bind:class="[(currentPage.includes('/discounts') || currentPage.includes('/coupons')) ? 'active' : '', 'nav-link']"
+              >
                 <i class="nav-icon fas fa-percent"></i>
                 <p>
                   Discounts
+                  <i class="right fas fa-angle-left"></i>
                 </p>
-              </router-link>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'admin.discounts.index' }" 
+                    v-bind:class="[(currentPage.includes('/discounts')) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Rates</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'admin.coupons.index' }" 
+                    v-bind:class="[(currentPage.includes('/coupons')) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Coupons</p>
+                  </router-link>
+                </li>
+
+              </ul>
             </li>
 
             <li class="nav-item has-treeview">

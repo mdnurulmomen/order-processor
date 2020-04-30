@@ -43,6 +43,8 @@ import RestaurantCuisineIndexComponent from './components/admin/RestaurantCuisin
 import RestaurantMenuItemIndexComponent from './components/admin/RestaurantMenuItemIndexComponent.vue';
 import RestaurantMenuCategoryDetailIndexComponent from './components/admin/RestaurantMenuCategoryDetailIndexComponent.vue';
 import NotificationIndexComponent from './components/admin/NotificationIndexComponent.vue';
+import CouponIndexComponent from './components/admin/CouponIndexComponent.vue';
+
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -164,6 +166,11 @@ const router = new VueRouter({
 			path: '/notifications',
             name: 'admin.notifications.index',
             component: NotificationIndexComponent
+		},
+		{
+			path: '/coupons',
+            name: 'admin.coupons.index',
+            component: CouponIndexComponent
 		},
 
 		

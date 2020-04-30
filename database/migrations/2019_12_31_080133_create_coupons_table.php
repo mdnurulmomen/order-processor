@@ -19,8 +19,8 @@ class CreateCouponsTable extends Migration
             $table->unsignedTinyInteger('percentage');
             $table->unsignedTinyInteger('min_order');
             $table->unsignedTinyInteger('max_discount_per_order');
-            $table->timestamp('valid_from')->useCurrent();
-            $table->timestamp('valid_to')->useCurrent();
+            $table->date('valid_from');
+            $table->date('valid_to');
             $table->boolean('status')->default(false);
             $table->unsignedTinyInteger('editor_id');
             $table->timestamps();

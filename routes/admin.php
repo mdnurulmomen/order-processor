@@ -173,6 +173,14 @@ Route::name('admin.')->group(function () {
 		    // Route::patch('/notifications/{notification}/{perPage}', 'NotificationController@restoreNotification');
 
 
+		    Route::get('/api/coupons/{perPage?}', 'DiscountController@showAllCoupons');
+		    Route::get('/api/coupons/search/{search}/{perPage}', 'DiscountController@searchAllCoupons');
+		    Route::post('/coupons/{perPage?}', 'DiscountController@createNewCoupon');
+		    Route::put('/coupons/{coupon}/{perPage}', 'DiscountController@updateCoupon');
+		    Route::delete('/coupons/{coupon}/{perPage}', 'DiscountController@deleteCoupon');
+		    // Route::patch('/coupons/{coupon}/{perPage}', 'DiscountController@restoreCoupon');
+
+
 		    Route::get('/api/restaurants/{perPage?}', 'RestaurantController@showAllRestaurants');
 		    Route::get('/api/restaurants/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurants');
 		    Route::post('/restaurants/{perPage}', 'RestaurantController@createNewRestaurant');
