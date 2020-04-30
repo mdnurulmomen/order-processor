@@ -119,10 +119,10 @@ Route::name('admin.')->group(function () {
 		    Route::patch('/item-variations/{item}/{perPage}', 'FoodController@restoreVariation');
 
 
-		    Route::get('/api/discounts/{perPage?}', 'RestaurantController@showAllDiscounts');
-		    Route::get('/api/discounts/search/{search}/{perPage}', 'RestaurantController@searchAllDiscounts');
-		    Route::post('/discounts/{perPage?}', 'RestaurantController@createNewDiscount');
-		    Route::put('/discounts/{discount}/{perPage}', 'RestaurantController@updateDiscount');
+		    Route::get('/api/discounts/{perPage?}', 'DiscountController@showAllDiscounts');
+		    Route::get('/api/discounts/search/{search}/{perPage}', 'DiscountController@searchAllDiscounts');
+		    Route::post('/discounts/{perPage?}', 'DiscountController@createNewDiscount');
+		    Route::put('/discounts/{discount}/{perPage}', 'DiscountController@updateDiscount');
 
 
 		    Route::get('/api/cuisines/{perPage?}', 'FoodController@showAllCuisines');
