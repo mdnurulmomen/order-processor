@@ -370,16 +370,6 @@
 									                </div>	
 								              	</div>
 
-
-
-
-
-
-
-
-
-
-
 								              	<div class="form-group row">	
 								              		<label for="inputDeliveryManName3" class="col-sm-4 col-form-label text-right">
 								              			Birth Date
