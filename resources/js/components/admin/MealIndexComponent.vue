@@ -253,7 +253,11 @@
 					      			:value="csrf"
 					      		>
 					      		<h5>Are you sure want to delete meal ?? </h5>
-					      		<h5 class="text-secondary"><small>But once you want, you can retreive it from bin.</small></h5>
+					      		<h5 style="color:#c6cacc">
+					      			<small>
+					      				But once you want, you can retreive it from bin.
+					      			</small>
+					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
 							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>

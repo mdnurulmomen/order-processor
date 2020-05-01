@@ -915,7 +915,7 @@
 					      			:value="csrf"
 					      		>
 					      		<h5>Are you sure want to delete menu-item ??</h5>
-					      		<h5 class="text-secondary">
+					      		<h5 style="color:#c6cacc">
 					      			<small>
 						      			Once you delete, you can't retreive it again.
 						      		</small>

@@ -399,7 +399,7 @@
 					      			:value="csrf"
 					      		>
 					      		<h5>Are you sure want to delete menu-category ??</h5>
-					      		<h5 class="text-secondary">
+					      		<h5 style="color:#c6cacc">
 					      			<small>
 					      				But once you want, you can retreive it from bin.
 					      			</small>

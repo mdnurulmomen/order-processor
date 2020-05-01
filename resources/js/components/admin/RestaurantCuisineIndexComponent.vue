@@ -311,11 +311,13 @@
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to delete restaurant cuisine ??</h5>
-					      		<h5 class="text-secondary">
+					      		<h5 style="color:#c6cacc">
 					      			<small>
-					      				But once you want, you can retreive it from bin.
+					      				Once you delete, you can't retreive it again.
 					      			</small>
+					      		</h5>
+					      		<h5>
+					      			Are you sure want to delete restaurant cuisine ??
 					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">

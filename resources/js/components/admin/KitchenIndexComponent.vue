@@ -15,12 +15,17 @@
 				</div>
 			</div>
 		
-			<div class="row" v-show="!loading">
+			<div 
+				class="row" 
+				v-show="!loading"
+			>
 				<div class="col-sm-12">
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">Kitchen List</h2>
+							<h2 class="lead float-left mt-1">
+								Kitchen List
+							</h2>
 
                         	<button 
 	                        	type="button" 
@@ -427,7 +432,7 @@
 					      			:value="csrf"
 					      		>
 					      		<h5>Are you sure want to delete this kitchen ?? </h5>
-					      		<h5 class="text-secondary">
+					      		<h5 style="color:#c6cacc">
 					      			<small>
 					      				But once you want, you can retreive it from bin.
 					      			</small>
@@ -660,14 +665,17 @@
 				this.submitForm = true;
 
 				this.singleKitchenData.kitchen = {};
+				this.singleKitchenData.restaurantObject = {};
 
 				$('#modal-createOrEdit-kitchen').modal('show');
 			},
     		storeKitchen(){
 
 				if (Object.keys(this.singleKitchenData.restaurantObject).length === 0) {
-					this.errors.kitchen.restaurant = 'Restaurant name is required';
+					
 					this.submitForm = false;
+					this.errors.kitchen.restaurant = 'Restaurant name is required';
+					
 					return;
 				}
 
@@ -701,11 +709,21 @@
 				this.editMode = true;
 				this.submitForm = true;
 				this.errors.kitchen = {};
+
 				this.singleKitchenData.kitchen = kitchen;
 				this.singleKitchenData.restaurantObject = kitchen.restaurant;
+
 				$("#modal-createOrEdit-kitchen").modal("show");
 			},
 			updateKitchen(){
+
+				if (Object.keys(this.singleKitchenData.restaurantObject).length === 0) {
+					
+					this.submitForm = false;
+					this.errors.kitchen.restaurant = 'Restaurant name is required';
+					
+					return;
+				}
 
 				$('#modal-createOrEdit-kitchen').modal('hide');
 				
