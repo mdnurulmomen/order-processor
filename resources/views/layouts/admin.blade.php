@@ -12,7 +12,7 @@
   <!-- Favicon Icon -->
   <link rel="icon" type="image/gif" href="uploads/application/favicon.png" sizes="16x16">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
   <!-- overlayScrollbars -->
@@ -163,7 +163,7 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 <!-- PAGE SCRIPTS -->
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ mix('js/app.js') }}"></script>
 <!-- ChartJS -->
 {{-- <script src="{{ asset('plugins/chart.js/js/Chart.min.js') }}"></script> --}}
 <!-- OPTIONAL SCRIPTS -->
