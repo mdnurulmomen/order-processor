@@ -178,6 +178,11 @@ const router = new VueRouter({
             name: 'admin.coupons.index',
             component: () => import(/* webpackChunkName : "js/coupon-list" */ './components/admin/CouponIndexComponent.vue')
 		},
+		{
+			path: '/cancelation-reasons',
+            name: 'admin.cancelationReasons.index',
+            component: () => import(/* webpackChunkName : "js/cancelation-reason-list" */ './components/admin/CancelationReasonIndexComponent.vue')
+		},
 
 		
 		{
