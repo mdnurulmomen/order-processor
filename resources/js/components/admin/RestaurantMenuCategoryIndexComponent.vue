@@ -62,13 +62,20 @@
 									<thead>
 										<tr>
 											<th scope="col">#</th>
-											<th scope="col">Restaurant Name</th>
-											<th scope="col">Menu Categories</th>
-											<th scope="col">Action</th>
+											<th scope="col">
+												Restaurant Name
+											</th>
+											<th scope="col">
+												Menu Categories
+											</th>
+											<th scope="col">
+												Action
+											</th>
 										</tr>
 									</thead>
 									<tbody>
-									  	<tr v-show="allRestaurantMenuCategories.length"
+									  	<tr 
+									  		v-show="allRestaurantMenuCategories.length"
 									    	v-for="(restaurant, index) in allRestaurantMenuCategories"
 									    	:key="restaurant.id"
 									  	>
@@ -131,7 +138,8 @@
  												-->
 								    		</td>
 									  	</tr>
-									  	<tr v-show="!allRestaurantMenuCategories.length"
+									  	<tr 
+									  		v-show="!allRestaurantMenuCategories.length"
 									  	>
 								    		<td colspan="6">
 									      		<div class="alert alert-danger" role="alert">Sorry, No Category or Restaurant found.</div>
@@ -149,7 +157,6 @@
 									>
 										<option>10</option>
 										<option>20</option>
-										<option>30</option>
 										<option>40</option>
 										<option>50</option>
 									</select>
@@ -180,7 +187,6 @@
 			</div>
 
 			<!-- /.modal-createOrEdit-restaurantMenuCategory -->
-			 
 			<div class="modal fade" id="modal-createOrEdit-restaurantMenuCategory">
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
@@ -223,7 +229,7 @@
 								              		</label>
 
 									                <div class="col-sm-8">
-									                  	
+
 									                  	<multiselect 
 				                                  			v-model="restaurantSingleMenuCategoryData.restaurantObject"
 				                                  			placeholder="Restaurant Name" 
@@ -354,7 +360,6 @@
 				</div>
 				
 			</div> 
-			
 			<!-- /.modal-createOrEdit-restaurantMenuCategory-->
 
 	    </section>
@@ -425,8 +430,8 @@
 		},
 
 		created(){
-			this.fetchAllMenuCategories();
 			this.fetchAllRestaurants();
+			this.fetchAllMenuCategories();
 			this.fetchAllRestaurantMenuCategories();
 		},
 
@@ -708,6 +713,8 @@
 </script>
 
 <style scoped>
+	@import '~vue-multiselect/dist/vue-multiselect.min.css';
+
 	.modal { 
 		overflow: auto !important; 
 	}

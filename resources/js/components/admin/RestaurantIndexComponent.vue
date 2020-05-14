@@ -5,7 +5,10 @@
 
 		<section>
 
-			<div class="row justify-content-center vh-100" v-show="loading">
+			<div 
+				class="row justify-content-center vh-100" 
+				v-show="loading"
+			>
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
 					  	<div class="overlay dark">
@@ -183,7 +186,11 @@
 							</div>	
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
-									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+									<select 
+										class="form-control" 
+										v-model="perPage" 
+										@change="changeNumberContents()"
+									>
 										<option>10</option>
 										<option>20</option>
 										<option>30</option>

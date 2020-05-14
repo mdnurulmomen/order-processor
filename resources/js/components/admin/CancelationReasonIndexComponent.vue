@@ -263,7 +263,9 @@
 					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 
@@ -356,7 +358,7 @@
 			fetchAllReasons(){
 				this.loading = true;
 				axios
-					.get('/api/cancelation-reasons/' + this.perPage +'?page='+ this.pagination.current_page)
+					.get('/api/cancelation-reasons/' + this.perPage + '?page='+ this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;

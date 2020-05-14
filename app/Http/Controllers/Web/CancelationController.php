@@ -65,7 +65,9 @@ class CancelationController extends Controller
 		$query = CancelationReason::where('reason', 'like', "%$search%");
 
 		return response()->json([
+
 			'all' => $query->paginate($perPage),  
+		
 		], 200);
 	}
 }

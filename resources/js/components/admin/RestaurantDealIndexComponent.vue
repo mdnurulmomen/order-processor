@@ -806,6 +806,8 @@
 </script>
 
 <style scoped>
+	@import '~vue-multiselect/dist/vue-multiselect.min.css';
+	
 	.modal { 
 		overflow: auto !important; 
 	}
