@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
+
   <meta name="csrf-token" content="{{ csrf_token() }}">
   
   <title>Qupaid | Admin</title>
@@ -23,8 +24,13 @@
   <link href="{{ asset('plugins/toastr/css/toastr.css') }}" rel="stylesheet"/>
   <!-- work schedule appointments -->
   <link href="{{ asset('plugins/scheduler/css/scheduler.css') }}" rel="stylesheet" />
-  <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <!-- prefetching restaurant-list components -->
+  <link rel="prefetch" href="{{ asset('/js/0.js') }}" as="script">
+  <link rel="prefetch" href="{{ asset('/js/1.js') }}" as="script">
+  <link rel="prefetch" href="{{ asset('/js/2.js') }}" as="script">
+  <link rel="prefetch" href="{{ asset('/js/3.js') }}" as="script">
+  <link rel="prefetch" href="{{ asset('/js/21.js') }}" as="script">
+  <link rel="prefetch" href="{{ asset('/js/24.js') }}" as="script">
   <!-- jQuery -->
   <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 </head>
@@ -148,6 +154,7 @@
 <!-- REQUIRED SCRIPTS -->
 <!-- google location api -->
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYz-qkrVLMSJCB8u8INQK9Ep7NF3eJBxU&libraries=places"></script>
+
 <!-- Scheduler -->
 <script src="{{ asset('plugins/scheduler/js/scheduler.js') }}"></script>
 <!-- Toastr -->
