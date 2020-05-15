@@ -18,7 +18,10 @@
 				</div>
 			</div>
 		
-			<div class="row" v-show="!loading">
+			<div 
+				class="row" 
+				v-show="!loading"
+			>
 				<div class="col-sm-12">
 	              	
 					<!--
@@ -35,9 +38,15 @@
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">Restaurant List</h2>
+							<h2 class="lead float-left mt-1">
+								Restaurant List
+							</h2>
 
-                        	<button type="button" @click="showRestaurantCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button 
+	                        	type="button" 
+	                        	@click="showRestaurantCreateModal" 
+	                        	class="btn btn-secondary btn-sm float-right mb-2"
+                        	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Add Restaurant
 					      	</button>
@@ -470,7 +479,12 @@
 						<div class="modal-body">
 
 					  		<!-- form start -->
-							<form class="form-horizontal" v-on:submit.prevent=" editMode ? updateRestaurant() : storeRestaurant()" autocomplete="off" novalidate="true">
+							<form 
+								class="form-horizontal" 
+								v-on:submit.prevent="editMode ? updateRestaurant() : storeRestaurant()" 
+								autocomplete="off" 
+								novalidate="true"
+							>
 
 								<input type="hidden" name="_token" :value="csrf">
 
@@ -1875,8 +1889,8 @@
     			this.errors.restaurant = {};
 
 				this.singleRestaurantData.restaurant = {};
+
 				this.singleRestaurantData.restaurantAdminObject = {};
-				// this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
 				this.singleRestaurantData.restaurantCuisineObjectTags = 
 		    	this.singleRestaurantData.restaurantFoodObjectTags = 
@@ -1903,7 +1917,6 @@
 
 							this.singleRestaurantData.restaurant = {};
 							this.singleRestaurantData.restaurantAdminObject = {};
-							// this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
 							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
 
@@ -1976,7 +1989,6 @@
 							
 							this.singleRestaurantData.restaurant = {};
 							this.singleRestaurantData.restaurantAdminObject = {};
-							// this.restaurantNewBanner = this.singleRestaurantData.restaurant.banner_preview = null;
 
 							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
 
@@ -2274,17 +2286,26 @@
 			},
 			nextPage (event) {
 
-				this.validateFormInput ('restaurant.restaurantAdminObject');
-				this.validateFormInput ('restaurant.name');
-				this.validateFormInput ('restaurant.mobile');
-				this.validateFormInput ('restaurant.restaurantCuisineObjectTags');
-				this.validateFormInput ('restaurant.website');
-				this.validateFormInput ('restaurant.address');
-				this.validateFormInput ('restaurant.min_order');
-				this.validateFormInput ('restaurant.restaurantFoodObjectTags');
-				this.validateFormInput ('restaurant.restaurantMealObjectTags');
+				if (this.step===1) {
 
-				if (this.checkRestaurantFormValidation()) {
+					this.validateFormInput ('restaurant.restaurantAdminObject');
+					this.validateFormInput ('restaurant.name');
+					this.validateFormInput ('restaurant.mobile');
+					this.validateFormInput ('restaurant.restaurantCuisineObjectTags');
+					this.validateFormInput ('restaurant.website');
+				
+				}else if (this.step===2) {
+
+					this.validateFormInput ('restaurant.address');
+				
+				}else if (this.step===3) {
+
+					this.validateFormInput ('restaurant.min_order');
+					this.validateFormInput ('restaurant.restaurantFoodObjectTags');
+					this.validateFormInput ('restaurant.restaurantMealObjectTags');
+				}
+
+				if (Object.keys(this.errors.restaurant).length === 0) {
 
 					this.step += 1;
 
@@ -2533,6 +2554,7 @@
 				}
 					 
 			},
+		/*
 			checkRestaurantFormValidation() {
 
 				if (this.step == 1 && this.singleRestaurantData.restaurant.restaurant_admins_id && this.singleRestaurantData.restaurant.name && this.singleRestaurantData.restaurant.mobile && this.singleRestaurantData.restaurant.restaurantCuisineTags.length > 0) {
@@ -2559,6 +2581,7 @@
 				return	this.submitForm = false;
 
 			},
+		*/
 			onBannerChange(evnt){
 
 		      	let files = evnt.target.files || evnt.dataTransfer.files;
@@ -2567,8 +2590,12 @@
 		      	if (files.length && files[0].type.match('image.*')) {
                 	this.createImage(files[0]);
 		      	}
+		      	/*
 		      	else
 		      		this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner = null;
+	      		*/
+
+		      	evnt.target.value = '';
 
 		      	return;
 			},
