@@ -908,6 +908,7 @@
 
 					this.$delete(this.errors.deliveryMan, 'profile_pic_preview');
                 	this.createImage(files[0], 'profile');
+
 		      	}
 		      	else {
 
@@ -925,6 +926,7 @@
 		      		
 					this.$delete(this.errors.deliveryMan, 'nid_front_preview');
                 	this.createImage(files[0], 'NIDFront');
+
 		      	}
 		      	else {
 		      		
@@ -942,6 +944,7 @@
 
 		      		this.$delete(this.errors.deliveryMan, 'nid_back_preview');
                 	this.createImage(files[0], 'NIDBack');
+
 		      	}
 		      	else {
 		      		
@@ -974,6 +977,7 @@
 				this.errors.deliveryMan = {};
 
 				this.singleDeliveryManData.deliveryMan = {};
+				$('#modal-createOrEdit-deliveryMan').find('form')[0].reset();
 
 				$('#modal-createOrEdit-deliveryMan').modal('show');
 			},

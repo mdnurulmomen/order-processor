@@ -223,7 +223,7 @@
 
 								              	<div class="form-group row">	
 								              		<div class="col-sm-4 text-center">
-								                  		<img class="profile-user-img img-fluid" :src="singleNotificationData.notification.banner" alt="profile picture">
+								                  		<img class="profile-user-img img-fluid" :src="singleNotificationData.notification.banner" alt="Notification Banner">
 								                	</div>
 
 									                <div class="col-sm-8">
@@ -234,6 +234,7 @@
 										                        	class="form-control custom-file-input" 
 										                        	v-on:change="onBannerChange" 
 										                        	accept="image/*" 
+										                        	:required="!editMode" 
 										                        	:class="!errors.notification.banner  ? 'is-valid' : 'is-invalid'"
 										                        >
 										                        <label class="custom-file-label" for="exampleInputFile">
@@ -460,7 +461,6 @@
 							this.loading = false;
 							this.allNotifications = response.data.data;
 							this.pagination = response.data;
-							console.log(this.allNotifications);
 						}
 					})
 					.catch(error => {
@@ -515,6 +515,7 @@
 				this.errors.notification = {};
 
 				this.singleNotificationData.notification = {};
+				$('#modal-createOrEdit-notification').find('form')[0].reset();
 
 				$('#modal-createOrEdit-notification').modal('show');
 			},
