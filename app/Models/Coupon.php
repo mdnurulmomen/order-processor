@@ -14,6 +14,7 @@ class Coupon extends Model
      * @var array
      */
     protected $casts = [
+        'durability' => 'boolean',
         'status' => 'boolean',
     ];
 }

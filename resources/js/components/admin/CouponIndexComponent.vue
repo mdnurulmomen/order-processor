@@ -299,6 +299,27 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputDeliveryManName3" class="col-sm-4 col-form-label text-right">
+								              			Durability
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<toggle-button 
+									                  		:sync="true" 
+				                                  			v-model="singleCouponData.coupon.durability" 
+				                                  			value="true" 
+				                                  			:width="130"  
+				                                  			:height="30" 
+				                                  			:font-size="15" 
+				                                  			:color="{checked: 'green', unchecked: 'red'}" 
+				                                  			:labels="{checked: 'Defined', unchecked: 'Undefined' }"
+			                                  			/>
+									                </div>	
+								              	</div>
+
+								              	<div 
+								              		class="form-group row" 
+								              		v-show="singleCouponData.coupon.durability"
+								              	>	
+								              		<label for="inputDeliveryManName3" class="col-sm-4 col-form-label text-right">
 								              			Valid From
 								              		</label>
 									                <div class="col-sm-8">
@@ -306,15 +327,17 @@
 									                  		type="date" 
 									                  		class="form-control is-valid" 
 															v-model="singleCouponData.coupon.valid_from" 
-															placeholder="Date of Birth" 
-															min="2020-01-01" 
-															:max="currentDate" 
-															required="true"
+															placeholder="First Date" 
+															:min="currentDate" 
+															:required="singleCouponData.coupon.durability" 
 									                  	>
 									                </div>	
 								              	</div>
 
-								              	<div class="form-group row">	
+								              	<div 
+								              		class="form-group row" 
+								              		v-show="singleCouponData.coupon.durability"
+								              	>	
 								              		<label for="inputDeliveryManName3" class="col-sm-4 col-form-label text-right">
 								              			Valid To
 								              		</label>
@@ -323,9 +346,9 @@
 									                  		type="date" 
 									                  		class="form-control is-valid" 
 															v-model="singleCouponData.coupon.valid_to" 
-															placeholder="Date of Birth" 
-															min="2020-01-01" 
-															required="true"
+															placeholder="Last Date" 
+															:min="currentDate" 
+															:required="singleCouponData.coupon.durability" 
 									                  	>
 									                </div>	
 								              	</div>

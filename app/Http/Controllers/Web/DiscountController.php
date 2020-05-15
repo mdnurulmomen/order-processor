@@ -68,21 +68,29 @@ class DiscountController extends Controller
 			'percentage'=>'required|numeric|min:1|max:100',
 			'min_order'=>'required|numeric|min:100|max:255',
 			'max_discount_per_order'=>'required|numeric|max:255',
-			'valid_from'=>'required|date',
-			'valid_to'=>'required|date',
+			'durability'=>'nullable|boolean',
+			'valid_from'=>'nullable|date',
+			'valid_to'=>'nullable|date',
 			'status'=>'nullable|boolean',
 		]);
 
-		$newCoupon = Coupon::create([
-			'coupon_code' => $request->coupon_code,
-			'percentage' => $request->percentage,
-			'min_order' => $request->min_order,
-			'max_discount_per_order' => $request->max_discount_per_order,
-			'valid_from' => $request->valid_from,
-			'valid_to' => $request->valid_to,
-			'status' => $request->status ?? false,
-			'editor_id' => \Auth::guard('admin')->user()->id,
-		]);
+		$newCoupon = new Coupon();
+
+		$newCoupon->coupon_code = $request->coupon_code;
+		$newCoupon->percentage = $request->percentage;
+		$newCoupon->min_order = $request->min_order;
+		$newCoupon->max_discount_per_order = $request->max_discount_per_order;
+		$newCoupon->durability = $request->durability ?? false;
+
+		if ($request->durability) {
+			$newCoupon->valid_from = $request->valid_from;
+			$newCoupon->valid_to = $request->valid_to;
+		}
+		
+		$newCoupon->status = $request->status ?? false;
+		$newCoupon->editor_id = \Auth::guard('admin')->user()->id;
+
+		$newCoupon->save();
 
 		return $this->showAllCoupons($perPage);
 	}
@@ -96,21 +104,31 @@ class DiscountController extends Controller
 			'percentage'=>'required|numeric|min:1|max:100',
 			'min_order'=>'required|numeric|min:100|max:255',
 			'max_discount_per_order'=>'required|numeric|max:255',
-			'valid_from'=>'required|date',
-			'valid_to'=>'required|date',
+			'durability'=>'nullable|boolean',
+			'valid_from'=>'nullable|date',
+			'valid_to'=>'nullable|date',
 			'status'=>'nullable|boolean',
 		]);
 
-		$couponToUpdate->update([
-			'coupon_code' => $request->coupon_code,
-			'percentage' => $request->percentage,
-			'min_order' => $request->min_order,
-			'max_discount_per_order' => $request->max_discount_per_order,
-			'valid_from' => $request->valid_from,
-			'valid_to' => $request->valid_to,
-			'status' => $request->status ?? false,
-			'editor_id' => \Auth::guard('admin')->user()->id,
-		]);
+		$couponToUpdate->coupon_code = $request->coupon_code;
+		$couponToUpdate->percentage = $request->percentage;
+		$couponToUpdate->min_order = $request->min_order;
+		$couponToUpdate->max_discount_per_order = $request->max_discount_per_order;
+		$couponToUpdate->durability = $request->durability ?? false;
+
+		if ($request->durability) {
+			$couponToUpdate->valid_from = $request->valid_from;
+			$couponToUpdate->valid_to = $request->valid_to;
+		}
+		else {
+			$couponToUpdate->valid_from = NULL;
+			$couponToUpdate->valid_to = NULL;
+		}
+		
+		$couponToUpdate->status = $request->status ?? false;
+		$couponToUpdate->editor_id = \Auth::guard('admin')->user()->id;
+
+		$couponToUpdate->save();
 
 		return $this->showAllCoupons($perPage);
 	}
