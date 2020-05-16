@@ -40,7 +40,7 @@
 	                        	class="btn btn-secondary btn-sm float-right mb-2 ml-1"
                         	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                Add More menu categories
+                                More menu categories
 					      	</button>
 
 					      	<button 
@@ -49,7 +49,7 @@
 	                        	class="btn btn-default btn-sm float-right"
                         	>
 			        			<i class="fas fa-eye"></i>
-			        			View Menu-Items
+			        			Menu-Items
 			      			</button>
 						</div>
 
@@ -505,8 +505,6 @@
     	editMode : false,
     	
     	allMenuCategories : [],
-    	restaurantsToShow : [],
-
     	
     	restaurantAllMenuCategories : [],
 		restaurantMenuCategoriesToShow : [],
@@ -538,16 +536,6 @@
 		},
 
 		created(){
-
-			this.restaurantSingleMenuCategoryData.restaurantObject = {
-				id : this.$route.params.restaurant,		
-				name : this.restaurantNameFromData,
-			};
-
-			var array = [];
-			array.push(this.restaurantSingleMenuCategoryData.restaurantObject);
-			this.restaurantsToShow = array;
-
 			this.fetchAllMenuCategories();
 			this.fetchRestaurantAllMenuCategories();
 		},
@@ -555,13 +543,25 @@
 		computed: {
 		    // a computed getter
 		    restaurantNameFromData: function () {
-		      // `this` points to the vm instance
-		      if (this.restaurantMenuCategoriesToShow.length) {
-	      		return this.restaurantMenuCategoriesToShow[0].restaurant.name;
-		      }
+		      	// `this` points to the vm instance
+		      	if (this.restaurantMenuCategoriesToShow.length) {
+	      			return this.restaurantMenuCategoriesToShow[0].restaurant.name;
+		      	}
 
-		      return 'Current Restaurant';
-		    }
+		      	return 'Current Restaurant';
+		    },
+
+		    // a computed getter
+		    restaurantsToShow: function () {  
+		      	this.restaurantSingleMenuCategoryData.restaurantObject = {
+					id : this.$route.params.restaurant,		
+					name : this.restaurantNameFromData,
+				};
+
+				var array = [];
+				array.push(this.restaurantSingleMenuCategoryData.restaurantObject);
+				return array;
+		    },
 		},
 
 		watch : {
@@ -931,6 +931,8 @@
 </script>
 
 <style scoped>
+	@import '~vue-multiselect/dist/vue-multiselect.min.css';
+	
 	.modal { 
 		overflow: auto !important; 
 	}
