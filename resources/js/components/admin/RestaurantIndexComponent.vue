@@ -133,7 +133,6 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ restaurant.name}}</td>
-								    		<!-- <td>{{ restaurant.email }}</td> -->
 								    		<td>{{ restaurant.mobile }}</td>
 								    		<td>
 								    			{{ 
@@ -151,16 +150,14 @@
 								    		<td>
 								      			<button type="button" @click="showRestaurantDetailModal(restaurant)" class="btn btn-info btn-sm">
 								        			<i class="fas fa-eye"></i>
-								        			Details
+								        			Sum
 								      			</button>
-								      			<button type="button" @click="showRestaurantMenuList(restaurant)" class="btn btn-warning btn-sm">
-								        			<i class="fas fa-eye"></i>
-								        			Menu-items
-								      			</button>
+
 										      	<button type="button" v-show="restaurant.deleted_at === null" @click="showRestaurantEditModal(restaurant)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
+
 								      			<button
 								        			v-show="restaurant.deleted_at === null"
 								        			type="button"
@@ -170,6 +167,7 @@
 								        			<i class="fas fa-trash-alt"></i>
 								        			Delete
 								      			</button>
+
 								      			<button
 								        			v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin !== null"
 								        			type="button"
@@ -179,15 +177,27 @@
 								        			<i class="fas fa-undo"></i>
 								        			Restore
 								      			</button>
-								      			<p 	class="text-danger" 
-								      				v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin === null">
+
+								      			<button type="button" @click="showRestaurantMenuList(restaurant)" class="btn btn-success btn-sm">
+								        			<i class="fas fa-eye"></i>
+								        			Menu
+								      			</button>
+
+								      			<p 	
+								      				class="text-danger" 
+								      				v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin === null"
+								      			>
 								      				Trashed Admin
 								      			</p>
 								    		</td>
 									  	</tr>
-									  	<tr v-show="!restaurantsToShow.length">
+									  	<tr 
+									  		v-show="!restaurantsToShow.length"
+									  	>
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No data found.</div>
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No data found.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -251,11 +261,6 @@
 								<li class="nav-item">
 									<a class="nav-link" data-toggle="tab" href="#address">
 										Address
-									</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#menu">
-										Menu Profile
 									</a>
 								</li>
 								<li class="nav-item">
@@ -334,6 +339,7 @@
 					            		</div>
 					            	</div>
 								</div>
+
 								<div id="address" class="container tab-pane fade">
 									<div class="row">
 					            		<div class="col-sm-12">
@@ -356,61 +362,11 @@
 					            		</div>
 					            	</div>
 								</div>
-								<div id="menu" class="container tab-pane fade">
+
+								<div id="service" class="container tab-pane fade">
 									<div class="row">
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Restaurant Type :
-							              		</label>
-								                <div class="col-sm-6">
-								                	
-								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantCuisineObjectTags).length === 0">
-								                		No cuisine available or deleted
-								                	</p>
-								                	
-								                	<ul>
-													  	<li v-for="restaurantCuisineObjectTag in singleRestaurantData.restaurantCuisineObjectTags">
-													    	{{ restaurantCuisineObjectTag.name }}
-													  	</li>
-													</ul>
-								                </div>	
-								            </div>
-					            			<div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Best Menu :
-							              		</label>
-								                <div class="col-sm-6">
-								                	
-								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantFoodObjectTags).length === 0">
-								                		No menu available or deleted
-								                	</p>
-								                	
-								                	<ul>
-													  	<li v-for="restaurantFoodObjectTag in singleRestaurantData.restaurantFoodObjectTags">
-													    	{{ restaurantFoodObjectTag.name }}
-													  	</li>
-													</ul>
-								                </div>	
-								            </div>
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Available Meals :
-							              		</label>
-								                <div class="col-sm-6">
-								                  	
-								                	<p class="small text-danger" v-show="Object.keys(singleRestaurantData.restaurantMealObjectTags).length === 0">
-								                		No meal available or deleted
-								                	</p>
-								                	
-								                  	<ul>
-													  	<li v-for="restaurantMealObjectTag in singleRestaurantData.restaurantMealObjectTags">
-													    	{{ restaurantMealObjectTag.name }}
-													  	</li>
-													</ul>
-								                </div>	
-								            </div>
-								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Minimum Order :
 							              		</label>
@@ -418,12 +374,6 @@
 								                  	{{singleRestaurantData.restaurant.min_order}} tk
 								                </div>	
 								            </div> 
-					            		</div>
-					            	</div>
-								</div>
-								<div id="service" class="container tab-pane fade">
-									<div class="row">
-					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Payment :
@@ -471,7 +421,9 @@
 				<div class="modal-dialog modal-xl">
 					<div class="modal-content">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Restaurant</h4>
+						  	<h4 class="modal-title">
+						  		{{ editMode ? 'Edit' : 'Create' }} Restaurant
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -498,7 +450,9 @@
 
 									  	<div class="col-sm-12">
 	  
-									        <h2 class="text-center mb-4 lead">Restaurant Profile</h2>
+									        <h2 class="text-center mb-4 lead">
+									        	Restaurant Profile
+									        </h2>
 									      
 									        <div class="row">
 
@@ -509,7 +463,12 @@
 									                      	<div class="d-flex flex-wrap align-content-center form-group row">
 									                        	<div class="col-sm-8 text-center mb-2">
 									                        		<picture>
-									                                	<img class="img-fluid" :src="singleRestaurantData.restaurant.banner_preview" alt="Restaurant Banner" style="max-height: 200px;">
+									                                	<img 
+									                                		class="img-fluid" 
+									                                		:src="singleRestaurantData.restaurant.banner_preview" 
+									                                		alt="Restaurant Banner" 
+									                                		style="max-height: 200px;"
+									                                	>
 									                                </picture>
 									                          	</div>
 									                          	<div class="col-sm-4 align-self-center">
@@ -541,7 +500,9 @@
 
 									                        	<div class="col-6">
 									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">Restaurant Admin</label>
+									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">
+									                              			Restaurant Admin
+									                              		</label>
 									                              		<div class="col-sm-6">
 									                                  		
 									                                  		<multiselect 
@@ -653,49 +614,31 @@
 
 									                        <div class="form-group row">
 									                          	<div class="col-6">
-									                            	<div class="row d-flex align-items-center">
-
-									                              		<label 
-										                              		for="inputCusineTags3" 
-										                              		class="col-sm-4 col-form-label text-right"
-									                              		>
-									                              			Restaurant Type
-									                              		</label>
-									                              		<div class="col-sm-6">
-
-									                              			<multiselect 
-									                                  			v-model="singleRestaurantData.restaurantCuisineObjectTags"
-									                                  			placeholder="Restaurant Type" 
-										                                  		label="name" 
-										                                  		track-by="id" 
-										                                  		:options="allRestaurantCuisines" 
-										                                  		:multiple="true"   
-										                                  		:required="true"
-										                                  		:class="!errors.restaurant.restaurantCuisineObjectTags  ? 'is-valid' : 'is-invalid'" 
-										                                  		:allow-empty="false"
-										                                  		selectLabel = "Press/Click"
-										                                  		deselect-label="Can't remove single value"
-										                                  		@close="validateFormInput('restaurant.restaurantCuisineObjectTags')"
-									                                  		>
-										                                	</multiselect>
-
-										                                	<div 
-											                                	class="invalid-feedback"
+										                            <div class="row">
+										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-right">Min. Order</label>
+										                              	<div class="col-sm-8">
+										                              		
+									                                  		<input 
+										                                  		type="number" 
+										                                  		class="form-control" 
+										                                  		v-model.number="singleRestaurantData.restaurant.min_order" 
+										                                  		placeholder="Minimum Currency" 
+										                                  		min="100" 
+										                                  		max="5000" 
+										                                  		step="1" 
+										                                  		:class="!errors.restaurant.min_order  ? 'is-valid' : 'is-invalid'"
+										                                  		@keyup="validateFormInput('restaurant.min_order')"
+										                                  	>
+										                                  		
+										                                  	<div 
+											                                  	class="invalid-feedback" 
 											                                >
-
-																		        {{ errors.restaurant.restaurantCuisineObjectTags }}
-
+																		        {{ errors.restaurant.min_order }}
 																		  	</div>
 
 										                              	</div>
-										                              	<div class="col-sm-2 text-right">
-										                                  	<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-restaurant-category">
-										                                    	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-											                                    Cuisine
-										                                	</button>
-										                              	</div>
-										                            </div>
-									                          	</div>
+										                          	</div>
+										                      	</div>
 									                          	<div class="col-6">
 										                            <div class="row">
 										                              <div class="col-sm-4 text-right">
@@ -836,192 +779,12 @@
 										class="row" 
 										v-bind:key="3" 
 										v-show="step==3"
-									>
-									  
-									  	<div class="col-sm-12">
-									        
-									        <h2 class="text-center mb-4 lead">Restaurant Menu Profile</h2>
-									      
-									        <div class="row">
-									          
-									          	<div class="col-sm-12">
-									            	<div class="card">
-									                    <div class="card-body">
-
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-										                            <div class="row">
-										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-right">Min. Order</label>
-										                              	<div class="col-sm-8">
-										                              		
-									                                  		<input 
-										                                  		type="number" 
-										                                  		class="form-control" 
-										                                  		v-model.number="singleRestaurantData.restaurant.min_order" 
-										                                  		placeholder="Minimum Currency" 
-										                                  		min="100" 
-										                                  		max="5000" 
-										                                  		step="1" 
-										                                  		:class="!errors.restaurant.min_order  ? 'is-valid' : 'is-invalid'"
-										                                  		@keyup="validateFormInput('restaurant.min_order')"
-										                                  	>
-										                                  		
-										                                  	<div 
-											                                  	class="invalid-feedback" 
-											                                >
-																		        {{ errors.restaurant.min_order }}
-																		  	</div>
-
-										                              	</div>
-										                          	</div>
-										                      	</div>
-										                  		<div class="col-6">
-										                            <div class="d-flex flex-wrap align-content-center form-group row">
-										                                
-										                              	<div class="col-sm-4 text-right">
-										                                	<label for="inputPayment3" class="col-form-label pb-0">
-										                                		Payment
-										                                	</label>
-										                                	<div class="p-0 m-0">
-										                                		(physical orders)
-										                                	</div>
-										                                
-										                              	</div>
-
-										                              	<div class="col-sm-8 align-self-center text-center">
-										                                	<div class="checkbox">
-										                                  
-										                                    	<toggle-button 
-											                                    	:sync="true" 
-											                                    	v-model="singleRestaurantData.restaurant.is_post_paid" 
-											                                    	value="true" 
-											                                    	:width="120"  
-											                                    	:height="30" 
-											                                    	:font-size="15" 
-											                                    	:color="{checked: 'green', unchecked: '#17a2b8'}" 
-											                                    	:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"
-											                                    />
-
-										                                	</div>
-										                              	</div>
-										                          	</div>
-										                      	</div>
-									                        </div>
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">Best Food Menu's</label>
-									                              		<div class="col-sm-6">
-									                        
-									                                  		<multiselect 
-									                                  			v-model="singleRestaurantData.restaurantFoodObjectTags"
-									                                  			placeholder="Select three main foods" 
-										                                  		label="name" 
-										                                  		track-by="id" 
-										                                  		:options="allMenuCategories" 
-										                                  		:multiple="true"   
-										                                  		:required="true"
-										                                  		:class="!errors.restaurant.restaurantFoodObjectTags  ? 'is-valid' : 'is-invalid'" 
-										                                  		:allow-empty="false"
-										                                  		selectLabel = "Press/Click"
-										                                  		deselect-label="Can't remove single value"
-										                                  		@close="validateFormInput('restaurant.restaurantFoodObjectTags')"
-									                                  		>
-
-									                                		</multiselect>
-
-									                                		<div 
-											                                  	class="invalid-feedback"
-											                                >
-																		        {{ errors.restaurant.restaurantFoodObjectTags }}
-																		  	</div>
-
-									                              		</div>
-									                               
-										                              	<div class="col-sm-2 text-right">
-										                                  	<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-menu-category">
-										                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-										                                    	Food
-										                                	</button>
-										                              	</div> 
-									                            
-									                            	</div>
-									                          	</div>
-									                          	<div class="col-6">
-									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputMealTags3" class="col-sm-4 col-form-label text-right">Available Meal's</label>
-									                              		<div class="col-sm-6">
-									                            
-								                                			<multiselect 
-									                                			v-model="singleRestaurantData.restaurantMealObjectTags"
-									                                			placeholder="Available Meals" 
-									                                			label="name" 
-									                                			track-by="id" 
-									                                			:options="allMeals" 
-									                                			:multiple="true"  
-									                                			:required="true"
-									                                			:class="!errors.restaurant.restaurantMealObjectTags  ? 'is-valid' : 'is-invalid'"
-									                                			:allow-empty="false"
-										                                  		selectLabel = "Press/Click"
-										                                  		deselect-label="Can't remove single value"
-									                                			@close="validateFormInput('restaurant.restaurantMealObjectTags')"
-								                                			>
-
-								                                			</multiselect>
-
-								                                			<div 
-											                                  	class="invalid-feedback"
-											                                >
-																		        {{ errors.restaurant.restaurantMealObjectTags }}
-																		  	</div>
-
-									                              		</div>
-									                              
-									                              		<div class="col-sm-2 text-right">
-									                                  		<button type="button" class="btn btn-secondary btn-sm p-0" data-toggle="modal" data-target="#modal-create-meal-tag">
-										                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-										                                    	Meal
-										                                	</button>
-									                              		</div>
-									                              
-									                            	</div>
-									                          	</div>
-									                        </div>
-
-									                    </div>
-									                    <!-- /.card-body -->
-									              	</div>
-									              	<!-- /.card-card -->
-								          		</div>  
-							       			</div>
-
-									        <div class="row mb-2">
-									          	<div class="col-sm-6 text-left">
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="step-=1">
-									                    <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
-								                  	</button>
-								                </div>
-
-								                <div class="col-sm-6 text-right">
-								                	<div class="text-danger small" v-show="!submitForm">
-												  		Please input required fields
-										          	</div>
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
-									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
-								                  	</button>
-									          	</div>
-								            </div>
-									  	</div>
-									</div>
-
-									<div 
-										class="row" 
-										v-bind:key="4" 
-										v-show="step==4"
 									> 
 									  	<div class="col-sm-12">
 
-									        <h2 class="text-center mb-4 lead">Service & Schedule</h2>
+									        <h2 class="text-center mb-4 lead">
+									        	Service & Schedule
+									        </h2>
 									      
 									        <div class="row">
 									          
@@ -1029,51 +792,6 @@
 									            	<div class="card">
 									                    <div class="card-body">
 
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="d-flex flex-wrap align-content-center row">
-									                              		<label for="inputParking3" class="col-sm-4 col-form-label text-right">Parking Facility</label>
-									                              		<div class="col-sm-8 align-self-center text-center">
-									                                  		<div class="checkbox">
-									                                  
-									                                    		<toggle-button 
-										                                    		value="true" 
-										                                    		:sync="true" 
-										                                    		v-model="singleRestaurantData.restaurant.has_parking" 
-										                                    		:width="120"  
-										                                    		:height="30" 
-										                                    		:font-size="15" 
-										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
-										                                    		:labels="{checked: 'Available', unchecked: 'No Parking' }"
-									                                    		/>
-
-									                                		</div>
-									                              		</div>
-									                          		</div>
-									                      		</div>
-									                  			<div class="col-6">
-									                            	<div class="d-flex flex-wrap align-content-center row">
-
-									                              		<label for="inputSelfService3" class="col-sm-4 col-form-label text-right">Self Service</label>
-									                                
-									                              		<div class="col-sm-8 align-self-center text-center">
-									                                  		<div class="checkbox">
-									                                  
-									                                    		<toggle-button 
-										                                    		value ="true" 
-										                                    		:sync="true" 
-										                                    		v-model="singleRestaurantData.restaurant.is_self_service" 
-										                                    		:width="120"  
-										                                    		:height="30" 
-										                                    		:font-size="15" 
-										                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
-										                                    		:labels="{checked: 'Yes', unchecked: 'No' }"
-										                                    	/>
-									                                		</div>
-									                              		</div>
-									                          		</div>
-									                      		</div>
-									                        </div>
 									                        <div class="form-group row mb-4">
 									                            
 									                          	<label for="inputServiceSchedule3" class="col-sm-2 col-form-label text-right">Service Schedule</label>
@@ -1101,6 +819,84 @@
 
 									                          	</div>      
 									                        </div>
+
+									                        <div class="form-group row">
+									                          	<div class="col-4">
+										                            <div class="d-flex flex-wrap align-content-center form-group row">
+										                                
+										                              	<div class="col-sm-4 text-right">
+										                                	<label for="inputPayment3" class="col-form-label pb-0">
+										                                		Payment
+										                                	</label>
+										                                	<div class="p-0 m-0">
+										                                		(cash)
+										                                	</div>
+										                                
+										                              	</div>
+
+										                              	<div class="col-sm-8 align-self-center text-center">
+										                                	<div class="checkbox">
+										                                  
+										                                    	<toggle-button 
+											                                    	:sync="true" 
+											                                    	v-model="singleRestaurantData.restaurant.is_post_paid" 
+											                                    	value="true" 
+											                                    	:width="120"  
+											                                    	:height="30" 
+											                                    	:font-size="15" 
+											                                    	:color="{checked: 'green', unchecked: '#17a2b8'}" 
+											                                    	:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"
+											                                    />
+
+										                                	</div>
+										                              	</div>
+										                          	</div>
+										                      	</div>
+									                          	<div class="col-4">
+									                            	<div class="d-flex flex-wrap align-content-center row">
+									                              		<label for="inputParking3" class="col-sm-4 col-form-label text-right">Parking Facility</label>
+									                              		<div class="col-sm-8 align-self-center text-center">
+									                                  		<div class="checkbox">
+									                                  
+									                                    		<toggle-button 
+										                                    		value="true" 
+										                                    		:sync="true" 
+										                                    		v-model="singleRestaurantData.restaurant.has_parking" 
+										                                    		:width="120"  
+										                                    		:height="30" 
+										                                    		:font-size="15" 
+										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
+										                                    		:labels="{checked: 'Available', unchecked: 'No Parking' }"
+									                                    		/>
+
+									                                		</div>
+									                              		</div>
+									                          		</div>
+									                      		</div>
+									                  			<div class="col-4">
+									                            	<div class="d-flex flex-wrap align-content-center row">
+
+									                              		<label for="inputSelfService3" class="col-sm-4 col-form-label text-right">Self Service</label>
+									                                
+									                              		<div class="col-sm-8 align-self-center text-center">
+									                                  		<div class="checkbox">
+									                                  
+									                                    		<toggle-button 
+										                                    		value ="true" 
+										                                    		:sync="true" 
+										                                    		v-model="singleRestaurantData.restaurant.is_self_service" 
+										                                    		:width="120"  
+										                                    		:height="30" 
+										                                    		:font-size="15" 
+										                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+										                                    		:labels="{checked: 'Yes', unchecked: 'No' }"
+										                                    	/>
+									                                		</div>
+									                              		</div>
+									                          		</div>
+									                      		</div>
+									                        </div>
+
 									                    </div>
 									                    <!-- /.card-body -->
 									              	</div>
@@ -1144,16 +940,13 @@
 										    <div class="card-header text-center">
 
 										      	<div class="progress">
-										        	<div class="progress-bar bg-success w-25" v-show="step>=1">
+										        	<div class="progress-bar bg-success w-50" v-show="step>=1">
 										          		Profile
 										        	</div>
 										        	<div class="progress-bar bg-info w-25" v-show="step>=2">
 										          		Address
 										        	</div>
-										        	<div class="progress-bar bg-warning w-25" v-show="step>=3">
-										          		Menu Profile
-										        	</div>
-										        	<div class="progress-bar bg-danger w-25" v-show="step>=4">
+										        	<div class="progress-bar bg-danger w-25" v-show="step>=3">
 										          		Service & Schedule
 										        	</div>
 										      	</div>
@@ -1174,79 +967,6 @@
 				<!-- /.modal-dialog -->
 			</div>
 			<!-- /modal-createOrEdit-restaurant -->
-
-			<!-- /.modal-create-restaurant-category -->
-			<div class="modal fade" id="modal-create-restaurant-category">
-				<div class="modal-dialog">
-					<div class="modal-content bg-secondary">
-						<div class="modal-header">
-						  	<h4 class="modal-title">Add More Cuisine</h4>
-						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						    	<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="storeRestaurantCuisine" autocomplete="off">
-							<div class="modal-body text-dark">
-
-					      		<input type="hidden" name="_token" :value="csrf">
-
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="card card-outline">
-								            <div class="card-body">
-								              	<div class="form-group row">
-									              		
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">New Cuisine Name</label>
-									                <div class="col-sm-8">
-									                  	<input 
-										                  	type="text" class="form-control" 
-										                  	v-model="newRestaurantCuisine.name"
-										                  	placeholder="Cuisine Name"
-										                  	required="true" 
-										                  	:class="!errors.newRestaurantCuisine.name  ? 'is-valid' : 'is-invalid'"
-										                  	@keyup="validateFormInput('newRestaurantCuisine.name')"
-									                  	>
-									                  	
-									                  	<div class="invalid-feedback">
-												        	{{ errors.newRestaurantCuisine.name }}
-												  		</div>
-									                </div>	
-									              	
-								              	</div>
-								            </div>
-								            <!-- /.card-body -->
-									    </div>
-									</div>
-								</div>
-							</div>
-
-							<div class="modal-footer justify-content-between">	
-								
-								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
-								  		Please input all required fields
-								  	</span>
-								</div>
-								
-				              	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
-				              		Close
-				              	</button>
-				              	<button 
-								  	type="submit" 
-								  	:disabled="!submitForm" 
-								  	class="btn btn-outline-light">
-							  		Add Cuisine
-								</button>
-								
-				            </div>
-						</form>
-					</div>
-				<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal-create-restaurant-category -->
 
 			<!-- /.modal-create-restaurant-admin -->
 			<div class="modal fade" id="modal-create-restaurant-admin">
@@ -1274,15 +994,15 @@
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="text" class="form-control" 
-										                  	v-model="newRestaurantAdmin.user_name"
+										                  	v-model="restaurantNewAdmin.user_name"
 										                  	placeholder="Restaurant Admin Name" 
 										                  	required="true" 
-										                  	:class="!errors.newRestaurantAdmin.user_name  ? 'is-valid' : 'is-invalid'"
-										                  	@keyup="validateFormInput('newRestaurantAdmin.user_name')"
+										                  	:class="!errors.restaurantNewAdmin.user_name  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('restaurantNewAdmin.user_name')"
 									                  	>
 									                  	
 									                  	<div class="invalid-feedback">
-												        	{{ errors.newRestaurantAdmin.user_name }}
+												        	{{ errors.restaurantNewAdmin.user_name }}
 												  		</div>
 									                </div>	
 								              	</div>
@@ -1292,15 +1012,15 @@
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="text" class="form-control" 
-										                  	v-model="newRestaurantAdmin.mobile"
+										                  	v-model="restaurantNewAdmin.mobile"
 										                  	placeholder="Restaurant Admin Name" 
 										                  	required="true"  
-										                  	:class="!errors.newRestaurantAdmin.mobile  ? 'is-valid' : 'is-invalid'"
-										                  	@keyup="validateFormInput('newRestaurantAdmin.mobile')"
+										                  	:class="!errors.restaurantNewAdmin.mobile  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('restaurantNewAdmin.mobile')"
 									                  	>
 									                  	
 									                  	<div class="invalid-feedback">
-												        	{{ errors.newRestaurantAdmin.mobile }}
+												        	{{ errors.restaurantNewAdmin.mobile }}
 												  		</div>
 									                </div>	
 								              	</div>
@@ -1310,15 +1030,15 @@
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="text" class="form-control" 
-										                  	v-model="newRestaurantAdmin.email"
+										                  	v-model="restaurantNewAdmin.email"
 										                  	placeholder="Restaurant Admin Name" 
 										                  	required="true"  
-										                  	:class="!errors.newRestaurantAdmin.email  ? 'is-valid' : 'is-invalid'"
-										                  	@keyup="validateFormInput('newRestaurantAdmin.email')"
+										                  	:class="!errors.restaurantNewAdmin.email  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('restaurantNewAdmin.email')"
 									                  	>
 									                  	
 									                  	<div class="invalid-feedback">
-												        	{{ errors.newRestaurantAdmin.email }}
+												        	{{ errors.restaurantNewAdmin.email }}
 												  		</div>
 									                </div>	
 								              	</div>
@@ -1328,15 +1048,15 @@
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="password" class="form-control" 
-										                  	v-model="newRestaurantAdmin.password"
+										                  	v-model="restaurantNewAdmin.password"
 										                  	placeholder="Restaurant Admin Name" 
 										                  	required="true" 
-										                  	:class="!errors.newRestaurantAdmin.password  ? 'is-valid' : 'is-invalid'"
-										                  	@keyup="validateFormInput('newRestaurantAdmin.password')"
+										                  	:class="!errors.restaurantNewAdmin.password  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('restaurantNewAdmin.password')"
 									                  	>
 									                  	
 									                  	<div class="invalid-feedback">
-												        	{{ errors.newRestaurantAdmin.password }}
+												        	{{ errors.restaurantNewAdmin.password }}
 												  		</div>
 									                </div>	
 								              	</div>
@@ -1346,15 +1066,15 @@
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="password" class="form-control" 
-										                  	v-model="newRestaurantAdmin.password_confirmation"
+										                  	v-model="restaurantNewAdmin.password_confirmation"
 										                  	placeholder="Restaurant Admin Name" 
 										                  	required="true" 
-										                  	:class="!errors.newRestaurantAdmin.password_confirmation  ? 'is-valid' : 'is-invalid'"
-										                  	@keyup="validateFormInput('newRestaurantAdmin.password_confirmation')"
+										                  	:class="!errors.restaurantNewAdmin.password_confirmation  ? 'is-valid' : 'is-invalid'"
+										                  	@keyup="validateFormInput('restaurantNewAdmin.password_confirmation')"
 									                  	>
 									                  	
 									                  	<div class="invalid-feedback">
-												        	{{ errors.newRestaurantAdmin.password_confirmation }}
+												        	{{ errors.restaurantNewAdmin.password_confirmation }}
 												  		</div>
 									                </div>	
 								              	</div>
@@ -1392,167 +1112,6 @@
 				<!-- /.modal-dialog -->
 			</div>
 			<!-- /.modal-create-restaurant-admin -->
-			
-			<!-- modal-create-meal-tag -->
-			<div class="modal fade" id="modal-create-meal-tag">
-				<div class="modal-dialog">
-					<div class="modal-content bg-secondary">
-						<div class="modal-header">
-						  	<h4 class="modal-title">Create New Meal</h4>
-						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						    	<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-					  	<!-- form start -->
-					  	<form 
-						  	class="form-horizontal" 
-						  	v-on:submit.prevent="storeNewMeal" 
-						  	autocomplete="off"
-					  	>
-							<div class="modal-body text-dark">
-
-					      		<input type="hidden" name="_token" :value="csrf">
-
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="card card-outline">
-								            <div class="card-body">
-								              	<div class="form-group row">
-									              		
-								              		<label for="inputMealName3" class="col-sm-4 col-form-label text-right">Meal Name</label>
-									                <div class="col-sm-8">
-									                  	<input 
-															type="text" 
-															class="form-control" 
-															v-model="newMeal.name" 
-															placeholder="Meal Name" 
-															required="true"
-															:class="!errors.newMeal.name  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('newMeal.name')"
-									                  	>
-									                  	<div class="invalid-feedback">
-												        	{{ errors.newMeal.name }}
-												  		</div>
-									                </div>	
-									              	
-								              	</div>
-								            </div>
-								            <!-- /.card-body -->
-									    </div>
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer justify-content-between">
-								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
-								  		Please input all required fields
-								  	</span>
-								</div>
-							  	<button 
-								  	type="button" 
-								  	class="btn btn-outline-light" 
-								  	data-dismiss="modal"
-							  	>
-							  		Close
-							  	</button>
-							  	<button 
-								  	type="submit" 
-								  	:disabled="!submitForm" 
-								  	class="btn btn-outline-light"
-							  	>
-							  		Add Meal
-								</button>
-							</div>
-						</form>
-					</div>
-				<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal-modal-create-meal-tag -->
-
-			<!-- /.modal-modal-create-menu-category -->
-			<div class="modal fade" id="modal-create-menu-category">
-				<div class="modal-dialog">
-					<div class="modal-content bg-secondary">
-						<div class="modal-header">
-						  	<h4 class="modal-title">Add Menu Category</h4>
-						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						    	<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-					  	<!-- form start -->
-					  	<form 
-						  	class="form-horizontal" 
-						  	v-on:submit.prevent="storeMenuCategory" 
-						  	autocomplete="off"
-					  	>
-							<div class="modal-body text-dark">
-
-					      		<input 
-						      		type="hidden" 
-						      		name="_token" 
-						      		:value="csrf"
-					      		>
-
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="card card-outline">
-								            <div class="card-body">
-								              	<div class="form-group row">
-									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Menu Name</label>
-									                <div class="col-sm-8">
-									                  	<input 
-															type="text" 
-															class="form-control" 
-															v-model="newMenuCategory.name" 
-															placeholder="Menu Name" 
-															required="true"
-															:class="!errors.newMenuCategory.name  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('newMenuCategory.name')"
-									                	>
-									                	<div class="invalid-feedback">
-												        	{{ errors.newMenuCategory.name }}
-												  		</div>
-									                </div>	
-									              	
-								              	</div>
-								            </div>
-								            <!-- /.card-body -->
-									    </div>
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer justify-content-between">
-								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
-								  		Please input all required fields
-								  	</span>
-								</div>
-							  	<button 
-								  	type="button" 
-								  	class="btn btn-outline-light" 
-								  	data-dismiss="modal"
-							  	>
-							  		Close
-							  	</button>
-
-							  	<button 
-							  		type="submit" 
-							  		:disabled="!submitForm" 
-							  		class="btn btn-outline-light"
-							  	>
-							  		Add Food Menu
-							  	</button>
-							</div>
-						</form>
-					</div>
-				<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal-modal-create-menu-category -->
 
 			<!-- modal-restaurant-delete-confirmation -->
 			<div class="modal fade" id="modal-restaurant-delete-confirmation">
@@ -1668,9 +1227,6 @@
 			is_post_paid : false,
 			
 			restaurant_admins_id : null,
-			restaurantCuisineTags : [],
-			restaurantFoodTags : [],
-			restaurantMealTags : [],
 
 			has_parking : false,
 			is_self_service : false,
@@ -1702,22 +1258,10 @@
     	currentTab : 'all',
     	allRestaurants : [],
     	restaurantsToShow : [],
-
-    	allMeals : [],
-    	allMenuCategories : [],
+    	
         allRestaurantAdmins : [],
-        allRestaurantCuisines : [],
-
-    	newMeal : {
-    		// name : null,
-    	},
-    	newMenuCategory : {
-    		// name : null,
-    	},
-    	newRestaurantCuisine : {
-    		// name : null,
-    	},
-    	newRestaurantAdmin : {
+    	
+    	restaurantNewAdmin : {
 			// email : null,
 			// mobile : null,
     		// user_name : null,
@@ -1732,11 +1276,8 @@
       	},
 
     	errors : {
-    		newMeal : {},
     		restaurant : {},
-    		newMenuCategory : {},
-			newRestaurantAdmin : {},
-    		newRestaurantCuisine : {},
+			restaurantNewAdmin : {},
     	},
 
         singleRestaurantData : singleRestaurantData,
@@ -1759,11 +1300,8 @@
 		},
 
 		created(){
-			this.fetchAllMeals();
 			this.fetchAllRestaurants();
-			this.fetchAllMenuCategories();
 			this.fetchAllRestaurantAdmins();
-			this.fetchAllRestaurantCuisines();
 		},
 
 		mounted(){
@@ -1777,27 +1315,6 @@
 					this.singleRestaurantData.restaurant.restaurant_admins_id = restaurantAdminObject.id;
 				}else
 					this.singleRestaurantData.restaurant.restaurant_admins_id = null;
-			},
-			'singleRestaurantData.restaurantCuisineObjectTags' : function(restaurantCuisineObjectTags){
-				let array = [];
-				$.each(restaurantCuisineObjectTags, function(key, value) {
-			     	array.push(value.id);
-			   	});
-		     	this.singleRestaurantData.restaurant.restaurantCuisineTags = array;
-			},
-			'singleRestaurantData.restaurantFoodObjectTags' : function(restaurantFoodObjectTags){
-				let array = [];
-				$.each(restaurantFoodObjectTags, function(key, value) {
-			     	array.push(value.id);
-			   	});
-		     	this.singleRestaurantData.restaurant.restaurantFoodTags = array;
-			},
-			'singleRestaurantData.restaurantMealObjectTags' : function(restaurantMealObjectTags){
-				let array = [];
-				$.each(restaurantMealObjectTags, function(key, value) {
-			     	array.push(value.id);
-			   	});
-		     	this.singleRestaurantData.restaurant.restaurantMealTags = array;
 			},
 			'singleRestaurantData.service_schedule' : function(val){
 				this.singleRestaurantData.restaurant.service_schedule = val;
@@ -1868,6 +1385,21 @@
 						console.log(error);
 					});
 			},
+			fetchAllRestaurantAdmins(){
+				this.loading = true;
+				axios
+					.get('/api/restaurant-admins')
+					.then(response => {
+						if (response.status == 200) {
+							this.loading = false;
+							this.allRestaurantAdmins = response.data;
+							// console.log(this.allRestaurantAdmins);
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			},
 			changeNumberContents() {
 				this.pagination.current_page = 1;
 				if (this.query === '') {
@@ -1881,6 +1413,14 @@
 				}else
 					this.searchData();
     		},
+    		showRestaurantDetailModal(restaurant) {
+
+				this.singleRestaurantData.restaurant = restaurant;
+
+				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
+
+				$("#modal-show-restaurant").modal("show");
+			},
     		showRestaurantCreateModal(restaurant) {
     			
     			this.step = 1;
@@ -1892,13 +1432,16 @@
 
 				this.singleRestaurantData.restaurantAdminObject = {};
 
-				this.singleRestaurantData.restaurantCuisineObjectTags = 
-		    	this.singleRestaurantData.restaurantFoodObjectTags = 
-		    	this.singleRestaurantData.restaurantMealObjectTags = [];
-
 				$("#modal-createOrEdit-restaurant").modal("show");
 			},
 		    storeRestaurant() {
+
+				if (!this.singleRestaurantData.restaurant.restaurant_admins_id || !this.singleRestaurantData.restaurant.name || !this.singleRestaurantData.restaurant.mobile || !this.singleRestaurantData.restaurant.min_order || !this.singleRestaurantData.restaurant.address) {
+
+					this.submitForm = false;
+					
+					return;
+				}
 
 				$("#modal-createOrEdit-restaurant").modal("hide");
 
@@ -1918,12 +1461,13 @@
 							this.singleRestaurantData.restaurant = {};
 							this.singleRestaurantData.restaurantAdminObject = {};
 
-							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
-
 							this.query = '';
+
 							this.currentTab = 'all';
+
 							this.allRestaurants = response.data;
 							this.showListDataForSelectedTab();
+
 							toastr.success(response.data.success, "Added");
 						}
 					})
@@ -1936,24 +1480,6 @@
 				      	}
 					});
 			},
-			showRestaurantMenuList(restaurant) {
-				this.$router.push({
-			 		name: 'admin.restaurantMenuItem.index', 
-			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
-				});
-			},
-		    showRestaurantDetailModal(restaurant) {
-
-				this.singleRestaurantData.restaurant = restaurant;
-
-				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
-
-				this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
-		    	this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
-		    	this.singleRestaurantData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
-
-				$("#modal-show-restaurant").modal("show");
-			},
 			showRestaurantEditModal(restaurant) {
 
 				this.step = 1;
@@ -1964,14 +1490,17 @@
 				this.singleRestaurantData.restaurant = restaurant;
 
 				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
-
-				this.singleRestaurantData.restaurantCuisineObjectTags = restaurant.restaurant_cuisines;
-		    	this.singleRestaurantData.restaurantFoodObjectTags = restaurant.restaurant_menu_categories;
-		    	this.singleRestaurantData.restaurantMealObjectTags = restaurant.restaurant_meal_categories;
 		    	
 				$("#modal-createOrEdit-restaurant").modal("show");
 			},
 			updateRestaurant() {
+
+				if (!this.singleRestaurantData.restaurant.restaurant_admins_id || !this.singleRestaurantData.restaurant.name || !this.singleRestaurantData.restaurant.mobile || !this.singleRestaurantData.restaurant.min_order || !this.singleRestaurantData.restaurant.address) {
+
+					this.submitForm = false;
+					
+					return;
+				}
 			
 				$("#modal-createOrEdit-restaurant").modal("hide");
 
@@ -1989,8 +1518,6 @@
 							
 							this.singleRestaurantData.restaurant = {};
 							this.singleRestaurantData.restaurantAdminObject = {};
-
-							this.singleRestaurantData.restaurantCuisineObjectTags = this.singleRestaurantData.restaurantFoodObjectTags = this.singleRestaurantData.restaurantMealObjectTags = [];
 
 							if (this.query === '') {
 								this.allRestaurants = response.data;
@@ -2101,66 +1628,14 @@
 					console.log(e);
 				});
 			},
+			showRestaurantMenuList(restaurant) {
+				this.$router.push({
+			 		name: 'admin.restaurantMenuItem.index', 
+			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
+				});
+			},
 			getAddressData(addressData, placeResultData, id) {
 				// console.log(addressData);
-			},
-			fetchAllRestaurantCuisines(){
-				this.loading = true;
-				axios
-					.get('/api/cuisines')
-					.then(response => {
-						if (response.status == 200) {
-							this.loading = false;
-							this.allRestaurantCuisines = response.data;
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					});
-			},
-			fetchAllRestaurantAdmins(){
-				this.loading = true;
-				axios
-					.get('/api/restaurant-admins')
-					.then(response => {
-						if (response.status == 200) {
-							this.loading = false;
-							this.allRestaurantAdmins = response.data;
-							// console.log(this.allRestaurantAdmins);
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					});
-			},
-			fetchAllMenuCategories(){
-				this.loading = true;
-				axios
-					.get('/api/menu-categories')
-					.then(response => {
-						if (response.status == 200) {
-							this.loading = false;
-							this.allMenuCategories = response.data;
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					});
-			},
-			fetchAllMeals(){
-				this.loading = true;
-				axios
-					.get('/api/meals')
-					.then(response => {
-						if (response.status == 200) {
-							this.loading = false;
-							this.allMeals = response.data;
-							// console.log('All Meals :'+this.allMeals);
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					});
 			},
 			enableScheduler(){
 
@@ -2200,79 +1675,16 @@
 					},
 				});
 			},
-			storeRestaurantCuisine(){
-
-				$('#modal-create-restaurant-category').modal('hide');
-
-				axios
-					.post('/cuisines', this.newRestaurantCuisine)
-					.then(response => {
-						if (response.status == 200) {
-							this.newRestaurantCuisine = {};
-							this.allRestaurantCuisines = response.data;
-							toastr.success(response.data.success, "Success");
-						}
-					})
-					.catch(error => {
-						if (error.response.status == 422) {
-							for (var x in error.response.data.errors) {
-								toastr.error(error.response.data.errors[x], "Wrong Input");
-							}
-				      	}
-					});
-			},
 			storeRestaurantAdmin(){
 
 				$('#modal-create-restaurant-admin').modal('hide');
 
 				axios
-					.post('/restaurant-admins', this.newRestaurantAdmin)
+					.post('/restaurant-admins', this.restaurantNewAdmin)
 					.then(response => {
 						if (response.status == 200) {
-							this.newRestaurantAdmin = {};
+							this.restaurantNewAdmin = {};
 							this.allRestaurantAdmins = response.data;
-							toastr.success(response.data.success, "Success");
-						}
-					})
-					.catch(error => {
-						if (error.response.status == 422) {
-							for (var x in error.response.data.errors) {
-								toastr.error(error.response.data.errors[x], "Wrong Input");
-							}
-				      	}
-					});
-			},
-			storeMenuCategory(){
-
-				$('#modal-create-menu-category').modal('hide');
-				
-				axios
-					.post('/menu-categories', this.newMenuCategory)
-					.then(response => {
-						if (response.status == 200) {
-							this.newMenuCategory = {};
-							this.allMenuCategories = response.data;
-							toastr.success(response.data.success, "Success");
-						}
-					})
-					.catch(error => {
-						if (error.response.status == 422) {
-							for (var x in error.response.data.errors) {
-								toastr.error(error.response.data.errors[x], "Wrong Input");
-							}
-				      	}
-					});
-			},
-			storeNewMeal(){
-
-				$('#modal-create-meal-tag').modal('hide');
-				
-				axios
-					.post('/meals', this.newMeal)
-					.then(response => {
-						if (response.status == 200) {
-							this.newMeal = {};
-							this.allMeals = response.data;
 							toastr.success(response.data.success, "Success");
 						}
 					})
@@ -2291,18 +1703,13 @@
 					this.validateFormInput ('restaurant.restaurantAdminObject');
 					this.validateFormInput ('restaurant.name');
 					this.validateFormInput ('restaurant.mobile');
-					this.validateFormInput ('restaurant.restaurantCuisineObjectTags');
+					this.validateFormInput ('restaurant.min_order');
 					this.validateFormInput ('restaurant.website');
 				
 				}else if (this.step===2) {
 
 					this.validateFormInput ('restaurant.address');
 				
-				}else if (this.step===3) {
-
-					this.validateFormInput ('restaurant.min_order');
-					this.validateFormInput ('restaurant.restaurantFoodObjectTags');
-					this.validateFormInput ('restaurant.restaurantMealObjectTags');
 				}
 
 				if (Object.keys(this.errors.restaurant).length === 0) {
@@ -2362,18 +1769,6 @@
 
 						break;
 
-					case 'restaurant.restaurantCuisineObjectTags' :
-
-						if (this.singleRestaurantData.restaurantCuisineObjectTags.length===0) {
-							this.errors.restaurant.restaurantCuisineObjectTags = 'Type is required';
-						}
-						else {
-							this.submitForm = true;
-							this.$delete(this.errors.restaurant, 'restaurantCuisineObjectTags');
-						}
-
-						break;
-
 					case 'restaurant.website' :
 
 						if (this.singleRestaurantData.restaurant.website && !this.singleRestaurantData.restaurant.website.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)) {
@@ -2413,140 +1808,71 @@
 
 						break;
 
-					case 'restaurant.restaurantFoodObjectTags' :
+					case 'restaurantNewAdmin.user_name' :
 
-						if (this.singleRestaurantData.restaurantFoodObjectTags.length===0) {
-							this.errors.restaurant.restaurantFoodObjectTags = 'Food tag is required';
+						if (!this.restaurantNewAdmin.user_name) {
+							this.errors.restaurantNewAdmin.user_name = 'Username is required';
 						}
-						else {
-							this.submitForm = true;
-							this.$delete(this.errors.restaurant, 'restaurantFoodObjectTags');
-						}
-
-						break;
-
-					case 'restaurant.restaurantMealObjectTags' :
-
-						if (this.singleRestaurantData.restaurantMealObjectTags.length===0) {
-							this.errors.restaurant.restaurantMealObjectTags = 'Meal tag is required';
-						}
-						else {
-							this.submitForm = true;
-							this.$delete(this.errors.restaurant, 'restaurantMealObjectTags');
-						}
-
-						break;
-
-					case 'newRestaurantCuisine.name' :
-
-						if (!this.newRestaurantCuisine.name) {
-							this.errors.newRestaurantCuisine.name = 'Cuisine name is required';
-						}
-						else if (!this.newRestaurantCuisine.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-							this.errors.newRestaurantCuisine.name = 'No special characters';
+						else if (!this.restaurantNewAdmin.user_name.match(/^[_A-z0-9]*((-|_|\w)*[_A-z0-9])*$/g)) {
+							this.errors.restaurantNewAdmin.user_name = 'No space or specail characters';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.newRestaurantCuisine, 'name');
+							this.$delete(this.errors.restaurantNewAdmin, 'user_name');
 						}
 
 						break;
 
-					case 'newMeal.name' :
+					case 'restaurantNewAdmin.email' :
 
-						if (!this.newMeal.name) {
-							this.errors.newMeal.name = 'Meal name is required';
+						if (!this.restaurantNewAdmin.email) {
+							this.errors.restaurantNewAdmin.email = 'Email is required';
 						}
-						else if (!this.newMeal.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-							this.errors.newMeal.name = 'No special characters';
+						else if (!this.restaurantNewAdmin.email.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
+							this.errors.restaurantNewAdmin.email = 'Invalid Email';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.newMeal, 'name');
+							this.$delete(this.errors.restaurantNewAdmin, 'email');
 						}
 
 						break;
 
-					case 'newMenuCategory.name' :
+					case 'restaurantNewAdmin.mobile' :
 
-						if (!this.newMenuCategory.name) {
-							this.errors.newMenuCategory.name = 'Menu category name is required';
+						if (!this.restaurantNewAdmin.mobile) {
+							this.errors.restaurantNewAdmin.mobile = 'Mobile is required';
 						}
-						else if (!this.newMenuCategory.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-							this.errors.newMenuCategory.name = 'No special characters';
+						else if (!this.restaurantNewAdmin.mobile.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
+							this.errors.restaurantNewAdmin.mobile = 'Invalid mobile number';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.newMenuCategory, 'name');
+							this.$delete(this.errors.restaurantNewAdmin, 'mobile');
 						}
 
 						break;
 
-					case 'newRestaurantAdmin.user_name' :
+					case 'restaurantNewAdmin.password' :
 
-						if (!this.newRestaurantAdmin.user_name) {
-							this.errors.newRestaurantAdmin.user_name = 'Username is required';
-						}
-						else if (!this.newRestaurantAdmin.user_name.match(/^[_A-z0-9]*((-|_|\w)*[_A-z0-9])*$/g)) {
-							this.errors.newRestaurantAdmin.user_name = 'No space or specail characters';
+						if (this.restaurantNewAdmin.password && this.restaurantNewAdmin.password.length < 8) {
+							this.errors.restaurantNewAdmin.password = 'Password length has to be 8';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.newRestaurantAdmin, 'user_name');
+							this.$delete(this.errors.restaurantNewAdmin, 'password');
 						}
 
 						break;
 
-					case 'newRestaurantAdmin.email' :
+					case 'restaurantNewAdmin.password_confirmation' :
 
-						if (!this.newRestaurantAdmin.email) {
-							this.errors.newRestaurantAdmin.email = 'Email is required';
-						}
-						else if (!this.newRestaurantAdmin.email.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
-							this.errors.newRestaurantAdmin.email = 'Invalid Email';
+						if (this.restaurantNewAdmin.password && this.restaurantNewAdmin.password !== this.restaurantNewAdmin.password_confirmation) {
+							this.errors.restaurantNewAdmin.password_confirmation = "Password doesn't match" ;
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.newRestaurantAdmin, 'email');
-						}
-
-						break;
-
-					case 'newRestaurantAdmin.mobile' :
-
-						if (!this.newRestaurantAdmin.mobile) {
-							this.errors.newRestaurantAdmin.mobile = 'Mobile is required';
-						}
-						else if (!this.newRestaurantAdmin.mobile.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
-							this.errors.newRestaurantAdmin.mobile = 'Invalid mobile number';
-						}
-						else{
-							this.submitForm = true;
-							this.$delete(this.errors.newRestaurantAdmin, 'mobile');
-						}
-
-						break;
-
-					case 'newRestaurantAdmin.password' :
-
-						if (this.newRestaurantAdmin.password && this.newRestaurantAdmin.password.length < 8) {
-							this.errors.newRestaurantAdmin.password = 'Password length has to be 8';
-						}
-						else{
-							this.submitForm = true;
-							this.$delete(this.errors.newRestaurantAdmin, 'password');
-						}
-
-						break;
-
-					case 'newRestaurantAdmin.password_confirmation' :
-
-						if (this.newRestaurantAdmin.password && this.newRestaurantAdmin.password !== this.newRestaurantAdmin.password_confirmation) {
-							this.errors.newRestaurantAdmin.password_confirmation = "Password doesn't match" ;
-						}
-						else{
-							this.submitForm = true;
-							this.$delete(this.errors.newRestaurantAdmin, 'password_confirmation');
+							this.$delete(this.errors.restaurantNewAdmin, 'password_confirmation');
 						}
 
 						break;
@@ -2554,34 +1880,6 @@
 				}
 					 
 			},
-		/*
-			checkRestaurantFormValidation() {
-
-				if (this.step == 1 && this.singleRestaurantData.restaurant.restaurant_admins_id && this.singleRestaurantData.restaurant.name && this.singleRestaurantData.restaurant.mobile && this.singleRestaurantData.restaurant.restaurantCuisineTags.length > 0) {
-
-					return this.submitForm = true;				
-
-				}
-				else if (this.step == 2 && this.singleRestaurantData.restaurant.address) {
-
-					return this.submitForm = true;
-
-				}
-				else if (this.step == 3 && this.singleRestaurantData.restaurant.min_order && this.singleRestaurantData.restaurant.restaurantFoodTags.length > 0 && this.singleRestaurantData.restaurant.restaurantMealTags.length > 0) {
-
-					return this.submitForm = true;					
-
-				}
-				else if (this.step == 4 && Object.keys(this.errors.restaurant).length === 0) {
-
-					return this.submitForm = true;
-
-				}
-
-				return	this.submitForm = false;
-
-			},
-		*/
 			onBannerChange(evnt){
 
 		      	let files = evnt.target.files || evnt.dataTransfer.files;
@@ -2590,10 +1888,6 @@
 		      	if (files.length && files[0].type.match('image.*')) {
                 	this.createImage(files[0]);
 		      	}
-		      	/*
-		      	else
-		      		this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner = null;
-	      		*/
 
 		      	evnt.target.value = '';
 

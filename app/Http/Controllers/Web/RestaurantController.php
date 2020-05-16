@@ -21,10 +21,10 @@ class RestaurantController extends Controller
    	{
    		if ($perPage) {
             return response()->json([
-               'all' => Restaurant::withTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-               'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-               'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
-               'trashed' => Restaurant::onlyTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories'])->latest()->paginate($perPage),
+               'all' => Restaurant::withTrashed()->with('restaurantAdmin')->latest()->paginate($perPage),
+               'approved' => Restaurant::where('admin_approval', 1)->with('restaurantAdmin')->latest()->paginate($perPage),
+               'nonApproved' => Restaurant::where('admin_approval', 0)->with('restaurantAdmin')->latest()->paginate($perPage),
+               'trashed' => Restaurant::onlyTrashed()->with('restaurantAdmin')->latest()->paginate($perPage),
                
             ], 200);
          }
@@ -38,8 +38,6 @@ class RestaurantController extends Controller
    			'restaurant_admins_id'=>'required',
             'name'=>'required|unique:restaurants,name|string|max:50',
    			'mobile'=>'required|unique:restaurants,mobile|max:13',
-            'restaurantCuisineTags' => 'present|array|min:1',
-            'restaurantCuisineTags.*' => 'numeric|distinct',
    			'website'=>'nullable|url|max:255',
    			// 'lat'=>'required|unique:menu_categories,name|max:50',
    			// 'lng'=>'required|unique:menu_categories,name|max:50',
@@ -47,11 +45,6 @@ class RestaurantController extends Controller
    			// 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
    			'min_order'=>'required|numeric|min:100|max:65535',
             'is_post_paid'=>'nullable|boolean',
-            'restaurantFoodTags' => 'present|array|min:1',
-            'restaurantFoodTags.*' => 'numeric|distinct',
-            'restaurantMealTags' => 'present|array|min:1',
-            'restaurantMealTags.*' => 'numeric|distinct',
-
    			'has_parking'=>'nullable|boolean',
             'is_self_service'=>'nullable|boolean',
    			// 'service_schedule'=>'required|unique:menu_categories,name|max:50',
@@ -61,6 +54,7 @@ class RestaurantController extends Controller
          // return $request;
 
    		$newRestaurant = new Restaurant();
+
          $newRestaurant->admin_approval = $request->admin_approval ?? 0;
          $newRestaurant->restaurant_admins_id = $request->restaurant_admins_id;
          
@@ -78,11 +72,10 @@ class RestaurantController extends Controller
          $newRestaurant->is_self_service = $request->is_self_service ?? 0;
          // $newRestaurant->service_schedule = $request->service_schedule;
          // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
-         $newRestaurant->save();
          
-         $newRestaurant->restaurantCuisines()->sync($request->restaurantCuisineTags);
-         $newRestaurant->restaurantMenuCategories()->sync($request->restaurantFoodTags);
-         $newRestaurant->restaurantMealCategories()->sync($request->restaurantMealTags);  
+         $newRestaurant->save();
+           
+         // For $this->id.jpg
          $newRestaurant->banner_preview = $request->banner_preview;
          
          $newRestaurant->save();
@@ -98,20 +91,13 @@ class RestaurantController extends Controller
             'restaurant_admins_id'=>'required',
             'name'=>'required|string|max:50|unique:restaurants,name,'.$restaurantToUpdate->id,
             'mobile'=>'required|max:13|unique:restaurants,mobile,'.$restaurantToUpdate->id,
-            'restaurantCuisineTags' => 'present|array|min:1',
-            'restaurantCuisineTags.*' => 'numeric|distinct',
+            'min_order'=>'required|numeric|min:100|max:65535',
             'website'=>'nullable|url|max:255',
             // 'lat'=>'required|unique:menu_categories,name|max:50',
             // 'lng'=>'required|unique:menu_categories,name|max:50',
             'address'=>'required|string|max:255',
             // 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'min_order'=>'required|numeric|min:100|max:65535',
             'is_post_paid'=>'required|boolean',
-            'restaurantFoodTags' => 'present|array|min:1',
-            'restaurantFoodTags.*' => 'numeric|distinct',
-            'restaurantMealTags' => 'present|array|min:1',
-            'restaurantMealTags.*' => 'numeric|distinct',
-
             'has_parking'=>'required|boolean',
             'is_self_service'=>'nullable|boolean',
             // 'service_schedule'=>'required|unique:menu_categories,name|max:50',
@@ -133,15 +119,10 @@ class RestaurantController extends Controller
          $restaurantToUpdate->is_post_paid = $request->is_post_paid;
          $restaurantToUpdate->has_parking = $request->has_parking;
          $restaurantToUpdate->is_self_service = $request->is_self_service;
+
          // $newRestaurant->service_schedule = $request->service_schedule;
          // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
-         $restaurantToUpdate->restaurantCuisines()->sync($request->restaurantCuisineTags);
-         $restaurantToUpdate->restaurantMenuCategories()->sync($request->restaurantFoodTags);
-         $restaurantToUpdate->restaurantMealCategories()->sync($request->restaurantMealTags);
-
-         // Deleting menu items with restaurant old menu categories;
-         RestaurantMenuItem::whereNotIn('restaurant_menu_category_id', RestaurantMenuCategory::get()->pluck('id'))->delete();
-
+         
          $restaurantToUpdate->banner_preview = $request->banner_preview;
          
          $restaurantToUpdate->save();
@@ -154,9 +135,11 @@ class RestaurantController extends Controller
          $expectedRestaurant = Restaurant::find($restaurantToDelete);
          
          if ($expectedRestaurant) {
+
             $expectedRestaurant->kitchen()->delete();
             $expectedRestaurant->waiters()->delete();
             $expectedRestaurant->delete();
+            
          }
          
          return $this->showAllRestaurants($perPage);
@@ -181,7 +164,7 @@ class RestaurantController extends Controller
       {
          $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order'];
 
-         $query = Restaurant::withTrashed()->with(['restaurantAdmin', 'restaurantCuisines', 'restaurantMenuCategories', 'restaurantMealCategories']);
+         $query = Restaurant::withTrashed()->with('restaurantAdmin');
 
          foreach($columnsToSearch as $column)
          {
@@ -199,8 +182,8 @@ class RestaurantController extends Controller
       {
          if ($perPage) {
             return response()->json([
-               'current' => RestaurantAdmin::with(['restaurants'])->paginate($perPage),
-               'trashed' => RestaurantAdmin::onlyTrashed()->with(['restaurants'])->paginate($perPage),
+               'current' => RestaurantAdmin::with('restaurants')->paginate($perPage),
+               'trashed' => RestaurantAdmin::onlyTrashed()->with('restaurants')->paginate($perPage),
 
             ], 200);
          }
@@ -291,7 +274,7 @@ class RestaurantController extends Controller
       {
          $columnsToSearch = ['user_name', 'mobile', 'email'];
 
-         $query = RestaurantAdmin::withTrashed()->with(['restaurants']);
+         $query = RestaurantAdmin::withTrashed()->with('restaurants');
 
          foreach($columnsToSearch as $column)
          {
@@ -307,8 +290,8 @@ class RestaurantController extends Controller
       {
          if ($perPage) {
             return response()->json([
-               'current' => Kitchen::with(['restaurant'])->paginate($perPage),
-               'trashed' => Kitchen::onlyTrashed()->with(['restaurant'])->paginate($perPage),
+               'current' => Kitchen::with('restaurant')->paginate($perPage),
+               'trashed' => Kitchen::onlyTrashed()->with('restaurant')->paginate($perPage),
 
             ], 200);
          }
@@ -419,8 +402,8 @@ class RestaurantController extends Controller
       {
          if ($perPage) {
             return response()->json([
-               'current' => Waiter::with(['restaurant'])->paginate($perPage),
-               'trashed' => Waiter::onlyTrashed()->with(['restaurant'])->paginate($perPage),
+               'current' => Waiter::with('restaurant')->paginate($perPage),
+               'trashed' => Waiter::onlyTrashed()->with('restaurant')->paginate($perPage),
 
             ], 200);
          }
