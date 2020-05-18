@@ -2,6 +2,44 @@
 <template> 
     
   <div>
+
+    <!-- Navbar for back/forward button -->
+    <nav 
+      class="main-header navbar navbar-expand position-relative" 
+      style="top: 55px;z-index: 0"
+    >
+
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <button 
+            type="button" 
+            class="btn btn-default btn-sm" 
+            v-on:click="$router.go(-1);" 
+            title="Go back" 
+          >
+            <i class="fas fa-backward"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Right navbar links -->
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <button 
+            type="button" 
+            class="btn btn-default btn-sm" 
+            v-on:click="$router.go(1);" 
+            title="Go back" 
+          >
+            <i class="fas fa-forward"></i>
+          </button>
+        </li>
+      </ul>
+
+    </nav>
+    <!-- /.navbar -->
+
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Sidebar -->

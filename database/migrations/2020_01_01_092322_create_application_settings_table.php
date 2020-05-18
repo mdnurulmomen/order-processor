@@ -25,6 +25,7 @@ class CreateApplicationSettingsTable extends Migration
             $table->string('official_bank_account_holder_name')->default('Mr./Mrs. XXXX');
             $table->string('official_bank_account_number')->default('XXXXXXXXXXXX');
             $table->char('merchant_number',13)->default('8801XXXXXXXXX');
+            $table->string('logo')->default('logo.png');
             $table->string('favicon')->default('favicon.png');
             $table->unsignedSmallInteger('admin_id')->default(1);
             $table->timestamps();

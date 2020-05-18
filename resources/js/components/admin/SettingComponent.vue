@@ -18,16 +18,24 @@
 		  	<!-- Nav tabs -->
 			<ul class="nav nav-pills nav-tabs nav-justified mb-4" v-show="!loading" >
 				<li class="nav-item">
-					<a class="nav-link active" data-toggle="tab" href="#payment">Payment</a>
+					<a class="nav-link active" data-toggle="tab" href="#payment">
+						Payment
+					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#contact">Contact</a>
+					<a class="nav-link" data-toggle="tab" href="#contact">
+						Contact
+					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#delivery">Delivery</a>
+					<a class="nav-link" data-toggle="tab" href="#delivery">
+						Delivery
+					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#others">Others</a>
+					<a class="nav-link" data-toggle="tab" href="#others">
+						Others
+					</a>
 				</li>
 			</ul>
 
@@ -36,17 +44,26 @@
 
 				<div class="tab-pane container active" id="payment">	
 					<div class="row">
-						<div  v-show="!loading" class="col-sm-12">
+						<div  
+							v-show="!loading" 
+							class="col-sm-12"
+						>
 							<div class="card card-primary card-outline">
 								<!-- form start -->
 						      	<form class="form-horizontal" v-on:submit.prevent="updatePaymentSetting">
 						      		
-						      		<input type="hidden" name="_token" :value="csrf">
+						      		<input 
+							      		type="hidden" 
+							      		name="_token" 
+							      		:value="csrf"
+						      		>
 						            
 						            <div class="card-body box-profile">  
 
 						              	<div class="form-group row">
-						              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">Vat Rate</label>
+						              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">
+						              			Vat Rate
+						              		</label>
 							                <div class="col-sm-9">
 							                	<div class="input-group mb-3">
 													<input 
@@ -73,7 +90,9 @@
 							                </div>
 						              	</div>
 						              	<div class="form-group row">
-						              		<label for="inputNewnumber3" class="col-sm-3 col-form-label text-right">Official Bank </label>
+						              		<label for="inputNewnumber3" class="col-sm-3 col-form-label text-right">
+						              			Official Bank
+						              		</label>
 							                <div class="col-sm-9">
 							                  	<input 
 							                  		type="text" 
@@ -90,7 +109,9 @@
 							                </div>
 						              	</div>
 						              	<div class="form-group row">
-						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">Bank Account Number : </label>
+						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
+						              			Bank Account Number  
+						              		</label>
 							                <div class="col-sm-9">
 							                  	<input  
 							                  		type="text" 
@@ -108,7 +129,9 @@
 							                </div>
 						              	</div>
 						              	<div class="form-group row">
-						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">Account Holder Name : </label>
+						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
+						              			Account Holder Name 
+						              		</label>
 							                <div class="col-sm-9">
 							                  	<input 
 							                  		type="text" 
@@ -125,7 +148,9 @@
 							                </div>
 						              	</div>
 						              	<div class="form-group row">
-						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">Merchant Number : </label>
+						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
+						              			Merchant Number 
+						              		</label>
 							                <div class="col-sm-9">
 							                  	<input 
 							                  		type="tel" 
@@ -150,7 +175,13 @@
 										  		Please input all required fields
 										  	</span>
 										</div>
-						              	<button type="submit" :disabled="loading || !submitForm" class="btn btn-primary">Update Payment Settings</button>
+						              	<button 
+							              	type="submit" 
+							              	:disabled="loading || !submitForm" 
+							              	class="btn btn-primary"
+						              	>
+						              		Update Payment Settings
+						              	</button>
 						            </div>
 						        	<!-- /.card-footer -->
 						      	</form>
@@ -161,19 +192,31 @@
 
 				<div class="tab-pane container fade" id="contact">	
 					<div class="row">
-						<div  v-show="!loading" class="col-sm-12">
+						<div  
+							v-show="!loading" 
+							class="col-sm-12"
+						>
 							<div class="card card-primary card-outline">
 								<!-- form start -->
-						      	<form class="form-horizontal" v-on:submit.prevent="updateContactSetting">
+						      	<form 
+							      	class="form-horizontal" 
+							      	v-on:submit.prevent="updateContactSetting"
+						      	>
 						      		
-						      		<input type="hidden" name="_token" :value="csrf">
+						      		<input 
+							      		type="hidden" 
+							      		name="_token" 
+							      		:value="csrf"
+						      		>
 						            
 						            <div class="card-body box-profile">  
 
 						              	<div class="form-group row">
 							              	<div class="col-6">
 							              		<div class="row">
-								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">Customer Care Number</label>
+								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">
+								              			Customer Care Number
+								              		</label>
 									                <div class="col-sm-8">
 									                  <input 
 									                  	type="tel" 
@@ -192,7 +235,9 @@
 							              	</div>
 							                <div class="col-6">
 							              		<div class="row">
-								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">Mail Address</label>
+								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">
+								              			Mail Address
+								              		</label>
 									                <div class="col-sm-8">
 									                  <input 
 								                  		type="email" 
@@ -211,7 +256,9 @@
 							              	</div>
 						              	</div>
 						              	<div class="form-group row">
-						              		<label for="inputLastName3" class="col-sm-2 col-form-label text-right">Contact Address</label>
+						              		<label for="inputLastName3" class="col-sm-2 col-form-label text-right">
+						              			Contact Address
+						              		</label>
 							                <div class="col-sm-10">
 							                  	<ckeditor 
 					                              	class="form-control" 
@@ -231,11 +278,20 @@
 						            <!-- /.card-body -->
 						            <div class="card-footer text-center">
 						            	<div class="col-sm-12">
-											<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+											<span 
+												class="text-danger p-0 m-0 small" 
+												v-show="!submitForm"
+											>
 										  		Please input all required fields
 										  	</span>
 										</div>
-						              	<button type="submit" :disabled="loading || !submitForm" class="btn btn-primary">Update Contact Setting</button>
+						              	<button 
+							              	type="submit" 
+							              	:disabled="loading || !submitForm" 
+							              	class="btn btn-primary"
+						              	>
+						              		Update Contact Setting
+						              	</button>
 						            </div>
 						        	<!-- /.card-footer -->
 						      	</form>
@@ -249,16 +305,25 @@
 						<div  v-show="!loading" class="col-sm-12">
 							<div class="card card-primary card-outline">
 								<!-- form start -->
-						      	<form class="form-horizontal" v-on:submit.prevent="updateDeliverySetting">
+						      	<form 
+							      	class="form-horizontal" 
+							      	v-on:submit.prevent="updateDeliverySetting"
+						      	>
 						      		
-						      		<input type="hidden" name="_token" :value="csrf">
+						      		<input 
+							      		type="hidden" 
+							      		name="_token" 
+							      		:value="csrf"
+						      		>
 						            
 						            <div class="card-body box-profile">  
 
 						              	<div class="form-group row">
 							              	<div class="col-6">
 							              		<div class="row">
-								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">Delivery Charge</label>
+								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">
+								              			Delivery Charge
+								              		</label>
 									                <div class="col-sm-8">
 									                  <input 
 									                  	type="number" 
@@ -279,7 +344,9 @@
 							              	</div>
 							                <div class="col-6">
 							                	<div class="row">
-								              		<label for="inputLastName3" class="col-sm-4 col-form-label text-right"> Delivery Fee Percentage (for multiple)</label>
+								              		<label for="inputLastName3" class="col-sm-4 col-form-label text-right">
+								              		 	Delivery Fee Percentage (for multiple)
+								              		</label>
 									                <div class="col-sm-8">
 									                	<div class="input-group mb-3">
 															<input 
@@ -312,11 +379,20 @@
 						            <!-- /.card-body -->
 						            <div class="card-footer text-center">
 						            	<div class="col-sm-12">
-											<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+											<span 
+												class="text-danger p-0 m-0 small" 
+												v-show="!submitForm"
+											>
 										  		Please input all required fields
 										  	</span>
 										</div>
-						              	<button type="submit" :disabled="loading || !submitForm" class="btn btn-primary">Update Delivery Setting</button>
+						              	<button 
+							              	type="submit" 
+							              	:disabled="loading || !submitForm" 
+							              	class="btn btn-primary"
+						              	>
+						              		Update Delivery Setting
+						              	</button>
 						            </div>
 						        	<!-- /.card-footer -->
 						      	</form>
@@ -328,20 +404,34 @@
 				<div class="tab-pane container fade" id="others">	
 					<div class="row">
 
-						<div  v-show="!loading" class="col-sm-12">
+						<div  
+							v-show="!loading" 
+							class="col-sm-12"
+						>
 							<div class="card card-primary card-outline">
 								<!-- form start -->
-						      	<form class="form-horizontal" v-on:submit.prevent="updateOtherSetting">
-						      		
-						      		<input type="hidden" name="_token" :value="csrf">
+						      	<form 
+							      	class="form-horizontal" 
+							      	v-on:submit.prevent="updateOtherSetting"
+						      	>	
+						      		<input 
+							      		type="hidden" 
+							      		name="_token" 
+							      		:value="csrf"
+						      		>
 						            
 					              	<div class="card-body box-profile">
-					                	<div class="row d-flex align-items-center text-center">
+
+					              		<div class="row d-flex align-items-center text-center mb-4">
 						              		<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
-						              			Panel Favicon :
+						              			App Logo
 						              		</label>
 						              		<div class="col-sm-4">
-						                  		<img class="profile-user-img img-fluid" :src="applicationSettings.favicon" alt="Application favicon">
+						                  		<img 
+							                  		class="profile-user-img img-fluid" 
+							                  		:src="applicationSettings.logo || 'uploads/application/logo.png'" 
+							                  		alt="Application logo"
+						                  		>
 						                	</div>
 							                <div class="col-sm-4">
 							                  	<div class="input-group">
@@ -350,20 +440,65 @@
 								                        	type="file" 
 								                        	class="custom-file-input" 
 								                        	id="exampleInputFile" 
-								                        	required="true"  
-								                        	v-on:change="onImageChange" 
+								                        	v-on:change="onLogoChange" 
 								                        	accept="image/*"
 								                        >
-								                        <label class="custom-file-label" for="exampleInputFile">Change Favicon</label>
+								                        <label class="custom-file-label" for="exampleInputFile">
+								                        	Change Logo
+								                        </label>
 								                    </div>
 							                    </div>
 							                </div>
 						            	</div>
+
+					                	<div class="row d-flex align-items-center text-center">
+						              		<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
+						              			Panel Favicon
+						              		</label>
+						              		<div class="col-sm-4">
+						                  		<img 
+							                  		class="profile-user-img img-fluid" 
+							                  		:src="applicationSettings.favicon || 'uploads/application/favicon.png'" 
+							                  		alt="Application favicon"
+						                  		>
+						                	</div>
+							                <div class="col-sm-4">
+							                  	<div class="input-group">
+								                    <div class="custom-file">
+								                        <input 
+								                        	type="file" 
+								                        	class="custom-file-input" 
+								                        	id="exampleInputFile" 
+								                        	v-on:change="onFaviconChange" 
+								                        	accept="image/*"
+								                        >
+								                        <label class="custom-file-label" for="exampleInputFile">
+								                        	Change Favicon
+								                        </label>
+								                    </div>
+							                    </div>
+							                </div>
+						            	</div>
+
 					              	</div>
 					              	<!-- /.card-body -->
 						            
 						            <div class="card-footer text-center">
-						              	<button type="submit" :disabled="loading || !submitForm" class="btn btn-primary">Update Media Settings</button>
+						            	<div class="col-sm-12">
+											<span 
+												class="text-danger p-0 m-0 small" 
+												v-show="!submitForm"
+											>
+										  		Please input one file at least
+										  	</span>
+										</div>
+						              	<button 
+							              	type="submit" 
+							              	:disabled="loading || !submitForm" 
+							              	class="btn btn-primary"
+						              	>
+						              		Update Media Settings
+						              	</button>
 						            </div>
 						        	<!-- /.card-footer -->
 						      	</form>
@@ -411,10 +546,14 @@
 	        		// multiple_delivery_charge_percentage : null,
 
 	        		// favicon : null,
+	        		// logo : null,
 	        	},
 
+	        	newLogo : null,
 	        	newFavicon : null,
+
 	        	loading : false,
+
 	        	errors : {
 	        		applicationSettings : {},
 	        	},
@@ -516,13 +655,22 @@
 			},
 			updateOtherSetting() {
 
+				if (!this.newLogo && !this.newFavicon) {
+					this.submitForm = false;
+					return;
+				}
+
+				this.applicationSettings.logo = this.newLogo;
 				this.applicationSettings.favicon = this.newFavicon;
 
 				axios
 					.post('/other-settings', this.applicationSettings)
 					.then(response => {
 						if (response.status == 200) {
+							
+							this.newLogo = this.newFavicon = null;
 							toastr.success(response.data.success, "Success");
+
 						}
 					})
 					.catch(error => {
@@ -536,21 +684,45 @@
 
 					});
 			},
-			onImageChange(evnt){
+			onLogoChange(evnt){
 				let files = evnt.target.files || evnt.dataTransfer.files;
 
                 // Only process image files.
 		      	if (files.length && files[0].type.match('image.*')) {
-                	this.createImage(files[0]);
+		      		this.submitForm = true;
+                	this.createImage(files[0], 'logo');
 		      	}
+
+		      	evnt.target.value = '';
 
 		      	return;
 			},
-			createImage(file) {
+			onFaviconChange(evnt){
+				let files = evnt.target.files || evnt.dataTransfer.files;
+
+                // Only process image files.
+		      	if (files.length && files[0].type.match('image.*')) {
+		      		this.submitForm = true;
+                	this.createImage(files[0], 'favicon');
+		      	}
+
+		      	evnt.target.value = '';
+
+		      	return;
+			},
+			createImage(file, filename) {
                 let reader = new FileReader();
-                reader.onload = (evnt) => {
-                    this.newFavicon = this.applicationSettings.favicon = evnt.target.result;
-                };
+
+                if (filename=='favicon') {
+	                reader.onload = (evnt) => {
+	                    this.newFavicon = this.applicationSettings.favicon = evnt.target.result;
+	                };
+                }else{
+                	reader.onload = (evnt) => {
+	                    this.newLogo = this.applicationSettings.logo = evnt.target.result;
+	                };
+                }
+
                 reader.readAsDataURL(file);
             },
             validateFormInput (formInputName) {

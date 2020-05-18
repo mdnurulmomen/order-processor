@@ -16,6 +16,23 @@ class ApplicationSetting extends Model
         'id' 
     ];
 
+    public function setLogoIconAttribute($encodedImageFile)
+    {
+        if ($encodedImageFile) {
+
+            $directory = "uploads/application/";
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            
+            $imageObject = ImageIntervention::make($encodedImageFile);
+            $imageObject->save($directory.'logo.png');
+
+            $this->attributes['logo'] = $directory.'logo.png';
+        }
+    }
+
     public function setFaviconIconAttribute($encodedImageFile)
     {
         if ($encodedImageFile) {

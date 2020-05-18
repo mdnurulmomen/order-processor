@@ -94,6 +94,7 @@ class SettingController extends Controller
     public function updateOtherSettings(Request $request)
     {   
         $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
+        $settings->logo_icon = $request->logo;
         $settings->favicon_icon = $request->favicon;
         $settings->admin_id = \Auth::guard('admin')->user()->id;
         $settings->save();

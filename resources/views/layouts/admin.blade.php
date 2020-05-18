@@ -42,15 +42,24 @@
       <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+          <a class="nav-link" data-widget="pushmenu" href="#">
+            <i class="fas fa-bars"></i>
+          </a>
         </li>
       </ul>
 
       <!-- Brand Logo -->
       <a class="navbar-brand ml-1" onclick="showHomeComponent()">
-        <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-             width="30" height="30"  style="opacity: .8">
-        <span class="font-weight-light">Qupaid</span>
+        <img 
+            src="{{ asset('uploads/application/logo.png') }}" 
+            alt="Qupaid Logo" 
+            class="brand-image img-circle elevation-3" 
+            width="30" height="30"  
+            style="opacity: .8"
+        >
+        <span class="font-weight-light">
+          Qupaid
+        </span>
       </a>
 
       <!-- SEARCH FORM -->
