@@ -8,6 +8,7 @@ use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Models\RestaurantDeal;
 use App\Models\RestaurantAdmin;
+use Illuminate\Validation\Rule;
 use App\Models\RestaurantMenuItem;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
@@ -1110,6 +1111,11 @@ class RestaurantController extends Controller
          $request->validate([
             'menu_category_id'=>'required|array|min:1',
             'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
+            'menu_category_id.0'  => Rule::unique('restaurant_menu_categories', 'menu_category_id')
+                                     ->where(function($query) use ($request) {
+                                       $query->where('restaurant_id', $request->restaurant_id);
+                                     })
+                                     ->ignore($restaurantMenuCategoryToUpdate->id),
             'serving_from'=>'nullable|string|max:20',
             'serving_to'=>'nullable|string|max:20',
             'restaurant_id'=>'required|numeric|exists:restaurants,id',
