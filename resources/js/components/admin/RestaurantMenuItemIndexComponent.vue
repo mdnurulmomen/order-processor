@@ -468,11 +468,19 @@
 						                                  		track-by="id" 
 						                                  		:key="index"
 						                                  		:required="true"
-						                                  		:allow-empty="false"
+						                                  		:allow-empty="false" 
+						                                  		:class="!errors.restaurantMenuItem.variationName  ? 'is-valid' : 'is-invalid'"
 						                                  		selectLabel = "Press/Click"
-						                                  		deselect-label="One selection is required"
+						                                  		deselect-label="One selection is required" 
+						                                  		@close="validateFormInput('restaurantMenuItem.variationName')"
 					                                  		>
 						                                	</multiselect>
+
+						                                	<div class="invalid-feedback">
+													        	{{ 
+													        		errors.restaurantMenuItem.variationName 
+													        	}}
+													  		</div>
 										                </div>	
 									              	 		
 									              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right mb-2">
@@ -605,12 +613,20 @@
 						                                  		label="name" 
 						                                  		track-by="id" 
 						                                  		:key="index"
-						                                  		:required="true"
+						                                  		:required="true" 
+						                                  		:class="!errors.restaurantMenuItem.addonName  ? 'is-valid' : 'is-invalid'"
 						                                  		:allow-empty="false"
 						                                  		selectLabel = "Press/Click"
-						                                  		deselect-label="One selection is required"
+						                                  		deselect-label="One selection is required" 
+						                                  		@close="validateFormInput('restaurantMenuItem.addonName')"
 					                                  		>
 						                                	</multiselect>
+
+						                                	<div class="invalid-feedback">
+													        	{{ 
+													        		errors.restaurantMenuItem.addonName 
+													        	}}
+													  		</div>
 										                </div>	
 									              	 		
 									              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right mb-2">
@@ -1294,8 +1310,12 @@
 			},
     		storeRestaurantMenuItem(){
 
-    			if (!this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_menu_category_id || !this.singleRestaurantMenuItemData.restaurantMenuItem.name) {
+    			if (!this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_menu_category_id || (this.singleRestaurantMenuItemData.restaurantMenuItem.has_variation && this.variationObjects.length < 2) || (this.singleRestaurantMenuItemData.restaurantMenuItem.has_addon && this.addonObjects.length < 1)) {
 					
+					this.validateFormInput('restaurantMenuItem.restaurantMenuCategory');
+					this.validateFormInput('restaurantMenuItem.variationName');
+					this.validateFormInput('restaurantMenuItem.addonName');
+
 					this.submitForm = false;
 					return;
 				}
@@ -1313,6 +1333,7 @@
 						if (response.status == 200) {
 							
 							this.singleRestaurantMenuItemData.restaurantMenuCategoryObject = {};
+
 							this.singleRestaurantMenuItemData.restaurantMenuItem = {};
 
 							this.query = '';
@@ -1393,8 +1414,12 @@
 			},
 			updateRestaurantMenuItem(){
 
-				if (!this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_menu_category_id || !this.singleRestaurantMenuItemData.restaurantMenuItem.name) {
+				if (!this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_menu_category_id || (this.singleRestaurantMenuItemData.restaurantMenuItem.has_variation && this.variationObjects.length < 2) || (this.singleRestaurantMenuItemData.restaurantMenuItem.has_addon && this.addonObjects.length < 1)) {
 					
+					this.validateFormInput('restaurantMenuItem.restaurantMenuCategory');
+					this.validateFormInput('restaurantMenuItem.variationName');
+					this.validateFormInput('restaurantMenuItem.addonName');
+
 					this.submitForm = false;
 					return;
 				}
@@ -1614,7 +1639,6 @@
 
 						break;
 
-					
 
 					case 'restaurantMenuItem.price' :
 
@@ -1639,6 +1663,30 @@
 						}
 
 						break;
+
+					case 'restaurantMenuItem.variationName' :
+
+						if (this.singleRestaurantMenuItemData.restaurantMenuItem.has_variation && this.variationObjects.length < 2) {
+							this.errors.restaurantMenuItem.variationName = 'Min 2 variation name is required';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.restaurantMenuItem, 'variationName');
+						}
+
+						break;
+
+					case 'restaurantMenuItem.addonName' :
+
+						if (this.singleRestaurantMenuItemData.restaurantMenuItem.has_addon && this.addonObjects.length < 1) {
+							this.errors.restaurantMenuItem.addonName = 'Addon name is required';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.restaurantMenuItem, 'addonName');
+						}
+
+						break;
 				}
 	 
 			},
@@ -1649,6 +1697,8 @@
 </script>
 
 <style scoped>
+	@import '~vue-multiselect/dist/vue-multiselect.min.css';
+	
 	.modal { 
 		overflow: auto !important; 
 	}

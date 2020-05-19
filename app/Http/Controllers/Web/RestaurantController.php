@@ -785,7 +785,7 @@ class RestaurantController extends Controller
                $newMenuItem->restaurantMenuItemVariations()
                            ->syncWithoutDetaching([
                               $request->variations_id[$i] => [
-                                 'price' => $request->price_item_variations[$i]
+                                 'price' => $request->price_item_variations[$i] ?? 0
                               ]
                            ]
                );
@@ -805,7 +805,7 @@ class RestaurantController extends Controller
                $newMenuItem->restaurantMenuItemAddons()
                            ->syncWithoutDetaching([
                               $request->addons_id[$i] => [
-                                 'price' => $request->price_addon_items[$i]
+                                 'price' => $request->price_addon_items[$i] ?? 0
                               ]
                            ]
                );
@@ -829,7 +829,11 @@ class RestaurantController extends Controller
             'name'=>'required|string|max:255',
             'detail'=>'nullable|string|max:255',
             'has_variation'=>'boolean',
+            'variations_id' => 'required_if:has_variation,true|array',
+            'price_item_variations' => 'required_if:has_variation,true|array',
             'has_addon'=>'boolean',
+            'addons_id' => 'required_if:has_addon,true|array',
+            'price_addon_items' => 'required_if:has_addon,true|array',
             'price'=>'nullable|numeric|min:0|max:65535',
             'customizable'=>'boolean',
             'restaurant_menu_category_id'=>'required|numeric|exists:restaurant_menu_categories,id',
@@ -877,7 +881,7 @@ class RestaurantController extends Controller
                */
               
                   $existingVariation->update([
-                     'price' => $request->price_item_variations[$i],
+                     'price' => $request->price_item_variations[$i] ?? 0,
                      'deleted_at' => NULL,
                   ]);
                                    
@@ -887,7 +891,7 @@ class RestaurantController extends Controller
 
                   $menuItemToUpdate->restaurantMenuItemVariations()
                                    ->attach($request->variations_id[$i], [
-                                       'price' => $request->price_item_variations[$i]
+                                       'price' => $request->price_item_variations[$i] ?? 0
                                     ]
                                  );
 
@@ -932,7 +936,7 @@ class RestaurantController extends Controller
                */
               
                   $existingAddon->update([
-                     'price' => $request->price_addon_items[$i],
+                     'price' => $request->price_addon_items[$i] ?? 0,
                      'deleted_at' => NULL,
                   ]);
                                    
@@ -942,7 +946,7 @@ class RestaurantController extends Controller
 
                   $menuItemToUpdate->restaurantMenuItemAddons()
                                    ->attach($request->addons_id[$i], [
-                                       'price' => $request->price_addon_items[$i]
+                                       'price' => $request->price_addon_items[$i] ?? 0
                                     ]
                                  );
 
