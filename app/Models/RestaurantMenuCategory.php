@@ -30,7 +30,7 @@ class RestaurantMenuCategory extends Model
 
     public function menuCategory()
    	{
-   		return $this->belongsTo(MenuCategory::class, 'menu_category_id', 'id');
+   		return $this->belongsTo(MenuCategory::class, 'menu_category_id', 'id')->withTrashed();
    	}
 
    	public function restaurantMenuItems()

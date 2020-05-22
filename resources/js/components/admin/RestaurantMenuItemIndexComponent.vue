@@ -76,6 +76,12 @@
 									    			{{ 
 									    				restaurantMenuCategory.menu_category ? restaurantMenuCategory.menu_category.name : 'Trashed Menu Category' 
 									    			}}
+										    		<span 
+											    		class="badge badge-danger" 
+											    		v-show="restaurantMenuCategory.deleted_at"
+											    	>
+											    		trashed
+											    	</span>
 									    		</p>
 										    	<table class="table">
 										    		<thead>
@@ -218,13 +224,20 @@
 												        			Delete
 												      			</button>
 												      			<button type="button" 
-												      					v-show="menuItem.deleted_at"  
+												      					v-show="!restaurantMenuCategory.deleted_at && menuItem.deleted_at"  
 												        				@click="showRestaurantMenuItemRestoreModal(menuItem)"
 												        				class="btn btn-danger btn-sm"
 											      				>
 												        			<i class="fas fa-undo-alt"></i>
 												        			Restore
 												      			</button>
+
+												      			<p 
+														      		class="text-danger" 
+														      		v-show="restaurantMenuCategory.deleted_at && menuItem.deleted_at"
+														      	>
+														      		Trashed Menu-Category
+														      	</p>
 												    		</td>
 												    	</tr>
 
@@ -331,15 +344,14 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Menu-Category : 
+								              			Menu-Category
 								              		</label>
 
-									                <div class="col-sm-5">
-									                  	
+									                <div class="col-sm-5">  	
 									                  	<multiselect 
 				                                  			v-model="singleRestaurantMenuItemData.restaurantMenuCategoryObject"
 				                                  			placeholder="Category Name" 
-					                                  		:options="restaurantAllMenuCategories" 
+					                                  		:options="restaurantShowableMenuCategories" 
 					                                  		:custom-label="menuCategoryName" 
 					                                  		track-by="id" 
 					                                  		:required="true"
@@ -411,7 +423,6 @@
 								              		</label>
 
 									                <div class="col-sm-8">
-									                  	
 									                  	<ckeditor 
 							                              	class="form-control" 
 							                              	:editor="editor" 
@@ -507,30 +518,26 @@
 										                </div>	
 									              	</div>
 
+								              		<div class="col-sm-12 text-right">
+											        	
+											        	<i 
+												        	class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
+												        	aria-hidden="true" 
+												        	@click="variationIndex.push(variationIndex[variationIndex.length-1]+1)"
+											        	>
+											        		
+											        	</i>
+								              		
+											        	<i 
+											        		class="fas fa-minus-circle fa-2x  rounded-circle bg-info" aria-hidden="true" 
+											        		@click="variationIndex.pop();variationObjects.pop();price_item_variations.pop()" 
+								              				v-show="variationIndex.length>2" 
+											        	>
+											        		
+											        	</i>
 
-									              	<div class="">
+								              		</div>
 
-									              		<div class="col-sm-12 text-right">
-												        	
-												        	<i 
-													        	class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
-													        	aria-hidden="true" 
-													        	@click="variationIndex.push(variationIndex[variationIndex.length-1]+1)"
-												        	>
-												        		
-												        	</i>
-									              		
-												        	<i 
-												        		class="fas fa-minus-circle fa-2x  rounded-circle bg-info" aria-hidden="true" 
-												        		@click="variationIndex.pop();variationObjects.pop();price_item_variations.pop()" 
-									              				v-show="variationIndex.length>2" 
-												        	>
-												        		
-												        	</i>
-
-									              		</div>
-
-									              	</div>
 								              	</div>
 
 								              	<div 
@@ -653,42 +660,27 @@
 										                </div>	
 									              	</div>
 
+								              		<div class="col-sm-12 text-right">
+											        	
+											        	<i 
+												        	class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
+												        	aria-hidden="true" 
+												        	@click="addonIndex.push(addonIndex[addonIndex.length-1]+1)"
+											        	>
+											        		
+											        	</i>
+								              		
+											        	<i 
+											        		class="fas fa-minus-circle fa-2x  rounded-circle bg-info" aria-hidden="true" 
+											        		@click="addonIndex.pop();addonObjects.pop();price_addon_items.pop()" 
+								              				v-show="addonIndex.length>1" 
+											        	>
+											        		
+											        	</i>
 
-									              	<div class="">
-
-									              		<div class="col-sm-12 text-right">
-												        	
-												        	<i 
-													        	class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
-													        	aria-hidden="true" 
-													        	@click="addonIndex.push(addonIndex[addonIndex.length-1]+1)"
-												        	>
-												        		
-												        	</i>
-									              		
-												        	<i 
-												        		class="fas fa-minus-circle fa-2x  rounded-circle bg-info" aria-hidden="true" 
-												        		@click="addonIndex.pop();addonObjects.pop();price_addon_items.pop()" 
-									              				v-show="addonIndex.length>1" 
-												        	>
-												        		
-												        	</i>
-
-									              		</div>
-									              		
-									              	</div>
+								              		</div>
 
 								              	</div>
-
-
-
-
-
-
-
-
-
-
 
 								              	<div class="form-group row">
 									              		
@@ -1127,7 +1119,19 @@
 		      }
 
 		      return 'Current Restaurant';
-		    }
+		    },
+		    // a computed getter
+		    restaurantShowableMenuCategories: function () {
+		    	var array = [];
+		      	// `this` points to the vm instance
+		      	if (this.restaurantAllMenuCategories.length) {
+		      		array = this.restaurantAllMenuCategories.filter(restaurantMenuCategory=>{
+						return restaurantMenuCategory.deleted_at === null;
+					});
+		      	}
+
+		      	return array;
+		    },
 		},
 
 		watch : {

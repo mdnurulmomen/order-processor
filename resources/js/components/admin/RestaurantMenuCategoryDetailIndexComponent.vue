@@ -137,22 +137,29 @@
 										        	Edit
 										      	</button>
 
-										      	<button type="button" 
+										      	<button 
+										      		type="button" 
 										      		v-show="restaurantMenuCategory.deleted_at === null"
-										      		@click="showRestaurantMenuCategoryDeleteModal(restaurantMenuCategory)" class="btn btn-danger btn-sm">
+										      		@click="showRestaurantMenuCategoryDeleteModal(restaurantMenuCategory)" class="btn btn-danger btn-sm"
+										      	>
 										        	<i class="fas fa-trash"></i>
 										        	Delete
 										      	</button>
 
-										      	<button type="button" 
-										      		v-show="restaurantMenuCategory.deleted_at !== null && restaurantMenuCategory.menu_category !== null"
-										      		@click="showRestaurantMenuCategoryRestoreModal(restaurantMenuCategory)" class="btn btn-danger btn-sm">
-										        	<i class="fas fa-restore"></i>
+										      	<button 
+										      		type="button" 
+										      		v-show="restaurantMenuCategory.deleted_at !== null && restaurantMenuCategory.menu_category.deleted_at === null"
+										      		@click="showRestaurantMenuCategoryRestoreModal(restaurantMenuCategory)" class="btn btn-danger btn-sm"
+										      	>
+										        	<i class="fas fa-undo"></i>
 										        	Restore
 										      	</button>
 
-										      	<p class="text-danger" v-show="restaurantMenuCategory.menu_category === null">
-										      		Restore Menu-Category
+										      	<p 
+										      		class="text-danger" 
+										      		v-show="restaurantMenuCategory.deleted_at !== null && restaurantMenuCategory.menu_category.deleted_at !== null"
+										      	>
+										      		Trashed Menu-Category
 										      	</p>
  												
 								    		</td>
@@ -449,7 +456,13 @@
 					      		<h5>Are you sure want to restore meal ??</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button 
+								  	type="button" 
+								  	class="btn btn-outline-light" 
+								  	data-dismiss="modal"
+							  	>
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 

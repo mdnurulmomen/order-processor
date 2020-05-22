@@ -118,7 +118,7 @@
 									    			class="btn btn-primary btn-sm"
 								    			>
 										        	<i class="fas fa-eye"></i>
-										        	View Category Details
+										        	Category Details
 										      	</button>
 
 										      	<button 
@@ -127,7 +127,7 @@
 											      	class="btn btn-warning btn-sm"
 										      	>
 										        	<i class="fas fa-eye"></i>
-										        	View Menu-Items
+										        	Menu-Items
 										      	</button>
 
 										      	<!-- 
