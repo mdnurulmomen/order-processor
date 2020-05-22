@@ -140,6 +140,7 @@ class FoodController extends Controller
 
      	if ($menuCategoryToDelete) {
      		
+	     	$menuCategoryToDelete->menuItems()->delete();
 	     	$menuCategoryToDelete->restaurantMenuCategories()->delete();
 	     	$menuCategoryToDelete->delete();
      	
