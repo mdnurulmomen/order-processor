@@ -48,8 +48,8 @@ class RestaurantController extends Controller
             'is_post_paid'=>'nullable|boolean',
    			'has_parking'=>'nullable|boolean',
             'is_self_service'=>'nullable|boolean',
-   			// 'service_schedule'=>'required|unique:menu_categories,name|max:50',
-   			// 'booking_schedule_break'=>'required|unique:menu_categories,name|max:50',
+   			'service_schedule'=>'required',
+   			'booking_break_schedule'=>'required',
    		]);
 
          // return $request;
@@ -71,8 +71,8 @@ class RestaurantController extends Controller
          $newRestaurant->is_post_paid = $request->is_post_paid ?? 0;
          $newRestaurant->has_parking = $request->has_parking ?? 0;
          $newRestaurant->is_self_service = $request->is_self_service ?? 0;
-         // $newRestaurant->service_schedule = $request->service_schedule;
-         // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
+         $newRestaurant->service_schedule = json_encode($request->service_schedule);
+         $newRestaurant->booking_break_schedule = json_encode($request->booking_break_schedule);
          
          $newRestaurant->save();
            
@@ -101,8 +101,8 @@ class RestaurantController extends Controller
             'is_post_paid'=>'required|boolean',
             'has_parking'=>'required|boolean',
             'is_self_service'=>'nullable|boolean',
-            // 'service_schedule'=>'required|unique:menu_categories,name|max:50',
-            // 'booking_schedule_break'=>'required|unique:menu_categories,name|max:50',
+            'service_schedule'=>'required',
+            'booking_break_schedule'=>'required',
          ]);
 
          $restaurantToUpdate->admin_approval = $request->admin_approval ?? 0;
@@ -121,8 +121,8 @@ class RestaurantController extends Controller
          $restaurantToUpdate->has_parking = $request->has_parking;
          $restaurantToUpdate->is_self_service = $request->is_self_service;
 
-         // $newRestaurant->service_schedule = $request->service_schedule;
-         // $newRestaurant->booking_schedule_break = $request->booking_schedule_break;
+         $restaurantToUpdate->service_schedule = json_encode($request->service_schedule);
+         $restaurantToUpdate->booking_break_schedule = json_encode($request->booking_break_schedule);
          
          $restaurantToUpdate->banner_preview = $request->banner_preview;
          

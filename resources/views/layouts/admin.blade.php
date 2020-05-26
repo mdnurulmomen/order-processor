@@ -22,8 +22,6 @@
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
   <!-- Toastr style -->
   <link href="{{ asset('plugins/toastr/css/toastr.css') }}" rel="stylesheet"/>
-  <!-- work schedule appointments -->
-  <link href="{{ asset('plugins/scheduler/css/scheduler.css') }}" rel="stylesheet" />
   <!-- prefetching restaurant-list components -->
   <link rel="prefetch" href="{{ asset('/js/0.js') }}" as="script">
   <link rel="prefetch" href="{{ asset('/js/1.js') }}" as="script">
@@ -33,6 +31,8 @@
   <link rel="prefetch" href="{{ asset('/js/24.js') }}" as="script">
   <!-- jQuery -->
   <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+  <!-- google location api -->
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6P9KPoKUYR8lsXjeLWEA5Zd39ORPvoVY&libraries=places"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -161,11 +161,7 @@
 </script>
 
 <!-- REQUIRED SCRIPTS -->
-<!-- google location api -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYz-qkrVLMSJCB8u8INQK9Ep7NF3eJBxU&libraries=places"></script>
 
-<!-- Scheduler -->
-<script src="{{ asset('plugins/scheduler/js/scheduler.js') }}"></script>
 <!-- Toastr -->
 <script src="{{ asset('plugins/toastr/js/toastr.min.js') }}"></script>
 <!-- Bootstrap -->

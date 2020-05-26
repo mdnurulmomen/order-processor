@@ -39,6 +39,8 @@ class Restaurant extends Authenticatable
         'is_post_paid' => 'boolean',
         'is_self_service' => 'boolean',
         'has_parking' => 'boolean',
+        'service_schedule' => 'json',
+        'booking_break_schedule' => 'json',
         'taking_order' => 'boolean',
         'admin_approval' => 'boolean',
     ];

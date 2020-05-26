@@ -23,18 +23,6 @@
 				v-show="!loading"
 			>
 				<div class="col-sm-12">
-	              	
-					<!--
-					// For those who has only to view
-					<vue-bootstrap4-table 
-						:rows="restaurants" 
-						:columns="columns" 
-						:config="config"
-						:actions="actions"
-					>
-
-					</vue-bootstrap4-table> 
-					-->
 
 					<div class="card">
 						<div class="card-header">
@@ -108,7 +96,6 @@
 									  	>
 									  	<div class="invalid-feedback">
 									  		Please search with releavant input
-									        <!-- No special characters (except '@&*+-_=') -->
 									  	</div>
 									</div>
 								</div>
@@ -148,37 +135,50 @@
 								    			</span>		
 								    		</td>
 								    		<td>
-								      			<button type="button" @click="showRestaurantDetailModal(restaurant)" class="btn btn-info btn-sm">
+								      			<button 
+									      			type="button" 
+									      			class="btn btn-info btn-sm"
+									      			@click="showRestaurantDetailModal(restaurant)" 
+								      			>
 								        			<i class="fas fa-eye"></i>
 								        			Sum
 								      			</button>
 
-										      	<button type="button" v-show="restaurant.deleted_at === null" @click="showRestaurantEditModal(restaurant)" class="btn btn-primary btn-sm">
+										      	<button 
+											      	type="button" 
+											      	class="btn btn-primary btn-sm"
+											      	v-show="restaurant.deleted_at === null" 
+											      	@click="showRestaurantEditModal(restaurant)" 
+										      	>
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
 
 								      			<button
-								        			v-show="restaurant.deleted_at === null"
 								        			type="button"
-								        			@click="showRestaurantDeletionModal(restaurant)"
 								        			class="btn btn-danger btn-sm"
+								        			v-show="restaurant.deleted_at === null"
+								        			@click="showRestaurantDeletionModal(restaurant)"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
 								        			Delete
 								      			</button>
 
 								      			<button
-								        			v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin !== null"
 								        			type="button"
-								        			@click="showRestaurantRestoreModal(restaurant)"
 								        			class="btn btn-danger btn-sm"
+								        			v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin !== null"
+								        			@click="showRestaurantRestoreModal(restaurant)"
 							      				>
 								        			<i class="fas fa-undo"></i>
 								        			Restore
 								      			</button>
 
-								      			<button type="button" @click="showRestaurantMenuList(restaurant)" class="btn btn-success btn-sm">
+								      			<button 
+									      			type="button" 
+									      			class="btn btn-success btn-sm"
+									      			@click="showRestaurantMenuList(restaurant)" 
+								      			>
 								        			<i class="fas fa-eye"></i>
 								        			Menu
 								      			</button>
@@ -246,12 +246,14 @@
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
-						  	<h4 class="modal-title">Restaurant Details</h4>
+						  	<h4 class="modal-title">
+						  		Restaurant Details
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    <span aria-hidden="true">&times;</span></button>
 						</div>
-						<div class="modal-body">
 
+						<div class="modal-body">
 							<ul class="nav nav-tabs justify-content-center mb-4" role="tablist">
 								<li class="nav-item">
 									<a class="nav-link active" data-toggle="tab" href="#profile">
@@ -397,7 +399,7 @@
 								                <div class="col-sm-6">
 								                  	{{singleRestaurantData.restaurant.has_parking ? 'Available' : 'Not-available'}}
 								                </div>	
-								            </div> 
+								            </div>
 					            		</div>
 					            	</div>
 								</div>
@@ -447,7 +449,6 @@
 										v-bind:key="1" 
 										v-show="!loading && step==1"
 									>
-
 									  	<div class="col-sm-12">
 	  
 									        <h2 class="text-center mb-4 lead">
@@ -496,8 +497,6 @@
 									                        <hr class="mt-1">
 
 									                        <div class="form-group row">
-
-
 									                        	<div class="col-6">
 									                            	<div class="row d-flex align-items-center">
 									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">
@@ -540,7 +539,9 @@
 
 																<div class="col-6">
 																	<div class="row">
-																  		<label for="inputAdminApproval3" class="col-sm-4 col-form-label text-right">Admin Approval</label>
+																  		<label for="inputAdminApproval3" class="col-sm-4 col-form-label text-right">
+																  			Admin Approval
+																  		</label>
 																  		<div class="col-sm-8">
 																  			
 																			<toggle-button 
@@ -557,8 +558,6 @@
 																  		</div>
 																	</div>
 																</div>
-										                        
-
 									                        </div>
 
 									                        <div class="form-group row">
@@ -577,9 +576,7 @@
 										                                  		:class="!errors.restaurant.name  ? 'is-valid' : 'is-invalid'"
 										                                  		@keyup="validateFormInput('restaurant.name')" 
 									                                  		>
-									                                  		<div 
-										                                  		class="invalid-feedback" 
-									                                  		>
+									                                  		<div class="invalid-feedback">
 																		        {{ errors.restaurant.name  }}
 																		  	</div>
 									                                  		
@@ -589,7 +586,9 @@
 
 									                      		<div class="col-6">
 										                            <div class="row">
-										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-right">Mobile</label>
+										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
+										                              		Mobile
+										                              	</label>
 										                              	<div class="col-sm-8">
 										                              		
 									                                  		<input 
@@ -601,8 +600,7 @@
 										                                  		@keyup="validateFormInput('restaurant.mobile')"
 									                                  		>
 
-									                                  		<div 
-										                                  		class="invalid-feedback"
+									                                  		<div class="invalid-feedback"
 										                                  	>
 																		        {{ errors.restaurant.mobile }}
 																		  	</div>
@@ -615,7 +613,9 @@
 									                        <div class="form-group row">
 									                          	<div class="col-6">
 										                            <div class="row">
-										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-right">Min. Order</label>
+										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-right">
+										                              		Min. Order
+										                              	</label>
 										                              	<div class="col-sm-8">
 										                              		
 									                                  		<input 
@@ -630,9 +630,7 @@
 										                                  		@keyup="validateFormInput('restaurant.min_order')"
 										                                  	>
 										                                  		
-										                                  	<div 
-											                                  	class="invalid-feedback" 
-											                                >
+										                                  	<div class="invalid-feedback">
 																		        {{ errors.restaurant.min_order }}
 																		  	</div>
 
@@ -707,7 +705,9 @@
 									                    <div class="card-body">
 
 									                        <div class="form-group row">    
-									                          <label for="inputLocation3" class="col-sm-4 col-form-label text-right">Restaurant Location</label>
+									                          <label for="inputLocation3" class="col-sm-4 col-form-label text-right">
+									                          	Restaurant Location
+									                          </label>
 									                          	<div class="col-sm-8">
 									                    
 										                    		<vue-google-autocomplete
@@ -728,7 +728,9 @@
 									                        </div>
 									                          
 									                        <div class="form-group row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">Detail Address</label>
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          		Detail Address
+									                          	</label>
 									                          	<div class="col-sm-8">
 
 									                              	<ckeditor 
@@ -757,17 +759,25 @@
 									        </div>
 
 									        <div class="row mb-2">
-									          	<div class="col-sm-6 text-left">
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="step-=1">
+									          	<div class="col-6 text-left">
+								                  	<button type="button" 
+								                  		class="btn btn-outline-secondary btn-sm rounded-pill" 
+								                  		v-on:click="step-=1"
+								                  	>
 									                    <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
 								                  	</button>
 								                </div>
 
-								                <div class="col-sm-6 text-right">
-								                	<div class="text-danger small" v-show="!submitForm">
+								                <div class="col-6 text-right">
+								                	<div class="text-danger small" 
+								                		v-show="!submitForm"
+								                	>
 												  		Please input required fields
 										          	</div>
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
+								                  	<button type="button" 
+								                  		class="btn btn-outline-secondary btn-sm rounded-pill" 
+								                  		v-on:click="nextPage"
+								                  	>
 									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
 								                  	</button>
 									          	</div>
@@ -794,41 +804,183 @@
 
 									                        <div class="form-group row mb-4">
 									                            
-									                          	<label for="inputServiceSchedule3" class="col-sm-2 col-form-label text-right">Service Schedule</label>
+									                          	<label for="inputServiceSchedule3" class="col-sm-2 col-form-label text-right">
+									                          		Service Schedule
+									                          	</label>
 									                          	<div class="col-sm-10">
+																	<div 
+																		class="form-group row border border-dark" 
+																		v-for="dayName in restaurantWeekDays"
+																	>
+																		<label class="col-sm-4 col-form-label text-center">
+																      		{{ dayName | capitalize }}
+																      	</label>
+																      	
+																        <div class="col-sm-8">
+																        	<div class="row d-flex mb-4 mt-2 border-top" 
+																        		v-for="(schedule, index) in service_schedule[dayName].schedules"
+																        	>
+																        		<div class="col-sm-12 text-right"
+																        			v-show="service_schedule[dayName].schedules.length >= 2 && index === (service_schedule[dayName].schedules.length-1)"
+																        		>
+																	        		<button 
+																		        		type="button" 
+																		        		class="pr-1 close" 
+																		        		@click="service_schedule[dayName].schedules.pop();" 
+																		        		aria-label="Close"
+																	        		>
+																				    	<span aria-hidden="true" class="text-danger">&times;</span>
+																					</button>
+																        		</div>
 
-								                            		<table id="service_schedule"></table>
+																        		<div class="col-sm-4">
+																        			<span>
+																              			Start Time
+																              		</span>
+																					             	
+																				  	<multiselect v-model="service_schedule[dayName].schedules[index].start_time" 
+																				  		:options="restaurantScheduleHours" 
+																				  		:key="index" 
+																				  		:show-labels="false" 
+																                  		:allow-empty="false"
+																				  		placeholder="Start Time" 
+																				  		selectLabel = "Click to select"
+																				  		deselect-label="Can't remove"
+																						>
+																					</multiselect>
+																        		</div>
 
-									                              <!-- 
-									                              <input type="text" class="form-control" v-model="restaurant.service_schedule" placeholder="Available Meals" required>
-									                               -->
-									                          	</div>
+																        		<div class="col-sm-4">
+																        			<span>
+																              			End Time
+																              		</span>
+																					
+																				  	<multiselect v-model="service_schedule[dayName].schedules[index].end_time" 
+																				  		:options="restaurantScheduleHours" 
+																				  		:key="index" 
+																				  		:show-labels="false" 
+																                  		:allow-empty="false" 
+																				  		placeholder="End Time" 
+																				  		selectLabel = "Click to select"
+																				  		deselect-label="Can't remove"
+																						>
+																					</multiselect>
+																        		</div>
+
+																        		<div class="col-sm-4 align-self-center text-center">
+																        			<i 	class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
+																		        		aria-hidden="true" 
+																			        	@click="service_schedule[dayName].schedules.push({ 'start_time' : '10 am','end_time' : '10 pm', })"
+																		        	>	
+																		        	</i>
+																          		
+																		        	<i 	class="fas fa-times-circle fa-2x rounded-circle bg-info" 
+																		        		aria-hidden="true" 
+																		        		@click="service_schedule[dayName].schedules.pop();" 
+																          				v-show="service_schedule[dayName].schedules.length >= 2 && index === (service_schedule[dayName].schedules.length-1)"
+																		        	>	
+																		        	</i>
+																        		</div>
+																        	</div>			                  	
+																        </div>
+																  	</div>
+									                          	</div> 
 									                            
 									                        </div>
 
-									                        <div class="form-group row">      
-									                          	<label for="inputBookingBreak3" class="col-sm-2 col-form-label text-right">Booking Breaks</label>
+									                        <div class="form-group row mb-4">      
+									                          	<label for="inputBookingBreak3" class="col-sm-2 col-form-label text-right">
+									                          		Booking Breaks
+									                          	</label>
 
 									                          	<div class="col-sm-10">
+															    	<div 
+															    		class="form-group row border border-dark" 
+															    		v-for="dayName in restaurantWeekDays"
+															    	>
+															    		<label class="col-sm-4 col-form-label text-center">
+														              		{{ dayName | capitalize }}
+														              	</label>
 
-									                            	<table id="booking_break_schedule"></table>
+														                <div class="col-sm-8">
+														                	<div class="row d-flex mb-4 mt-2 border-top" 
+														                		v-for="(schedule, index) in booking_break_schedule[dayName].schedules"
+														                	>
+														                		<div class="col-sm-12 text-right"
+																        			v-show="booking_break_schedule[dayName].schedules.length >= 2 && index === (booking_break_schedule[dayName].schedules.length-1)"
+																        		>
+																	        		<button 
+																		        		type="button" 
+																		        		class="pr-1 close" 
+																		        		@click="booking_break_schedule[dayName].schedules.pop();" 
+																		        		aria-label="Close"
+																	        		>
+																				    	<span aria-hidden="true" class="text-danger">&times;</span>
+																					</button>
+																        		</div>
 
-									                              	<!-- 
-									                              	<input type="text" class="form-control" v-model="restaurant.booking_break_schedule" placeholder="Available Meals" required>
-									                    			-->
+														                		<div class="col-sm-4">
+														                			<span>
+																              			Start Time
+																              		</span>
+																					             	
+																				  	<multiselect v-model="booking_break_schedule[dayName].schedules[index].start_time" 
+																				  		placeholder="Start Time" 
+																				  		:options="restaurantScheduleHours" 
+																				  		:key="index" 
+																				  		:show-labels="false" 
+														                      			:allow-empty="false" 
+																				  		selectLabel = "Click to select"
+																				  		deselect-label="Can't remove"
+																						>
+																					</multiselect>
+														                		</div>
 
+														                		<div class="col-sm-4">
+														                			<span>
+																              			End Time
+																              		</span>
+																					
+																				  	<multiselect v-model="booking_break_schedule[dayName].schedules[index].end_time" 
+																				  		placeholder="End Time" 
+																				  		:options="restaurantScheduleHours" 
+																				  		:key="index" 
+																				  		:show-labels="false" 
+														                      			:allow-empty="false"  
+																				  		selectLabel = "Click to select"
+																				  		deselect-label="Can't remove"
+																						>
+																					</multiselect>
+														                		</div>
+
+														                		<div class="col-sm-4 align-self-center text-center">
+														                			<i 	class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
+																		        		aria-hidden="true" 
+																			        	@click="booking_break_schedule[dayName].schedules.push({ 'start_time' : 'NA','end_time' : 'NA', })"
+																		        	>	
+																		        	</i>
+															              		
+																		        	<i 	class="fas fa-times-circle fa-2x  rounded-circle bg-info" aria-hidden="true" 
+																		        		@click="booking_break_schedule[dayName].schedules.pop();" 
+																          				v-show="booking_break_schedule[dayName].schedules.length >= 2 && index === (booking_break_schedule[dayName].schedules.length-1)"
+																		        	>	
+																		        	</i>
+														                		</div>
+														                	</div>			                  	
+														                </div>
+														          	</div>
 									                          	</div>      
 									                        </div>
 
 									                        <div class="form-group row">
-									                          	<div class="col-4">
-										                            <div class="d-flex flex-wrap align-content-center form-group row">
+									                          	<div class="col-sm-4">
+										                            <div class="form-group row">
 										                                
-										                              	<div class="col-sm-4 text-right">
+										                              	<div class="col-sm-4 text-center">
 										                                	<label for="inputPayment3" class="col-form-label pb-0">
 										                                		Payment
 										                                	</label>
-										                                	<div class="p-0 m-0">
+										                                	<div>
 										                                		(cash)
 										                                	</div>
 										                                
@@ -836,7 +988,6 @@
 
 										                              	<div class="col-sm-8 align-self-center text-center">
 										                                	<div class="checkbox">
-										                                  
 										                                    	<toggle-button 
 											                                    	:sync="true" 
 											                                    	v-model="singleRestaurantData.restaurant.is_post_paid" 
@@ -847,17 +998,17 @@
 											                                    	:color="{checked: 'green', unchecked: '#17a2b8'}" 
 											                                    	:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"
 											                                    />
-
 										                                	</div>
 										                              	</div>
 										                          	</div>
 										                      	</div>
-									                          	<div class="col-4">
-									                            	<div class="d-flex flex-wrap align-content-center row">
-									                              		<label for="inputParking3" class="col-sm-4 col-form-label text-right">Parking Facility</label>
+									                          	<div class="col-sm-4">
+									                            	<div class="form-group row">
+									                              		<label for="inputParking3" class="col-sm-4 col-form-label text-center">
+									                              			Parking
+									                              		</label>
 									                              		<div class="col-sm-8 align-self-center text-center">
 									                                  		<div class="checkbox">
-									                                  
 									                                    		<toggle-button 
 										                                    		value="true" 
 										                                    		:sync="true" 
@@ -868,19 +1019,19 @@
 										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
 										                                    		:labels="{checked: 'Available', unchecked: 'No Parking' }"
 									                                    		/>
-
 									                                		</div>
 									                              		</div>
 									                          		</div>
 									                      		</div>
-									                  			<div class="col-4">
-									                            	<div class="d-flex flex-wrap align-content-center row">
+									                  			<div class="col-sm-4">
+									                            	<div class="form-group row">
 
-									                              		<label for="inputSelfService3" class="col-sm-4 col-form-label text-right">Self Service</label>
+									                              		<label for="inputSelfService3" class="col-sm-4 col-form-label text-center">
+									                              			Self Service
+									                              		</label>
 									                                
 									                              		<div class="col-sm-8 align-self-center text-center">
 									                                  		<div class="checkbox">
-									                                  
 									                                    		<toggle-button 
 										                                    		value ="true" 
 										                                    		:sync="true" 
@@ -905,7 +1056,7 @@
 									        </div>
 
 									        <div class="row mb-2">
-									          	<div class="col-sm-4 text-left">
+									          	<div class="col-4 text-left">
 								                  	<button 
 									                  	type="button" 
 									                  	class="btn btn-outline-secondary btn-sm rounded-pill" 
@@ -915,7 +1066,7 @@
 								                  	</button>
 								                </div>
 								                
-									          	<div class="col-sm-8 text-right">
+									          	<div class="col-8 text-right">
 									                <div class="text-danger small" v-show="!submitForm">
 												  		Please input required fields
 										          	</div>
@@ -990,7 +1141,9 @@
 								            <div class="card-body">
 									              		
 								              	<div class="form-group row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">User Name</label>
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              			User Name
+								              		</label>
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="text" class="form-control" 
@@ -1008,7 +1161,9 @@
 								              	</div>
 
 								              	<div class="form-group row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">Mobile</label>
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              			Mobile
+								              		</label>
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="text" class="form-control" 
@@ -1026,7 +1181,9 @@
 								              	</div>
 
 								              	<div class="form-group row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">Email</label>
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              			Email
+								              		</label>
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="text" class="form-control" 
@@ -1044,7 +1201,9 @@
 								              	</div>
 
 								              	<div class="form-group row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">Password</label>
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              			Password
+								              		</label>
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="password" class="form-control" 
@@ -1062,7 +1221,9 @@
 								              	</div>
 
 								              	<div class="form-group row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">Repeat Password</label>
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              			Repeat Password
+								              		</label>
 									                <div class="col-sm-8">
 									                  	<input 
 										                  	type="password" class="form-control" 
@@ -1118,7 +1279,9 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-danger">
 						<div class="modal-header">
-						  	<h4 class="modal-title">Restaurant Deletion</h4>
+						  	<h4 class="modal-title">
+						  		Restaurant Deletion
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -1131,7 +1294,7 @@
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to delete restaurant ?? </h5>
+					      		<h5>Are you sure want to delete restaurant ??</h5>
 					      		<h5 style="color:#c6cacc">
 					      			<small>
 					      				But once you want, you can retreive it from bin.
@@ -1161,7 +1324,9 @@
 				<div class="modal-dialog">
 					<div class="modal-content bg-danger">
 						<div class="modal-header">
-						  	<h4 class="modal-title">Restaurant Restoration</h4>
+						  	<h4 class="modal-title">
+						  		Restaurant Restoration
+						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -1174,7 +1339,7 @@
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to restore restaurant ?? </h5>
+					      		<h5>Are you sure want to restore restaurant ??</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
 							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
@@ -1230,8 +1395,6 @@
 
 			has_parking : false,
 			is_self_service : false,
-			service_schedule : null,
-			booking_break_schedule : null,
 
 			admin_approval : false,
     	},
@@ -1240,9 +1403,6 @@
     	restaurantFoodObjectTags : [],
     	restaurantMealObjectTags : [],
 		restaurantCuisineObjectTags : [],
-
-    	service_schedule : {},
-		booking_break_schedule : {},
     };
 
 	var restaurantListData = {
@@ -1260,6 +1420,8 @@
     	restaurantsToShow : [],
     	
         allRestaurantAdmins : [],
+
+        restaurantScheduleHours : ['NA', '6 am', '7 am', '8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm', '9 pm', '10 pm', '11 pm', '12 am', '1 am', '2 am'],
     	
     	restaurantNewAdmin : {
 			// email : null,
@@ -1281,6 +1443,126 @@
     	},
 
         singleRestaurantData : singleRestaurantData,
+			
+        restaurantWeekDays : ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'],
+
+        service_schedule : {
+			sat : {
+				schedules : [
+					{
+						start_time : '10 am',
+						end_time : '10 pm',
+					},
+				]
+			},
+			sun : {
+				schedules : [
+					{
+						start_time : '10 am',
+						end_time : '10 pm',
+					},
+				]
+			},
+			mon : {
+				schedules : [
+					{
+						start_time : '10 am',
+						end_time : '10 pm',
+					},
+				]
+			},
+			tue : {
+				schedules : [
+					{
+						start_time : '10 am',
+						end_time : '10 pm',
+					},
+				]
+			},
+			wed : {
+				schedules : [
+					{
+						start_time : '10 am',
+						end_time : '10 pm',
+					},
+				]
+			},
+			thu : {
+				schedules : [
+					{
+						start_time : '10 am',
+						end_time : '10 pm',
+					},
+				]
+			},
+			fri : {
+				schedules : [
+					{
+						start_time : '10 am',
+						end_time : '10 pm',
+					},
+				]
+			},
+		},
+
+		booking_break_schedule : {
+			sat : {
+				schedules : [
+					{
+						start_time : 'NA',
+						end_time : 'NA',
+					},
+				]
+			},
+			sun : {
+				schedules : [
+					{
+						start_time : 'NA',
+						end_time : 'NA',
+					},
+				]
+			},
+			mon : {
+				schedules : [
+					{
+						start_time : 'NA',
+						end_time : 'NA',
+					},
+				]
+			},
+			tue : {
+				schedules : [
+					{
+						start_time : 'NA',
+						end_time : 'NA',
+					},
+				]
+			},
+			wed : {
+				schedules : [
+					{
+						start_time : 'NA',
+						end_time : 'NA',
+					},
+				]
+			},
+			thu : {
+				schedules : [
+					{
+						start_time : 'NA',
+						end_time : 'NA',
+					},
+				]
+			},
+			fri : {
+				schedules : [
+					{
+						start_time : 'NA',
+						end_time : 'NA',
+					},
+				]
+			},
+		},
 
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     };
@@ -1304,10 +1586,6 @@
 			this.fetchAllRestaurantAdmins();
 		},
 
-		mounted(){
-			this.enableScheduler();
-		},
-
 		watch : {
 			'singleRestaurantData.restaurantAdminObject' : function(restaurantAdminObject){
 
@@ -1316,12 +1594,6 @@
 				}else
 					this.singleRestaurantData.restaurant.restaurant_admins_id = null;
 			},
-			'singleRestaurantData.service_schedule' : function(val){
-				this.singleRestaurantData.restaurant.service_schedule = val;
-			},
-			'singleRestaurantData.booking_break_schedule' : function(val){
-				this.singleRestaurantData.restaurant.booking_break_schedule = val;
-			},
 			query : function(val){
 				if (val==='') {
 					this.fetchAllRestaurants();
@@ -1329,6 +1601,14 @@
 				else 
 					this.searchData();
 			}
+		},
+
+		filters: {
+		  	capitalize: function (value) {
+			    if (!value) return ''
+			    value = value.toString()
+			    return value.charAt(0).toUpperCase() + value.slice(1)
+		  	}
 		},
 
 		methods : {
@@ -1429,28 +1709,139 @@
     			this.errors.restaurant = {};
 
 				this.singleRestaurantData.restaurant = {};
-
 				this.singleRestaurantData.restaurantAdminObject = {};
+
+				this.service_schedule = {
+					sat : {
+						schedules : [
+							{
+								start_time : '10 am',
+								end_time : '10 pm',
+							},
+						]
+					},
+					sun : {
+						schedules : [
+							{
+								start_time : '10 am',
+								end_time : '10 pm',
+							},
+						]
+					},
+					mon : {
+						schedules : [
+							{
+								start_time : '10 am',
+								end_time : '10 pm',
+							},
+						]
+					},
+					tue : {
+						schedules : [
+							{
+								start_time : '10 am',
+								end_time : '10 pm',
+							},
+						]
+					},
+					wed : {
+						schedules : [
+							{
+								start_time : '10 am',
+								end_time : '10 pm',
+							},
+						]
+					},
+					thu : {
+						schedules : [
+							{
+								start_time : '10 am',
+								end_time : '10 pm',
+							},
+						]
+					},
+					fri : {
+						schedules : [
+							{
+								start_time : '10 am',
+								end_time : '10 pm',
+							},
+						]
+					},
+				};
+
+				this.booking_break_schedule = {
+					sat : {
+						schedules : [
+							{
+								start_time : 'NA',
+								end_time : 'NA',
+							},
+						]
+					},
+					sun : {
+						schedules : [
+							{
+								start_time : 'NA',
+								end_time : 'NA',
+							},
+						]
+					},
+					mon : {
+						schedules : [
+							{
+								start_time : 'NA',
+								end_time : 'NA',
+							},
+						]
+					},
+					tue : {
+						schedules : [
+							{
+								start_time : 'NA',
+								end_time : 'NA',
+							},
+						]
+					},
+					wed : {
+						schedules : [
+							{
+								start_time : 'NA',
+								end_time : 'NA',
+							},
+						]
+					},
+					thu : {
+						schedules : [
+							{
+								start_time : 'NA',
+								end_time : 'NA',
+							},
+						]
+					},
+					fri : {
+						schedules : [
+							{
+								start_time : 'NA',
+								end_time : 'NA',
+							},
+						]
+					},
+				};
 
 				$("#modal-createOrEdit-restaurant").modal("show");
 			},
 		    storeRestaurant() {
 
-				if (!this.singleRestaurantData.restaurant.restaurant_admins_id || !this.singleRestaurantData.restaurant.name || !this.singleRestaurantData.restaurant.mobile || !this.singleRestaurantData.restaurant.min_order || !this.singleRestaurantData.restaurant.address) {
-
-					this.submitForm = false;
-					
-					return;
-				}
-
 				$("#modal-createOrEdit-restaurant").modal("hide");
 
 				this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner;
+
+				this.singleRestaurantData.restaurant.service_schedule = this.service_schedule;
+				this.singleRestaurantData.restaurant.booking_break_schedule = this.booking_break_schedule;
 				
 				// this.restaurant.lat : null,
 				// this.restaurant.lng : null,
-				// this.restaurant.service_schedule : this.restaurant.service_schedule,
-				// this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
 				axios
 					.post('/restaurants/'+ this.perPage, this.singleRestaurantData.restaurant)
@@ -1488,28 +1879,24 @@
 				this.errors.restaurant = {};
 
 				this.singleRestaurantData.restaurant = restaurant;
+				this.service_schedule  = JSON.parse(restaurant.service_schedule);
+				this.booking_break_schedule = JSON.parse(restaurant.booking_break_schedule);
 
 				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
 		    	
 				$("#modal-createOrEdit-restaurant").modal("show");
 			},
 			updateRestaurant() {
-
-				if (!this.singleRestaurantData.restaurant.restaurant_admins_id || !this.singleRestaurantData.restaurant.name || !this.singleRestaurantData.restaurant.mobile || !this.singleRestaurantData.restaurant.min_order || !this.singleRestaurantData.restaurant.address) {
-
-					this.submitForm = false;
-					
-					return;
-				}
 			
 				$("#modal-createOrEdit-restaurant").modal("hide");
 
 				this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner;
 				
+				this.singleRestaurantData.restaurant.service_schedule = this.service_schedule;
+				this.singleRestaurantData.restaurant.booking_break_schedule = this.booking_break_schedule;
+
 				// this.restaurant.lat : null,
 				// this.restaurant.lng : null,
-				// this.restaurant.service_schedule : this.restaurant.service_schedule,
-				// this.restaurant.booking_break_schedule : this.restaurant.booking_break_schedule,
 
 				axios
 					.put('/restaurants/'+this.singleRestaurantData.restaurant.id+'/'+this.perPage, this.singleRestaurantData.restaurant)
@@ -1637,44 +2024,6 @@
 			getAddressData(addressData, placeResultData, id) {
 				// console.log(addressData);
 			},
-			enableScheduler(){
-
-				$('#service_schedule').scheduler({
-					accuracy: 1,
-					onDragStart: function(){
-					  	// console.log('Drag Start');
-					},
-					onDragMove: function(){
-					  	// console.log('Draggging');
-					},
-					onDragEnd: function(){
-					  	// console.log('Drag End');
-					},
-					onSelect: function(){
-						singleRestaurantData.service_schedule = $('#service_schedule').scheduler('val');
-						// console.log(singleRestaurantData.service_schedule);
-					  	// console.log($('#service_schedule').scheduler('val'));
-					},
-				});
-
-				$('#booking_break_schedule').scheduler({
-					accuracy: 1,
-					onDragStart: function(){
-					  	// console.log('Drag Start');
-					},
-					onDragMove: function(){
-					  	// console.log('Draggging');
-					},
-					onDragEnd: function(){
-					  	// console.log('Drag End');
-					},
-					onSelect: function(){
-						singleRestaurantData.booking_break_schedule = $('#booking_break_schedule').scheduler('val');
-						// console.log(singleRestaurantData.booking_break_schedule);
-					  	// console.log($('#booking_break_schedule').scheduler('val'));
-					},
-				});
-			},
 			storeRestaurantAdmin(){
 
 				$('#modal-create-restaurant-admin').modal('hide');
@@ -1706,7 +2055,7 @@
 					this.validateFormInput ('restaurant.min_order');
 					this.validateFormInput ('restaurant.website');
 				
-				}else if (this.step===2) {
+				}else {
 
 					this.validateFormInput ('restaurant.address');
 				
@@ -1769,6 +2118,21 @@
 
 						break;
 
+					case 'restaurant.min_order' :
+
+						if (!this.singleRestaurantData.restaurant.min_order) {
+							this.errors.restaurant.min_order = 'Minimum order is required';
+						}
+						else if (this.singleRestaurantData.restaurant.min_order < 100 || this.singleRestaurantData.restaurant.min_order > 5000) {
+							this.errors.restaurant.min_order = 'Value should be between 100 and 5000';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.restaurant, 'min_order');
+						}
+
+						break;
+
 					case 'restaurant.website' :
 
 						if (this.singleRestaurantData.restaurant.website && !this.singleRestaurantData.restaurant.website.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)) {
@@ -1789,21 +2153,6 @@
 						else {
 							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'address');
-						}
-
-						break;
-
-					case 'restaurant.min_order' :
-
-						if (!this.singleRestaurantData.restaurant.min_order) {
-							this.errors.restaurant.min_order = 'Minimum order is required';
-						}
-						else if (this.singleRestaurantData.restaurant.min_order < 100 || this.singleRestaurantData.restaurant.min_order > 5000) {
-							this.errors.restaurant.min_order = 'Value should be between 100 and 5000';
-						}
-						else {
-							this.submitForm = true;
-							this.$delete(this.errors.restaurant, 'min_order');
 						}
 
 						break;
@@ -1881,7 +2230,6 @@
 					 
 			},
 			onBannerChange(evnt){
-
 		      	let files = evnt.target.files || evnt.dataTransfer.files;
 
                 // Only process image files.

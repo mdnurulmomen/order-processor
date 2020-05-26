@@ -30,7 +30,7 @@ class CreateRestaurantsTable extends Migration
             $table->boolean('is_self_service')->default(true);
             $table->boolean('has_parking')->default(false);
             $table->json('service_schedule')->nullable(); // service hour for whole week
-            $table->json('booking_schedule_break')->nullable(); // break hour for whole week
+            $table->json('booking_break_schedule')->nullable(); // break hour for whole week
             $table->boolean('taking_order')->default(false);
             $table->boolean('admin_approval')->default(false);
             $table->unsignedInteger('restaurant_admins_id');
