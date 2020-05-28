@@ -10,15 +10,13 @@ use App\Models\MenuCategory;
 use App\Models\RestaurantDeal;
 use App\Models\RestaurantAdmin;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Intervention\Image\ImageManagerStatic as ImageIntervention;
 
-class Restaurant extends Authenticatable
+class Restaurant extends Model
 {
-   	use Notifiable, SoftDeletes;
+   	use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

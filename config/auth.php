@@ -88,7 +88,7 @@ return [
 
         'restaurants' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Restaurant::class,
+            'model' => App\Models\RestaurantAdmin::class,
         ],
 
         // 'users' => [

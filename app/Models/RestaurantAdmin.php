@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Models\Restaurant;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class RestaurantAdmin extends Model
+class RestaurantAdmin extends Authenticatable
 {
-    use SoftDeletes;
+    use Notifiable, SoftDeletes;
     
    	protected $guarded = [
         'id'

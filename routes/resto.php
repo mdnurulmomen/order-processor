@@ -17,16 +17,14 @@ Route::name('resto.')->group(function () {
 	
 		Route::get('/', 'LoginController@showRestaurantLoginForm')->name('login');
 		Route::post('/', 'LoginController@restaurantLogin');
-		
-	    Route::get('/home', 'HomeController@showRestaurantHome')->name('home');
-
+	    
 	    // For all other routes coming from vue
-	    Route::get('/{any}', 'HomeController@showAdminHome');
+    	Route::get('/{any}/{id?}', 'HomeController@showRestaurantHome')->where('id', '[0-9]+');
 
 		Route::group(['middleware' => ['auth:restaurant']], function () {
 		    
 		    Route::post('/logout', 'LoginController@restaurantLogout')->name('logout');
-		    
+
 		});
 	});
 
@@ -36,6 +34,7 @@ Route::name('resto.')->group(function () {
 		    
 		    Route::get('/api/profile', 'ProfileController@showAdminProfile')->name('profile');
 		    Route::get('/profile', 'ProfileController@showRestaurantProfile');
+
 		});
 	});
 });

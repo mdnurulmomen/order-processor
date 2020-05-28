@@ -27,7 +27,7 @@ class RedirectIfAuthenticated
                     break;
 
                 case 'restaurant':
-                    return redirect()->route('resto.home');
+                    return redirect(RouteServiceProvider::HOME);
                     break;
                 
                 default:

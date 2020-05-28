@@ -165,14 +165,14 @@ class LoginController extends Controller
     protected function attemptRestaurantLoginWithMobile(Request $request)
     {
         return Auth::guard('restaurant')->attempt(
-            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'admin_approval'=>1], $request->filled('remember')
+            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
         );   
     }
 
     protected function attemptRestaurantLoginWithUsername(Request $request)
     {
         return Auth::guard('restaurant')->attempt(
-            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'admin_approval'=>1], $request->filled('remember')
+            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
         );   
     }
 

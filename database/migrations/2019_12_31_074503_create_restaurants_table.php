@@ -17,7 +17,6 @@ class CreateRestaurantsTable extends Migration
             $table->increments('id');
             $table->string('name', 50)->unique();
             $table->char('mobile', 13)->unique();
-            $table->rememberToken();
             $table->string('address'); // floor, house, road and other landmark  
             $table->string('lat'); // from area name / map
             $table->string('lng'); // from area name / map
