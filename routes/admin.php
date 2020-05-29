@@ -24,7 +24,8 @@ Route::name('admin.')->group(function () {
 		Route::group(['middleware' => ['auth:admin']], function () {
 		    
 		    Route::post('/logout', 'LoginController@adminLogout')->name('logout');
-		});
+
+		});		
 	});
 
 
