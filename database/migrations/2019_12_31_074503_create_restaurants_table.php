@@ -18,8 +18,8 @@ class CreateRestaurantsTable extends Migration
             $table->string('name', 50)->unique();
             $table->char('mobile', 13)->unique();
             $table->string('address'); // floor, house, road and other landmark  
-            $table->string('lat'); // from area name / map
-            $table->string('lng'); // from area name / map
+            $table->float('lat', 10, 6); // from area name / map
+            $table->float('lng', 10, 6); // from area name / map
             $table->string('website')->nullable();
             $table->string('banner_preview')->nullable();
             $table->unsignedMediumInteger('min_order')->default(150);
