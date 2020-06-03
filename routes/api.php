@@ -23,6 +23,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 		Route::name('api.')->group(function () {    
 
 			Route::get('/restaurants/{expectedLatitude}/{expectedLongitude}', 'RestaurantController@getRestaurants');
+			Route::get('/general-info', 'SettingController@getGeneralInfo');
 
 		});
 	});
