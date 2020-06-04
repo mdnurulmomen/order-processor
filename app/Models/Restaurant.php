@@ -94,5 +94,10 @@ class Restaurant extends Model
     public function deal()
     {
         return $this->hasOne(RestaurantDeal::class, 'restaurant_id', 'id');
-    }   
+    }
+
+    public function menuCategories()
+    {
+        return $this->hasMany(RestaurantMenuCategory::class, 'restaurant_id', 'id');
+    } 
 }

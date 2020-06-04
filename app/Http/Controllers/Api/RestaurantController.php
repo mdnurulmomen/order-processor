@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\RestaurantMenuCategory;
 use App\Http\Resources\Api\RestaurantResource;
+use App\Http\Resources\Api\RestaurantMenuItemResource;
 
 class RestaurantController extends Controller
 {
@@ -25,4 +27,11 @@ class RestaurantController extends Controller
    		// return new RestaurantCollection(); // aggregations, items
          return RestaurantResource::collection($restaurants);
    	}
+
+      public function getRestaurantMenuItems($expectedRestaurant)
+      {
+         $restaurantMenuItems =  Restaurant::findOrFail($expectedRestaurant)->with(['menuCategories.menuCategory', 'menuCategories.restaurantMenuItems.restaurantMenuItemVariations', 'menuCategories.restaurantMenuItems.restaurantMenuItemAddons'])->get();
+
+         return RestaurantMenuItemResource::collection($restaurantMenuItems);
+      }
 }
