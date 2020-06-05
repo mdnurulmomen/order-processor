@@ -295,6 +295,32 @@
               </ul>
             </li>
 
+            <li class="nav-item has-treeview menu-open">
+              <a 
+                href="#" 
+                v-bind:class="[(currentPage.includes('/api-list') || currentPage.includes('/api-list')) ? 'active' : '', 'nav-link']"
+              >
+                <i class="nav-icon fas fa-key"></i>
+                <p>
+                  API
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'admin.apiList.index' }" 
+                    v-bind:class="[(currentPage.includes('/api-list')) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>API List</p>
+                  </router-link>
+                </li>
+
+              </ul>
+            </li>
+
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-copy"></i>

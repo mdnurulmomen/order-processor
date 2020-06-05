@@ -183,6 +183,11 @@ const router = new VueRouter({
             name: 'admin.cancelationReasons.index',
             component: () => import(/* webpackChunkName : "js/cancelation-reason-list" */ './components/admin/CancelationReasonIndexComponent.vue')
 		},
+		{
+			path: '/api-list',
+            name: 'admin.apiList.index',
+            component: () => import(/* webpackChunkName : "js/api-list" */ './components/admin/ApiIndexComponent.vue')
+		},
 
 		
 		{
