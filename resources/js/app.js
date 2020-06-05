@@ -188,6 +188,11 @@ const router = new VueRouter({
             name: 'admin.apiList.index',
             component: () => import(/* webpackChunkName : "js/api-list" */ './components/admin/ApiIndexComponent.vue')
 		},
+		{
+			path: '/restaurant-menu-items',
+		    name: 'admin.expectedRestaurantForMenuItem.index',
+		    component: () => import(/* webpackChunkName : "js/expected-restaurant-name-for-menu-item-list" */ './components/admin/ExpectedRestaurantNameForMenuItemComponent.vue'),
+		},
 
 		
 		{

@@ -131,6 +131,12 @@
                   </router-link>
                 </li>
                 <li class="nav-item">
+                  <router-link :to="{ name: 'admin.expectedRestaurantForMenuItem.index' }"  v-bind:class="[(currentPage.includes('/restaurant-menu-items')) ? 'active' : '', 'nav-link']">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Rst Menu-Items</p>
+                  </router-link>
+                </li>
+                <li class="nav-item">
                   <router-link :to="{ name: 'admin.restaurantMenuCategories.index' }"  v-bind:class="[(currentPage.includes('/restaurant-menu-categories')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Rst Menu-Categories</p>
