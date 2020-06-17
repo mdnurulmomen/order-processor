@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderedItemCustomization extends Model
 {
-    //
+   	protected $guarded = [
+   		'id'
+   	];
+
+   	public $timestamps = false;
 }
