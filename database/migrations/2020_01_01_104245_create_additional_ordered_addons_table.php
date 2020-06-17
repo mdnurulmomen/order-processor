@@ -16,6 +16,7 @@ class CreateAdditionalOrderedAddonsTable extends Migration
         Schema::create('additional_ordered_addons', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->unsignedSmallInteger('restaurant_menu_item_addon_id');
+            $table->unsignedTinyInteger('quantity')->default(1);
             $table->unsignedMediumInteger('order_item_id');
         });
     }

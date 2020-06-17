@@ -27,7 +27,7 @@ class CreateOrdersTable extends Migration
             $table->boolean('cutlery_addition')->default(false);
             $table->string('orderer_type'); // Counter / Waiter / Customer
             $table->unsignedInteger('orderer_id');
-            $table->boolean('call_confirmation')->default(false);
+            $table->tinyInteger('call_confirmation')->default(-1);
             $table->timestamps();
         });
     }

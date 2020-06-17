@@ -20,7 +20,7 @@ class CreateCustomerAddressesTable extends Migration
             $table->string('additional_hint')->nullable(); // Landmarks
             $table->string('lat'); // from suggested area name / pin pointing map
             $table->string('lang'); // from suggested area name / pin pointing map
-            $table->string('address_name');
+            $table->string('address_name'); // work,home,other
             $table->unsignedInteger('customer_id');
         });
     }
