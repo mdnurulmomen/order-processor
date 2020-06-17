@@ -18,8 +18,8 @@ class MenuItemAddonResource extends JsonResource
 
         return [
 
-            'itemAddonId' => $this->id,
-            'addonName' => $this->name,
+            'id' => $this->id,
+            'name' => $this->name,
             'price' => $this->pivot->price,
 
         ];

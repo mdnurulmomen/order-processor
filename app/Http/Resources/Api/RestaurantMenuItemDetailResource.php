@@ -21,14 +21,14 @@ class RestaurantMenuItemDetailResource extends JsonResource
 
         return [
 
-            'menuItemId' => $this->id,
-            'itemName' => $this->name,
-            'itemDetail' => $this->detail,
+            'id' => $this->id,
+            'name' => $this->name,
+            'detail' => $this->detail,
             'itemVariations' => $this->has_variation ? MenuItemVariationResource::collection($this->restaurantMenuItemVariations) : false,
             'itemAddons' => $this->has_addon ? MenuItemAddonResource::collection($this->restaurantMenuItemAddons) : false,
             'price' => $this->price,
             'customizable' => $this->customizable,
-            'itemStock' => $this->item_stock,
+            'item_stock' => $this->item_stock,
 
         ];
     }

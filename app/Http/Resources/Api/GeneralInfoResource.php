@@ -17,18 +17,18 @@ class GeneralInfoResource extends JsonResource
         // return parent::toArray($request);
 
         return [
-            'deliveryCharge' => $this->delivery_charge,
-            'deliveryChargePercentage' => $this->multiple_delivery_charge_percentage,
-            'mailAddress' => $this->official_mail_address,
-            'contactAddress' => $this->official_contact_address,
-            'customerCareNumber' => $this->official_customer_care_number,
-            'vatPercentage' => $this->vat_rate,
-            'officialBankName' => $this->official_bank,
-            'accountHolderName' => $this->official_bank_account_holder_name,
-            'accountNumber' => $this->official_bank_account_number,
-            'officialMerchantNumber' => $this->merchant_number,
-            'appLogo' => $this->logo,
-            'faviconIcon' => $this->favicon,
+            'delivery_charge' => $this->delivery_charge,
+            'multiple_delivery_charge_percentage' => $this->multiple_delivery_charge_percentage,
+            'official_mail_address' => $this->official_mail_address,
+            'official_contact_address' => $this->official_contact_address,
+            'official_customer_care_number' => $this->official_customer_care_number,
+            'vat_rate' => $this->vat_rate,
+            'official_bank' => $this->official_bank,
+            'official_bank_account_holder_name' => $this->official_bank_account_holder_name,
+            'official_bank_account_number' => $this->official_bank_account_number,
+            'merchant_number' => $this->merchant_number,
+            'logo' => $this->logo,
+            'favicon' => $this->favicon,
         ];
     }
 }

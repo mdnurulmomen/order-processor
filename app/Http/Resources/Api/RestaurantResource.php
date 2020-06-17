@@ -22,24 +22,25 @@ class RestaurantResource extends JsonResource
         
         return [
 
-            'restaurantName' => $this->name,
-            'restaurantMobile' => $this->mobile,
-            'restaurantAddress' => $this->address,
-            'addressLatitude' => $this->lat,
-            'addressLongitude' => $this->lng,
-            'restaurantWebsite' => $this->website,
-            'restaurantBanner' => $this->banner_preview,
+            'name' => $this->name,
+            'mobile' => $this->mobile,
+            'address' => $this->address,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
+            'website' => $this->website,
+            'banner_preview' => $this->banner_preview,
             
             'availableMeals' => RestaurantMealResource::collection($this->restaurantMealCategories),
             'availableCuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
             'availableMenuCategories' => RestaurantMenuCategoryResource::collection($this->restaurantMenuCategories),
             
-            'minimumOrder' => $this->min_order,
-            'payFirst' => $this->is_post_paid ? 0 : 1,
-            'selfServiceAvailability' => $this->is_self_service,
-            'parkingAvailability' => $this->has_parking,
-            'serviceHours' => json_decode($this->service_schedule),
-            'bookingBreakHours' => json_decode($this->booking_break_schedule),
+            'min_order' => $this->min_order,
+            'is_post_paid' => $this->is_post_paid,
+            'is_self_service' => $this->is_self_service,
+            'has_parking' => $this->has_parking,
+			'discount' => $this->deal->discount->rate,
+            'service_schedule' => json_decode($this->service_schedule),
+            'booking_break_schedule' => json_decode($this->booking_break_schedule),
 
         ];
     }
