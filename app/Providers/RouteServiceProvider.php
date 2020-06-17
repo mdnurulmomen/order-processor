@@ -61,7 +61,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::domain('api.localhost')
+        Route::domain('api.'.env('APP_URL'))
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
@@ -76,7 +76,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes()
     {
-        Route::domain('admin.localhost')
+        Route::domain('admin.'.env('APP_URL'))
              ->middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/admin.php'));
@@ -91,7 +91,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapRestaurantRoutes()
     {
-        Route::domain('resto.localhost')
+        Route::domain('resto.'.env('APP_URL'))
              ->middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/resto.php'));
