@@ -34,57 +34,69 @@ class OrderController extends Controller
             ]);
         }
 
-        $request->menuItems = json_decode(json_encode($request->menuItems));
+        $request->orderItems = json_decode(json_encode($request->orderItems));
 
-        foreach ($request->menuItems as $menuItem) {
-            $orderedNewItem = $newOrder->orderItems()->create([
-                 'restaurant_menu_item_id' => $menuItem->id,
-                 'quantity' => $menuItem->quantity,
-            ]);
+        foreach ($request->orderItems as $orderItem) {
+            
+            $request->menuItems = json_decode(json_encode($orderItem->menuItems));
 
-            $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
+            foreach ($request->menuItems as $menuItem) {
 
-            if ($addedMenuItem->has_variation && !empty($menuItem->itemVariations) && !empty($menuItem->itemVariations->id)) {
-                $orderedNewItem->selectedItemVariation()->create([
-                    'restaurant_menu_item_variation_id'=>$menuItem->itemVariations->id
+                $orderedNewItem = $newOrder->orderItems()->create([
+                     'restaurant_menu_item_id' => $menuItem->id,
+                     'quantity' => $menuItem->quantity,
                 ]);
-            }
 
-            if ($addedMenuItem->customizable && !empty($menuItem->customization)) {
-                $orderedNewItem->orderedItemCustomization()->create([
-                    'custom_instruction'=>$menuItem->customization,
-                ]);
-            }
+                $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
 
-            if ($addedMenuItem->has_addon && !empty($menuItem->itemAddons)) {
-                foreach ($menuItem->itemAddons as $itemAddon) {
-                    $orderedNewItem->additionalOrderedAddons()->create([
-                        'restaurant_menu_item_addon_id'=>$itemAddon->id,
-                        'quantity'=>$itemAddon->quantity,
+                if ($addedMenuItem->has_variation && !empty($menuItem->itemVariations) && !empty($menuItem->itemVariations->id)) {
+                    $orderedNewItem->selectedItemVariation()->create([
+                        'restaurant_menu_item_variation_id'=>$menuItem->itemVariations->id
                     ]);
                 }
+
+                if ($addedMenuItem->customizable && !empty($menuItem->customization)) {
+                    $orderedNewItem->orderedItemCustomization()->create([
+                        'custom_instruction'=>$menuItem->customization,
+                    ]);
+                }
+
+                if ($addedMenuItem->has_addon && !empty($menuItem->itemAddons)) {
+                    foreach ($menuItem->itemAddons as $itemAddon) {
+                        $orderedNewItem->additionalOrderedAddons()->create([
+                            'restaurant_menu_item_addon_id'=>$itemAddon->id,
+                            'quantity'=>$itemAddon->quantity,
+                        ]);
+                    }
+                }
             }
+
+            // Broadcast to specific restaurant 
+
         }
 
-        if ($request->delivery_new_address && $request->orderer_type==='customer') {
-            
-            $request->delivery_new_address = json_decode(json_encode($request->delivery_new_address));
+        if ($request->order_type==='home-delivery' && $request->orderer_type==='customer') {
 
-            $customerNewAddress = CustomerAddress::create([
-                'house' => $request->delivery_new_address->house,
-                'road' => $request->delivery_new_address->road,
-                'additional_hint' => $request->delivery_new_address->additional_hint ?? NULL,
-                'lat' => $request->delivery_new_address->lat,
-                'lang' => $request->delivery_new_address->lang,
-                'address_name' => $request->delivery_new_address->address_name,
-                'customer_id' => $request->orderer_id,
+            if ($request->delivery_new_address) {
+                
+                $request->delivery_new_address = json_decode(json_encode($request->delivery_new_address));
+
+                $customerNewAddress = CustomerAddress::create([
+                    'house' => $request->delivery_new_address->house,
+                    'road' => $request->delivery_new_address->road,
+                    'additional_hint' => $request->delivery_new_address->additional_hint ?? NULL,
+                    'lat' => $request->delivery_new_address->lat,
+                    'lang' => $request->delivery_new_address->lang,
+                    'address_name' => $request->delivery_new_address->address_name,
+                    'customer_id' => $request->orderer_id,
+                ]);
+            }
+        
+            $newOrderAddress = $newOrder->deliveryAddress()->create([
+                'additional_info'=>$request->delivery_additional_info,
+                'delivery_address_id'=>$request->delivery_address_id ?? $customerNewAddress->id,
             ]);
         }
-
-        $newOrderAddress = $newOrder->deliveryAddress()->create([
-            'additional_info'=>$request->delivery_additional_info,
-            'delivery_address_id'=>$request->delivery_address_id ?? $customerNewAddress->id,
-        ]);
 
         return $newOrder;
     }

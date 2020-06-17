@@ -48,18 +48,21 @@ class OrderRequest extends FormRequest
             
             'payment_id'=>'required_if:payment_method,bkash,card|string',
 
-            'menuItems' => 'required|array|min:1',
-            'menuItems.*.id' => 'required|exists:restaurant_menu_items,id',
-            'menuItems.*.quantity' => 'required|numeric',
+            'orderItems' => 'required|array|min:1',
+            'orderItems.*.restaurant_id' => 'required|exists:restaurants,id',
 
-            'menuItems.*.itemVariations' => 'required',
-            'menuItems.*.itemVariations.id' => 'required_unless:menuItems.*.itemVariations,0|numeric|exists:restaurant_menu_item_variations,variation_id',
+            'orderItems.*.menuItems' => 'required|array|min:1',
+            'orderItems.*.menuItems.*.id' => 'required|exists:restaurant_menu_items,id',
+            'orderItems.*.menuItems.*.quantity' => 'required|numeric',
+
+            'orderItems.*.menuItems.*.itemVariations' => 'required',
+            'orderItems.*.menuItems.*.itemVariations.id' => 'required_unless:orderItems.*.menuItems.*.itemVariations,0|numeric|exists:restaurant_menu_item_variations,variation_id',
             
-            'menuItems.*.itemAddons' => 'present|array',
-            'menuItems.*.itemAddons.*.id' => 'required_unless:menuItems.*.itemAddons.*,|numeric|exists:restaurant_menu_item_addons,addon_id',
-            'menuItems.*.itemAddons.*.quantity' => 'required_unless:menuItems.*.itemAddons.*,|numeric',
+            'orderItems.*.menuItems.*.itemAddons' => 'present|array|min:0',
+            'orderItems.*.menuItems.*.itemAddons.*.id' => 'required_unless:orderItems.*.menuItems.*.itemAddons.*,|numeric|exists:restaurant_menu_item_addons,addon_id',
+            'orderItems.*.menuItems.*.itemAddons.*.quantity' => 'required_unless:orderItems.*.menuItems.*.itemAddons.*,|numeric',
 
-            'menuItems.*.customization' => 'nullable|string',
+            'orderItems.*.menuItems.*.customization' => 'nullable|string',
             
             // 'selected_item_variations'=>'required|string',
             // 'added_addon_id'=>'required|string',
@@ -100,22 +103,26 @@ class OrderRequest extends FormRequest
 
             'payment_id.*'  => 'Payment id is required',
 
-            'menuItems.*.id.required'  => 'Menu item id is required',
-            // 'menuItems.*.id.exists'  => 'Menu item id is invalid',
-            'menuItems.*.quantity.required'  => 'Menu-item quantity is required',
-            'menuItems.*.quantity.numeric'  => 'Menu-item quantity is invalid',
+            'orderItems.*.restaurant_id.required'  => 'Restaurant id is required',
+            'orderItems.*.restaurant_id.*'  => 'Restaurant id is invalid',
 
-            'menuItems.*.itemVariations.required'  => 'Menu-item-variation is required',
-            'menuItems.*.itemVariations.id.required'  => 'Item variation id is required',
-            'menuItems.*.itemVariations.id.*'  => 'Item variation id is invalid',
+            'orderItems.*.menuItems.*.id.required'  => 'Menu item id is required',
+            // 'orderItems.*.menuItems.*.id.exists'  => 'Menu item id is invalid',
+            'orderItems.*.menuItems.*.quantity.required'  => 'Menu-item quantity is required',
+            'orderItems.*.menuItems.*.quantity.numeric'  => 'Menu-item quantity is invalid',
 
-            'menuItems.*.itemAddons.required' => 'Menu-item-addons is required',
-            'menuItems.*.itemAddons.*.id.required'  => 'Addon item id is required',
-            'menuItems.*.itemAddons.*.id.*'  => 'Addon item id is invalid',
-            'menuItems.*.itemAddons.*.quantity.required'  => 'Addon quantity is required',
-            'menuItems.*.itemAddons.*.quantity.*'  => 'Addon quantity is invalid',
+            'orderItems.*.menuItems.*.itemVariations.required'  => 'Menu-item-variation is required',
+            'orderItems.*.menuItems.*.itemVariations.id.required'  => 'Item variation id is required',
+            'orderItems.*.menuItems.*.itemVariations.id.*'  => 'Item variation id is invalid',
 
-            'menuItems.*.customization.*' => 'Menu item customization should be string',
+            'orderItems.*.menuItems.*.itemAddons.present' => 'Menu-item-addons is required',
+            'orderItems.*.menuItems.*.itemAddons.array' => 'Menu-item-addons must be an array',
+            'orderItems.*.menuItems.*.itemAddons.*.id.required'  => 'Addon item id is required',
+            'orderItems.*.menuItems.*.itemAddons.*.id.*'  => 'Addon item id is invalid',
+            'orderItems.*.menuItems.*.itemAddons.*.quantity.required'  => 'Addon quantity is required',
+            'orderItems.*.menuItems.*.itemAddons.*.quantity.*'  => 'Addon quantity is invalid',
+
+            'orderItems.*.menuItems.*.customization.*' => 'Menu item customization should be string',
         ];
     }
 }
