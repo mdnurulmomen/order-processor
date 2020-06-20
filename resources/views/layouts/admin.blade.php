@@ -176,6 +176,17 @@
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 <!-- PAGE SCRIPTS -->
 <script src="{{ mix('js/app.js') }}"></script>
+<!-- receive notifications -->
+<script type="text/javascript">
+  Pusher.logToConsole = true;
+  Echo.private(`notifyAdmin`)
+    .listen('NewOrderArrival', (e) => {
+        console.log(e.order);
+        console.log(e.orderItems);
+        console.log(e.orderPayment);
+    });
+</script>
+
 <!-- ChartJS -->
 {{-- <script src="{{ asset('plugins/chart.js/js/Chart.min.js') }}"></script> --}}
 <!-- OPTIONAL SCRIPTS -->

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use App\Events\NewOrderArrival;
 use App\Models\CustomerAddress;
 use App\Models\RestaurantMenuItem;
 use App\Http\Controllers\Controller;
@@ -70,10 +72,10 @@ class OrderController extends Controller
                     }
                 }
             }
-
-            // Broadcast to specific restaurant 
-
         }
+
+        // Broadcast for admin
+        event(new NewOrderArrival($newOrder, $request->orderItems, $newOrderPayment ?? NULL));
 
         if ($request->order_type==='home-delivery' && $request->orderer_type==='customer') {
 
@@ -98,6 +100,10 @@ class OrderController extends Controller
             ]);
         }
 
-        return $newOrder;
+        // return $newOrder;
+        
+        return response()->json([
+            'success' => 'Order has been taken successfully'
+        ], 201);
     }
 }
