@@ -4,9 +4,10 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-// require('./bootstrap');
+require('./bootstrap');
 
 window.Vue = require('vue');
+
 // Registering component globally
 Vue.component('pagination', require('./components/admin/PaginationComponent.vue').default);
 
