@@ -17,19 +17,15 @@ class NewOrderArrival implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $order;
-    public $orderItems;
-    public $orderPayment;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Order $order, $orderItems, $orderPayment=NULL)
+    public function __construct(Order $order)
     {
         $this->order = $order;
-        $this->orderItems = $orderItems;
-        $this->orderPayment = $orderPayment;
     }
 
     /**

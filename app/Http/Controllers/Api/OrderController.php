@@ -75,30 +75,45 @@ class OrderController extends Controller
         }
 
         // Broadcast for admin
-        event(new NewOrderArrival($newOrder, $request->orderItems, $newOrderPayment ?? NULL));
+        event(new NewOrderArrival($newOrder));
 
-        if ($request->order_type==='home-delivery' && $request->orderer_type==='customer') {
+        if ($request->orderer_type==='customer') {
+            
+            if ($request->order_type==='home-delivery') {
 
-            if ($request->delivery_new_address) {
-                
-                $request->delivery_new_address = json_decode(json_encode($request->delivery_new_address));
+                if ($request->delivery_new_address) {
+                    
+                    $request->delivery_new_address = json_decode(json_encode($request->delivery_new_address));
 
-                $customerNewAddress = CustomerAddress::create([
-                    'house' => $request->delivery_new_address->house,
-                    'road' => $request->delivery_new_address->road,
-                    'additional_hint' => $request->delivery_new_address->additional_hint ?? NULL,
-                    'lat' => $request->delivery_new_address->lat,
-                    'lang' => $request->delivery_new_address->lang,
-                    'address_name' => $request->delivery_new_address->address_name,
-                    'customer_id' => $request->orderer_id,
+                    $customerNewAddress = CustomerAddress::create([
+                        'house' => $request->delivery_new_address->house,
+                        'road' => $request->delivery_new_address->road,
+                        'additional_hint' => $request->delivery_new_address->additional_hint ?? NULL,
+                        'lat' => $request->delivery_new_address->lat,
+                        'lang' => $request->delivery_new_address->lang,
+                        'address_name' => $request->delivery_new_address->address_name,
+                        'customer_id' => $request->orderer_id,
+                    ]);
+                }
+            
+                $newOrderAddress = $newOrder->deliveryAddress()->create([
+                    'additional_info'=>$request->delivery_additional_info,
+                    'delivery_address_id'=>$request->delivery_address_id ?? $customerNewAddress->id,
                 ]);
             }
-        
-            $newOrderAddress = $newOrder->deliveryAddress()->create([
-                'additional_info'=>$request->delivery_additional_info,
-                'delivery_address_id'=>$request->delivery_address_id ?? $customerNewAddress->id,
-            ]);
+
         }
+        else {
+
+            $newOrder->update([
+               'call_confirmation' => 1, 
+            ]);
+
+            // Broadcast for restaurant
+            // event(new NewOrderArrival($newOrder, $request->orderItems, $newOrderPayment ?? NULL));
+
+        }
+
 
         // return $newOrder;
         
