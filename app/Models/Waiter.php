@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Order;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,5 +34,13 @@ class Waiter extends Model
    	public function restaurant()
     {
         return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');
+    }
+
+    /**
+     * Get all of the order's.
+     */
+    public function orders()
+    {
+        return $this->morphMany(Order::class, 'orderer');
     }
 }

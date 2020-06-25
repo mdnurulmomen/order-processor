@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\RestaurantMenuItem;
 use App\Models\SelectedItemVariation;
 use App\Models\AdditionalOrderedAddon;
 use Illuminate\Database\Eloquent\Model;
@@ -29,4 +30,9 @@ class OrderItem extends Model
    	{
    		return $this->hasOne(OrderedItemCustomization::class, 'order_item_id', 'id');
    	}
+
+      public function restaurantMenuItem()
+      {
+         return $this->belongsTo(RestaurantMenuItem::class, 'restaurant_menu_item_id', 'id');
+      }
 }

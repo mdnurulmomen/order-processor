@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -37,4 +38,12 @@ class Customer extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get all of the order's.
+     */
+    public function orders()
+    {
+        return $this->morphMany(Order::class, 'orderer');
+    }
 }
