@@ -89,6 +89,12 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
+                  <router-link :to="{ name: 'admin.orders.index' }" v-bind:class="[(currentPage.includes('/orders')) ? 'active' : '', 'nav-link']">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Orders</p>
+                  </router-link>
+                </li>
+                <li class="nav-item">
                   <router-link :to="{ name: 'admin.restaurants.index' }" v-bind:class="[(currentPage.includes('/restaurants')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Restaurants</p>

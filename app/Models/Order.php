@@ -2,20 +2,27 @@
 
 namespace App\Models;
 
-use App\Models\OrderItem;
+use App\Models\OrderedRestaurant;
 use App\Models\OrderDeliveryInfo;
 use App\Models\OrderPaymentDetail;
+use App\Models\RiderDeliveryRecord;
 use App\Models\OrderServeProgression;
 use App\Models\RestaurantOrderRecord;
 use App\Models\OrderPickUpProgression;
 use App\Models\OrderReadyConfirmation;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\OrderDeliveryProgression;
+use App\Models\RiderOrderCancelationReason;
+use App\Models\RestaurantOrderCancelationReason;
 
 class Order extends Model
 {
    	protected $guarded = [
          'id'
+      ];
+
+      protected $casts = [
+         'cutlery_addition' => 'boolean',
       ];
 
       /**
@@ -31,10 +38,10 @@ class Order extends Model
    		return $this->hasOne(OrderPaymentDetail::class, 'order_id', 'id');
    	}
 
-   	public function items()
-   	{
-   		return $this->hasMany(OrderItem::class, 'order_id', 'id');
-   	}
+   	public function restaurants()
+      {
+         return $this->hasMany(OrderedRestaurant::class, 'order_id', 'id');
+      }
 
       public function delivery()
       {
@@ -48,7 +55,8 @@ class Order extends Model
 
       public function riderAssignment()
       {
-         return $this->hasOne(OrderDeliveryProgression::class, 'order_id', 'id');
+         // There might be many riders got request for a single order untill one accepted
+         return $this->hasOne(RiderDeliveryRecord::class, 'order_id', 'id')->where('delivery_order_acceptance', 1);
       }
 
       public function orderReadyConfirmations()
@@ -69,5 +77,15 @@ class Order extends Model
       public function waiterServeConfirmation()
       {
          return $this->hasOne(OrderServeProgression::class, 'order_id', 'id');
+      }
+
+      public function restaurantOrderCancelation()
+      {
+         return $this->hasOne(RestaurantOrderCancelationReason::class, 'order_id', 'id');
+      }
+
+      public function riderOrderCancelation()
+      {
+         return $this->hasOne(RiderOrderCancelationReason::class, 'order_id', 'id');
       }
 }

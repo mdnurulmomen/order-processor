@@ -194,6 +194,11 @@ const router = new VueRouter({
 		    name: 'admin.expectedRestaurantForMenuItem.index',
 		    component: () => import(/* webpackChunkName : "js/expected-restaurant-name-for-menu-item-list" */ './components/admin/ExpectedRestaurantNameForMenuItemComponent.vue'),
 		},
+		{
+			path: '/orders',
+            name: 'admin.orders.index',
+            component: () => import(/* webpackChunkName : "js/order-list" */ './components/admin/OrderIndexComponent.vue')
+		},
 
 		
 		{

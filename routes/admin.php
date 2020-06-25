@@ -80,12 +80,19 @@ Route::name('admin.')->group(function () {
 		    Route::patch('/restaurant-menu-categories/{menuCategory}/{perPage}', 'RestaurantController@restoreRestaurantMenuCategory');
 
 
+		    Route::get('/api/orders/{perPage?}', 'OrderController@showAllOrders');
+		    Route::get('/orders/{order}/show', 'OrderController@showOrderDetail');
+		    Route::put('/orders/{order}/{perPage}', 'OrderController@confirmNewOrder');
+		    Route::patch('/orders/{order}/{perPage}', 'OrderController@cancelNewOrder');
+		    Route::get('/api/orders/search/{search}/{perPage}', 'OrderController@searchAllOrders');
+
+
 		    Route::get('/api/cancelation-reasons/{perPage?}', 'CancelationController@showAllReasons');
 		    Route::get('/api/cancelation-reasons/search/{search}/{perPage}', 'CancelationController@searchAllReasons');
 		    Route::post('/cancelation-reasons/{perPage?}', 'CancelationController@createCancelationReason');
 		    Route::put('/cancelation-reasons/{reason}/{perPage}', 'CancelationController@updateCancelationReason');
 		    Route::delete('/cancelation-reasons/{reason}/{perPage}', 'CancelationController@deleteCancelationReason');
-		    Route::patch('/cancelation-reasons/{reason}/{perPage}', 'CancelationController@restoreCancelationReason');
+		    // Route::patch('/cancelation-reasons/{reason}/{perPage}', 'CancelationController@restoreCancelationReason');
 
 
 		    Route::get('/api/restaurant-deals/{perPage?}', 'RestaurantController@showAllRestaurantDeals');
