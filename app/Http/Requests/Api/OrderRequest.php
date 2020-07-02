@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Waiter;
+use App\Models\Customer;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrderRequest extends FormRequest
@@ -35,7 +37,24 @@ class OrderRequest extends FormRequest
             'payment_method'=>'required|in:cash,card,bkash',
             'cutlery_addition'=>'boolean',
             'orderer_type'=>'required|in:customer,waiter',
-            'orderer_id'=>'required|numeric',
+            
+            'orderer_id'=>['required', 'numeric', 
+                function($attribute, $value, $fail) {
+
+                    if ($this->input('orderer_type') === 'customer' && !Customer::where('id', $value)->exists()) {
+                        return $fail($attribute.' is invalid.');
+                    }
+                    else if ($this->input('orderer_type') === 'waiter' && !Waiter::where('id', $value)->exists()) {
+                        return $fail($attribute.' is invalid.');
+                    }
+                    
+                    /*
+                        if (!Customer::where('id', $value)->exists() && !Waiter::where('id', $value)->exists()) { 
+                            return $fail($attribute.' is invalid.');
+                        }
+                    */
+                },
+            ],
 
             'delivery_new_address.house' => 'required_with:delivery_new_address|string',
             'delivery_new_address.road' => 'required_with:delivery_new_address|string',

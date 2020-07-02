@@ -28,6 +28,7 @@ class OrderController extends Controller
             'cutlery_addition' => $request->cutlery_addition ?? 0,
             'orderer_type' => $request->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
             'orderer_id' => $request->orderer_id,
+            'call_confirmation' => ($request->orderer_type==='customer' && $request->payment_method==='cash') ? -1 : 1, 
         ]);
 
         if ($request->payment_method !=='cash' && $request->payment_id) {
@@ -40,11 +41,15 @@ class OrderController extends Controller
 
         foreach ($request->orderItems as $orderItem) {
             
+            $orderedNewRestaurant = $newOrder->restaurants()->create([
+                'restaurant_id' => $orderItem->restaurant_id,
+            ]);
+
             $request->menuItems = json_decode(json_encode($orderItem->menuItems));
 
             foreach ($request->menuItems as $menuItem) {
 
-                $orderedNewItem = $newOrder->orderItems()->create([
+                $orderedNewItem = $orderedNewRestaurant->items()->create([
                      'restaurant_menu_item_id' => $menuItem->id,
                      'quantity' => $menuItem->quantity,
                 ]);
@@ -96,7 +101,7 @@ class OrderController extends Controller
                     ]);
                 }
             
-                $newOrderAddress = $newOrder->deliveryAddress()->create([
+                $newOrderAddress = $newOrder->delivery()->create([
                     'additional_info'=>$request->delivery_additional_info,
                     'delivery_address_id'=>$request->delivery_address_id ?? $customerNewAddress->id,
                 ]);
@@ -104,10 +109,6 @@ class OrderController extends Controller
 
         }
         else {
-
-            $newOrder->update([
-               'call_confirmation' => 1, 
-            ]);
 
             // Broadcast for restaurant
             // event(new NewOrderArrival($newOrder, $request->orderItems, $newOrderPayment ?? NULL));
