@@ -19,3 +19,13 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 Broadcast::channel('notifyAdmin', function ($user) {
     return true;
 }, ['guards' => 'admin']);
+
+/*
+Broadcast::channel('notifyRestaurant.{restaurantId}', function ($restaurant, $restaurantId) {
+    return $restaurant->id == $restaurantId;
+}, ['guards' => ['admin', 'restaurant']]);
+ 
+*/
+Broadcast::channel('notifyRestaurant', function ($restaurant) {
+	return true;
+}, ['guards' => ['admin', 'restaurant']]);

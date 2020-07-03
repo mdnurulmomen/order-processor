@@ -23,24 +23,24 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => Order::with(['orderer', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->latest()->paginate($perPage),
+               'all' => Order::with(['orderer', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->latest()->paginate($perPage),
 
-               'new' => Order::where('call_confirmation', -1)->with(['orderer', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->latest()->paginate($perPage),
+               'new' => Order::where('call_confirmation', -1)->with(['orderer', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->latest()->paginate($perPage),
 
-               'deliveredOrServed' => Order::with(['orderer', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'waiterServeConfirmation'])
+               'deliveredOrServed' => Order::with(['orderer', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'waiterServeConfirmation'])
                					->whereHas('riderDeliveryConfirmation.rider', function($q){
 				   					$q->where('rider_delivery_confirmation', 1);
 								})
 								->orWhereHas('waiterServeConfirmation', function($q){
-				   					$q->where('waiter_confirmation', 1);
+				   					$q->where('waiter_serve_confirmation', 1);
 								})
 								->latest()->paginate($perPage),				
 
-               'cancelled' => Order::where('call_confirmation', 0)->with(['orderer', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->latest()->paginate($perPage),
+               'cancelled' => Order::where('call_confirmation', 0)->with(['orderer', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->latest()->paginate($perPage),
 
-               'prepaid' => Order::with(['orderer', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->has('payment')->latest()->paginate($perPage),
+               'prepaid' => Order::with(['orderer', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->has('payment')->latest()->paginate($perPage),
                			
-               'postpaid' => Order::with(['orderer', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->doesntHave('payment')->latest()->paginate($perPage),
+               'postpaid' => Order::with(['orderer', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation'])->doesntHave('payment')->latest()->paginate($perPage),
                
             ], 200);
 

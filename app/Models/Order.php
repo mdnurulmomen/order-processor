@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Events\UpdateAdmin;
+use App\Events\UpdateRestaurant;
 use App\Models\OrderedRestaurant;
 use App\Models\OrderDeliveryInfo;
 use App\Models\OrderPaymentDetail;
@@ -24,6 +26,40 @@ class Order extends Model
       protected $casts = [
          'cutlery_addition' => 'boolean',
       ];
+
+      /**
+      * The "booted" method of the model.
+      *
+      * @return void
+      */
+      protected static function boot()
+      {
+         parent::boot();
+
+         static::saved(function ($order) {
+            
+            // Broadcast for order confirmation
+            if ($order->call_confirmation) {
+               
+               foreach ($order->restaurants as $orderedRestaurant) {
+
+                  event(new UpdateRestaurant($orderedRestaurant));
+                  
+                  $order->restaurantAcceptances()->create([
+                     'food_order_acceptance' => -1, // ringing
+                     'restaurant_id' => $orderedRestaurant->restaurant_id,
+                  ]);
+
+               }
+
+            }
+
+            // Broadcast for admin
+            event(new UpdateAdmin($order));
+
+         });
+
+      }
 
       /**
       * Get the owning orderer model.

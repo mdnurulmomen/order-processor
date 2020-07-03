@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Order;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
-use App\Events\NewOrderArrival;
+// use App\Events\UpdateAdmin;
 use App\Models\CustomerAddress;
 use App\Models\RestaurantMenuItem;
 use App\Http\Controllers\Controller;
@@ -79,8 +79,8 @@ class OrderController extends Controller
             }
         }
 
-        // Broadcast for admin
-        event(new NewOrderArrival($newOrder));
+        // // Broadcast for admin
+        // event(new UpdateAdmin($newOrder));
 
         if ($request->orderer_type==='customer') {
             
@@ -111,7 +111,7 @@ class OrderController extends Controller
         else {
 
             // Broadcast for restaurant
-            // event(new NewOrderArrival($newOrder, $request->orderItems, $newOrderPayment ?? NULL));
+            // event(new UpdateAdmin($newOrder, $request->orderItems, $newOrderPayment ?? NULL));
 
         }
 
