@@ -418,7 +418,6 @@
 				if (this.query === '') {
 					this.fetchAllMeals();
 				}else {
-					this.pagination.current_page = 1;
 					this.searchData();
 				}
     		},
@@ -426,7 +425,7 @@
 				if (this.query === '') {
 					this.fetchAllMeals();
 				}else {
-					this.pagination.current_page = 1;
+					// this.pagination.current_page = 1;
 					this.searchData();
 				}
     		},

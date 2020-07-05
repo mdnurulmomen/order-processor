@@ -9,7 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 // Registering component globally
-Vue.component('pagination', require('./components/admin/PaginationComponent.vue').default);
+Vue.component('pagination', require('./pages/PaginationComponent.vue').default);
 
 /**
  * The following block of code may be used to automatically register your
