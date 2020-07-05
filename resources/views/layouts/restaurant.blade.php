@@ -22,13 +22,6 @@
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
   <!-- Toastr style -->
   <link href="{{ asset('plugins/toastr/css/toastr.css') }}" rel="stylesheet"/>
-  <!-- prefetching restaurant-list components -->
-  <link rel="prefetch" href="{{ asset('/js/0.js') }}" as="script">
-  <link rel="prefetch" href="{{ asset('/js/1.js') }}" as="script">
-  <link rel="prefetch" href="{{ asset('/js/2.js') }}" as="script">
-  <link rel="prefetch" href="{{ asset('/js/3.js') }}" as="script">
-  <link rel="prefetch" href="{{ asset('/js/21.js') }}" as="script">
-  <link rel="prefetch" href="{{ asset('/js/24.js') }}" as="script">
   <!-- jQuery -->
   <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
   <!-- google location api -->
@@ -172,10 +165,10 @@
   <!-- overlayScrollbars -->
   <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script> 
 --}}
-<!-- AdminLTE App -->
+<!-- AdminLTE Template -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 <!-- PAGE SCRIPTS -->
-<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ mix('js/restaurant.js') }}"></script>
 <!-- ChartJS -->
 {{-- <script src="{{ asset('plugins/chart.js/js/Chart.min.js') }}"></script> --}}
 <!-- OPTIONAL SCRIPTS -->

@@ -51,7 +51,7 @@
                  with font-awesome or any other icon font library -->
             <li class="nav-item has-treeview menu-open">
               <a href="#" v-bind:class="[(currentPage.includes('home') || currentPage.includes('dashboard')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <i class="nav-icon fas fa-home"></i>
                 <p>
                   Dashboard
                   <i class="right fas fa-angle-left"></i>

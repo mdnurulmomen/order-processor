@@ -25,7 +25,7 @@ Vue.component('pagination', require('./pages/PaginationComponent.vue').default);
 // Importing empty scss file for webpack 4 bug
 import appScss from './../sass/emptyScssForWebpackBug.scss';
 
-import App from './views/App.vue';
+import App from './views/AdminSideMenuBar.vue';
 
 // import Home from './components/admin/HomeComponent.vue';
 // import Dashboard2 from './components/admin/Dashboard2.vue';
@@ -204,7 +204,7 @@ const router = new VueRouter({
 		{
 			path: '/404',
             name: 'admin.routeNotFound',
-            component: () => import(/* webpackChunkName : "js/not-found-component" */ './components/admin/NotFoundComponent.vue')
+            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFoundComponent.vue')
 		},
 		{
 			path: '*',

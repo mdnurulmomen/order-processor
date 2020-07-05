@@ -172,10 +172,10 @@
   <!-- overlayScrollbars -->
   <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script> 
 --}}
-<!-- AdminLTE App -->
+<!-- AdminLTE Template -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 <!-- PAGE SCRIPTS -->
-<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ mix('js/admin.js') }}"></script>
 
 <!-- ChartJS -->
 {{-- <script src="{{ asset('plugins/chart.js/js/Chart.min.js') }}"></script> --}}
