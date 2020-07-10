@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Web;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Models\OrderedRestaurant;
+use App\Models\RestaurantEvaluation;
 use App\Http\Controllers\Controller;
+use App\Models\RestaurantOrderRecord;
 
 class OrderController extends Controller
 {
@@ -104,7 +108,7 @@ class OrderController extends Controller
 		 	]);
 		*/
 
-	 		// the restaurnat accepted the food request but the food was never ready(was cancelled)
+	 		// the restaurant accepted the food request but the food was never ready(was cancelled)
 	 		$cancelledRestaurantOrder = $orderToCancel->orderReadyConfirmations()->where('restaurant_id', $request->restaurant_id)->update([
 		 		'food_ready_confirmation' => 0
 		 	]);
@@ -211,5 +215,153 @@ class OrderController extends Controller
 			'all' => $query->paginate($perPage),  
 		
 		], 200);
+	}
+
+	// Restaurant
+	public function showRestaurantAllOrders($restaurant, $perPage = false)
+	{
+	 	if ($perPage) {
+		 	
+            return response()->json([
+
+               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation'])
+				               			->whereHas('order', function($q){
+						   					$q->where('call_confirmation', 1);
+										})
+				       					->latest()->paginate($perPage),
+
+               'new' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', -1)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation'])
+					               			->whereHas('order', function($q){
+							   					$q->where('call_confirmation', 1);
+											})
+					               			->latest()->paginate($perPage),
+
+               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation'])
+											->whereHas('order.waiterServeConfirmation', function($q){
+							   					$q->where('waiter_serve_confirmation', 1);
+											})
+											->latest()->paginate($perPage),				
+
+               'cancelled' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', 0)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation'])->latest()->paginate($perPage),
+
+               
+            ], 200);
+
+	 	}
+
+	 	// return response(Order::get(), 200);
+	}
+
+	public function confirmRestaurantOrder(Request $request, $order, $perPage)
+	{
+	 	// validation
+	 	$request->validate([
+			'restaurant_id' => ['required','exists:restaurants,id',
+			        function ($attribute, $value, $fail) use ($order) {
+			            $restaurantExist = OrderedRestaurant::where('restaurant_id', $value)
+			            									->where('order_id', $order)
+			            									->count();
+			            if (!$restaurantExist) {
+			                $fail('Restaurant is invalid for this order');
+			            }
+			        },
+			        function ($attribute, $value, $fail) use ($order) {
+			            $restaurantExist = RestaurantOrderRecord::where('restaurant_id', $value)
+			            										->where('order_id', $order)
+			            										->count();
+			            if (!$restaurantExist) {
+			                $fail('Invalid Restaurant or Order');
+			            }
+			        },
+		    ],
+	 	]);
+
+	 	$orderToConfirm = Order::findOrFail($order);
+
+ 		if ($request->orderReady) {
+ 			
+ 			$orderToConfirm->orderReadyConfirmations()->create([
+	 			'food_ready_confirmation' => 1,
+	 			'restaurant_id' => $request->restaurant_id,
+	 		]);
+
+ 		}
+
+ 		// if not accepted yet
+ 		if (!$orderToConfirm->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->where('food_order_acceptance', 1)->count()) {
+
+	 		$orderToConfirm->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->update([
+	 			'food_order_acceptance' => 1
+	 		]);
+	 		
+ 		}
+
+ 		return $this->showRestaurantAllOrders($request->restaurant_id, $perPage);
+
+	}
+
+	public function cancelRestaurantOrder(Request $request, $order, $perPage)
+	{
+		// validation
+		$request->validate([
+			'reason_id' => 'required|exists:cancelation_reasons,id',
+			'restaurant_id' => ['required','exists:restaurants,id',
+					function ($attribute, $value, $fail) use ($order) {
+						$restaurantExist = OrderedRestaurant::where('restaurant_id', $value)
+															->where('order_id', $order)
+															->count();
+			            if (!$restaurantExist) {
+			                $fail('Invalid Restaurant or Order');
+			            }
+			        },
+			        function ($attribute, $value, $fail) use ($order) {
+			            $restaurantExist = RestaurantOrderRecord::where('restaurant_id', $value)
+			            										->where('order_id', $order)
+			            										->count();
+			            if (!$restaurantExist) {
+			                $fail('Invalid Restaurant or Order');
+			            }
+			        },
+			]
+		]);
+
+		$orderToCancel = Order::findOrFail($order);
+
+		if ($orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->count()) {
+			
+			// Cancelling restaurant order acceptance for this order
+			$restaurantCancelledAcceptance = $orderToCancel->restaurantAcceptances()
+															->where('restaurant_id', $request->restaurant_id)
+															->update([
+														 		'food_order_acceptance' => 0
+														 	]);
+
+			// Creating Order Cancelation reason for this order
+			$orderCancelationReason = $orderToCancel->restaurantOrderCancelations()
+													->updateOrCreate([
+												 		'reason_id' => $request->reason_id,
+												 		'restaurant_id' => $request->restaurant_id,
+												 	]);
+
+			$totalRequestReceived = RestaurantOrderRecord::where('restaurant_id', $request->restaurant_id)->count();
+
+			$totalRequestAccepted = RestaurantOrderRecord::where('restaurant_id', $request->restaurant_id)
+														->where('food_order_acceptance', 1)
+														->count();
+
+			// Avoiding O exception
+			if ($totalRequestReceived) {
+				// Updating restaurant evaluation
+				$restaurantEvaluated = RestaurantEvaluation::where('restaurant_id', $request->restaurant_id)
+															->updateOrCreate([
+																'order_acceptance_percentage' => (($totalRequestAccepted/$totalRequestReceived)*100),
+																'restaurant_id' => $request->restaurant_id,
+															]);
+			}
+
+	 		return $this->showRestaurantAllOrders($request->restaurant_id, $perPage);
+		}
+
+		return response('Bad Request', 401);
 	}
 }

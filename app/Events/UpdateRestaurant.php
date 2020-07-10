@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use App\Http\Resources\Web\RestaurantOrderResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
@@ -37,9 +38,8 @@ class UpdateRestaurant implements ShouldBroadcastNow
     {
         return [
             'order_id' => $this->orderedRestaurant->order_id,
-            'order_schedule' => $this->orderedRestaurant->order->is_asap_order ? 'ASAP' : $this->orderedRestaurant->order->delivery_datetime,
-            'order_items' => $this->orderedRestaurant->items,
-            'cutlery_addition' => $this->orderedRestaurant->order->cutlery_addition,
+            'restaurant_id' => $this->orderedRestaurant->restaurant_id,
+            'order' => new RestaurantOrderResource($this->orderedRestaurant->order),
         ];
     }
 

@@ -39,16 +39,16 @@ class Order extends Model
          static::saved(function ($order) {
             
             // Broadcast for order confirmation
-            if ($order->call_confirmation) {
+            if ($order->call_confirmation===1) {
                
                foreach ($order->restaurants as $orderedRestaurant) {
 
-                  event(new UpdateRestaurant($orderedRestaurant));
-                  
                   $order->restaurantAcceptances()->create([
                      'food_order_acceptance' => -1, // ringing
                      'restaurant_id' => $orderedRestaurant->restaurant_id,
                   ]);
+                  
+                  event(new UpdateRestaurant($orderedRestaurant));
 
                }
 
@@ -115,9 +115,9 @@ class Order extends Model
          return $this->hasOne(OrderServeProgression::class, 'order_id', 'id');
       }
 
-      public function restaurantOrderCancelation()
+      public function restaurantOrderCancelations()
       {
-         return $this->hasOne(RestaurantOrderCancelationReason::class, 'order_id', 'id');
+         return $this->hasMany(RestaurantOrderCancelationReason::class, 'order_id', 'id');
       }
 
       public function riderOrderCancelation()

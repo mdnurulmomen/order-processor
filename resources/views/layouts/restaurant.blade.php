@@ -7,6 +7,10 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  @if (Auth::guard('restaurant')->check()) 
+    <meta name="restaurant-id" content="{{ Auth::guard('restaurant')->user()->id }}" />
+  @endif
   
   <title>Qupaid | Restaurant</title>
 
