@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
 use App\Models\Restaurant;
+use App\Events\UpdateAdmin;
 use Illuminate\Http\Request;
-// use App\Events\UpdateAdmin;
 use App\Models\CustomerAddress;
 use App\Models\RestaurantMenuItem;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderRequest;
 
@@ -79,10 +80,7 @@ class OrderController extends Controller
             }
         }
 
-        // // Broadcast for admin
-        // event(new UpdateAdmin($newOrder));
-
-        if ($request->orderer_type==='customer') {
+        // if ($request->orderer_type==='customer') {
             
             if ($request->order_type==='home-delivery') {
 
@@ -107,19 +105,20 @@ class OrderController extends Controller
                 ]);
             }
 
-        }
-        else {
-
-            // Broadcast for restaurant
-            // event(new UpdateAdmin($newOrder, $request->orderItems, $newOrderPayment ?? NULL));
-
-        }
-
+        // }
 
         // return $newOrder;
         
+        $this->notifyAdmin($newOrder);
+
         return response()->json([
             'success' => 'Order has been taken successfully'
         ], 201);
+    }
+
+    private function notifyAdmin(Order $order) 
+    {
+        Log::info('UpdateAdmin');
+        event(new UpdateAdmin($order));
     }
 }
