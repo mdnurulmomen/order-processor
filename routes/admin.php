@@ -82,8 +82,8 @@ Route::name('admin.')->group(function () {
 
 		    Route::get('/api/orders/{perPage?}', 'OrderController@showAllOrders');
 		    Route::get('/orders/{order}/show', 'OrderController@showOrderDetail');
-		    Route::put('/orders/{order}/{perPage}', 'OrderController@confirmNewOrder');
-		    Route::patch('/orders/{order}/{perPage}', 'OrderController@cancelNewOrder');
+		    Route::post('/orders/{perPage}', 'OrderController@confirmNewOrder');
+		    Route::put('/orders/{order}/{perPage}', 'OrderController@cancelNewOrder');
 		    Route::get('/api/orders/search/{search}/{perPage}', 'OrderController@searchAllOrders');
 
 

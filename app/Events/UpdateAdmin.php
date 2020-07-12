@@ -62,7 +62,8 @@ class UpdateAdmin implements ShouldBroadcastNow
             'rider_assignment' => $this->order->riderAssignment,
             'rider_delivery_confirmation' => $this->order->riderDeliveryConfirmation ? new RiderDeliveryResource($this->order->riderDeliveryConfirmation) : null,
             'rider_food_pick_confirmations' => OrderPickUpProgressionResource::collection($this->order->riderFoodPickConfirmations),
-            'waiter_serve_confirmation' => $this->order->waiterServeConfirmation
+            'waiter_serve_confirmation' => $this->order->waiterServeConfirmation,
+            'restaurant_order_cancelations' => $this->order->restaurantOrderCancelations,
         ];
     }
 

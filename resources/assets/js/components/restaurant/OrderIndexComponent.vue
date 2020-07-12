@@ -110,7 +110,7 @@
 									  	<tr v-show="ordersToShow.length"
 									    	v-for="(restaurant, index) in ordersToShow"
 									    	:key="restaurant.id" 
-									    	:class="[confirmedOrder(restaurant.order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(restaurant.order.restaurant_acceptances) ? 'bg-warning' : cancelledOrder(restaurant.order.restaurant_acceptances) ? 'bg-secondary' : 'bg-danger']" 
+									    	:class="[confirmedOrder(restaurant.order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(restaurant.order.restaurant_acceptances) ? 'bg-warning' : cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) ? 'bg-secondary' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ restaurant.order.id }}</td>
@@ -131,7 +131,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances) && !confirmedOrder(restaurant.order.order_ready_confirmations)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations)" 
 									      			@click="showOrderConfirmationModal(restaurant.order)" 
 								      			>
 								        			<i class="fas fa-bell"></i>
@@ -143,7 +143,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-secondary btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances) && !acceptedOrder(restaurant.order.restaurant_acceptances)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !acceptedOrder(restaurant.order.restaurant_acceptances)" 
 									      			@click="showOrderCancelationModal(restaurant.order)" 
 								      			>
 								        			<i class="fas fa-times"></i>
@@ -547,7 +547,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="modal-footer justify-content-between">
+							<div class="modal-footer">
 							  	<button 
 							  		type="submit" 
 							  		name="cancel-order" 
@@ -715,7 +715,6 @@
 
 		mounted(){
 			    
-
 			Pusher.logToConsole = true;
 
 			Echo.private(`notifyRestaurant`)
@@ -724,22 +723,29 @@
 			    console.log(orderedRestaurant);
 
 			    // due to pagination, checking if this broadcasted one already exists 
-			    const orderExist = (element) => element.order.id==orderedRestaurant.order_id;
+			    const orderExist = (currentOrder) => currentOrder.order.id==orderedRestaurant.order_id;
 
 			    // due to pagination, checking if this broadcasted restaurant is for this one & ringing 
-			    const thisRestaurantRinging = (object) => object.restaurant_id==this.restaurant_id && object.food_order_acceptance==-1;
+			    const restaurantRinging = (restaurantOrderRecord) => restaurantOrderRecord.restaurant_id==this.restaurant_id && restaurantOrderRecord.food_order_acceptance==-1;
 			    
-			    // console.log(orderedRestaurant.order.restaurant_acceptances.some(thisRestaurantRinging));
-			    // console.log(!this.ordersToShow.some(orderExist));
+			    console.log(orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging));
+			    console.log(!this.ordersToShow.some(orderExist));
 
 			    // new order and not in the list or nothing in the list
-			    if ((orderedRestaurant.order.restaurant_acceptances.some(thisRestaurantRinging) && !this.ordersToShow.some(orderExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
+			    if ((orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging) && !this.ordersToShow.some(orderExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
+			    	
 			    	this.ordersToShow.unshift(orderedRestaurant);
+			    	toastr.warning("New Order arrives");
 			    }
 			    // now showing the order in this page
 			    else if (this.ordersToShow.some(orderExist)) {
-				    let index = this.ordersToShow.findIndex(currentObject => currentObject.order.id==orderedRestaurant.order_id);
-				    this.ordersToShow[index] = orderedRestaurant;
+				    let index = this.ordersToShow.findIndex(currentOrder => currentOrder.order.id==orderedRestaurant.order_id);
+				    // this.ordersToShow[index] = orderedRestaurant;
+				    // this.ordersToShow.$set(index, orderedRestaurant);
+				    // this.$set(this.ordersToShow, index, orderedRestaurant)
+				    Vue.set(this.ordersToShow, index, orderedRestaurant)
+				    toastr.warning("Old Order arrives");
+				    console.log(index);
 			    }
 			    // no previous order available
 			    else {
@@ -747,7 +753,6 @@
 			    }
 
 			});
-
 
 		},
 
@@ -936,14 +941,22 @@
 					console.log(e);
 				});
 			},
-			cancelledOrder(orderAcceptedRestaurants) {
+			cancelledOrder(orderAcceptedRestaurants, restaurantOrderCancelations) {
+				
+				let cancelled = false;
+
 				if (orderAcceptedRestaurants.length) {
-					return orderAcceptedRestaurants.some(
+					cancelled = orderAcceptedRestaurants.some(
 						currentAcceptance => (currentAcceptance.restaurant_id==this.restaurant_id && currentAcceptance.food_order_acceptance==0)
 					);
 				}
+				if (!cancelled && restaurantOrderCancelations.length) {
+					return restaurantOrderCancelations.some(
+						cancelationReason => (cancelationReason.restaurant_id==this.restaurant_id)
+					);
+				}
 				
-				return false;
+				return cancelled;
 			},
 			acceptedOrder(restaurantAcceptances) {
 				if (restaurantAcceptances.length) {

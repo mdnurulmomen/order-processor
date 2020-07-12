@@ -129,26 +129,27 @@
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ order.id }}</td>
 								    		<td>
-								    			<span :class="[order.call_confirmation===1 ? 'badge-warning' : order.call_confirmation===-1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+								    			<span :class="[orderCallConfirmationClass(order.call_confirmation), 'badge d-block']"
 								    			>
 								    				{{ 
-								    					customerCallConfirmation(order.call_confirmation)
+								    					orderCallConfirmationStatus(order.call_confirmation)
 								    				}}
 								    			</span>
 
-								    			<span v-if="order.restaurant_acceptances.length" 
+								    			<span 
+								    				v-if="order.restaurant_acceptances.length" 
  								    				v-for="restaurantOrderAcceptance in order.restaurant_acceptances" 
-								    				:key="restaurantOrderAcceptance.id" 
-								    				:class="[restaurantOrderAcceptance.food_order_acceptance===1 ? 'badge-warning' : restaurantOrderAcceptance.food_order_acceptance===-1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+								    				:class="[restaurantOrderAcceptanceClass(restaurantOrderAcceptance), 'badge d-block']"
 								    			>
 								    				<!-- {{ restaurantOrderAcceptance }} -->
 								    				
 								    				{{ 
-								    					restaurantOrderStatus(restaurantOrderAcceptance)
+								    					restaurantOrderAcceptanceStatus(restaurantOrderAcceptance)
 								    				}}
 								    			</span>
 
-								    			<span v-if="order.rider_assignment"
+								    			<span 
+								    				v-if="order.rider_assignment"
 								    				:class="[order.rider_assignment ? 'badge-warning' : 'badge-danger', 'badge d-block']"
 								    			>
 								    				{{ 
@@ -156,31 +157,52 @@
 								    				}}
 								    			</span>
 
-								    			<span v-if="order.order_ready_confirmations.length" 
+								    			<span 
+								    				v-if="order.order_ready_confirmations.length" 
 								    				v-for="restaurantReadyConfirmation in order.order_ready_confirmations" 
-								    				:key="restaurantReadyConfirmation.id"
-								    				:class="[restaurantReadyConfirmation.food_ready_confirmation===1 ? 'badge-warning' : restaurantReadyConfirmation.food_ready_confirmation===-1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+								    				:class="[restaurantOrderReadyClass(restaurantReadyConfirmation), 'badge d-block']"
 								    			>
+								    				<!-- {{ restaurantReadyConfirmation }} -->
+
 								    				{{ 
-								    					restaurantReadyConfirmation(restaurantReadyConfirmation)
+								    					restaurantOrderReadyStatus(restaurantReadyConfirmation)
 								    				}}
 								    			</span>
 
-								    			<span v-if="order.rider_food_pick_confirmations.length" 
+								    			<span 
+								    				v-if="order.restaurant_order_cancelations.length" 
+								    				v-for="restaurantOrderCancelation in order.restaurant_order_cancelations" 
+								    				class="badge badge-secondary d-block"
+								    			>
+								    				{{
+								    					restaurantOrderCancelation.restaurant.name + ' has cancelled'
+								    				}}
+								    			</span>
+
+								    			<span 
+								    				v-if="order.rider_food_pick_confirmations.length" 
 									    			v-for="riderFoodPickUpConfirmation in order.rider_food_pick_confirmations" 
-									    			:key="riderFoodPickUpConfirmation.id"
-								    				:class="[riderFoodPickUpConfirmation.rider_food_pick_confirmation===1 ? 'badge-warning' : riderFoodPickUpConfirmation.rider_food_pick_confirmation===-1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+								    				:class="[riderFoodPickUpClass(riderFoodPickUpConfirmation), 'badge d-block']"
 								    			>
 								    				{{ 
-								    					riderFoodPickUpConfirmation(riderFoodPickUpConfirmation)
+								    					riderFoodPickUpStatus(riderFoodPickUpConfirmation)
+								    				}}
+								    			</span>
+								    			
+								    			<span 
+								    				v-if="order.rider_order_cancelation" 
+								    				class="badge badge-secondary d-block"
+								    			>
+								    				{{
+								    					order.rider_order_cancelation.rider.name + ' has cancelled'
 								    				}}
 								    			</span>
 
-								    			<span v-if="order.rider_delivery_confirmation && Object.keys(order.rider_delivery_confirmation).length"
-								    				:class="[order.rider_delivery_confirmation.rider_delivery_confirmation===1 ? 'badge-success' : 'badge-secondary', 'badge d-block']"
+								    			<span v-if="order.rider_delivery_confirmation" 
+								    				:class="[order.rider_delivery_confirmation.rider_delivery_confirmation===1 ? 'badge-success' : 'badge-warning', 'badge d-block']"
 								    			>
 								    				{{ 
-								    					riderDeliveryConfirmation(order.rider_delivery_confirmation)
+								    					riderFoodDeliveryStatus(order.rider_delivery_confirmation)
 								    				}}
 								    			</span>
 
@@ -188,9 +210,10 @@
 								    				:class="[order.waiter_serve_confirmation.waiter_serve_confirmation===1 ? 'badge-success' : 'badge-secondary', 'badge d-block']"
 								    			>
 								    				{{ 
-								    					waiterServeConfirmation(order.waiter_serve_confirmation)
+								    					waiterFoodServeStatus(order.waiter_serve_confirmation)
 								    				}}
 								    			</span>
+
 								    		</td>
 								    		<td>
 								      			<button 
@@ -201,23 +224,23 @@
 								        			<i class="fas fa-eye"></i>
 								        			Details
 								      			</button>
-								      			<!-- disabled if customer is already confirmed/cancelled or orderer is waiter -->
+								      			<!-- show if customer is not confirmed and orderer is not waiter -->
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			:disabled="order.call_confirmation!==-1 || order.orderer.hasOwnProperty('restaurant_id')" 
+									      			v-if="order.call_confirmation===-1" 
 									      			@click="showOrderConfirmationModal(order)" 
 								      			>
 								        			<i class="fas fa-check"></i>
 								        			Confirm
 								      			</button>
 												<div class="btn-group">
-													<!-- disabled if not even confirmed or already delivered -->
+													<!-- disabled if not even confirmed or already delivered or cancelled by restaurants in order-->
 													<button 
 														type="button" 
 														class="btn btn-danger btn-sm dropdown-toggle" 
 														data-toggle="dropdown" 
-									      				:disabled="order.call_confirmation!==1 || (order.rider_delivery_confirmation!==null && order.rider_delivery_confirmation.rider_delivery_confirmation===1)"
+									      				:disabled="order.call_confirmation!==1 || (order.rider_delivery_confirmation && order.rider_delivery_confirmation.rider_delivery_confirmation===1) || (order.restaurant_order_cancelations.length && order.restaurant_order_cancelations.length===order.restaurant_acceptances.length)"
 													>
 														<i class="fas fa-times"></i>
 														Cancel
@@ -441,26 +464,27 @@
 								                <div class="col-sm-6">
 								                	<!-- <div v-show="order.payment_method==='cash'"> -->
 
-									    			<span :class="[singleOrderData.order.call_confirmation===1 ? 'badge-warning' : singleOrderData.order.call_confirmation===-1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+									    			<span :class="[orderCallConfirmationClass(singleOrderData.order.call_confirmation), 'badge d-block']"
 									    			>
 									    				{{ 
-									    					customerCallConfirmation(singleOrderData.order.call_confirmation)
+									    					orderCallConfirmationStatus(singleOrderData.order.call_confirmation)
 									    				}}
 									    			</span>
 
-									    			<span v-if="singleOrderData.order.restaurant_acceptances.length" 
+									    			<span 
+									    				v-if="singleOrderData.order.restaurant_acceptances.length" 
 	 								    				v-for="restaurantOrderAcceptance in singleOrderData.order.restaurant_acceptances" 
-									    				:key="restaurantOrderAcceptance.id" 
-									    				:class="[restaurantOrderAcceptance.food_order_acceptance===1 ? 'badge-warning' : restaurantOrderAcceptance.food_order_acceptance===-1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+									    				:class="[restaurantOrderAcceptanceClass(restaurantOrderAcceptance), 'badge d-block']"
 									    			>
 									    				<!-- {{ restaurantOrderAcceptance }} -->
 									    				
 									    				{{ 
-									    					restaurantOrderStatus(restaurantOrderAcceptance)
+									    					restaurantOrderAcceptanceStatus(restaurantOrderAcceptance)
 									    				}}
 									    			</span>
 
-									    			<span v-if="singleOrderData.order.rider_assignment"
+									    			<span 
+									    				v-if="singleOrderData.order.rider_assignment"
 									    				:class="[singleOrderData.order.rider_assignment ? 'badge-warning' : 'badge-danger', 'badge d-block']"
 									    			>
 									    				{{ 
@@ -468,31 +492,33 @@
 									    				}}
 									    			</span>
 
-									    			<span v-if="singleOrderData.order.order_ready_confirmations.length" 
+									    			<span 
+									    				v-if="singleOrderData.order.order_ready_confirmations.length" 
 									    				v-for="restaurantReadyConfirmation in singleOrderData.order.order_ready_confirmations" 
-									    				:key="restaurantReadyConfirmation.id"
-									    				:class="[restaurantReadyConfirmation.food_ready_confirmation===1 ? 'badge-warning' : restaurantReadyConfirmation.food_ready_confirmation===-1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+									    				:class="[restaurantOrderReadyClass(restaurantReadyConfirmation), 'badge d-block']"
 									    			>
+									    				<!-- {{ restaurantReadyConfirmation }} -->
+
 									    				{{ 
-									    					restaurantReadyConfirmation(restaurantReadyConfirmation)
+									    					restaurantOrderReadyStatus(restaurantReadyConfirmation)
 									    				}}
 									    			</span>
 
-									    			<span v-if="singleOrderData.order.rider_food_pick_confirmations.length" 
+									    			<span 
+									    				v-if="singleOrderData.order.rider_food_pick_confirmations.length" 
 										    			v-for="riderFoodPickUpConfirmation in singleOrderData.order.rider_food_pick_confirmations" 
-										    			:key="riderFoodPickUpConfirmation.id"
-									    				:class="[riderFoodPickUpConfirmation.rider_food_pick_confirmation===1 ? 'badge-warning' : riderFoodPickUpConfirmation.rider_food_pick_confirmation===-1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+									    				:class="[riderFoodPickUpClass(riderFoodPickUpConfirmation), 'badge d-block']"
 									    			>
 									    				{{ 
-									    					riderFoodPickUpConfirmation(riderFoodPickUpConfirmation)
+									    					riderFoodPickUpStatus(riderFoodPickUpConfirmation)
 									    				}}
 									    			</span>
 
-									    			<span v-if="singleOrderData.order.rider_delivery_confirmation && Object.keys(singleOrderData.order.rider_delivery_confirmation).length"
-									    				:class="[singleOrderData.order.rider_delivery_confirmation.rider_delivery_confirmation===1 ? 'badge-success' : 'badge-secondary', 'badge d-block']"
+									    			<span v-if="singleOrderData.order.rider_delivery_confirmation" 
+									    				:class="[singleOrderData.order.rider_delivery_confirmation.rider_delivery_confirmation===1 ? 'badge-success' : 'badge-warning', 'badge d-block']"
 									    			>
 									    				{{ 
-									    					riderDeliveryConfirmation(singleOrderData.order.rider_delivery_confirmation)
+									    					riderFoodDeliveryStatus(order.rider_delivery_confirmation)
 									    				}}
 									    			</span>
 
@@ -500,7 +526,7 @@
 									    				:class="[singleOrderData.order.waiter_serve_confirmation.waiter_serve_confirmation===1 ? 'badge-success' : 'badge-secondary', 'badge d-block']"
 									    			>
 									    				{{ 
-									    					waiterServeConfirmation(singleOrderData.order.waiter_serve_confirmation)
+									    					waiterFoodServeStatus(singleOrderData.order.waiter_serve_confirmation)
 									    				}}
 									    			</span>
 										    		
@@ -861,7 +887,7 @@
 							  		type="submit" 
 							  		name="confirm-order" 
 							  		@click="orderConfirming=true" 
-							  		class="btn btn-outline-warning float-right"
+							  		class="btn btn-outline-success float-right"
 							  	>
 							  		Confirm-Order
 							  	</button>
@@ -879,7 +905,7 @@
 			<!-- /.modal-restaurantOrRider-orderCancelation -->
 			<div class="modal fade" id="modal-restaurantOrRider-orderCancelation">
 				<div class="modal-dialog">
-					<div class="modal-content bg-danger">
+					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
 						  		Order Cancelation
@@ -902,123 +928,116 @@
 						      		:value="csrf"
 					      		>
 
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="card card-outline">
-								            <div class="card-body">
-								              	<div class="form-group row">
-									              		
-								              		<label 
-								              			for="inputMenuName3" 
-								              			class="col-sm-4 col-form-label text-right"
-								              		>
-								              			Cancelled By
-								              		</label>
+								<div class="form-group row">	              		
+				              		<label 
+				              			for="inputMenuName3" 
+				              			class="col-sm-4 col-form-label text-right"
+				              		>
+				              			Cancelled By
+				              		</label>
 
-									                <div class="col-sm-8"> 	
-									                  	<multiselect 
-									                  	v-model="singleOrderData.orderCancelation.cancelledBy" 
-									                  	:options="['Restaurants', 'Rider']" 
-									                  	:required="true" 
-									                  	:allow-empty="false"
-									                  	:show-labels="false" 
-									                  	placeholder="Pick an entity"
-									                  	@close="validateFormInput('orderCancelation.cancelledBy')"
-									                  	:class="!errors.orderCancelation.cancelledBy ? 'is-valid' : 'is-invalid'"
-									                  	>
-									                  		
-									                  	</multiselect>
+					                <div class="col-sm-8"> 
 
-									                	<div class="invalid-feedback">
-												        	{{ 
-												        		errors.orderCancelation.cancelledBy 
-												        	}}
-												  		</div>
-									                </div>	
-									              	
-								              	</div>
+					                	<select 
+											class="form-control" 
+											v-model="singleOrderData.orderCancelation.cancelledBy" 
+											@change="errors.orderCancelation.cancelledBy=null;submitCancelationForm = true;" 
+										>
+											<option :value="null" selected="true" disabled="true">
+												Pick Cancelling Entity 
+											</option>
+											<option 
+												v-for="cancelledBy in ['Restaurants', 'Rider']" 
+												:value="cancelledBy" 
+											>
+												{{ cancelledBy }}
+											</option>
+										</select>
 
-								              	<div 
-								              		class="form-group row" 
-								              		v-if="singleOrderData.orderCancelation.cancelledBy==='Restaurants'"
-								              	>	
-								              		<label 
-								              			for="inputMenuName3" 
-								              			class="col-sm-4 col-form-label text-right"
-								              		>
-								              			Restaurant Name
-								              		</label>
-									                <div class="col-sm-8">
-									                  	
-									                  	<!-- <multiselect 
-				                                  			v-model="singleOrderData.orderCancelation.restaurant"
-					                                  		track-by="restaurant_id" 
-					                                  		:show-labels="false"
-					                                  		:custom-label="customLabel" 
-					                                  		:options="singleOrderData.order.restaurants" 
-					                                  		:required="true"
-					                                  		:class="!errors.orderCancelation.restaurant  ? 'is-valid' : 'is-invalid'"
-					                                  		:allow-empty="false"
-				                                  			placeholder="Restaurant Name" 
-					                                  		selectLabel = "Press/Click"
-					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('orderCancelation.restaurant')"
-				                                  		>
-					                                	</multiselect>
- -->
-									                	<div class="invalid-feedback">
-												        	{{ 
-												        		errors.orderCancelation.restaurant 
-												        	}}
-												  		</div>
-									                </div>
-								              	</div>
+					                	<div class="text-danger" v-if="errors.orderCancelation.cancelledBy">
+								        	{{ errors.orderCancelation.cancelledBy }}
+								  		</div>
+					                </div>	
+				              	</div>
 
-								              	<div class="form-group row">
-									              		
-								              		<label 
-								              			for="inputMenuName3" 
-								              			class="col-sm-4 col-form-label text-right"
-								              		>
-								              			Cancelation Reason
-								              		</label>
+				              	<div 
+				              		class="form-group row" 
+				              		v-if="singleOrderData.orderCancelation.cancelledBy==='Restaurants'"
+				              	>	
+				              		<label 
+				              			for="inputMenuName3" 
+				              			class="col-sm-4 col-form-label text-right"
+				              		>
+				              			Restaurant Name
+				              		</label>
+					                <div class="col-sm-8">
 
-									                <div class="col-sm-8">
-									                  	
-									                  	<multiselect 
-				                                  			v-model="singleOrderData.orderCancelation.reason"
-				                                  			placeholder="Meal Names" 
-					                                  		label="reason" 
-					                                  		track-by="id" 
-					                                  		:options="allCancelationReasons" 
-					                                  		:required="true" 
-					                                  		:multiple="true" 
-					                                  		:class="!errors.orderCancelation.reason ? 'is-valid' : 'is-invalid'"
-					                                  		:allow-empty="false"
-					                                  		selectLabel = "Press/Click"
-					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('orderCancelation.reason')"
-				                                  		>
-					                                	</multiselect>
+										<select 
+											class="form-control" 
+											v-model="singleOrderData.orderCancelation.restaurant_id" 
+											@change="errors.orderCancelation.restaurant=null;submitCancelationForm = true;" 
+										>
+											<option :value="null" selected="true" disabled="true">
+												Select Restaurant Name 
+											</option>
+											<option 
+												v-if="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length" 
+												v-for="orderedRestaurant in singleOrderData.order.restaurants" 
+												:value="orderedRestaurant.restaurant.id" 
+											>
+												{{ orderedRestaurant.restaurant.name }}
+											</option>
+										</select>
 
-									                	<div class="invalid-feedback">
-												        	{{ errors.orderCancelation.reason }}
-												  		</div>
-									                </div>	
-									              	
-								              	</div>
-								            </div>
-								            <!-- /.card-body -->
-									    </div>
-									</div>
-								</div>
+					                	<div class="text-danger" v-if="errors.orderCancelation.restaurant">
+								        	{{ errors.orderCancelation.restaurant }}
+								  		</div>
+					                </div>
+				              	</div>
+
+				              	<div class="form-group row">
+					              		
+				              		<label 
+				              			for="inputMenuName3" 
+				              			class="col-sm-4 col-form-label text-right"
+				              		>
+				              			Cancelation Reason
+				              		</label>
+
+					                <div class="col-sm-8">
+
+	                                	<select 
+											class="form-control" 
+											v-model="singleOrderData.orderCancelation.reason_id" 
+											@change="errors.orderCancelation.reason=null;submitCancelationForm=true;" 
+										>
+											<option :value="null" selected="true" disabled="true">
+												Select Reason 
+											</option>
+											<option 
+												v-if="allCancelationReasons.length" 
+												v-for="cancelationReason in allCancelationReasons" 
+												:value="cancelationReason.id" 
+											>
+												<span v-html="cancelationReason.reason"></span>
+											</option>
+										</select>
+
+					                	<div class="text-danger" v-if="errors.orderCancelation.reason">
+								        	{{ errors.orderCancelation.reason }}
+								  		</div>
+					                </div>	
+					              	
+				              	</div>
 							</div>
 							<div class="modal-footer justify-content-between">
+							<!-- 
 								<div class="col-sm-12 text-right">
 									<span class="text-danger p-0 m-0 small" v-show="!submitCancelationForm">
 								  		Please input all required fields
 								  	</span>
-								</div>
+								</div> 
+							-->
 							  	<button 
 								  	type="button" 
 								  	class="btn btn-outline-light" 
@@ -1032,7 +1051,7 @@
 							  		class="btn btn-outline-light"
 							  		:disabled="!submitCancelationForm" 
 							  	>
-							  		Order Cancelled by {{ singleOrderData.orderCancelation.cancelledBy }}
+							  		Cancel-Order
 							  	</button>
 							</div>
 						</form>
@@ -1060,10 +1079,10 @@
 		},
 		orderCancelation : {
 			reason : {},
-			restaurant : {},
+			// restaurant : {},
 			reason_id : null,
-			cancelledBy : 'Customer',
 			restaurant_id : null,
+			cancelledBy : 'Customer',
 		}
 	};
 
@@ -1122,35 +1141,28 @@
 			Echo.private(`notifyAdmin`)
 			.listen('UpdateAdmin', (order) => {
 			    
+			    console.log(order);
+
 			    // due to pagination, checking if this broadcasted one already exists 
 			    const objectExist = (element) => element.id===order.id;
 
 			    // new order and not in the list or nothing in the list
 			    if ((order.call_confirmation===-1 && !this.ordersToShow.some(objectExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
 			    	this.ordersToShow.unshift(order);
+			    	toastr.warning("New Order update arrives");
 			    }
 			    // now showing the order in this page
 			    else if (this.ordersToShow.some(objectExist)) {
 				    let index = this.ordersToShow.findIndex(currentObject => currentObject.id===order.id);
 				    this.ordersToShow[index] = order;
+				    toastr.warning("Old Order update arrives");
 			    }
 			    // no previous order available
 			    else {
-			    	toastr.warning("Order update arrives");
+			    	toastr.warning("Else Order update arrives");
 			    }
 
 			});
-
-			Echo.private(`notifyRestaurant`)
-			.listen('UpdateRestaurant', (restaurant) => {
-
-			    // console.log(restaurant);
-			    // this.allOrders.new.data.unshift(e);
-			    // this.showListDataForSelectedTab();
-				// this.pagination = this.allOrders.new;
-
-			});
-
 
 		},
 
@@ -1164,24 +1176,6 @@
 					this.searchData();
 				}
 			},
-
-			'singleOrderData.orderCancelation.reason' : function(val){
-				if (val) {
-					this.singleOrderData.orderCancelation.reason_id = val.id;
-				}
-				this.singleOrderData.orderCancelation.reason_id = null;
-			},
-
-			'singleOrderData.orderCancelation.restaurant' : function(val){
-				if (val) {
-					this.singleOrderData.orderCancelation.restaurant_id = val.restaurant_id;
-				}
-				this.singleOrderData.orderCancelation.restaurant_id = null;
-			},
-		},
-
-		filters: {
-
 		},
 
 		methods : {
@@ -1288,8 +1282,8 @@
 					this.searchData();
 				}
     		},
-    		showOrderDetailModal(order) {
-				axios
+    		fetchExpectedOrderDetail(order){
+    			axios
 					.get('/orders/'+ order.id +'/show')
 					.then(response => {		
 						if (response.status == 200) {
@@ -1300,21 +1294,13 @@
 					.catch(error => {
 						console.log(error);
 					});
-				
+    		},
+    		showOrderDetailModal(order) {
+				this.fetchExpectedOrderDetail(order);
 				$("#modal-show-order").modal("show");
 			},
 			showOrderConfirmationModal(order) {
-				axios
-					.get('/orders/'+ order.id +'/show')
-					.then(response => {		
-						if (response.status == 200) {
-							this.singleOrderData.order = response.data.expectedOrder;
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					});
-
+				this.fetchExpectedOrderDetail(order);
 				$("#modal-confirmOrCancel-order").modal("show");
 			},
 			submitConfirmation(){
@@ -1330,7 +1316,7 @@
 				$("#modal-confirmOrCancel-order").modal("hide");
 				
 				axios
-					.put('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.order)
+					.post('/orders/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.order)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1352,53 +1338,44 @@
 					});
 			},
 			showRiderCancelationModal(order) {
-				axios
-					.get('/orders/'+ order.id +'/show')
-					.then(response => {		
-						if (response.status == 200) {
-							this.singleOrderData.order = response.data.expectedOrder;
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					});
-
+				this.fetchExpectedOrderDetail(order);
+				console.log(this.singleOrderData.order);
 				this.singleOrderData.orderCancelation.cancelledBy = 'Rider';
 				$("#modal-restaurantOrRider-orderCancelation").modal("show");
 			},
 			showRestaurantCancelationModal(order) {
-				axios
-					.get('/orders/'+ order.id +'/show')
-					.then(response => {		
-						if (response.status == 200) {
-							this.singleOrderData.order = response.data.expectedOrder;
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					});
-
+				this.fetchExpectedOrderDetail(order);
+				console.log(this.singleOrderData.order);
 				this.singleOrderData.orderCancelation.cancelledBy = 'Restaurants';
 				$("#modal-restaurantOrRider-orderCancelation").modal("show");
 			},
 			cancelOrder(){
 
-				if (this.singleOrderData.orderCancelation.cancelledBy === 'Restaurants' || this.singleOrderData.orderCancelation.cancelledBy === 'Rider') {
+				if (this.singleOrderData.orderCancelation.cancelledBy==='Restaurants' || this.singleOrderData.orderCancelation.cancelledBy === 'Rider') {
 
-					if (!this.singleOrderData.orderCancelation.cancelledBy || (this.singleOrderData.orderCancelation.cancelledBy === 'Restaurants' && Object.keys(this.singleOrderData.orderCancelation.restaurant).length === 0) || Object.keys(this.singleOrderData.orderCancelation.reason).length === 0) {
-						
+					if (this.singleOrderData.orderCancelation.cancelledBy==='Restaurants' && !this.singleOrderData.orderCancelation.restaurant_id) {	
+
+						this.errors.orderCancelation.restaurant = 'Restaurant name is required';
 						this.submitCancelationForm = false;
 						return;
+
+					}
+					else if (!this.singleOrderData.orderCancelation.reason_id) {
+
+						this.errors.orderCancelation.reason = 'Reason is required';
+						this.submitCancelationForm = false;
+						return;
+						
 					}
 
 					$("#modal-restaurantOrRider-orderCancelation").modal("hide");
-				}
 
+				}
 				
 				$("#modal-confirmOrCancel-order").modal("hide");
 				
 				axios
-					.patch('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.orderCancelation)
+					.put('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.orderCancelation)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1435,15 +1412,33 @@
 					console.log(e);
 				});
 			},
-			customerCallConfirmation(customerCallConfirmation) {
-				if (customerCallConfirmation===0) {
-					return 'Cancelled by customer';
-				}else if (customerCallConfirmation===1) {
-					return 'Confirmed by customer';
+			orderCallConfirmationClass(callConfirmation) {
+
+				if (callConfirmation===1) {
+					return 'badge-success';
+				}else if (callConfirmation===-1) {
+					return 'badge-danger';
+				}else
+					return 'badge-secondary';
+
+			},
+			orderCallConfirmationStatus(orderCallConfirmation) {
+				if (orderCallConfirmation===0) {
+					return 'Cancelled from customer';
+				}else if (orderCallConfirmation===1) {
+					return 'Confirmed from customer';
 				}else
 					return 'Not confirmed yet';
 			},
-			restaurantOrderStatus(restaurantOrderAcceptance) {
+			restaurantOrderAcceptanceClass(restaurantOrderAcceptance) {
+				if (restaurantOrderAcceptance.food_order_acceptance===1) {
+					return 'badge-warning';
+				}else if (restaurantOrderAcceptance.food_order_acceptance===-1) {
+					return 'badge-danger';
+				}else
+					return 'badge-secondary';
+			},
+			restaurantOrderAcceptanceStatus(restaurantOrderAcceptance) {
 				if (restaurantOrderAcceptance.food_order_acceptance===-1) {
 					return restaurantOrderAcceptance.restaurant.name +' is Ringing';
 				}else if (restaurantOrderAcceptance.food_order_acceptance===1) {
@@ -1452,18 +1447,34 @@
 					return restaurantOrderAcceptance.restaurant.name +' has Cancelled';
 					// return 'Cancelled';
 			},
+			restaurantOrderReadyClass(restaurantReadyConfirmation) {
+				if (restaurantReadyConfirmation.food_ready_confirmation===1) {
+					return 'badge-success';
+				}else if (restaurantReadyConfirmation.food_ready_confirmation===-1) {
+					return 'badge-warning';
+				}else
+					return 'badge-secondary';
+			},
 			//  cancelled by restaurant
-			restaurantReadyConfirmation(restaurantReadyConfirmation) {
+			restaurantOrderReadyStatus(restaurantReadyConfirmation) {
 				if (restaurantReadyConfirmation.food_ready_confirmation===-1) {
 					return restaurantReadyConfirmation.restaurant.name +' Not ready yet';
 				}else if (restaurantReadyConfirmation.food_ready_confirmation===1) {
-					return restaurantReadyConfirmation.restaurant.name +' is Ready';
+					return restaurantReadyConfirmation.restaurant.name +' is ready';
 				}else
-					return restaurantReadyConfirmation.restaurant.name +' has Cancelled';
+					return restaurantReadyConfirmation.restaurant.name +' has cancelled';
 					// return 'Cancelled';
 			},
+			riderFoodPickUpClass(riderFoodPickUpConfirmation) {
+				if (riderFoodPickUpConfirmation.rider_food_pick_confirmation===1) {
+					return 'badge-warning';
+				}else if (riderFoodPickUpConfirmation.rider_food_pick_confirmation===-1) {
+					return 'badge-danger';
+				}else
+					return 'badge-secondary';
+			},
 			//  cancelled by rider
-			riderFoodPickUpConfirmation(riderFoodPickUpConfirmation) {
+			riderFoodPickUpStatus(riderFoodPickUpConfirmation) {
 				if (riderFoodPickUpConfirmation.rider_food_pick_confirmation===-1) {
 					return riderFoodPickUpConfirmation.rider.user_name +' not picked-up yet from '+riderFoodPickUpConfirmation.restaurant.name;
 				}else if (riderFoodPickUpConfirmation.rider_food_pick_confirmation===1) {
@@ -1471,7 +1482,7 @@
 				}else
 					return riderFoodPickUpConfirmation.rider.user_name +' has cancelled order of '+riderFoodPickUpConfirmation.restaurant.name;
 			},
-			riderDeliveryConfirmation(riderDeliveryConfirmation) {
+			riderFoodDeliveryStatus(riderDeliveryConfirmation) {
 				if (riderDeliveryConfirmation.rider_delivery_confirmation===1) {
 					return 'Delivered by '+riderDeliveryConfirmation.rider.user_name;
 				}else if (riderDeliveryConfirmation.rider_delivery_confirmation===-1) {
@@ -1482,7 +1493,7 @@
 				else
 					return 'No response';
 			},
-			waiterServeConfirmation(waiterServeConfirmation) {
+			waiterFoodServeStatus(waiterServeConfirmation) {
 				if (waiterServeConfirmation.waiter_serve_confirmation===1) {
 					return 'Served';
 				}else if (waiterServeConfirmation.waiter_serve_confirmation===-1) {
@@ -1491,54 +1502,7 @@
 				else
 					return 'Cancelled';
 			},
-			validateFormInput(formInputName)
-			{
-				this.submitCancelationForm = false;
-
-				switch(formInputName) {
-
-					case 'orderCancelation.cancelledBy' :
-
-						if (!this.singleOrderData.orderCancelation.cancelledBy) {
-							this.errors.orderCancelation.cancelledBy = 'This field is required';
-						}
-						else {
-							this.submitCancelationForm = true;
-							this.$delete(this.errors.orderCancelation, 'cancelledBy');
-						}
-
-						break;
-
-					case 'orderCancelation.restaurant' :
-
-						if (Object.keys(this.singleOrderData.orderCancelation.restaurant).length === 0) {
-							this.errors.orderCancelation.restaurant = 'Restaurant Name is required';
-						}
-						else {
-							this.submitCancelationForm = true;
-							this.$delete(this.errors.orderCancelation, 'restaurant');
-						}
-
-						break;
-
-					case 'orderCancelation.reason' :
-
-						if (Object.keys(this.singleOrderData.orderCancelation.reason).length === 0) {
-							this.errors.orderCancelation.reason = 'Reason is required';
-						}
-						else {
-							this.submitCancelationForm = true;
-							this.$delete(this.errors.orderCancelation, 'reason');
-						}
-
-						break;
-
-				}
-
-			},
-			/*customLabel ({ restaurants }) {
-				return `${restaurants.name}`;
-			}*/
+			
 		}
   	}
 

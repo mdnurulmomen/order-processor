@@ -64,7 +64,7 @@ Route::name('resto.')->group(function () {
 
 		    Route::get('/api/cancelation-reasons/{perPage?}', 'CancelationController@showAllReasons');
 
-		    Route::get('/orders/{restaurant}/{perPage?}', 'OrderController@showRestaurantAllOrders');
+		    Route::get('/orders/{restaurant}/{perPage?}', 'OrderController@showAllRestaurantOrders');
 		    Route::post('/orders/{order}/{perPage}', 'OrderController@confirmRestaurantOrder');
 		    Route::put('/orders/{order}/{perPage}', 'OrderController@cancelRestaurantOrder');
 		    // Route::get('/api/orders/search/{search}/{perPage}', 'OrderController@searchAllOrders');
