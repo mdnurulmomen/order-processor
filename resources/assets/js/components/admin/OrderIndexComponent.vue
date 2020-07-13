@@ -1139,27 +1139,31 @@
 			Pusher.logToConsole = true;
 
 			Echo.private(`notifyAdmin`)
-			.listen('UpdateAdmin', (order) => {
+			.listen('UpdateAdmin', (broadcastedOrder) => {
 			    
-			    console.log(order);
+			    console.log(broadcastedOrder);
 
 			    // due to pagination, checking if this broadcasted one already exists 
-			    const objectExist = (element) => element.id===order.id;
+			    const objectExist = (orderObject) => orderObject.id===broadcastedOrder.id;
 
 			    // new order and not in the list or nothing in the list
-			    if ((order.call_confirmation===-1 && !this.ordersToShow.some(objectExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
-			    	this.ordersToShow.unshift(order);
-			    	toastr.warning("New Order update arrives");
+			    if ((broadcastedOrder.call_confirmation===-1 && !this.ordersToShow.some(objectExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
+			    	this.ordersToShow.unshift(broadcastedOrder);
+			    	toastr.warning("New order update arrives");
 			    }
-			    // now showing the order in this page
+			    // now showing the broadcastedOrder in this page
 			    else if (this.ordersToShow.some(objectExist)) {
-				    let index = this.ordersToShow.findIndex(currentObject => currentObject.id===order.id);
-				    this.ordersToShow[index] = order;
-				    toastr.warning("Old Order update arrives");
+				    let index = this.ordersToShow.findIndex(orderObject => orderObject.id===broadcastedOrder.id);
+				    // this.ordersToShow[index] = broadcastedOrder;
+				    // this.ordersToShow.$set(index, broadcastedOrder);
+				    // this.$set(this.ordersToShow, index, broadcastedOrder)
+				    Vue.set(this.ordersToShow, index, broadcastedOrder)
+				    toastr.warning("Old order update arrives");
+				    console.log(index);
 			    }
-			    // no previous order available
+			    // else
 			    else {
-			    	toastr.warning("Else Order update arrives");
+			    	toastr.warning("Order update arrives");
 			    }
 
 			});
