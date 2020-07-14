@@ -110,7 +110,7 @@
 									  	<tr v-show="ordersToShow.length"
 									    	v-for="(restaurant, index) in ordersToShow"
 									    	:key="restaurant.id" 
-									    	:class="[confirmedOrder(restaurant.order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(restaurant.order.restaurant_acceptances) ? 'bg-warning' : cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) ? 'bg-secondary' : 'bg-danger']" 
+									    	:class="[cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) ? 'bg-secondary' : confirmedOrder(restaurant.order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(restaurant.order.restaurant_acceptances) ? 'bg-warning' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ restaurant.order.id }}</td>
