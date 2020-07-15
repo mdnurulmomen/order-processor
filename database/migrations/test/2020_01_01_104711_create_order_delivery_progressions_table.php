@@ -15,10 +15,9 @@ class CreateOrderDeliveryProgressionsTable extends Migration
     {
         Schema::create('order_delivery_progressions', function (Blueprint $table) {
             $table->increments('id');
-            $table->boolean('rider_food_pick_confirmation')->default(false);
-            $table->boolean('rider_delivery_confirmation')->default(false);
-            $table->unsignedInteger('order_id')->unique();
+            $table->tinyInteger('rider_delivery_confirmation')->default(-1); // initially pending (-1 for pending, 1 for dropped, 2 for dropped at office, 0 for cancel)
             $table->unsignedMediumInteger('rider_id');
+            $table->unsignedInteger('order_id')->unique();
             $table->timestamps();
         });
     }

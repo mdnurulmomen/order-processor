@@ -17,7 +17,7 @@ class CreateOrderServeProgressionsTable extends Migration
         // (After restaurant accepted the request)
         Schema::create('order_serve_progressions', function (Blueprint $table) {
             $table->increments('id');
-            $table->boolean('waiter_confirmation')->default(false);
+            $table->tinyInteger('waiter_serve_confirmation')->default(-1); // initially pending (-1 for pending, 1 for confirm, 0 for cancel)
             $table->unsignedInteger('order_id')->unique();
             $table->unsignedMediumInteger('restaurant_id');
             $table->unsignedMediumInteger('waiter_id');

@@ -13,9 +13,11 @@ class CreateRiderDeliveryRecordsTable extends Migration
      */
     public function up()
     {
+        // If it is delivery order (after/when restaurant accepted the order, for all orders)
+        // May be multiple row for single order untill any rider accepts the order
         Schema::create('rider_delivery_records', function (Blueprint $table) {
             $table->increments('id');
-            $table->boolean('delivery_order_acceptance')->default(1);
+            $table->tinyInteger('delivery_order_acceptance')->default(0); // initially ringing (-1 for ringing, 1 for confirm, 0 for cancel, default 0 as may not receive)
             $table->unsignedInteger('order_id');
             $table->unsignedSmallInteger('rider_id');
             $table->timestamp('created_at')->useCurrent();

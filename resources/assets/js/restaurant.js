@@ -85,13 +85,13 @@ const router = new VueRouter({
 
 		
 		{
+			path: '*',
+            redirect : '/404'
+		},
+		{
 			path: '/404',
             name: 'restaurant.routeNotFound',
             component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFoundComponent.vue')
-		},
-		{
-			path: '*',
-            redirect : '/404'
 		},
 	],
 });
