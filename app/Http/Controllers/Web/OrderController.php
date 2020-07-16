@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\Order;
+use App\Models\Rider;
+use App\Models\Customer;
 use App\Events\UpdateRider;
 use App\Events\UpdateAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Events\UpdateRestaurant;
 use App\Models\OrderedRestaurant;
+use App\Models\OrderDeliveryInfo;
+use App\Models\RiderDeliveryRecord;
 use Illuminate\Support\Facades\Log;
 use App\Models\RestaurantEvaluation;
 use App\Http\Controllers\Controller;
@@ -72,7 +76,7 @@ class OrderController extends Controller
 	 	$orderToConfirm->call_confirmation = 1;
 	 	$orderToConfirm->save();
 
-	 	$this->makeRestaurantOrderCalls($orderToConfirm);
+ 		$this->makeRestaurantOrderCalls($orderToConfirm);
 
 	 	return $this->showAllOrders($perPage);
 	}
@@ -98,7 +102,7 @@ class OrderController extends Controller
 	 	}
 
 	 	// if the restaurant actually belongs to ordered-restaurants and accepted the food request
-	 	else if ($request->cancelledBy==='Restaurants' && $orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->count() && $orderToCancel->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->count()) {
+	 	else if ($request->cancelledBy==='Restaurants' && $orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->exists() && $orderToCancel->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->exists()) {
 
 		 	$this->makeRestaurantOrderCancelationReason($orderToCancel, $request->reason_id, $request->restaurant_id);	
 			$this->updateRestaurantEvaluation($request->restaurant_id);
@@ -110,10 +114,10 @@ class OrderController extends Controller
 
 /*
 	 	// if any rider is actually assigned and the food has't been picked up yet 
-	 	else if ($request->cancelledBy==='Rider' && $orderToCancel->riderAssignment->count() && !$orderToCancel->riderFoodPickConfirmations()->where('rider_food_pick_confirmation', 1)->count()) {
+	 	else if ($request->cancelledBy==='Rider' && $orderToCancel->riderAssignment->exists() && !$orderToCancel->riderFoodPickConfirmations()->where('rider_food_pick_confirmation', 1)->exists()) {
 		
 		 	// reason of the cancelled order
-	 		$riderOrderCancelationReason = $orderToCancel->riderOrderCancelation()->create([
+	 		$riderOrderCancelationReason = $orderToCancel->riderOrderCancelations()->create([
 		 		'reason_id' => $request->reason_id,
 		 		'rider_id' => $request->rider_id,
 		 	]);
@@ -262,7 +266,7 @@ class OrderController extends Controller
 			        function ($attribute, $value, $fail) use ($order) {
 			            $restaurantExist = OrderedRestaurant::where('restaurant_id', $value)
 			            									->where('order_id', $order)
-			            									->count();
+			            									->exists();
 			            if (!$restaurantExist) {
 			                $fail('Invalid Restaurant or Order');
 			            }
@@ -270,7 +274,7 @@ class OrderController extends Controller
 			        function ($attribute, $value, $fail) use ($order) {
 			            $restaurantExist = RestaurantOrderRecord::where('restaurant_id', $value)
 			            										->where('order_id', $order)
-			            										->count();
+			            										->exists();
 			            if (!$restaurantExist) {
 			                $fail('Invalid Restaurant or Order');
 			            }
@@ -287,14 +291,15 @@ class OrderController extends Controller
  		}
 
  		// if not accepted yet
- 		if (!$orderToConfirm->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->where('food_order_acceptance', 1)->count()) {
+ 		if (!$orderToConfirm->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->where('food_order_acceptance', 1)->exists()) {
 
 	 		$orderConfirmedOrAccepted = $this->makeRestaurantOrderAccepted($orderToConfirm, $request->restaurant_id);
 
 	 		// checking if order is for home-delivery, order is from customer and any rider has been assigned yet
-			if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer() instanceof Customer && !$orderToConfirm->riderAssignment()->count()) {
+			if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer instanceof Customer && !$orderToConfirm->riderAssignment()->exists()) {
 
-				// Broadcast for rider
+				Log::info('Inside Home Delivery');
+				// make rider call with RiderDeliveryRecord
 				$this->makeRiderOrderCall($orderToConfirm);
 
 			}
@@ -317,7 +322,7 @@ class OrderController extends Controller
 					function ($attribute, $value, $fail) use ($order) {
 						$restaurantExist = OrderedRestaurant::where('restaurant_id', $value)
 															->where('order_id', $order)
-															->count();
+															->exists();
 			            if (!$restaurantExist) {
 			                $fail('Invalid Restaurant or Order');
 			            }
@@ -325,7 +330,7 @@ class OrderController extends Controller
 			        function ($attribute, $value, $fail) use ($order) {
 			            $restaurantExist = RestaurantOrderRecord::where('restaurant_id', $value)
 			            										->where('order_id', $order)
-			            										->count();
+			            										->exists();
 			            if (!$restaurantExist) {
 			                $fail('Invalid Restaurant or Order');
 			            }
@@ -336,7 +341,7 @@ class OrderController extends Controller
 		$orderToCancel = Order::findOrFail($order);
 
 		// Checking if this restaurant is in ordered-restaurants
-		if ($orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->count()) {
+		if ($orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->exists()) {
 			
 			$this->cancelRestaurantOrderRequest($orderToCancel, $request->restaurant_id);
 			$this->makeRestaurantOrderCancelationReason($orderToCancel, $request->reason_id, $request->restaurant_id);
@@ -365,16 +370,16 @@ class OrderController extends Controller
 		event(new UpdateRestaurant($orderedRestaurant));
 	}
 
-	private function notifyRider(Order $order)
+	private function notifyRider(RiderDeliveryRecord $riderNewDeliveryRecord)
 	{
 		Log::info('UpdateRider');
-		event(new UpdateRider($order));
+		event(new UpdateRider($riderNewDeliveryRecord));
 	}
 
 	private function makeRestaurantOrderCalls(Order $order)
 	{
-		// checking for order confirmation
-        if ($order->call_confirmation===1) {
+		// checking for order confirmation and if already has made
+        if ($order->call_confirmation===1 && !$order->restaurantAcceptances()->exists()) {
            
            	foreach ($order->restaurants as $orderedRestaurant) {
 
@@ -404,7 +409,7 @@ class OrderController extends Controller
 	private function makeRestaurantOrderCancelationReason(Order $orderToCancel, $reason, $restaurant)
 	{
 		// if same restaurnat hasn't already cancelled 
-	 	if (!$orderToCancel->restaurantOrderCancelations()->where('restaurant_id', $restaurant)->count()) {
+	 	if (!$orderToCancel->restaurantOrderCancelations()->where('restaurant_id', $restaurant)->exists()) {
 		 	
 		 	// reason of the cancelled order
 	 		$restaurantOrderCancelation = $orderToCancel->restaurantOrderCancelations()->create([
@@ -417,11 +422,11 @@ class OrderController extends Controller
 
 	private function updateRestaurantEvaluation($restaurant)
 	{
-		$totalRequestReceived = RestaurantOrderRecord::where('restaurant_id', $restaurant)->count();
+		$totalRequestReceived = RestaurantOrderRecord::where('restaurant_id', $restaurant)->exists();
 
 		$totalRequestAccepted = RestaurantOrderRecord::where('restaurant_id', $restaurant)
 													->where('food_order_acceptance', 1)
-													->count();
+													->exists();
 
 		// Avoiding O exception
 		if ($totalRequestReceived) {
@@ -448,8 +453,149 @@ class OrderController extends Controller
 
 	private function makeRiderOrderCall(Order $order)
 	{	
-		// Broadcast to Rider for order request
-		$this->notifyRider($order);
+		// to calculate the nearest rider laterly
+		$allNearestRiders = $this->findNearestRiders($order->delivery);
+
+		foreach ($allNearestRiders as $rider) {
+			
+			$riderNewDeliveryRecord = $order->riderAssignment()->create([
+				'delivery_order_acceptance'=>0,
+				'rider_id'=>$rider->id,
+			]);
+
+			// Broadcast to Rider for order request			
+			$this->notifyRider($riderNewDeliveryRecord);
+			sleep(1);
+
+			if ($order->riderAssignment()->exists()) {
+				break;
+			}
+		}
+
 	}
 
+	// to calculate the nearest rider laterly
+	private function findNearestRiders(OrderDeliveryInfo $delivery=null) 
+	{
+		return Rider::whereNull('current_lat')->whereNull('current_lang')->get();
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// Rider
+	public function showRiderAllOrders($rider, $perPage = false)
+	{
+	 	if ($perPage) {
+
+            return response()->json([
+
+               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order:id,is_asap_order,delivery_datetime,cutlery_addition,order_price,vat,discount,net_payable,payment_method,created_at', 'order.orderer', 'restaurants.items.restaurantMenuItem', 'restaurantsAccepted', 'riderOrderCancelations', 'delivery', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
+            
+            ], 200);
+
+	 	}
+
+	 	return response(Order::get(), 200);
+	}
+
+	public function confirmRiderOrder(Request $request, $order)
+    {
+        // validation
+        $request->validate([
+            'orderDropped' => 'required|boolean',
+            'orderPicked' => 'required|boolean',
+            'orderAccepted' => 'required|boolean',
+            'rider_id' => ['required','exists:riders,id',
+                    function ($attribute, $value, $fail) use ($order) {
+                        $riderExist = RiderDeliveryRecord::where('rider_id', $value)
+                                                            ->where('order_id', $order)
+                                                            ->exists();
+                        if (!$riderExist) {
+                            $fail('Invalid Rider or Order');
+                        }
+                    }
+            ],
+        ]);
+
+        $deliveryToConfirm = RiderDeliveryRecord::where('rider_id', $request->rider_id)->where('order_id', $order)->first();
+
+        // if already not accepted
+        if ($request->orderAccepted && $deliveryToConfirm->delivery_order_acceptance===0) {
+                
+            $deliveryToConfirm->update([
+                'delivery_order_acceptance' => 1
+            ]);
+
+            foreach ($deliveryToConfirm->restaurantsAccepted as $restaurantToPick) {
+               
+                $deliveryToConfirm->riderFoodPickConfirmations()->create([
+                    'rider_food_pick_confirmation' => -1,
+                    'order_id' => $restaurantToPick->order_id,
+                    'restaurant_id'=>$restaurantToPick->restaurant_id,
+                ]);
+
+            }
+
+        }
+
+        else if ($request->orderPicked) {
+            
+            $restaurantToPick = $deliveryToConfirm->riderFoodPickConfirmations()->where('rider_id', $request->rider_id)->where('restaurant_id', $request->restaurant_id)->first();
+
+            if ($restaurantToPick && $restaurantToPick->rider_food_pick_confirmation==-1) {
+                
+                $restaurantPicked = $restaurantToPick->update([
+                    'rider_food_pick_confirmation' => 1,
+                ]);
+
+                if ($restaurantPicked && !$deliveryToConfirm->riderDeliveryConfirmation()->exists()) {
+                    
+                    $deliveryToConfirm->riderDeliveryConfirmation()->create([
+                        'rider_delivery_confirmation' => 1
+                    ]);
+
+                }
+
+            }
+
+        }
+
+        else if ($request->orderDropped) {
+
+            $netRestaurantsToPick = $deliveryToConfirm->restaurants->count() - $deliveryToConfirm->restaurantOrderCancelations->count();
+
+            $alreadyPicked = $deliveryToConfirm->riderFoodPickConfirmations()->where('rider_food_pick_confirmation', 1)->count();
+
+            $alreadyDelivered = $deliveryToConfirm->riderDeliveryConfirmation()->where('rider_delivery_confirmation', 1)->exists();
+
+            if ($netRestaurantsToPick===$alreadyPicked && !$alreadyDelivered) {
+                
+                $deliveryToConfirm->riderDeliveryConfirmation()->update([
+                    'rider_delivery_confirmation' => 1
+                ]);
+
+            }
+
+        }
+
+        // Broadcast to admin for restaurant order ready confirmation
+        $this->notifyAdmin($deliveryToConfirm->order);
+
+        return $this->showRiderAllOrders($request->restaurant_id, $perPage);
+
+    }
+    
 }

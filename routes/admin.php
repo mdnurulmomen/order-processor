@@ -87,6 +87,10 @@ Route::name('admin.')->group(function () {
 		    Route::get('/api/orders/search/{search}/{perPage}', 'OrderController@searchAllOrders');
 
 
+		    Route::get('/api/rider-orders/{rider}/{perPage?}', 'OrderController@showRiderAllOrders');
+		    Route::post('/delivery-order-confirmations/{order}', 'OrderController@confirmRiderOrder');
+
+
 		    Route::get('/api/cancelation-reasons/{perPage?}', 'CancelationController@showAllReasons');
 		    Route::get('/api/cancelation-reasons/search/{search}/{perPage}', 'CancelationController@searchAllReasons');
 		    Route::post('/cancelation-reasons/{perPage?}', 'CancelationController@createCancelationReason');

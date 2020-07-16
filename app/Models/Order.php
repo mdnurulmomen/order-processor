@@ -84,8 +84,8 @@ class Order extends Model
          return $this->hasMany(RestaurantOrderCancelationReason::class, 'order_id', 'id');
       }
 
-      public function riderOrderCancelation()
+      public function riderOrderCancelations()
       {
-         return $this->hasOne(RiderOrderCancelationReason::class, 'order_id', 'id');
+         return $this->hasMany(RiderOrderCancelationReason::class, 'order_id', 'id');
       }
 }

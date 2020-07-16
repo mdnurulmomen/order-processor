@@ -222,7 +222,7 @@
                     v-bind:class="[(currentPage.includes('/rider-orders')) ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Orders</p>
+                    <p>Rider-Orders</p>
                   </router-link>
                 </li>
 

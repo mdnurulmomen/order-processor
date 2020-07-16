@@ -29,3 +29,13 @@ Broadcast::channel('notifyRestaurant.{restaurantId}', function ($restaurant, $re
 Broadcast::channel('notifyRestaurant', function ($restaurant) {
 	return true;
 }, ['guards' => ['admin', 'restaurant']]);
+
+/*
+Broadcast::channel('notifyRider.{riderId}', function ($rider, $riderId) {
+    return $rider->id == $riderId;
+}, ['guards' => 'api']);
+*/
+
+Broadcast::channel('notifyRider', function ($rider) {
+    return true;
+}, ['guards' => 'admin']);

@@ -29,7 +29,7 @@
 							<div class="row">
 								<div class="col-sm-12">
 									<h2 class="lead mt-1">
-										Order List
+										Rider Order List
 									</h2>
 								</div>
 							</div>
@@ -43,46 +43,46 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Id</th>
-											<th scope="col">Type</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-									  	<tr v-show="ordersToShow.length"
-									    	v-for="(order, index) in ordersToShow"
-									    	:key="restaurant.id" 
-									    	:class="[cancelledOrder(order.restaurant_acceptances, order.restaurant_order_cancelations) ? 'bg-secondary' : confirmedOrder(order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(order.restaurant_acceptances) ? 'bg-warning' : 'bg-danger']" 
+									  	<tr v-show="deliveriesToShow.length"
+									    	v-for="(riderDeliveryRecord, index) in deliveriesToShow"
+									    	:key="riderDeliveryRecord.id" 
+									    	:class="[(riderDeliveryRecord.rider_delivery_confirmation && riderDeliveryRecord.rider_delivery_confirmation.rider_delivery_confirmation) ? 'bg-success' : (riderDeliveryRecord.rider_order_cancelations.some(orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id) || riderDeliveryRecord.restaurant_order_cancelations.some(orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id)) ? 'bg-secondary' : riderDeliveryRecord.delivery_order_acceptance ? 'bg-warning' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ order.id }}</td>
-								    		<td>{{ order.order_type }}</td>
+								    		<td>{{ riderDeliveryRecord.order_id }}</td>
 								    		<td>
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-info btn-sm"
-									      			@click="showOrderDetailModal(order)" 
+									      			@click="showOrderDetailModal(riderDeliveryRecord)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
 								        			Details
 								      			</button>
-								      			<!-- disabled if restaurant already confirmed as ready-->
+								      			<!-- disabled if rider / restaurant already cancelled -->
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(order.restaurant_acceptances, order.restaurant_order_cancelations) && !confirmedOrder(order.order_ready_confirmations)" 
-									      			@click="showOrderConfirmationModal(order)" 
+									      			v-if="!riderDeliveryRecord.rider_order_cancelations.some(orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id) && !riderDeliveryRecord.restaurant_order_cancelations.some(orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id)" 
+									      			@click="showOrderConfirmationModal(riderDeliveryRecord)" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 								        			{{
-								        				acceptedOrder(order.restaurant_acceptances) ? 'Order-Ready' : 'Accept/Ready'
+								        				riderDeliveryRecord.rider_food_pick_confirmations.filter(
+								        					orderPickUp => orderPickUp.rider_food_pick_confirmation == 1
+								        				).length === (riderDeliveryRecord.restaurants.length-riderDeliveryRecord.restaurant_order_cancelations.length) ? 'Drop' : 'Pick-Up'  
 								        			}}
 								      			</button>
-								      			<!-- disabled if restaurant accepted -->
+								      			<!-- disabled if rider not yet accepted or already cancelled -->
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-secondary btn-sm" 
-									      			v-if="!cancelledOrder(order.restaurant_acceptances, order.restaurant_order_cancelations) && !acceptedOrder(order.restaurant_acceptances)" 
-									      			@click="showOrderCancelationModal(order)" 
+									      			v-if="!riderDeliveryRecord.delivery_order_acceptance!=1 && !riderDeliveryRecord.rider_order_cancelations.some(orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id) && !riderDeliveryRecord.restaurant_order_cancelations.some(orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id)" 
+									      			@click="showOrderCancelationModal(riderDeliveryRecord)" 
 								      			>
 								        			<i class="fas fa-times"></i>
 								        			Cancel
@@ -90,7 +90,7 @@
 								    		</td>
 									  	</tr>
 									  	<tr 
-									  		v-show="!ordersToShow.length"
+									  		v-show="!deliveriesToShow.length"
 									  	>
 								    		<td colspan="6">
 									      		<div class="alert alert-danger" role="alert">
@@ -130,7 +130,7 @@
 										v-if="pagination.last_page > 1"
 										:pagination="pagination"
 										:offset="5"
-										@paginate="query === '' ? fetchAllOrders() : searchData()"
+										@paginate="fetchAllOrders()"
 									>
 									</pagination>
 								</div>
@@ -151,16 +151,15 @@
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    <span aria-hidden="true">&times;</span></button>
 						</div>
-
 						<div class="modal-body">
 							<ul class="nav nav-tabs justify-content-center mb-4" role="tablist">
 								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#show-order-details">
+									<a class="nav-link active" data-toggle="tab" href="#show-order-details">
 										Order
 									</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link active" data-toggle="tab" href="#show-order-items-details">
+									<a class="nav-link" data-toggle="tab" href="#show-order-items-details">
 										Order Items
 									</a>
 								</li>
@@ -173,7 +172,7 @@
 
 							<!-- Tab panes -->
 							<div class="tab-content">
-								<div id="show-order-details" class="container tab-pane fade">
+								<div id="show-order-details" class="container tab-pane active">
 									<div class="row">
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
@@ -254,7 +253,7 @@
 					            		</div>
 					            	</div>
 								</div>
-								<div id="show-order-items-details" class="container tab-pane active">
+								<div id="show-order-items-details" class="container tab-pane fade">
 									<div class="row">
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
@@ -266,7 +265,6 @@
 								                		style="list-style-type: none;"
 								                	>
 														<li v-for="(orderedRestaurant, index) in singleOrderData.order.restaurants" 
-															v-if="orderedRestaurant.restaurant_id==restaurant_id" 
 															:key="orderedRestaurant.id"
 														>
 															<ul v-show="orderedRestaurant.items.length">
@@ -284,30 +282,25 @@
 					            		</div>
 					            	</div>
 								</div>
-								<div id="show-orderer-details" class="container tab-pane active">
+								<div id="show-orderer-details" class="container tab-pane fade">
 									<div class="row">
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
+								                		
 							              		<label class="col-sm-6 text-right">
-							              			Orderer
+							              			Ordered By
 							              		</label>
 								                <div class="col-sm-6">
-								                	<div class="form-group row">		
-									              		<label class="col-sm-6 text-right">
-									              			Ordered By
-									              		</label>
-										                <div class="col-sm-6">
-										                  	{{ 
-										                  		singleOrderData.order.orderer ? 
-										                  		singleOrderData.order.orderer.user_name : 'NA'  
-															}}
-															({{
-																singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
-										                  		'Waiter' : 'Customer'
-															}})
-										                </div>	
-										            </div>
+								                  	{{ 
+								                  		singleOrderData.order.orderer ? 
+								                  		singleOrderData.order.orderer.user_name : 'NA'  
+													}}
+													({{
+														singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
+								                  		'Waiter' : 'Customer'
+													}})
 								                </div>	
+										            
 								            </div>  
 					            		</div>
 					            	</div>
@@ -327,8 +320,8 @@
 			</div>
 			<!-- /modal-show-order -->
 
-			<!-- modal-confirmOrReady-order -->
-			<div class="modal fade" id="modal-confirmOrReady-order">
+			<!-- modal-acceptOrPickOrDrop-order -->
+			<div class="modal fade" id="modal-acceptOrPickOrDrop-order">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header bg-warning">
@@ -352,17 +345,17 @@
 								            	
 												<ul class="nav nav-tabs justify-content-center mb-4" role="tablist">
 													<li class="nav-item">
-														<a class="nav-link" data-toggle="tab" href="#order">
+														<a class="nav-link active" data-toggle="tab" href="#order">
 															Order
 														</a>
 													</li>
 													<li class="nav-item">
-														<a class="nav-link active" data-toggle="tab" href="#order-items">
+														<a class="nav-link" data-toggle="tab" href="#order-items">
 															Order Items
 														</a>
 													</li>
 													<li class="nav-item">
-														<a class="nav-link active" data-toggle="tab" href="#orderer">
+														<a class="nav-link" data-toggle="tab" href="#orderer">
 															Orderer
 														</a>
 													</li>
@@ -370,7 +363,7 @@
 
 												<!-- Tab panes -->
 												<div class="tab-content">
-													<div id="order" class="container tab-pane fade">
+													<div id="order" class="container tab-pane active">
 														<div class="row">
 										            		<div class="col-sm-12">
 										            			<div class="form-group row">		
@@ -399,7 +392,7 @@
 													                <div class="col-sm-6">
 													                  	{{ singleOrderData.order.cutlery_addition ? 'Added' : 'None' }}
 													                </div>	
-													            </div>
+													            </div> 
 													            <div class="form-group row">		
 												              		<label class="col-sm-6 text-right">
 												              			Price
@@ -447,11 +440,11 @@
 													                <div class="col-sm-6">
 													                  	{{ singleOrderData.order.created_at }}
 													                </div>	
-													            </div>  
+													            </div> 
 										            		</div>
 										            	</div>
 													</div>
-													<div id="order-items" class="container tab-pane active">
+													<div id="order-items" class="container tab-pane fade">
 														<div class="row">
 										            		<div class="col-sm-12">
 										            			<div class="form-group row">		
@@ -463,7 +456,6 @@
 													                		style="list-style-type: none;"
 													                	>
 																			<li v-for="(orderedRestaurant, index) in singleOrderData.order.restaurants" 
-																				v-if="orderedRestaurant.restaurant_id==restaurant_id" 
 																				:key="orderedRestaurant.id"
 																			>
 																				<ul v-show="orderedRestaurant.items.length">
@@ -481,30 +473,25 @@
 										            		</div>
 										            	</div>
 													</div>
-													<div id="orderer" class="container tab-pane active">
+													<div id="orderer" class="container tab-pane fade">
 														<div class="row">
 										            		<div class="col-sm-12">
 										            			<div class="form-group row">		
+													                		
 												              		<label class="col-sm-6 text-right">
-												              			Orderer
+												              			Ordered By
 												              		</label>
 													                <div class="col-sm-6">
-													                	<div class="form-group row">		
-														              		<label class="col-sm-6 text-right">
-														              			Ordered By
-														              		</label>
-															                <div class="col-sm-6">
-															                  	{{ 
-															                  		singleOrderData.order.orderer ? 
-															                  		singleOrderData.order.orderer.user_name : 'NA'  
-																				}}
-																				({{
-																					singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
-															                  		'Waiter' : 'Customer'
-																				}})
-															                </div>	
-															            </div>
+													                  	{{ 
+													                  		singleOrderData.order.orderer ? 
+													                  		singleOrderData.order.orderer.user_name : 'NA'  
+																		}}
+																		({{
+																			singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
+													                  		'Waiter' : 'Customer'
+																		}})
 													                </div>	
+															            
 													            </div>  
 										            		</div>
 										            	</div>
@@ -522,20 +509,20 @@
 							  		type="submit" 
 							  		name="cancel-order" 
 							  		:disabled="true" 
-							  		@click="singleOrderData.order.orderDropped=true" 
+							  		@click="singleOrderData.rider.orderDropped=true;" 
 							  		class="btn btn-outline-success float-right" 
-							  		v-if="singleOrderData.order.order_ready_confirmations && !confirmedOrder(singleOrderData.order.order_ready_confirmations)" 
+							  		v-if="true" 
 							  	>
-							  		Dropped-Customer
+							  		Drop-Order
 							  	</button>
 
 							  	<button 
 							  		type="submit" 
 							  		name="cancel-order" 
 							  		:disabled="true" 
-							  		@click="singleOrderData.order.orderPicked=true" 
+							  		@click="singleOrderData.rider.orderPicked=true" 
 							  		class="btn btn-outline-success float-right" 
-							  		v-if="singleOrderData.order.order_ready_confirmations && !confirmedOrder(singleOrderData.order.order_ready_confirmations)" 
+							  		v-if="true" 
 							  	>
 							  		Picked-up
 							  	</button>
@@ -543,9 +530,9 @@
 							  	<button 
 							  		type="submit" 
 							  		name="confirm-order" 
-							  		@click="singleOrderData.order.orderAccepted=false" 
+							  		@click="singleOrderData.rider.orderAccepted=false" 
 							  		class="btn btn-outline-warning float-right" 
-							  		v-if="singleOrderData.order.restaurant_acceptances && !acceptedOrder(singleOrderData.order.restaurant_acceptances)"
+							  		v-if="true"
 							  	>
 							  		Accept-Order
 							  	</button>
@@ -556,7 +543,7 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /modal-confirmOrReady-order -->
+			<!-- /modal-acceptOrPickOrDrop-order -->
 
 			<!-- modal-order-cancelation -->
 			<div class="modal fade" id="modal-order-cancelation">
@@ -645,6 +632,12 @@
 		order : {
 			// orderReady : false,
 		},
+		rider : {
+			orderDropped : false,
+			orderPicked : false,
+			orderAccepted : false,
+			rider_id : null,
+		},
 		orderCancelation : {
 			reason_id : null,
 			rider_id : 1, // have to be sent from app dynamically
@@ -658,7 +651,7 @@
     	submitCancelationForm : true,
     	
     	allOrders : [],
-    	ordersToShow : [],
+    	deliveriesToShow : [],
     	allCancelationReasons : [],
 
     	currentTab : 'all',
@@ -676,7 +669,8 @@
       	},
 
         csrf : document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        restaurant_id : document.querySelector('meta[name="restaurant-id"]').getAttribute('content'),
+        // restaurant_id : document.querySelector('meta[name="restaurant-id"]').getAttribute('content'),
+        rider_id : 1,
     };
 
 	export default {
@@ -699,60 +693,20 @@
 			    
 			Pusher.logToConsole = true;
 
-			Echo.private(`notifyRestaurant`)
-			.listen('UpdateRestaurant', (orderedRestaurant) => {
-
-			    console.log(orderedRestaurant);
-
-			    // due to pagination, checking if this broadcasted one already exists 
-			    const orderExist = (currentOrder) => currentOrder.order.id==orderedRestaurant.order_id;
-
-			    // due to pagination, checking if this broadcasted restaurant is for this one & ringing 
-			    const restaurantRinging = (restaurantOrderRecord) => restaurantOrderRecord.restaurant_id==this.restaurant_id && restaurantOrderRecord.food_order_acceptance==-1;
+			Echo.private(`notifyRider`)
+			.listen('UpdateRider', (riderDeliveryOrder) => {
 			    
-			    console.log(orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging));
-			    console.log(!this.ordersToShow.some(orderExist));
-
-			    // new order and not in the list or nothing in the list
-			    if ((orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging) && !this.ordersToShow.some(orderExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
-			    	
-			    	this.ordersToShow.unshift(orderedRestaurant);
-			    	toastr.warning("New Order arrives");
-			    }
-			    // now showing the order in this page
-			    else if (this.ordersToShow.some(orderExist)) {
-				    let index = this.ordersToShow.findIndex(currentOrder => currentOrder.order.id==orderedRestaurant.order_id);
-				    // this.ordersToShow[index] = orderedRestaurant;
-				    // this.ordersToShow.$set(index, orderedRestaurant);
-				    // this.$set(this.ordersToShow, index, orderedRestaurant)
-				    Vue.set(this.ordersToShow, index, orderedRestaurant)
-				    toastr.warning("Old Order arrives");
-				    console.log(index);
-			    }
-			    // no previous order available
-			    else {
-			    	toastr.warning("Order update arrives");
-			    }
+			    console.log(riderDeliveryOrder);
+			    this.deliveriesToShow.unshift(riderDeliveryOrder);
+		    	toastr.warning("New order delivery arrives");
 
 			});
 
 		},
 
-		watch : {
-			query : function(val){
-				if (val==='') {
-					this.fetchAllOrders();
-				}
-				else {
-					this.pagination.current_page = 1;
-					this.searchData();
-				}
-			},
-		},
-
 		methods : {
 			showListDataForSelectedTab(){
-				this.ordersToShow = this.allOrders.all.data;
+				this.deliveriesToShow = this.allOrders.all.data;
 				this.pagination = this.allOrders.all;
 			},
 			fetchAllCancelationReasons(){
@@ -772,9 +726,10 @@
 			fetchAllOrders(){
 				this.loading = true;
 				axios
-					.get('/orders/' + this.restaurant_id + '/' + this.perPage +'?page='+ this.pagination.current_page)
+					.get('/api/rider-orders/' + this.rider_id + '/' + this.perPage +'?page='+ this.pagination.current_page)
 					.then(response => {		
 						if (response.status == 200) {
+							console.log(response);
 							this.allOrders = response.data;
 							this.showListDataForSelectedTab();
 							this.loading = false;
@@ -786,35 +741,82 @@
 			},
 			changeNumberContents() {
 				this.pagination.current_page = 1;
-				if (this.query === '') {
-					this.fetchAllOrders();
-				}else {
-					this.searchData();
-				}
+				this.fetchAllOrders();
     		},
 			reload() {
 				this.pagination.current_page = 1;
-				if (this.query === '') {
-					this.fetchAllOrders();
-				}else {
-					this.searchData();
-				}
+				this.fetchAllOrders();
     		},
-    		showOrderDetailModal(order) {
-				this.singleOrderData.order = order;
+    		showOrderDetailModal(riderDeliveryRecord) {
+    			console.log(riderDeliveryRecord);
+				
+				this.singleOrderData.order = riderDeliveryRecord.order;
+
+				// if order request is accepted
+				if (riderDeliveryRecord.delivery_order_acceptance) {
+					this.singleOrderData.order.restaurants = riderDeliveryRecord.restaurants;
+				}
+
+				// if any food is picked
+				if (riderDeliveryRecord.rider_food_pick_confirmations.length) {
+					
+					let totalRestaurantFoodPicked = riderDeliveryRecord.rider_food_pick_confirmations.filter(
+														orderPickUp => orderPickUp.rider_food_pick_confirmation == 1
+													).length;
+
+					let totalRestaurantFoodsToPick = riderDeliveryRecord.restaurants.length - riderDeliveryRecord.restaurant_order_cancelations.length;
+
+					// if all restaruants food are picked
+					if(totalRestaurantFoodPicked == totalRestaurantFoodsToPick) {
+
+						this.singleOrderData.order.orderer = riderDeliveryRecord.order.orderer;
+
+					}
+
+				}
+
 				$("#modal-show-order").modal("show");
 			},
-			showOrderConfirmationModal(order) {
-				this.singleOrderData.order = order;
-				this.singleOrderData.order.restaurant_id = this.restaurant_id;
-				$("#modal-confirmOrReady-order").modal("show");
+			showOrderConfirmationModal(riderDeliveryRecord) {
+				
+				this.singleOrderData.order = riderDeliveryRecord.order;
+
+				this.singleOrderData.rider.orderDropped = false;
+				this.singleOrderData.rider.orderPicked = false;
+				this.singleOrderData.rider.orderAccepted = false;
+				this.singleOrderData.rider.rider_id = this.rider_id;
+
+				// if order request is accepted
+				if (riderDeliveryRecord.delivery_order_acceptance) {
+					this.singleOrderData.order.restaurants = riderDeliveryRecord.restaurants;
+				}
+
+				// if any food is picked
+				if (riderDeliveryRecord.rider_food_pick_confirmations.length) {
+					
+					let totalRestaurantFoodPicked = riderDeliveryRecord.rider_food_pick_confirmations.filter(
+														orderPickUp => orderPickUp.rider_food_pick_confirmation == 1
+													).length;
+
+					let totalRestaurantFoodsToPick = riderDeliveryRecord.restaurants.length - riderDeliveryRecord.restaurant_order_cancelations.length;
+
+					// if all restaruants food are picked
+					if(totalRestaurantFoodPicked == totalRestaurantFoodsToPick) {
+
+						this.singleOrderData.order.orderer = riderDeliveryRecord.order.orderer;
+
+					}
+
+				}
+
+				$("#modal-acceptOrPickOrDrop-order").modal("show");
 			},
 			submitConfirmation(){
 
-				$("#modal-confirmOrReady-order").modal("hide");
+				$("#modal-acceptOrPickOrDrop-order").modal("hide");
 				
 				axios
-					.post('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.order)
+					.post('/delivery-order-confirmations/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.rider)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -823,7 +825,7 @@
 							this.allOrders = response.data;
 							this.showListDataForSelectedTab();
 
-							toastr.success(response.data.success, "Confirmed");
+							toastr.success(response.data.success, "Accepted");
 						}
 					})
 					.catch(error => {
@@ -835,10 +837,10 @@
 				      	}
 					});
 			},
-			showOrderCancelationModal(order) {
-				this.singleOrderData.order = order;
-				// this.singleOrderData.orderCancelation.reason_id = null;
-				this.singleOrderData.orderCancelation.restaurant_id = this.restaurant_id;
+			showOrderCancelationModal(riderDeliveryRecord) {
+				this.singleOrderData.order = riderDeliveryRecord.order;
+				this.singleOrderData.orderCancelation.reason_id = null;
+				this.singleOrderData.orderCancelation.rider_id = this.rider_id;
 				$("#modal-order-cancelation").modal("show");
 			},
 			cancelOrder(){
@@ -856,6 +858,7 @@
 						if (response.status == 200) {
 							
 							this.singleOrderData.order = {};
+							this.singleOrderData.orderCancelation = {};
 
 							this.allOrders = response.data;
 							this.showListDataForSelectedTab();
@@ -871,57 +874,6 @@
 							}
 				      	}
 					});
-			},
-		    searchData() {
-				axios
-				.get(
-					"/api/orders/search/"+ this.query +"/" + this.perPage +
-				    "?page=" +
-				    this.pagination.current_page
-				)
-				.then(response => {
-					this.allOrders = response.data;
-					this.ordersToShow = this.allOrders.all.data;
-					this.pagination = this.allOrders.all;
-				})
-				.catch(e => {
-					console.log(e);
-				});
-			},
-			cancelledOrder(orderAcceptedRestaurants, restaurantOrderCancelations) {
-				
-				let cancelled = false;
-
-				if (orderAcceptedRestaurants.length) {
-					cancelled = orderAcceptedRestaurants.some(
-						currentAcceptance => (currentAcceptance.restaurant_id==this.restaurant_id && currentAcceptance.food_order_acceptance==0)
-					);
-				}
-				if (!cancelled && restaurantOrderCancelations.length) {
-					return restaurantOrderCancelations.some(
-						cancelationReason => (cancelationReason.restaurant_id==this.restaurant_id)
-					);
-				}
-				
-				return cancelled;
-			},
-			acceptedOrder(restaurantAcceptances) {
-				if (restaurantAcceptances.length) {
-					return restaurantAcceptances.some(
-						currentRestaurantAcceptance => (currentRestaurantAcceptance.restaurant_id==this.restaurant_id && currentRestaurantAcceptance.food_order_acceptance==1)
-					);
-				}
-
-				return false;
-			},
-			confirmedOrder(orderReadyConfirmations) {
-				if (orderReadyConfirmations.length) {
-					return orderReadyConfirmations.some(
-						currentRestaurantConfirmation => (currentRestaurantConfirmation.restaurant_id==this.restaurant_id && currentRestaurantConfirmation.food_ready_confirmation==1)
-					);
-				}
-				
-				return false;
 			},
 		}
   	}

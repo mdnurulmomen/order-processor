@@ -8,6 +8,7 @@ use App\Events\UpdateAdmin;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use App\Models\RestaurantMenuItem;
+use App\Models\RiderDeliveryRecord;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderRequest;
@@ -121,4 +122,5 @@ class OrderController extends Controller
         Log::info('UpdateAdmin');
         event(new UpdateAdmin($order));
     }
+
 }
