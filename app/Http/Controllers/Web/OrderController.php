@@ -237,18 +237,22 @@ class OrderController extends Controller
 				       					->latest()->paginate($perPage),
 
                'new' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', -1)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
-					               			->whereHas('order', function($q){
-							   					$q->where('call_confirmation', 1);
-											})
-					               			->latest()->paginate($perPage),
+				               			->whereHas('order', function($q){
+						   					$q->where('call_confirmation', 1);
+										})
+				               			->latest()->paginate($perPage),
 
                'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
-											->whereHas('order.waiterServeConfirmation', function($q){
-							   					$q->where('waiter_serve_confirmation', 1);
-											})
-											->latest()->paginate($perPage),				
+										->whereHas('order.waiterServeConfirmation', function($q){
+						   					$q->where('waiter_serve_confirmation', 1);
+										})
+										->latest()->paginate($perPage),				
 
-               'cancelled' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', 0)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])->latest()->paginate($perPage),
+               'cancelled' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', 0)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
+               							->orWhereHas('order.restaurantOrderCancelations', function($q) use ($restaurant){
+						   					$q->where('restaurant_id', $restaurant);
+										})
+               							->latest()->paginate($perPage),
 
                
             ], 200);
@@ -372,7 +376,7 @@ class OrderController extends Controller
 
 	private function notifyRider(RiderDeliveryRecord $riderNewDeliveryRecord)
 	{
-		Log::info('UpdateRider');
+		Log::info('UpdateRider from 379');
 		event(new UpdateRider($riderNewDeliveryRecord));
 	}
 

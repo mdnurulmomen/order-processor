@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Order;
-use App\Models\Customer;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Model;
 
