@@ -302,7 +302,6 @@ class OrderController extends Controller
 	 		// checking if order is for home-delivery, order is from customer and any rider has been assigned yet
 			if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer instanceof Customer && !$orderToConfirm->riderAssignment()->exists()) {
 
-				Log::info('Inside Home Delivery');
 				// make rider call with RiderDeliveryRecord
 				$this->makeRiderOrderCall($orderToConfirm);
 
@@ -376,7 +375,7 @@ class OrderController extends Controller
 
 	private function notifyRider(RiderDeliveryRecord $riderNewDeliveryRecord)
 	{
-		Log::info('UpdateRider from 379');
+		Log::info('UpdateRider');
 		event(new UpdateRider($riderNewDeliveryRecord));
 	}
 

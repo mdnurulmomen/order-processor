@@ -650,11 +650,9 @@
     	loading : false,
     	submitCancelationForm : true,
     	
-    	allOrders : [],
+    	allDeliveryOrders : [],
     	deliveriesToShow : [],
     	allCancelationReasons : [],
-
-    	currentTab : 'all',
 
     	pagination: {
         	current_page: 1
@@ -697,8 +695,18 @@
 			.listen('UpdateRider', (riderDeliveryOrder) => {
 			    
 			    console.log(riderDeliveryOrder);
-			    this.deliveriesToShow.unshift(riderDeliveryOrder);
-		    	toastr.warning("New order delivery arrives");
+
+			    // due to pagination, checking if this broadcasted one already exists 
+			    const objectExist = (orderObject) => orderObject.id==riderDeliveryOrder.id;
+
+			    // if new delivery order in the list or nothing in the list
+			    if ((!this.deliveriesToShow.some(objectExist)) || (Array.isArray(this.deliveriesToShow) && !this.deliveriesToShow.length)) {
+			    	
+			    	this.deliveriesToShow.unshift(riderDeliveryOrder);
+			    	toastr.warning("New order delivery arrives");
+			    }
+			    
+		    	toastr.warning("Old order delivery arrives");
 
 			});
 
@@ -706,8 +714,8 @@
 
 		methods : {
 			showListDataForSelectedTab(){
-				this.deliveriesToShow = this.allOrders.all.data;
-				this.pagination = this.allOrders.all;
+				this.deliveriesToShow = this.allDeliveryOrders.all.data;
+				this.pagination = this.allDeliveryOrders.all;
 			},
 			fetchAllCancelationReasons(){
 				this.loading = true;
@@ -730,7 +738,7 @@
 					.then(response => {		
 						if (response.status == 200) {
 							console.log(response);
-							this.allOrders = response.data;
+							this.allDeliveryOrders = response.data;
 							this.showListDataForSelectedTab();
 							this.loading = false;
 						}
@@ -748,6 +756,7 @@
 				this.fetchAllOrders();
     		},
     		showOrderDetailModal(riderDeliveryRecord) {
+    			
     			console.log(riderDeliveryRecord);
 				
 				this.singleOrderData.order = riderDeliveryRecord.order;
@@ -776,6 +785,7 @@
 				}
 
 				$("#modal-show-order").modal("show");
+
 			},
 			showOrderConfirmationModal(riderDeliveryRecord) {
 				
@@ -810,6 +820,7 @@
 				}
 
 				$("#modal-acceptOrPickOrDrop-order").modal("show");
+
 			},
 			submitConfirmation(){
 
@@ -822,7 +833,7 @@
 							
 							this.singleOrderData.order = {};
 
-							this.allOrders = response.data;
+							this.allDeliveryOrders = response.data;
 							this.showListDataForSelectedTab();
 
 							toastr.success(response.data.success, "Accepted");
@@ -860,7 +871,7 @@
 							this.singleOrderData.order = {};
 							this.singleOrderData.orderCancelation = {};
 
-							this.allOrders = response.data;
+							this.allDeliveryOrders = response.data;
 							this.showListDataForSelectedTab();
 
 							toastr.success(response.data.success, "Cancelled");
