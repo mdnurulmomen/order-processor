@@ -1382,9 +1382,7 @@
 				});
 			},
 			allRestaurantsCancelledOrder(order) {
-				
 				return order.restaurant_acceptances.length == order.restaurant_order_cancelations.length ? true : false;
-
 			},
 			orderConfirmed(order){
 				return order.call_confirmation===1 ? true : false;

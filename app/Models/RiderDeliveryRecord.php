@@ -37,7 +37,7 @@ class RiderDeliveryRecord extends Model
 
 	public function riderOrderCancelations()
 	{
-		return $this->hasMany(RiderOrderCancelationReason::class, 'rider_id', 'order_id');
+		return $this->hasMany(RiderOrderCancelationReason::class, 'rider_id', 'rider_id');
 	}
 
 	public function delivery()
