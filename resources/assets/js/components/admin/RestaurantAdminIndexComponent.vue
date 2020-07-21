@@ -17,18 +17,6 @@
 		
 			<div class="row" v-show="!loading">
 				<div class="col-sm-12">
-	              	
-					<!--
-					// For those who has only to view
-					<vue-bootstrap4-table 
-						:rows="restaurantAdmins" 
-						:columns="columns" 
-						:config="config"
-						:actions="actions"
-					>
-
-					</vue-bootstrap4-table> 
-					-->
 
 					<div class="card">
 						<div class="card-header">
@@ -319,27 +307,32 @@
 									</div>
 								</div>
 							</div>
-							<div class="modal-footer justify-content-between">
+
+							<div class="modal-footer flex-column">
 								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+									<span 
+										class="text-white small" 
+										v-show="!submitForm"
+									>
 								  		Please input all required fields
 								  	</span>
 								</div>
-							  	<button 
-								  	type="button" 
-								  	class="btn btn-outline-light" 
-								  	data-dismiss="modal"
-							  	>
-							  		Close
-							  	</button>
-
-							  	<button 
-							  		type="submit" 
-							  		class="btn btn-outline-light"
-							  		:disabled="!submitForm" 
-							  	>
-							  		{{ editMode ? 'Update' : 'Create' }} Admin
-							  	</button>
+								<div class="col-sm-12 d-flex justify-content-between">
+								  	<button 
+									  	type="button" 
+									  	class="btn btn-outline-light" 
+									  	data-dismiss="modal"
+								  	>
+								  		Close
+								  	</button>
+								  	<button 
+								  		type="submit" 
+								  		class="btn btn-outline-light"
+								  		:disabled="!submitForm" 
+								  	>
+								  		{{ editMode ? 'Update' : 'Create' }} Rest. Admin
+								  	</button>
+								</div>
 							</div>
 						</form>
 					</div>
