@@ -12,6 +12,7 @@ use App\Http\Resources\Web\RiderDeliveryResource;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Http\Resources\Web\RestaurantAcceptanceResource;
+use App\Http\Resources\Web\RestaurantCancelationResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use App\Http\Resources\Web\OrderPickUpProgressionResource;
 use App\Http\Resources\Web\OrderReadyConfirmationResource;
@@ -63,7 +64,7 @@ class UpdateAdmin implements ShouldBroadcastNow
             'rider_food_pick_confirmations' => OrderPickUpProgressionResource::collection($this->order->riderFoodPickConfirmations),
             'rider_delivery_confirmation' => $this->order->riderDeliveryConfirmation ? new RiderDeliveryResource($this->order->riderDeliveryConfirmation) : null,
             'waiter_serve_confirmation' => $this->order->waiterServeConfirmation,
-            'restaurant_order_cancelations' => $this->order->restaurantOrderCancelations,
+            'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->order->restaurantOrderCancelations),
         ];
     }
 

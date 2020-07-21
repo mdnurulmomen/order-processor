@@ -446,11 +446,11 @@ class OrderController extends Controller
 
 	private function updateRestaurantEvaluation($restaurant)
 	{
-		$totalRequestReceived = RestaurantOrderRecord::where('restaurant_id', $restaurant)->exists();
+		$totalRequestReceived = RestaurantOrderRecord::where('restaurant_id', $restaurant)->count();
 
 		$totalRequestAccepted = RestaurantOrderRecord::where('restaurant_id', $restaurant)
 													->where('food_order_acceptance', 1)
-													->exists();
+													->count();
 
 		// Avoiding O exception
 		if ($totalRequestReceived) {
@@ -477,7 +477,7 @@ class OrderController extends Controller
 	private function makeRestaurantOrderReady(Order $order, $restaurant)
 	{
 		// if not already entered for this order & restaurant
-		if (!$order->orderReadyConfirmations()->where('restaurant_id', $restaruant)->exists()) {
+		if (!$order->orderReadyConfirmations()->where('restaurant_id', $restaurant)->exists()) {
 			
 			return $order->orderReadyConfirmations()->create([
 											 			'food_ready_confirmation' => 1,
@@ -493,11 +493,10 @@ class OrderController extends Controller
 
 		foreach ($allNearestRiders as $rider) {
 			
-			$riderNewDeliveryRecord = RiderDeliveryRecord::updateOrCreate(
-				['order_id' => $order->id],
-				['delivery_order_acceptance' => 0],
-				['rider_id' => $rider->id]
-			);
+			$riderNewDeliveryRecord = $order->riderAssignment()->create([
+				'delivery_order_acceptance' => 0,
+				'rider_id' => $rider->id
+			]);
 
 			// Broadcast to Rider for order request			
 			$this->notifyRider($riderNewDeliveryRecord);
@@ -510,7 +509,7 @@ class OrderController extends Controller
 
 	}
 
-	// to calculate the nearest rider laterly
+	// should calculate the nearest rider and snoozing time laterly
 	private function findNearestRiders(OrderDeliveryInfo $delivery=null) 
 	{
 		return Rider::whereNull('current_lat')->whereNull('current_lang')->get();

@@ -17,6 +17,7 @@ class RestaurantCancelationResource extends JsonResource
         // return parent::toArray($request);
         return [
            'reason_id'=>$this->reason_id,  
+           'restaurant'=>$this->restaurant, 
            'restaurant_id'=>$this->restaurant_id, 
         ];
     }
