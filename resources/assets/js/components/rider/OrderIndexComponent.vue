@@ -50,7 +50,7 @@
 									  	<tr v-show="deliveriesToShow.length"
 									    	v-for="(riderDeliveryRecord, index) in deliveriesToShow"
 									    	:key="riderDeliveryRecord.id" 
-									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' :  deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedOrder(riderDeliveryRecord) ? 'bg-warning' : 'bg-danger']" 
+									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' :  deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-warning' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ riderDeliveryRecord.order_id }}</td>
@@ -78,7 +78,7 @@
 								      			<button
 								      				type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && !allRestaurantPickedUp(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && acceptedOrder(riderDeliveryRecord)" 
+									      			v-if="!cancelledOrder(riderDeliveryRecord) && !allRestaurantPickedUp(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && acceptedDeliveryOrder(riderDeliveryRecord)" 
 									      			v-for="restaurantOrderRecord in riderDeliveryRecord.restaurants_accepted"  
 									      			:key="restaurantOrderRecord.id" 
 									      			@click="orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord)" 
@@ -89,7 +89,7 @@
 								      			<button
 								      				type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedOrder(riderDeliveryRecord)" 
+									      			v-if="!cancelledOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)" 
 									      			@click="orderAcceptanceConfirmation(riderDeliveryRecord)" 
 								      			>
 								      				Accept
@@ -137,7 +137,7 @@
 										v-if="pagination.last_page > 1"
 										:pagination="pagination"
 										:offset="5"
-										@paginate="fetchAllOrders()"
+										@paginate="fetchAllDeliveryOrders()"
 									>
 									</pagination>
 								</div>
@@ -386,7 +386,7 @@
 		},
 
 		created(){
-			this.fetchAllOrders();
+			this.fetchAllDeliveryOrders();
 		},
 
 		mounted(){
@@ -407,15 +407,25 @@
 			    	this.deliveriesToShow.unshift(riderDeliveryOrder);
 			    	toastr.warning("New order delivery arrives");
 			    }
+			    // now showing the order in this page
+			    else if (this.deliveriesToShow.some(objectExist)) {
+				    let index = this.deliveriesToShow.findIndex(
+				    		currentDeliveryOrder => (currentDeliveryOrder.id==riderDeliveryOrder.id && currentDeliveryOrder.order_id==riderDeliveryOrder.order_id)
+				    	);
+
+				    Vue.set(this.deliveriesToShow, index, riderDeliveryOrder)
+				    toastr.warning("Old delivery-order arrives");
+				    console.log(index);
+			    }
 			    
-		    	toastr.warning("Old order delivery arrives");
+		    	toastr.warning("Else order delivery arrives");
 
 			});
 
 		},
 
 		methods : {
-			fetchAllOrders(){
+			fetchAllDeliveryOrders(){
 				this.loading = true;
 				axios
 					.get('/api/rider-orders/' + this.rider_id + '/' + this.perPage +'?page='+ this.pagination.current_page)
@@ -436,36 +446,25 @@
 			},
 			changeNumberContents() {
 				this.pagination.current_page = 1;
-				this.fetchAllOrders();
+				this.fetchAllDeliveryOrders();
     		},
 			reload() {
 				this.pagination.current_page = 1;
-				this.fetchAllOrders();
+				this.fetchAllDeliveryOrders();
     		},
     		showOrderDetailModal(riderDeliveryRecord) {
 
 				this.singleOrderData.order = riderDeliveryRecord.order;
 
 				// if order request is accepted
-				if (this.acceptedOrder(riderDeliveryRecord)) {
+				if (this.acceptedDeliveryOrder(riderDeliveryRecord)) {
 					this.singleOrderData.order.restaurants = riderDeliveryRecord.restaurants;
 				}
 
 				// if any food is picked
-				if (riderDeliveryRecord.rider_food_pick_confirmations.length) {
+				if (riderDeliveryRecord.rider_food_pick_confirmations.length && this.allRestaurantPickedUp(riderDeliveryRecord)) {
 					
-					let totalRestaurantFoodPicked = riderDeliveryRecord.rider_food_pick_confirmations.filter(
-														orderPickUp => orderPickUp.rider_food_pick_confirmation == 1
-													).length;
-
-					let totalRestaurantFoodsToPick = riderDeliveryRecord.restaurants.length - riderDeliveryRecord.restaurant_order_cancelations.length;
-
-					// if all restaruants food are picked
-					if(totalRestaurantFoodPicked == totalRestaurantFoodsToPick) {
-
-						this.singleOrderData.order.orderer = riderDeliveryRecord.order.orderer;
-
-					}
+					this.singleOrderData.order.orderer = riderDeliveryRecord.order.orderer;
 
 				}
 
@@ -546,15 +545,27 @@
 			},
 			cancelledOrder(riderDeliveryRecord) {
 
-				let cancelledByRider = riderDeliveryRecord.rider_order_cancelations.some(
-											orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id
-										);
+				if (this.riderCancelledSameOrder(riderDeliveryRecord) || this.allRestaurantCancelled(riderDeliveryRecord)) {
+					return true;
+				}
 
-				let cancelledByRestaurant = riderDeliveryRecord.restaurant_order_cancelations.some(
-											orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id
-										);
+				return false;
 
-				if (cancelledByRider || cancelledByRestaurant) {
+			},
+			riderCancelledSameOrder(riderDeliveryRecord){
+
+				return 	riderDeliveryRecord.rider_order_cancelations.some(
+							orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id
+						);
+
+			},
+			allRestaurantCancelled(riderDeliveryRecord) {
+
+				let numberCancelledRestaurants = riderDeliveryRecord.restaurant_order_cancelations.length;
+
+				let numberRestaurantsInOrder = riderDeliveryRecord.restaurants.length;
+
+				if (numberCancelledRestaurants==numberRestaurantsInOrder) {
 					return true;
 				}
 
@@ -563,7 +574,7 @@
 			},
 			deliveredOrder(riderDeliveryRecord){
 				
-				if (riderDeliveryRecord.rider_delivery_confirmation && riderDeliveryRecord.rider_delivery_confirmation.rider_delivery_confirmation==1) {
+				if (riderDeliveryRecord.rider_delivery_confirmation!=null && riderDeliveryRecord.rider_delivery_confirmation.rider_delivery_confirmation==1) {
 					return true;
 				}
 
@@ -578,14 +589,14 @@
 
 				let netRestaurantsToBePicked = riderDeliveryRecord.restaurants.length - riderDeliveryRecord.restaurant_order_cancelations.length;
 
-				if (totalRestaurantPickedUp===netRestaurantsToBePicked && riderDeliveryRecord.delivery_order_acceptance) {
+				if ((totalRestaurantPickedUp===netRestaurantsToBePicked) && this.acceptedDeliveryOrder(riderDeliveryRecord)) {
 					return true;
 				}
 
 				return false;
 
 			},
-			acceptedOrder(riderDeliveryRecord){
+			acceptedDeliveryOrder(riderDeliveryRecord){
 				return riderDeliveryRecord.delivery_order_acceptance==1 ? true : false;
 			},
 		}

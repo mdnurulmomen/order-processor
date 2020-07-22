@@ -111,6 +111,13 @@ class OrderController extends Controller
 			// Broadcast to restaruant for order cancelation with OrderedRestaurant Model
 			$this->notifyRestaurant($orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->first());
 
+			// inform rider if any rider has been assigned
+			// if ($orderToCancel->riderAssignment()->exists()) {
+				
+				$this->notifyRider($orderToCancel->riderAssignment);
+
+			// }
+
 	 	}
 
 
@@ -132,6 +139,13 @@ class OrderController extends Controller
 
 		 	$this->makeRiderEvaluation($riderOrderCancelationReason->rider_id);
 
+		 	// inform rider if any rider has been assigned
+			if ($orderToCancel->riderAssignment()->exists()) {
+				
+				$this->notifyRider($orderToCancel->riderAssignment);
+
+			}
+
 		 	// Assigning another food man for the order
 		 	// make rider call with RiderDeliveryRecord
 			// $this->makeRiderOrderCall($orderToCancel);
@@ -140,17 +154,6 @@ class OrderController extends Controller
 	
 
 	 	return $this->showAllOrders($perPage);
-	}
-
-	private function makeRiderEvaluation($rider)
-	{
-		$totalDeliveryRequestReceived = RiderDeliveryRecord::where('rider_id', $rider)->where('delivery_order_acceptance', 1)->count();
-		$totalDeliveryRequestAchieved = RiderDeliveryRecord::where('rider_id', $rider)->count();
-
-		$riderNewEvaluation = RiderEvaluation::updateOrCreate(
-			['rider_id' => $rider],
-			['order_acceptance_percentage' => ($totalDeliveryRequestReceived / $totalDeliveryRequestAchieved)*100]
-		);
 	}
 
   	public function searchAllOrders($search, $perPage)
@@ -322,8 +325,8 @@ class OrderController extends Controller
  		}
 
 
- 		// checking if order is for home-delivery, order is from customer and any rider has been assigned yet
-		if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer instanceof Customer && !$orderToConfirm->riderAssignment()->exists()) {
+ 		// checking if order is for home-delivery, order is from customer and any rider notification broadcasted
+		if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer instanceof Customer && !RiderDeliveryRecord::where('order_id', $order)->exists()) {
 
 			// make rider call with RiderDeliveryRecord
 			$this->makeRiderOrderCall($orderToConfirm);
@@ -381,6 +384,17 @@ class OrderController extends Controller
 	}
 
 // Done
+
+	private function makeRiderEvaluation($rider)
+	{
+		$totalDeliveryRequestReceived = RiderDeliveryRecord::where('rider_id', $rider)->where('delivery_order_acceptance', 1)->count();
+		$totalDeliveryRequestAchieved = RiderDeliveryRecord::where('rider_id', $rider)->count();
+
+		$riderNewEvaluation = RiderEvaluation::updateOrCreate(
+			['rider_id' => $rider],
+			['order_acceptance_percentage' => ($totalDeliveryRequestReceived / $totalDeliveryRequestAchieved)*100]
+		);
+	}
 
 	private function notifyAdmin(Order $order) 
 	{
@@ -500,6 +514,7 @@ class OrderController extends Controller
 
 			// Broadcast to Rider for order request			
 			$this->notifyRider($riderNewDeliveryRecord);
+
 			sleep(1);
 
 			if ($order->riderAssignment()->exists()) {
@@ -514,21 +529,6 @@ class OrderController extends Controller
 	{
 		return Rider::whereNull('current_lat')->whereNull('current_lang')->get();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	// Rider
 	public function showRiderAllOrders($rider, $perPage = false)
