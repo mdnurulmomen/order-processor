@@ -32,7 +32,7 @@
 								</div>
 							</div>
 							<div class="table-responsive">
-								<table class="table table-hover table-bordered table-striped text-center">
+								<table class="table table-hover table-bordered table-striped">
 									<thead>
 										<tr>
 											<th scope="col">#</th>
@@ -48,15 +48,20 @@
 									    	v-for="(api, index) in apiToShow"
 									    	:key="api.id"
 									  	>
-									    	<td scope="row">{{ index }}</td>
+									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td><mark>{{ api.url }}</mark></td>
 								    		<td>{{ api.method }}</td>
 								    		<td>{{ api.purpose }}</td>
-								    		<td>{{ api.parameters }}</td>
+								    		<td>
+												<span v-if="Object.keys(api.parameters).length>0">
+													<pre>{{ api.parameters }}</pre>
+												</span>
+												<span v-if="Object.keys(api.parameters).length==0">
+													None
+												</span>
+								    		</td>
 									  	</tr>
-								  		<tr 
-									  		v-show="!apiToShow.length"
-									  	>
+								  		<tr v-show="!apiToShow.length">
 								    		<td colspan="6">
 									      		<div class="alert alert-danger" role="alert">Sorry, No api found.</div>
 									    	</td>
@@ -98,20 +103,73 @@
 				{
 					url : 'general-info',
 					method : 'get',
-					purpose : 'Settings Info',
-					parameters : 'None',
+					purpose : 'Show settings Info',
+					parameters : {},
 				},
 				{
 					url : 'restaurants/{expectedLatitude}/{expectedLongitude}',
 					method : 'get',
-					purpose : 'Restaurant list',
-					parameters : 'None',
+					purpose : 'Show restaurant list in expected area',
+					parameters : {},
 				},
 				{
 					url : 'restaurant-menu-items/{expectedRestaurantId}',
 					method : 'get',
-					purpose : 'Restaurant menu items',
-					parameters : 'None',
+					purpose : 'Show restaurant menu items',
+					parameters : {},
+				},
+
+				{
+					url : 'orders',
+					method : 'post',
+					purpose : 'Post new order',
+					parameters : {
+						'order_type (required)' : 'home-delivery/serve-on-table/take-away/reservation', 
+						'is_asap_order (required)' : 'true/false',
+						'delivery_datetime (required if not asap)' : 'date',
+						'order_price (required)' : 'numeric', 
+						'vat (required)' : 'numeric', 
+						'discount (required)' : 'numeric', 
+						'delivery_fee (required)' : 'numeric', 
+						'net_payable (required)' : 'numeric', 
+						'payment_method (required)' : 'cash/bkash/card', 
+						'payment_id (required if not cash)' : 'string', 
+						'cutlery_addition' : 'true/false', 
+						'orderer_type (required)' : 'customer/waiter', 
+						'orderer_id (required)' : 'numeric', 
+						'delivery_new_address (required if no delivery_address_id)' : { 
+							'house (required)' : 'string',
+							'road (required)' : 'string',
+							'lat (required)' : 'string',
+							'lang (required)' : 'string',
+							'address_name (required)'  : 'string',
+							'additional_hint'  : 'string',
+						},
+						'delivery_address_id (required without delivery_new_address)' : 'string', 
+						'delivery_additional_info' : 'string', 
+						'orderItems (required)' : [
+							{
+								'restaurant_id (required)' : 'numeric', 
+								'menuItems (required)' : [
+									{
+										'id (required)' : 'numeric',
+										'quantity (required)' : 'numeric',
+										'itemVariations (required)' : { 
+											'id (required if not false)' : 'numeric'
+										},
+										'itemAddons' : [
+											{
+												'id (required if not empty-array)' : 'numeric',
+												'quantity (required if not empty-array)' : 'numeric'
+											}
+										],
+										'customization' : 'string'
+									}
+								]
+
+							}
+						]
+					}
 				},
 			];
 
