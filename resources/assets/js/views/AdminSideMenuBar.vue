@@ -80,6 +80,30 @@
             </li>
 
             <li class="nav-item has-treeview menu-open">
+              <a 
+                href="#" 
+                v-bind:class="[currentPage.includes('/orders') ? 'active' : '', 'nav-link']"
+              >
+                <i class="nav-icon fas fa-bell"></i>
+                <p>
+                  Orders
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'admin.orders.index' }" 
+                    v-bind:class="[(currentPage.includes('/orders')) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Orders</p>
+                  </router-link>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item has-treeview menu-open">
               <a href="#" v-bind:class="[(currentPage.includes('restaurant-admins') || currentPage.includes('restaurants') || currentPage.includes('kitchens') || currentPage.includes('restaurant-deals') || currentPage.includes('restaurant-meals') || currentPage.includes('restaurant-cuisines') || currentPage.includes('/waiters') || currentPage.includes('/restaurant-menu-categories')) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-hotel"></i>
                 <p>
@@ -88,12 +112,6 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.orders.index' }" v-bind:class="[(currentPage.includes('/orders')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Orders</p>
-                  </router-link>
-                </li>
                 <li class="nav-item">
                   <router-link :to="{ name: 'admin.restaurants.index' }" v-bind:class="[(currentPage.includes('/restaurants')) ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
