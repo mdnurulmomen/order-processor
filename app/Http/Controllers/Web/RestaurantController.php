@@ -10,6 +10,7 @@ use App\Models\RestaurantMeal;
 use App\Models\RestaurantDeal;
 use App\Models\RestaurantAdmin;
 use Illuminate\Validation\Rule;
+use App\Models\RestaurantCuisine;
 use App\Models\RestaurantMenuItem;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
@@ -1191,6 +1192,26 @@ class RestaurantController extends Controller
                                  ->whereHas('meal', function($q) use ($search){
                                     $q->where('name', 'like', "%$search%");
                                  });
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
+      public function showRestaurantAllCuisines($restaurant, $perPage)
+      {
+         return response()->json([
+            'cuisines' => RestaurantCuisine::with('cuisine')->where('restaurant_id', $restaurant)->paginate($perPage),  
+         ], 200);
+      }
+
+      public function searchRestaurantAllCuisines($restaurant, $search, $perPage)
+      {
+         $query = RestaurantCuisine::with('cuisine')
+                                    ->where('restaurant_id', $restaurant)
+                                    ->whereHas('cuisine', function($q) use ($search){
+                                       $q->where('name', 'like', "%$search%");
+                                    });
 
          return response()->json([
             'all' => $query->paginate($perPage),  
