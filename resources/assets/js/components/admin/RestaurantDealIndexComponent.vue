@@ -267,7 +267,7 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputDealName3" class="col-sm-5 col-form-label text-right">
-								              			Restaurant Promotional
+								              			Rest. Promotional
 								              		</label>
 									                <div class="col-sm-7">
 									                  	<div class="input-group mb-3">
