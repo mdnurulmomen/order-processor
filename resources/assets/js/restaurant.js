@@ -51,31 +51,36 @@ const router = new VueRouter({
 
 
 		{
-			path: '/my-cuisines',
-            name: 'restaurant.myCuisines.index',
-            component: () => import(/* webpackChunkName : "js/kitchen-list" */ './components/restaurant/CuisineIndexComponent.vue')
-		},
-		{
 			path: '/my-meals',
             name: 'restaurant.myMeals.index',
-            component: () => import(/* webpackChunkName : "js/kitchen-list" */ './components/restaurant/MealIndexComponent.vue')
+            component: () => import(/* webpackChunkName : "js/my-meals-list" */ './components/restaurant/MealIndexComponent.vue')
+		},
+		{
+			path: '/my-cuisines',
+            name: 'restaurant.myCuisines.index',
+            component: () => import(/* webpackChunkName : "js/my-cuisines-list" */ './components/restaurant/CuisineIndexComponent.vue')
 		},
 		{
 			path: '/my-menu-items',
             name: 'restaurant.myMenuItems.index',
-            component: () => import(/* webpackChunkName : "js/kitchen-list" */ './components/restaurant/MenuItemIndexComponent.vue')
+            component: () => import(/* webpackChunkName : "js/my-menu-items-list" */ './components/restaurant/MenuItemIndexComponent.vue')
+		},
+		{
+			path: '/my-menu-categories/:restaurant',
+            name: 'restaurant.myMenuCategories.index',
+            component: () => import(/* webpackChunkName : "js/my-menu-categories-list" */ './components/restaurant/MenuCategoryIndexComponent')
 		},
 		
 
 		{
 			path: '/my-kitchen',
             name: 'restaurant.myKitchen',
-            component: () => import(/* webpackChunkName : "js/kitchen-list" */ './components/restaurant/MyKitchenComponent.vue')
+            component: () => import(/* webpackChunkName : "js/my-kitchen-list" */ './components/restaurant/MyKitchenComponent.vue')
 		},
 		{
 			path: '/my-waiters',
             name: 'restaurant.myWaiters.index',
-            component: () => import(/* webpackChunkName : "js/waiter-list" */ './components/restaurant/WaiterIndexComponent.vue')
+            component: () => import(/* webpackChunkName : "js/my-waiters-list" */ './components/restaurant/WaiterIndexComponent.vue')
 		},
 		{
 			path: '/orders',

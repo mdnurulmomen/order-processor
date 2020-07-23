@@ -43,18 +43,15 @@ Route::name('resto.')->group(function () {
 
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
-		    // Route::get('/api/restaurant-menu-items/{restaurant}/{perPage?}', 'RestaurantController@showRestaurantAllMenuItems');
-		    // Route::get('/api/restaurant-menu-items/search/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMenuItems');
-		    // Route::post('/restaurant-menu-items/{perPage?}', 'RestaurantController@createRestaurantMenuItem');
-		    // Route::put('/restaurant-menu-items/{menuItem}/{perPage}', 'RestaurantController@updateRestaurantMenuItem');
-		    // Route::delete('/restaurant-menu-items/{restaurant}/{menuItem}/{perPage}', 'RestaurantController@deleteRestaurantMenuItem');
-		    // Route::patch('/restaurant-menu-items/{restaurant}/{menuItem}/{perPage}', 'RestaurantController@restoreRestaurantMenuItem');
+		    Route::get('/api/restaurant-meals/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllMeals');
+		    Route::get('/api/restaurant-meals/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMeals');
 
 		    Route::get('/api/restaurant-cuisines/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllCuisines');
 		    Route::get('/api/restaurant-cuisines/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllCuisines');
 
-		    Route::get('/api/restaurant-meals/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllMeals');
-		    Route::get('/api/restaurant-meals/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMeals');
+		    Route::get('/api/menu-items/{restaurant}/{perPage?}', 'RestaurantController@showRestaurantAllMenuItems');
+		    Route::put('/menu-items/{restaurant}/{perPage}', 'RestaurantController@updateRestaurantMenuItemStock');
+		    Route::get('/menu-items/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMenuItems');
 
 		    Route::get('/api/cancelation-reasons/{perPage?}', 'CancelationController@showAllReasons');
 
@@ -76,20 +73,6 @@ Route::name('resto.')->group(function () {
 		    // Route::put('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@updateRestaurantKitchen');
 		    // Route::delete('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@deleteRestaurantKitchen');
 		    // Route::patch('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@restoreRestaurantKitchen');
-
-		    // Route::get('/api/cuisines/{perPage?}', 'FoodController@showAllCuisines');
-		    // Route::get('/api/cuisines/search/{search}/{perPage}', 'FoodController@searchAllCuisines');
-		    // Route::post('/cuisines/{perPage?}', 'FoodController@createNewCuisine');
-		    // Route::put('/cuisines/{cuisine}/{perPage}', 'FoodController@updateCuisine');
-		    // Route::delete('/cuisines/{cuisine}/{perPage}', 'FoodController@deleteCuisine');
-		    // Route::patch('/cuisines/{cuisine}/{perPage}', 'FoodController@restoreCuisine');
-
-		    // Route::get('/api/meals/{perPage?}', 'FoodController@showAllMeals');
-		    // Route::get('/api/meals/search/{search}/{perPage}', 'FoodController@searchAllMeals');
-		    // Route::post('/meals/{perPage?}', 'FoodController@createNewMeal');
-		    // Route::put('/meals/{meal}/{perPage}', 'FoodController@updateMeal');
-		    // Route::delete('/meals/{meal}/{perPage}', 'FoodController@deleteMeal');
-		    // Route::patch('/meals/{meal}/{perPage}', 'FoodController@restoreMeal');
 
 		});
 	});

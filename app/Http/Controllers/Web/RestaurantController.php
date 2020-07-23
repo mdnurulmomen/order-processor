@@ -1020,6 +1020,26 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+      public function updateRestaurantMenuItemStock(Request $request, $restaurant, $perPage)
+      {
+         $request->validate([
+            'id'=>'required|exists:restaurant_menu_items,id',
+            'item_stock'=>'required|boolean',
+         ]);
+
+         $menuItemToUpdate = RestaurantMenuItem::findOrFail($request->id);
+
+         if ($menuItemToUpdate->restaurantMenuCategory->restaurant_id==$restaurant) {
+            
+            $menuItemToUpdate->update([
+               'item_stock' => $request->item_stock
+            ]);
+
+         }
+
+         return $this->showRestaurantAllMenuItems($restaurant, $perPage);
+      }
+
       
 
       public function showAllRestaurantMenuCategories($perPage = false)
