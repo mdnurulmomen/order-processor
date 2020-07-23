@@ -6,6 +6,7 @@ use App\Models\Waiter;
 use App\Models\Kitchen;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use App\Models\RestaurantMeal;
 use App\Models\RestaurantDeal;
 use App\Models\RestaurantAdmin;
 use Illuminate\Validation\Rule;
@@ -1170,6 +1171,26 @@ class RestaurantController extends Controller
          });
 
          $query->where('restaurant_id', $restaurant);
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
+      public function showRestaurantAllMeals($restaurant, $perPage)
+      {
+         return response()->json([
+            'meals' => RestaurantMeal::with('meal')->where('restaurant_id', $restaurant)->paginate($perPage),  
+         ], 200);
+      }
+
+      public function searchRestaurantAllMeals($restaurant, $search, $perPage)
+      {
+         $query = RestaurantMeal::with('meal')
+                                 ->where('restaurant_id', $restaurant)
+                                 ->whereHas('meal', function($q) use ($search){
+                                    $q->where('name', 'like', "%$search%");
+                                 });
 
          return response()->json([
             'all' => $query->paginate($perPage),  

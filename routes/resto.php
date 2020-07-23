@@ -56,11 +56,8 @@ Route::name('resto.')->group(function () {
 		    // Route::put('/restaurant-cuisines/{restaurant}/{perPage}', 'RestaurantController@updateRestaurantCuisine');
 		    // Route::delete('/restaurant-cuisines/{restaurant}/{perPage}', 'RestaurantController@deleteRestaurantCuisine');
 
-		    // Route::get('/api/restaurant-meals/{perPage?}', 'RestaurantController@showAllRestaurantMeals');
-		    // Route::get('/api/restaurant-meals/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantMeals');
-		    // Route::post('/restaurant-meals/{perPage?}', 'RestaurantController@createRestaurantMeal');
-		    // Route::put('/restaurant-meals/{restaurant}/{perPage}', 'RestaurantController@updateRestaurantMeal');
-		    // Route::delete('/restaurant-meals/{restaurant}/{perPage}', 'RestaurantController@deleteRestaurantMeal');
+		    Route::get('/api/restaurant-meals/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllMeals');
+		    Route::get('/api/restaurant-meals/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMeals');
 
 		    Route::get('/api/cancelation-reasons/{perPage?}', 'CancelationController@showAllReasons');
 
