@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api;
 
 use App\Models\Waiter;
 use App\Models\Customer;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrderRequest extends FormRequest
@@ -75,10 +76,23 @@ class OrderRequest extends FormRequest
             'orderItems.*.menuItems.*.quantity' => 'required|numeric',
 
             'orderItems.*.menuItems.*.itemVariations' => 'required',
-            'orderItems.*.menuItems.*.itemVariations.id' => 'required_unless:orderItems.*.menuItems.*.itemVariations,0|numeric|exists:restaurant_menu_item_variations,variation_id',
+            // 'orderItems.*.menuItems.*.itemVariations.id' => 'required_unless:orderItems.*.menuItems.*.itemVariations,0|numeric|exists:restaurant_menu_item_variations,variation_id',
+            'orderItems.*.menuItems.*.itemVariations.id' => ['required_unless:orderItems.*.menuItems.*.itemVariations,0', 'numeric', 
+                    Rule::exists('restaurant_menu_item_variations', 'variation_id')->where(function ($query) {
+                        $query->where('restaurant_menu_item_id', $this->input('orderItems.*.menuItems.*.id'));
+                    }),
+            ],
+
             
             'orderItems.*.menuItems.*.itemAddons' => 'present|array|min:0',
             'orderItems.*.menuItems.*.itemAddons.*.id' => 'required_unless:orderItems.*.menuItems.*.itemAddons.*,|numeric|exists:restaurant_menu_item_addons,addon_id',
+            /*
+            'orderItems.*.menuItems.*.itemAddons.*.id' => ['required_unless:orderItems.*.menuItems.*.itemAddons.*,', 'numeric', 
+                    Rule::exists('restaurant_menu_item_addons', 'addon_id')->where(function ($query) {
+                        $query->where('restaurant_menu_item_id', $this->input('orderItems.*.menuItems.*.id'));
+                    }),
+            ],
+             */
             'orderItems.*.menuItems.*.itemAddons.*.quantity' => 'required_unless:orderItems.*.menuItems.*.itemAddons.*,|numeric',
 
             'orderItems.*.menuItems.*.customization' => 'nullable|string',
