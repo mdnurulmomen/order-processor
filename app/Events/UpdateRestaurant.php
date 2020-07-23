@@ -50,7 +50,7 @@ class UpdateRestaurant implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        // return new PrivateChannel('notifyRestaurant.'.$this->orderedRestaurants->restaurant_id);
-        return new PrivateChannel('notifyRestaurant');
+        return new PrivateChannel('notifyRestaurant.'.$this->orderedRestaurant->restaurant_id);
+        // return new PrivateChannel('notifyRestaurant');
     }
 }
