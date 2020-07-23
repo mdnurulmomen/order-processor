@@ -7,6 +7,8 @@ use App\Models\Restaurant;
 use App\Events\UpdateAdmin;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
+use App\Events\UpdateRestaurant;
+use App\Models\OrderedRestaurant;
 use App\Models\RestaurantMenuItem;
 use App\Models\RiderDeliveryRecord;
 use Illuminate\Support\Facades\Log;
@@ -83,38 +85,68 @@ class OrderController extends Controller
 
         // if ($request->orderer_type==='customer') {
             
-            if ($request->order_type==='home-delivery') {
+        if ($request->order_type==='home-delivery') {
 
-                if ($request->delivery_new_address) {
-                    
-                    $request->delivery_new_address = json_decode(json_encode($request->delivery_new_address));
+            if ($request->delivery_new_address) {
+                
+                $request->delivery_new_address = json_decode(json_encode($request->delivery_new_address));
 
-                    $customerNewAddress = CustomerAddress::create([
-                        'house' => $request->delivery_new_address->house,
-                        'road' => $request->delivery_new_address->road,
-                        'additional_hint' => $request->delivery_new_address->additional_hint ?? NULL,
-                        'lat' => $request->delivery_new_address->lat,
-                        'lang' => $request->delivery_new_address->lang,
-                        'address_name' => $request->delivery_new_address->address_name,
-                        'customer_id' => $request->orderer_id,
-                    ]);
-                }
-            
-                $newOrderAddress = $newOrder->delivery()->create([
-                    'additional_info'=>$request->delivery_additional_info,
-                    'delivery_address_id'=>$request->delivery_address_id ?? $customerNewAddress->id,
+                $customerNewAddress = CustomerAddress::create([
+                    'house' => $request->delivery_new_address->house,
+                    'road' => $request->delivery_new_address->road,
+                    'additional_hint' => $request->delivery_new_address->additional_hint ?? NULL,
+                    'lat' => $request->delivery_new_address->lat,
+                    'lang' => $request->delivery_new_address->lang,
+                    'address_name' => $request->delivery_new_address->address_name,
+                    'customer_id' => $request->orderer_id,
                 ]);
             }
+        
+            $newOrderAddress = $newOrder->delivery()->create([
+                'additional_info'=>$request->delivery_additional_info,
+                'delivery_address_id'=>$request->delivery_address_id ?? $customerNewAddress->id,
+            ]);
+        }
 
         // }
 
         // return $newOrder;
         
+        if ($newOrder->call_confirmation==1) {
+            $this->makeRestaurantOrderCalls($newOrder);
+        }
+
         $this->notifyAdmin($newOrder);
 
         return response()->json([
             'success' => 'Order has been taken successfully'
         ], 201);
+    }
+
+    private function makeRestaurantOrderCalls(Order $order)
+    {
+        // checking for order confirmation and if already has made
+        if ($order->call_confirmation===1 && !$order->restaurantAcceptances()->exists()) {
+           
+            foreach ($order->restaurants as $orderedRestaurant) {
+
+                $order->restaurantAcceptances()->create([
+                    'food_order_acceptance' => -1, // ringing
+                    'restaurant_id' => $orderedRestaurant->restaurant_id,
+                ]);
+              
+                // Broadcast for restaurant
+                $this->notifyRestaurant($orderedRestaurant);
+
+            }
+
+        }
+    }
+
+    private function notifyRestaurant(OrderedRestaurant $orderedRestaurant)
+    {
+        Log::info('UpdateRestaurant');
+        event(new UpdateRestaurant($orderedRestaurant));
     }
 
     private function notifyAdmin(Order $order) 
