@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\RestaurantMenuItemVariation;
 
 class SelectedItemVariation extends Model
 {
@@ -11,4 +12,9 @@ class SelectedItemVariation extends Model
    	];
 
    	public $timestamps = false;
+
+   	public function restaurantMenuItemVariation()
+    {
+        return $this->belongsTo(RestaurantMenuItemVariation::class, 'restaurant_menu_item_variation_id', 'id');
+    }
 }

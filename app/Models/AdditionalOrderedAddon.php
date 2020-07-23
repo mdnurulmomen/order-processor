@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\RestaurantMenuItemAddon;
 
 class AdditionalOrderedAddon extends Model
 {
@@ -11,4 +12,9 @@ class AdditionalOrderedAddon extends Model
    	];
 
    	public $timestamps = false;
+
+   	public function restaurantMenuItemAddon()
+    {
+        return $this->belongsTo(RestaurantMenuItemAddon::class, 'restaurant_menu_item_addon_id', 'id');
+    }
 }

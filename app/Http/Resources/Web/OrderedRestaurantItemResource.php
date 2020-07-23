@@ -16,8 +16,10 @@ class OrderedRestaurantItemResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
+           'restaurantMenuItem'=>$this->restaurantMenuItem,
            'quantity'=>$this->quantity,
-           'restaurantMenuItem'=>$this->restaurantMenuItem
+           'selectedItemVariation'=>($this->restaurantMenuItem->has_variation & $this->selectedItemVariation()->exists()) ? $this->selectedItemVariation : false,
+           'additionalOrderedAddons'=>($this->restaurantMenuItem->has_addon & $this->additionalOrderedAddons()->exists()) ? $this->additionalOrderedAddons : false,
         ];
     }
 }

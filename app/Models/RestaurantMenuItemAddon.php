@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Addon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,4 +20,9 @@ class RestaurantMenuItemAddon extends Model
     ];
 
    	public $timestamps = false;
+
+    public function addon()
+    {
+        return $this->belongsTo(Addon::class, 'addon_id', 'id');
+    }
 }

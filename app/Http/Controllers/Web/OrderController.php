@@ -246,25 +246,25 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
+               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurants.items.selectedItemVariation', 'order.restaurants.items.additionalOrderedAddons', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
 				               			->whereHas('order', function($q){
 						   					$q->where('call_confirmation', 1);
 										})
 				       					->latest()->paginate($perPage),
 
-               'new' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', -1)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
+               'new' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', -1)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurants.items.selectedItemVariation', 'order.restaurants.items.additionalOrderedAddons', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
 				               			->whereHas('order', function($q){
 						   					$q->where('call_confirmation', 1);
 										})
 				               			->latest()->paginate($perPage),
 
-               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
+               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurants.items.selectedItemVariation', 'order.restaurants.items.additionalOrderedAddons', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
 										->whereHas('order.waiterServeConfirmation', function($q){
 						   					$q->where('waiter_serve_confirmation', 1);
 										})
 										->latest()->paginate($perPage),				
 
-               'cancelled' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', 0)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
+               'cancelled' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', 0)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurants.items.selectedItemVariation', 'order.restaurants.items.additionalOrderedAddons', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
                							->orWhereHas('order.restaurantOrderCancelations', function($q) use ($restaurant){
 						   					$q->where('restaurant_id', $restaurant);
 										})
@@ -449,9 +449,9 @@ class OrderController extends Controller
                     'rider_food_pick_confirmation' => 1,
                 ]);
 
+                // as picked, creating delivery status if already not created
                 if (!$deliveryToConfirm->riderDeliveryConfirmation()->exists()) {
                     
-                    // as picked, creating delivery status
                     $deliveryToConfirm->riderDeliveryConfirmation()->create([
                         'rider_delivery_confirmation' => -1,
                         'rider_id' => $deliveryToConfirm->rider_id,
