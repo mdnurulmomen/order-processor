@@ -380,10 +380,7 @@
     		},
     		showRestaurantAllMenuCategories(){
 				this.$router.push({
-			 		name: 'restaurant.myMenuCategories.index', 
-			 		params: { 
-			 			restaurant : this.restaurant_id,
-			 		}, 
+			 		name: 'restaurant.myMenuCategories.index',
 				});
 			},
 			updateRestaurantMenuItemStock(restaurantMenuItem){

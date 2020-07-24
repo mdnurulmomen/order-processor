@@ -66,7 +66,7 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/my-menu-items-list" */ './components/restaurant/MenuItemIndexComponent.vue')
 		},
 		{
-			path: '/my-menu-categories/:restaurant',
+			path: '/my-menu-categories',
             name: 'restaurant.myMenuCategories.index',
             component: () => import(/* webpackChunkName : "js/my-menu-categories-list" */ './components/restaurant/MenuCategoryIndexComponent')
 		},
