@@ -514,8 +514,8 @@
 			},
 			submitConfirmation(){
 
-				console.log(this.singleOrderData.order);
-				console.log(this.singleOrderData.rider);
+				// console.log(this.singleOrderData.order);
+				// console.log(this.singleOrderData.rider);
 				// return;
 				
 				$("#modal-acceptOrPickOrDrop-order").modal("hide");

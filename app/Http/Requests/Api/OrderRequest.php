@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api;
 use App\Models\Waiter;
 use App\Models\Customer;
 use Illuminate\Validation\Rule;
+use App\Models\RestaurantMenuItem;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrderRequest extends FormRequest
@@ -81,8 +82,19 @@ class OrderRequest extends FormRequest
                     Rule::exists('restaurant_menu_item_variations', 'variation_id')->where(function ($query) {
                         $query->where('restaurant_menu_item_id', $this->input('orderItems.*.menuItems.*.id'));
                     }),
-            ],
+                    /*
+                    function($attribute, $value, $fail) {
 
+                        if (empty($value) && RestaurantMenuItem::findOrFail($this->input('orderItems.*.menuItems.*.id'))->has_variation) {
+                            return $fail($attribute.' is invalid.');
+                        }
+                        if (!empty($value) && !RestaurantMenuItem::findOrFail($this->input('orderItems.*.menuItems.*.id'))->has_variation) {
+                            return $fail($attribute.' is invalid.');
+                        }
+                        
+                    },
+                     */
+            ],
             
             'orderItems.*.menuItems.*.itemAddons' => 'present|array|min:0',
             'orderItems.*.menuItems.*.itemAddons.*.id' => 'required_unless:orderItems.*.menuItems.*.itemAddons.*,|numeric|exists:restaurant_menu_item_addons,addon_id',

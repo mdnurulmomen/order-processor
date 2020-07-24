@@ -69,26 +69,10 @@
 											</li>
 											<li class="nav-item flex-fill">
 												<a 
-													:class="[{ 'active': currentTab==='new' }, 'nav-link']" 
-													@click="showNewOrders"
-												>
-													New
-												</a>
-											</li>
-											<li class="nav-item flex-fill">
-												<a 
 													:class="[{ 'active': currentTab==='served' }, 'nav-link']" 
 													@click="showServedOrders"
 												>
 													Served
-												</a>
-											</li>
-											<li class="nav-item flex-fill">
-												<a 
-													:class="[{ 'active': currentTab==='cancelled' }, 'nav-link']" 
-													@click="showCancelledOrders"
-												>
-													Cancelled
 												</a>
 											</li>
 										</ul>
@@ -102,7 +86,7 @@
 											<th scope="col">#</th>
 											<th scope="col">Id</th>
 											<th scope="col">Type</th>
-											<th scope="col">Status</th>
+											<!-- <th scope="col">Status</th> -->
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -113,16 +97,14 @@
 									    	:class="[cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) ? 'bg-secondary' : confirmedOrder(restaurant.order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(restaurant.order.restaurant_acceptances) ? 'bg-warning' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ restaurant.order.id }}</td>
+								    		<td>{{ restaurant.order_id }}</td>
 								    		<td>{{ restaurant.order.order_type }}</td>
-								    		<td>
-								    			
-								    		</td>
+								    		<!-- <td></td> -->
 								    		<td>
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-info btn-sm"
-									      			@click="showOrderDetailModal(restaurant.order)" 
+									      			@click="showOrderDetailModal(restaurant)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
 								        			Details
@@ -132,7 +114,7 @@
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
 									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations)" 
-									      			@click="showOrderConfirmationModal(restaurant.order)" 
+									      			@click="showOrderConfirmationModal(restaurant)" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 								        			{{
@@ -335,21 +317,36 @@
 							              			Order Items
 							              		</label>
 								                <div class="col-sm-6">
-								                	<ul v-show="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length" 
-								                		style="list-style-type: none;"
-								                	>
-														<li v-for="(orderedRestaurant, index) in singleOrderData.order.restaurants" 
-															v-if="orderedRestaurant.restaurant_id==restaurant_id" 
-															:key="orderedRestaurant.id"
-														>
-															<ul v-show="orderedRestaurant.items.length">
-																<li v-for="(item, index) in orderedRestaurant.items" 
-																	:key="item.id"
-																>	
-																	{{ item.restaurant_menu_item.name }}  
-																	(quantity : {{ item.quantity }})
+
+								                	<ul v-show="Boolean(singleOrderData.order.items!=null && singleOrderData.order.items.length)" 
+								                	>	
+														<li v-for="(item, index) in singleOrderData.order.items" 
+															:key="item.id"
+														>	
+															{{ item.restaurant_menu_item.name }}
+
+															<span class="d-block"
+																v-if="item.restaurant_menu_item.has_variation" 
+															>
+																(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation_id }} )
+															</span>
+
+															(quantity : {{ item.quantity }})
+
+															<span 
+																class="d-block" 
+																v-if="item.additional_ordered_addons.length"
+															>
+																Extra Addons
+															</span>
+
+															<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
+
+																<li v-for="(addon, index) in item.additional_ordered_addons">
+																	{{ addon.restaurant_menu_item_addon_id }}
 																</li>
 															</ul>
+
 														</li>
 													</ul>
 								                </div>	
@@ -517,23 +514,39 @@
 												              			Order Items
 												              		</label>
 													                <div class="col-sm-6">
-													                	<ul v-show="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length" 
-													                		style="list-style-type: none;"
-													                	>
-																			<li v-for="(orderedRestaurant, index) in singleOrderData.order.restaurants" 
-																				v-if="orderedRestaurant.restaurant_id==restaurant_id" 
-																				:key="orderedRestaurant.id"
-																			>
-																				<ul v-show="orderedRestaurant.items.length">
-																					<li v-for="(item, index) in orderedRestaurant.items" 
-																						:key="item.id"
-																					>	
-																						{{ item.restaurant_menu_item.name }}  
-																						(quantity : {{ item.quantity }})
+
+													                	<ul v-show="Boolean(singleOrderData.order.items!=null && singleOrderData.order.items.length)" 
+													                	>	
+																			<li v-for="(item, index) in singleOrderData.order.items" 
+																				:key="item.id"
+																			>	
+																				{{ item.restaurant_menu_item.name }}
+
+																				<span class="d-block"
+																					v-if="item.restaurant_menu_item.has_variation" 
+																				>
+																					(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation_id }} )
+																				</span>
+
+																				(quantity : {{ item.quantity }})
+
+																				<span 
+																					class="d-block" 
+																					v-if="item.additional_ordered_addons.length"
+																				>
+																					Extra Addons
+																				</span>
+
+																				<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
+
+																					<li v-for="(addon, index) in item.additional_ordered_addons">
+																						{{ addon.restaurant_menu_item_addon_id }}
 																					</li>
 																				</ul>
+
 																			</li>
 																		</ul>
+
 													                </div>	
 													            </div>  
 										            		</div>
@@ -553,7 +566,7 @@
 							  		name="cancel-order" 
 							  		@click="singleOrderData.order.orderReady=true" 
 							  		class="btn btn-outline-success float-right" 
-							  		v-if="singleOrderData.order.order_ready_confirmations && !confirmedOrder(singleOrderData.order.order_ready_confirmations)" 
+							  		v-if="singleOrderData.order.order_ready_confirmations && !confirmedOrder(singleOrderData.order.order_ready_confirmations) && acceptedOrder(singleOrderData.order.restaurant_acceptances)" 
 							  	>
 							  		Order-Ready
 							  	</button>
@@ -717,7 +730,7 @@
 			    
 			Pusher.logToConsole = true;
 
-			Echo.private(`notifyRestaurant`)
+			Echo.private(`notifyRestaurant.` + this.restaurant_id)
 			.listen('UpdateRestaurant', (orderedRestaurant) => {
 
 			    console.log(orderedRestaurant);
@@ -728,8 +741,8 @@
 			    // due to pagination, checking if this broadcasted restaurant is for this one & ringing 
 			    const restaurantRinging = (restaurantOrderRecord) => restaurantOrderRecord.restaurant_id==this.restaurant_id && restaurantOrderRecord.food_order_acceptance==-1;
 			    
-			    console.log(orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging));
-			    console.log(!this.ordersToShow.some(orderExist));
+			    // console.log(orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging));
+			    // console.log(!this.ordersToShow.some(orderExist));
 
 			    // new order and not in the list or nothing in the list
 			    if ((orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging) && !this.ordersToShow.some(orderExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
@@ -775,37 +788,19 @@
 				this.currentTab = 'all';
 				this.showListDataForSelectedTab();
 			},
-			showNewOrders(){
-				this.pagination.current_page = 1;
-				this.fetchAllOrders();
-				this.currentTab = 'new';
-				this.showListDataForSelectedTab();
-			},
 			showServedOrders(){
 				this.pagination.current_page = 1;
 				this.fetchAllOrders();
 				this.currentTab = 'served';
 				this.showListDataForSelectedTab();
 			},
-			showCancelledOrders(){
-				this.pagination.current_page = 1;
-				this.fetchAllOrders();
-				this.currentTab = 'cancelled';
-				this.showListDataForSelectedTab();
-			},
 			showListDataForSelectedTab(){
 				if (this.currentTab=='all') {
 					this.ordersToShow = this.allOrders.all.data;
 					this.pagination = this.allOrders.all;
-				}else if (this.currentTab=='new') {
-					this.ordersToShow = this.allOrders.new.data;
-					this.pagination = this.allOrders.new;
 				}else if (this.currentTab=='served') {
 					this.ordersToShow = this.allOrders.served.data;
 					this.pagination = this.allOrders.served;
-				}else if (this.currentTab=='cancelled') {
-					this.ordersToShow = this.allOrders.cancelled.data;
-					this.pagination = this.allOrders.cancelled;
 				}
 			},
 			fetchAllCancelationReasons(){
@@ -853,12 +848,14 @@
 					this.searchData();
 				}
     		},
-    		showOrderDetailModal(order) {
-				this.singleOrderData.order = order;
+    		showOrderDetailModal(restaurant) {
+				this.singleOrderData.order = restaurant.order;
+				this.singleOrderData.order.items = restaurant.items;
 				$("#modal-show-order").modal("show");
 			},
-			showOrderConfirmationModal(order) {
-				this.singleOrderData.order = order;
+			showOrderConfirmationModal(restaurant) {
+				this.singleOrderData.order = restaurant.order;
+				this.singleOrderData.order.items = restaurant.items;
 				this.singleOrderData.order.restaurant_id = this.restaurant_id;
 				$("#modal-confirmOrReady-order").modal("show");
 			},

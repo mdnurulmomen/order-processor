@@ -35,12 +35,6 @@ Route::name('resto.')->group(function () {
 		    Route::get('/api/profile', 'ProfileController@showAdminProfile');
 		    Route::post('/profile', 'ProfileController@updateAdminProfile');
 
-		    // Route::get('/api/settings', 'SettingController@showAllSettings');
-		    // Route::post('/payment-settings', 'SettingController@updatePaymentSettings');
-		    // Route::post('/contact-settings', 'SettingController@updateContactSettings');
-		    // Route::post('/delivery-settings', 'SettingController@updateDeliverySettings');
-		    // Route::post('/other-settings', 'SettingController@updateOtherSettings');
-
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
 		    Route::get('/restaurant-meals/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllMeals');
@@ -70,6 +64,9 @@ Route::name('resto.')->group(function () {
 
 		    Route::get('/restaurant-waiters/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllWaiters');
 		    Route::get('/restaurant-waiters/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllWaiters');
+
+		    // Route::get('/api/settings', 'SettingController@showAllSettings');
+		    // Route::post('/settings', 'SettingController@updatePaymentSettings');
 
 		});
 	});
