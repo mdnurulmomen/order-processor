@@ -43,11 +43,11 @@ Route::name('resto.')->group(function () {
 
 		    Route::post('/password', 'PasswordController@updateAdminPassword');
 
-		    Route::get('/api/restaurant-meals/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllMeals');
-		    Route::get('/api/restaurant-meals/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMeals');
+		    Route::get('/restaurant-meals/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllMeals');
+		    Route::get('/restaurant-meals/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMeals');
 
-		    Route::get('/api/restaurant-cuisines/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllCuisines');
-		    Route::get('/api/restaurant-cuisines/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllCuisines');
+		    Route::get('/restaurant-cuisines/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllCuisines');
+		    Route::get('/restaurant-cuisines/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllCuisines');
 
 		    Route::get('/api/menu-items/{restaurant}/{perPage?}', 'RestaurantController@showRestaurantAllMenuItems');
 		    Route::put('/menu-items/{restaurant}/{perPage}', 'RestaurantController@updateRestaurantMenuItemStock');

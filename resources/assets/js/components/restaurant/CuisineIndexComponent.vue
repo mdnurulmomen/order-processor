@@ -155,7 +155,7 @@
 			fetchRestaurantAllMeals(){
 				this.loading = true;
 				axios
-					.get('/api/restaurant-cuisines/' + this.restaurant_id + '/' + this.perPage +'?page='+ this.pagination.current_page)
+					.get('/restaurant-cuisines/' + this.restaurant_id + '/' + this.perPage +'?page='+ this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
@@ -187,7 +187,7 @@
 				
 				axios
 				.get(
-					"/api/restaurant-cuisines/" + this.restaurant_id + '/' + this.query +"/" + this.perPage +
+					"/restaurant-cuisines/" + this.restaurant_id + '/' + this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
