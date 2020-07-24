@@ -246,29 +246,17 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurants.items.selectedItemVariation', 'order.restaurants.items.additionalOrderedAddons', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
+               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation', 'items.additionalOrderedAddons', 'order.orderer', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
 				               			->whereHas('order', function($q){
 						   					$q->where('call_confirmation', 1);
 										})
 				       					->latest()->paginate($perPage),
 
-               'new' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', -1)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurants.items.selectedItemVariation', 'order.restaurants.items.additionalOrderedAddons', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
-				               			->whereHas('order', function($q){
-						   					$q->where('call_confirmation', 1);
-										})
-				               			->latest()->paginate($perPage),
-
-               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurants.items.selectedItemVariation', 'order.restaurants.items.additionalOrderedAddons', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
+               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation', 'items.additionalOrderedAddons', 'order.orderer', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
 										->whereHas('order.waiterServeConfirmation', function($q){
 						   					$q->where('waiter_serve_confirmation', 1);
 										})
-										->latest()->paginate($perPage),				
-
-               'cancelled' => RestaurantOrderRecord::where('restaurant_id', $restaurant)->where('food_order_acceptance', 0)->with(['order.orderer', 'order.restaurants.items.restaurantMenuItem', 'order.restaurants.items.selectedItemVariation', 'order.restaurants.items.additionalOrderedAddons', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
-               							->orWhereHas('order.restaurantOrderCancelations', function($q) use ($restaurant){
-						   					$q->where('restaurant_id', $restaurant);
-										})
-               							->latest()->paginate($perPage),
+										->latest()->paginate($perPage),
                
             ], 200);
 

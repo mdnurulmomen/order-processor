@@ -11,6 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use App\Http\Resources\Web\RestaurantOrderResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Http\Resources\Web\OrderedRestaurantItemResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class UpdateRestaurant implements ShouldBroadcastNow
@@ -40,6 +41,7 @@ class UpdateRestaurant implements ShouldBroadcastNow
             'order_id' => $this->orderedRestaurant->order_id,
             'restaurant_id' => $this->orderedRestaurant->restaurant_id,
             'order' => new RestaurantOrderResource($this->orderedRestaurant->order),
+            'items'=>OrderedRestaurantItemResource::collection($this->orderedRestaurant->items)
         ];
     }
 

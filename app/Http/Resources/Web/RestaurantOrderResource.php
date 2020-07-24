@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Web;
 
-use App\Http\Resources\Web\OrderedRestaurantResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Web\RestaurantAcceptanceResource;
 use App\Http\Resources\Web\RestaurantCancelationResource;
@@ -37,7 +36,6 @@ class RestaurantOrderResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'orderer' => $this->orderer,
-            'restaurants' => OrderedRestaurantResource::collection($this->restaurants),
             'restaurant_acceptances' => RestaurantAcceptanceResource::collection($this->restaurantAcceptances),
             'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->orderReadyConfirmations),
             'waiter_serve_confirmation' => $this->waiterServeConfirmation,
