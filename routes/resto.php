@@ -53,6 +53,10 @@ Route::name('resto.')->group(function () {
 		    Route::put('/menu-items/{restaurant}/{perPage}', 'RestaurantController@updateRestaurantMenuItemStock');
 		    Route::get('/menu-items/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMenuItems');
 
+		    Route::get('/api/my-kitchen/{restaurant}', 'RestaurantController@showRestaurantKitchen');
+		    // Route::put('/my-kitchen/{restaurant}', 'RestaurantController@updateRestaurantKitchen');
+		    // Route::put('/my-kitchen/{restaurant}', 'RestaurantController@updateRestaurantMenuItemStock');
+
 		    Route::get('/api/cancelation-reasons/{perPage?}', 'CancelationController@showAllReasons');
 
 		    Route::get('/orders/{restaurant}/{perPage?}', 'OrderController@showAllRestaurantOrders');
@@ -66,13 +70,6 @@ Route::name('resto.')->group(function () {
 		    // Route::put('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@updateRestaurantWaiter');
 		    // Route::delete('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@deleteRestaurantWaiter');
 		    // Route::patch('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@restoreRestaurantWaiter');
-
-		    // Route::get('/api/restaurant-kitchens/{perPage?}', 'RestaurantController@showAllRestaurantKitchens');
-		    // Route::get('/api/restaurant-kitchens/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantKitchens');
-		    // Route::post('/restaurant-kitchens/{perPage?}', 'RestaurantController@createRestaurantKitchen');
-		    // Route::put('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@updateRestaurantKitchen');
-		    // Route::delete('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@deleteRestaurantKitchen');
-		    // Route::patch('/restaurant-kitchens/{restaurantKitchen}/{perPage}', 'RestaurantController@restoreRestaurantKitchen');
 
 		});
 	});

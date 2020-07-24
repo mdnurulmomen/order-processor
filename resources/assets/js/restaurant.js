@@ -75,7 +75,7 @@ const router = new VueRouter({
 		{
 			path: '/my-kitchen',
             name: 'restaurant.myKitchen',
-            component: () => import(/* webpackChunkName : "js/my-kitchen-list" */ './components/restaurant/MyKitchenComponent.vue')
+            component: () => import(/* webpackChunkName : "js/my-kitchen" */ './components/restaurant/MyKitchenComponent.vue')
 		},
 		{
 			path: '/my-waiters',

@@ -1238,4 +1238,11 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+      public function showRestaurantKitchen($restaurant)
+      {
+         return response()->json([
+            'kitchen' => Kitchen::with('restaurant')->where('restaurant_id', $restaurant)->first(),  
+         ], 200);
+      }
+
 }
