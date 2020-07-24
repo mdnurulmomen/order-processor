@@ -1245,4 +1245,28 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+      public function showRestaurantAllWaiters($restaurant, $perPage = false)
+      {
+         return response()->json([
+            'waiters' => Waiter::with('restaurant')->where('restaurant_id', $restaurant)->paginate($perPage),
+         ], 200);
+      }
+
+      public function searchRestaurantAllWaiters($restaurant, $search, $perPage)
+      {
+         $query = Waiter::with('restaurant')
+                        ->where(function($q) use ($search) {
+                           $q->where('first_name', 'like', "%$search%")
+                              ->orWhere('last_name', 'like', "%$search%")
+                              ->orWhere('user_name', 'like', "%$search%")
+                              ->orWhere('mobile', 'like', "%$search%")
+                              ->orWhere('email', 'like', "%$search%");
+                        })
+                        ->where('restaurant_id', $restaurant);                  
+
+         return response()->json([
+            'all' => $query->paginate($perPage),  
+         ], 200);
+      }
+
 }

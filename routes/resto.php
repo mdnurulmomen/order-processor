@@ -64,12 +64,8 @@ Route::name('resto.')->group(function () {
 		    Route::put('/orders/{order}/{perPage}', 'OrderController@cancelRestaurantOrder');
 		    // Route::get('/api/orders/search/{search}/{perPage}', 'OrderController@searchAllOrders');
 
-		    // Route::get('/api/restaurant-waiters/{perPage?}', 'RestaurantController@showAllRestaurantWaiters');
-		    // Route::get('/api/restaurant-waiters/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantWaiters');
-		    // Route::post('/restaurant-waiters/{perPage?}', 'RestaurantController@createRestaurantWaiter');
-		    // Route::put('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@updateRestaurantWaiter');
-		    // Route::delete('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@deleteRestaurantWaiter');
-		    // Route::patch('/restaurant-waiters/{restaurantWaiter}/{perPage}', 'RestaurantController@restoreRestaurantWaiter');
+		    Route::get('/restaurant-waiters/{restaurant}/{perPage}', 'RestaurantController@showRestaurantAllWaiters');
+		    Route::get('/restaurant-waiters/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllWaiters');
 
 		});
 	});
