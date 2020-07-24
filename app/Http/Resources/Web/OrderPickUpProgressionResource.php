@@ -14,7 +14,6 @@ class OrderPickUpProgressionResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
         return [
             'id' => $this->id,
             'rider_food_pick_confirmation' => $this->rider_food_pick_confirmation,

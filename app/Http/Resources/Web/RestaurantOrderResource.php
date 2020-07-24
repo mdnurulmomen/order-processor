@@ -17,7 +17,6 @@ class RestaurantOrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
         return [
             'id' => $this->id,
             'order_type' => $this->order_type,

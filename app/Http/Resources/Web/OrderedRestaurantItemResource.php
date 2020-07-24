@@ -14,7 +14,6 @@ class OrderedRestaurantItemResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
         return [
            'restaurantMenuItem'=>$this->restaurantMenuItem,
            'quantity'=>$this->quantity,

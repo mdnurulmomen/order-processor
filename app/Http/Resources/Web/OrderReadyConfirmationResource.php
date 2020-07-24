@@ -14,7 +14,6 @@ class OrderReadyConfirmationResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
         return [
             'id' => $this->id,
             'food_ready_confirmation' => $this->food_ready_confirmation,
