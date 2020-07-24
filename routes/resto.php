@@ -53,6 +53,10 @@ Route::name('resto.')->group(function () {
 		    Route::put('/menu-items/{restaurant}/{perPage}', 'RestaurantController@updateRestaurantMenuItemStock');
 		    Route::get('/menu-items/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMenuItems');
 
+		    Route::get('/api/restaurant-menu-categories/{restaurant}/{perPage?}', 'RestaurantController@showRestaurantAllMenuCategories');
+		    Route::get('/restaurant-menu-categories/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMenuCategories');
+		    // Route::put('/restaurant-menu-categories/{restaurant}/{perPage}', 'RestaurantController@updateRestaurantMenuCategoryStock');
+
 		    Route::get('/api/my-kitchen/{restaurant}', 'RestaurantController@showRestaurantKitchen');
 		    // Route::put('/my-kitchen/{restaurant}', 'RestaurantController@updateRestaurantKitchen');
 		    // Route::put('/my-kitchen/{restaurant}', 'RestaurantController@updateRestaurantMenuItemStock');
