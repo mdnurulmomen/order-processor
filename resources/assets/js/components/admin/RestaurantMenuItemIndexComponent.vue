@@ -180,7 +180,7 @@
 												    		</td>
 												    		<td>
 												    			<ul class="text-left" 
-												    				v-show="menuItem.restaurant_menu_item_variations.length"
+												    				v-show="menuItem.has_variation && menuItem.restaurant_menu_item_variations.length"
 												    			>
 																  	<li v-for="itemVariation in menuItem.restaurant_menu_item_variations" 
 																  		:key="itemVariation.id"

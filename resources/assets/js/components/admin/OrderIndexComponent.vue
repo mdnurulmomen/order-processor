@@ -1114,17 +1114,17 @@
 			    // new order and not in the list or nothing in the list
 			    if ((broadcastedOrder.call_confirmation===-1 && !this.ordersToShow.some(objectExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
 			    	this.ordersToShow.unshift(broadcastedOrder);
-			    	toastr.warning("New order update arrives");
+			    	toastr.info("New order update arrives");
 			    }
 			    // now showing the broadcastedOrder in this page
 			    else if (this.ordersToShow.some(objectExist)) {
 				    let index = this.ordersToShow.findIndex(orderObject => orderObject.id==broadcastedOrder.id);
+				    // console.log(index);
 				    // this.ordersToShow[index] = broadcastedOrder;
 				    // this.ordersToShow.$set(index, broadcastedOrder);
 				    // this.$set(this.ordersToShow, index, broadcastedOrder)
 				    Vue.set(this.ordersToShow, index, broadcastedOrder)
-				    toastr.warning("Old order update arrives");
-				    console.log(index);
+				    toastr.info("Old order update arrives");
 			    }
 			    // else
 			    else {

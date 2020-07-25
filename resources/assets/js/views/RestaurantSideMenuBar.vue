@@ -68,7 +68,7 @@
                 <i class="nav-icon fas fa-bell"></i>
                 <p>
                   Orders
-                  <span class="right badge badge-danger">10</span>
+                  <span class="right badge badge-danger">1</span>
                 </p>
               </router-link>
             </li>

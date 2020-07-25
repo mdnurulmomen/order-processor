@@ -736,10 +736,10 @@
 			    console.log(orderedRestaurant);
 
 			    // due to pagination, checking if this broadcasted one already exists 
-			    const orderExist = (currentOrder) => currentOrder.order.id==orderedRestaurant.order_id;
+			    const orderExist = (currentOrder) => currentOrder.order_id==orderedRestaurant.order_id;
 
 			    // due to pagination, checking if this broadcasted restaurant is for this one & ringing 
-			    const restaurantRinging = (restaurantOrderRecord) => restaurantOrderRecord.restaurant_id==this.restaurant_id && restaurantOrderRecord.food_order_acceptance==-1;
+			    const restaurantRinging = (restaurantOrderRecord) => (restaurantOrderRecord.restaurant_id==this.restaurant_id && restaurantOrderRecord.food_order_acceptance==-1);
 			    
 			    // console.log(orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging));
 			    // console.log(!this.ordersToShow.some(orderExist));
@@ -748,17 +748,17 @@
 			    if ((orderedRestaurant.order.restaurant_acceptances.some(restaurantRinging) && !this.ordersToShow.some(orderExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
 			    	
 			    	this.ordersToShow.unshift(orderedRestaurant);
-			    	toastr.warning("New Order arrives");
+			    	toastr.info("New Order arrives");
 			    }
 			    // now showing the order in this page
 			    else if (this.ordersToShow.some(orderExist)) {
-				    let index = this.ordersToShow.findIndex(currentOrder => currentOrder.order.id==orderedRestaurant.order_id);
+				    let index = this.ordersToShow.findIndex(currentOrder => currentOrder.order_id==orderedRestaurant.order_id);
+				    // console.log(index);
 				    // this.ordersToShow[index] = orderedRestaurant;
 				    // this.ordersToShow.$set(index, orderedRestaurant);
 				    // this.$set(this.ordersToShow, index, orderedRestaurant)
-				    Vue.set(this.ordersToShow, index, orderedRestaurant)
-				    toastr.warning("Old Order arrives");
-				    console.log(index);
+				    Vue.set(this.ordersToShow, index, orderedRestaurant);
+				    toastr.info("Old Order arrives");
 			    }
 			    // no previous order available
 			    else {
