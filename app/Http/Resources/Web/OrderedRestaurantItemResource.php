@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Web\RestaurantMenuItemResource;
 
 class OrderedRestaurantItemResource extends JsonResource
 {
@@ -15,10 +16,10 @@ class OrderedRestaurantItemResource extends JsonResource
     public function toArray($request)
     {
         return [
-           'restaurantMenuItem'=>$this->restaurantMenuItem,
+           'restaurant_menu_item'=>new RestaurantMenuItemResource($this->restaurantMenuItem),
            'quantity'=>$this->quantity,
-           'selectedItemVariation'=>($this->restaurantMenuItem->has_variation & $this->selectedItemVariation()->exists()) ? $this->selectedItemVariation : false,
-           'additionalOrderedAddons'=>($this->restaurantMenuItem->has_addon & $this->additionalOrderedAddons()->exists()) ? $this->additionalOrderedAddons : false,
+           'selected_item_variation'=>($this->restaurantMenuItem->has_variation & $this->selectedItemVariation()->exists()) ? $this->selectedItemVariation : false,
+           'additional_ordered_addons'=>($this->restaurantMenuItem->has_addon & $this->additionalOrderedAddons()->exists()) ? $this->additionalOrderedAddons : false,
         ];
     }
 }
