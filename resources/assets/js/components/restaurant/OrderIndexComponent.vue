@@ -112,10 +112,10 @@
 								      			<!-- disabled if restaurant already confirmed as ready-->
 								      			<button 
 									      			type="button" 
-									      			class="btn btn-primary btn-sm" 
+									      			class="btn btn-success btn-sm" 
 									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order.orderReady=true;submitConfirmation()" 
+									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=true;submitConfirmation()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 							        				Order-Ready
@@ -126,7 +126,7 @@
 									      			class="btn btn-primary btn-sm" 
 									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations) && !acceptedOrder(restaurant.order.restaurant_acceptances)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order.orderReady=false;submitConfirmation()" 
+									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=false;submitConfirmation()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 								        			Accept-Order
