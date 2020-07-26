@@ -36,12 +36,12 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage),
+               'all' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage),
 
-               'new' => Order::where('call_confirmation', -1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage),
+               'new' => Order::where('call_confirmation', -1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage),
 
-               'deliveredOrServed' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])
-               					->whereHas('riderDeliveryConfirmation.rider', function($q){
+               'deliveredOrServed' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])
+               					->whereHas('riderDeliveryConfirmation', function($q){
 				   					$q->where('rider_delivery_confirmation', 1);
 								})
 								->orWhereHas('waiterServeConfirmation', function($q){
@@ -49,16 +49,16 @@ class OrderController extends Controller
 								})
 								->latest()->paginate($perPage),				
 
-               'cancelled' => Order::where('call_confirmation', 0)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])
+               'cancelled' => Order::where('call_confirmation', 0)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])
                					->orHas('restaurantOrderCancelations')
                					->orWhereHas('restaurantAcceptances', function($q){
 				   					$q->where('food_order_acceptance', 0);
 								})
                					->latest()->paginate($perPage),
 
-               'prepaid' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->has('payment')->latest()->paginate($perPage),
+               'prepaid' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->has('payment')->latest()->paginate($perPage),
                			
-               'postpaid' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->doesntHave('payment')->latest()->paginate($perPage),
+               'postpaid' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->doesntHave('payment')->latest()->paginate($perPage),
                
             ], 200);
 
@@ -125,12 +125,12 @@ class OrderController extends Controller
 	 	// if any rider is actually assigned and the food has't been picked up yet 
 	 	else if ($request->cancelledBy==='Rider' && $orderToCancel->riderAssignment()->exists() && !$orderToCancel->riderFoodPickConfirmations()->where('rider_food_pick_confirmation', 1)->exists()) {
 		
-		 	// reason of the cancelled order
-		 	$riderOrderCancelationReason = 	$this->makeRiderDeliveryCancelationReason($orderToCancel, $request->reason_id);
 		 	// cancelling accepted order-delivery
 		 	$this->cancelRiderDeliveryOrder($orderToCancel);
 		 	// deleting related rider food pick records
 		 	$orderToCancel->riderFoodPickConfirmations()->delete();
+		 	// reason of the cancelled order
+		 	$riderOrderCancelationReason = 	$this->makeRiderDeliveryCancelationReason($orderToCancel, $request->reason_id);
 		 	// evaluating related rider
 		 	$this->makeRiderEvaluation($riderOrderCancelationReason->rider_id);
 
@@ -147,8 +147,8 @@ class OrderController extends Controller
 	}
 
   	public function searchAllOrders($search, $perPage)
-	{
-		$query = Order::with(['orderer', 'restaurants.items.restaurantMenuItem', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation', 'payment', 'delivery.customerAddress'])
+	{	
+		$query = Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])
 						->where('id', 'like', "%$search%")
 						->orWhere('order_type', 'like', "%$search%")
 						->orWhere('is_asap_order', 'like', "%$search%")
@@ -165,72 +165,45 @@ class OrderController extends Controller
 
         // Retrieve comments associated to posts or videos with a title like foo%...
 		$query->whereHasMorph('orderer', ['App\Models\Customer', 'App\Models\Waiter'], function($q)use ($search) {
-			$q->where('user_name', 'like', "%$search%");
+			$q->where('first_name', 'like', "%$search%");
+			$q->orWhere('last_name', 'like', "%$search%");
+			$q->orWhere('user_name', 'like', "%$search%");
         	$q->orWhere('mobile', 'like', "%$search%");
         	$q->orWhere('email', 'like', "%$search%");
 		});
 
         $query->orWhereHas('restaurants.items.restaurantMenuItem', function($q)use ($search){
         	$q->where('name', 'like', "%$search%");
-        	$q->where('quantity', 'like', "%$search%");
+        	$q->orWhere('quantity', 'like', "%$search%");
         });
 
         $query->orWhereHas('restaurants.restaurant', function($q)use ($search){
-        	$q->where('name', 'like', "%$search%");
-        });
-
-        $query->orWhereHas('restaurantAcceptances.restaurant', function($q)use ($search){
         	$q->where('order_id', 'like', "%$search%");
         	$q->orWhere('restaurant_id', 'like', "%$search%");
         	$q->orWhere('name', 'like', "%$search%");
         });
 
-        $query->orWhereHas('riderAssignment', function($q)use ($search){
-        	$q->where('order_id', 'like', "%$search%");
-        	$q->orWhere('rider_id', 'like', "%$search%");
-        });
-
-        $query->orWhereHas('orderReadyConfirmations.restaurant', function($q)use ($search){
-        	$q->where('order_id', 'like', "%$search%");
-        	$q->orWhere('restaurant_id', 'like', "%$search%");
-        	$q->orWhere('name', 'like', "%$search%");
-        });
-
-        $query->orWhereHas('riderFoodPickConfirmations.restaurant', function($q)use ($search){
-        	$q->where('order_id', 'like', "%$search%");
-        	$q->orWhere('rider_id', 'like', "%$search%");
-        	$q->orWhere('restaurant_id', 'like', "%$search%");
-        	$q->orWhere('name', 'like', "%$search%");
-        });
-
-        $query->orWhereHas('riderFoodPickConfirmations.rider', function($q)use ($search){
-        	$q->where('user_name', 'like', "%$search%");
-        });
-
-        $query->orWhereHas('riderDeliveryConfirmation.rider', function($q)use ($search){
-        	$q->where('order_id', 'like', "%$search%");
-        	$q->orWhere('rider_id', 'like', "%$search%");
+        $query->orWhereHas('riderAssignment.rider', function($q)use ($search){
+        	$q->where('rider_id', 'like', "%$search%");
+        	$q->orWhere('user_name', 'like', "%$search%");
         });
 
         $query->orWhereHas('waiterServeConfirmation', function($q)use ($search){
-        	$q->where('order_id', 'like', "%$search%");
-        	$q->orWhere('waiter_id', 'like', "%$search%");
-        	$q->orWhere('restaurant_id', 'like', "%$search%");
+        	$q->where('waiter_id', 'like', "%$search%");
         });
 
         $query->orWhereHas('payment', function($q)use ($search){
         	$q->where('payment_id', 'like', "%$search%");
-        	$q->orWhere('order_id', 'like', "%$search%");
         });
 
         $query->orWhereHas('delivery.customerAddress', function($q)use ($search){
-        	$q->where('order_id', 'like', "%$search%");
-        	$q->orWhere('additional_info', 'like', "%$search%");
+        	$q->where('additional_info', 'like', "%$search%");
         	$q->orWhere('house', 'like', "%$search%");
         	$q->orWhere('road', 'like', "%$search%");
         	$q->orWhere('additional_hint', 'like', "%$search%");
         	$q->orWhere('address_name', 'like', "%$search%");
         });
+
 
 		return response()->json([
 
@@ -294,11 +267,12 @@ class OrderController extends Controller
 
  		if ($request->orderReady) {
  			
- 			$orderConfirmedOrAccepted = $this->makeRestaurantOrderReady($orderToConfirm, $request->restaurant_id);
+ 			$orderConfirmed = $this->makeRestaurantOrderReady($orderToConfirm, $request->restaurant_id);
+ 			$orderAccepted = $this->makeRestaurantOrderAccepted($orderToConfirm, $request->restaurant_id);
 
  		}else {
 
- 			$orderConfirmedOrAccepted = $this->makeRestaurantOrderAccepted($orderToConfirm, $request->restaurant_id);
+ 			$orderAccepted = $this->makeRestaurantOrderAccepted($orderToConfirm, $request->restaurant_id);
  		}
 
 

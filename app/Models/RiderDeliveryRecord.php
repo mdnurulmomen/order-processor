@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Order;
+use App\Models\Rider;
 use App\Models\OrderDeliveryInfo;
 use App\Models\OrderedRestaurant;
 use App\Models\RestaurantOrderRecord;
@@ -23,6 +24,11 @@ class RiderDeliveryRecord extends Model
 	public function order()
 	{
 		return $this->belongsTo(Order::class, 'order_id', 'id');
+	}
+
+	public function rider()
+	{
+		return $this->belongsTo(Rider::class, 'rider_id', 'id');
 	}
 
 	public function restaurants()

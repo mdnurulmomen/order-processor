@@ -21,7 +21,6 @@ class OrderPickUpProgressionResource extends JsonResource
             'restaurant_id' => $this->restaurant_id,
             'rider_id' => $this->rider_id,
             'restaurant' => $this->restaurant,
-            'rider' => $this->rider,
         ];
     }
 }

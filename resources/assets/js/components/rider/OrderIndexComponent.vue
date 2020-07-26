@@ -69,6 +69,7 @@
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
 									      			v-if="!cancelledOrder(riderDeliveryRecord) && allRestaurantPickedUp(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord)" 
+									      			:disabled="formSubmitionMode" 
 									      			@click="orderDroppingConfirmation(riderDeliveryRecord)" 
 								      			>
 								        			<i class="fas fa-bell"></i>
@@ -79,7 +80,8 @@
 								      				type="button" 
 									      			class="btn btn-primary btn-sm" 
 									      			v-if="!cancelledOrder(riderDeliveryRecord) && !allRestaurantPickedUp(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && acceptedDeliveryOrder(riderDeliveryRecord)" 
-									      			v-for="restaurantOrderRecord in riderDeliveryRecord.restaurants_accepted"  
+									      			v-for="restaurantOrderRecord in riderDeliveryRecord.restaurants_accepted" 
+									      			:disabled="formSubmitionMode" 
 									      			:key="restaurantOrderRecord.id" 
 									      			@click="orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord)" 
 								      			>
@@ -89,7 +91,8 @@
 								      			<button
 								      				type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)" 
+									      			v-if="!cancelledOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)"
+									      			:disabled="formSubmitionMode"  
 									      			@click="orderAcceptanceConfirmation(riderDeliveryRecord)" 
 								      			>
 								      				Accept
@@ -346,33 +349,23 @@
 			orderPicked : false,
 			orderDropped : false,
 			orderAccepted : false,
-		},
-		orderCancelation : {
-			reason_id : null,
-			rider_id : 1, // have to be sent from app dynamically
-		},
+		}
 	};
 
 	var restaurantListData = {
       	query : '',
     	perPage : 10,
     	loading : false,
-    	submitCancelationForm : true,
     	
     	deliveriesToShow : [],
     	allDeliveryOrders : [],
+    	formSubmitionMode : false,
 
     	pagination: {
         	current_page: 1
       	},
 
       	singleOrderData : singleOrderData,
-
-      	errors : {
-      		orderCancelation : {
-      			reason : null,
-      		},
-      	},
 
         csrf : document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         // restaurant_id : document.querySelector('meta[name="restaurant-id"]').getAttribute('content'),
@@ -473,6 +466,7 @@
 			},
 			orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord){
 
+				this.formSubmitionMode = true;
 				this.singleOrderData.rider = {};
 				this.singleOrderData.rider.rider_id = this.rider_id;
 
@@ -488,6 +482,7 @@
 			},
 			orderDroppingConfirmation(riderDeliveryRecord){
 
+				this.formSubmitionMode = true;
 				this.singleOrderData.rider = {};
 				this.singleOrderData.rider.rider_id = this.rider_id;
 
@@ -501,6 +496,7 @@
 			},
 			orderAcceptanceConfirmation(riderDeliveryRecord){
 
+				this.formSubmitionMode = true;
 				this.singleOrderData.rider = {};
 				this.singleOrderData.rider.rider_id = this.rider_id;
 
@@ -531,6 +527,7 @@
 							this.allDeliveryOrders = response.data;
 							this.showListDataForSelectedTab();
 
+							this.formSubmitionMode = false;
 							toastr.success(response.data.success, "Success");
 						}
 					})
