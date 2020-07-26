@@ -114,12 +114,22 @@
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
 									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations)" 
-									      			@click="showOrderConfirmationModal(restaurant)" 
+									      			:disabled="formSubmitionMode" 
+									      			@click="singleOrderData.order.orderReady=true;submitConfirmation()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
-								        			{{
-								        				acceptedOrder(restaurant.order.restaurant_acceptances) ? 'Order-Ready' : 'Accept/Ready'
-								        			}}
+							        				Order-Ready
+								      			</button>
+								      			<!-- if restaurant not accepted yet-->
+								      			<button 
+									      			type="button" 
+									      			class="btn btn-primary btn-sm" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations) && !acceptedOrder(restaurant.order.restaurant_acceptances)" 
+									      			:disabled="formSubmitionMode" 
+									      			@click="singleOrderData.order.orderReady=false;submitConfirmation()" 
+								      			>
+								        			<i class="fas fa-bell"></i>
+								        			Accept-Order
 								      			</button>
 								      			<!-- disabled if restaurant accepted -->
 								      			<button 
@@ -369,226 +379,6 @@
 			</div>
 			<!-- /modal-show-order -->
 
-			<!-- modal-confirmOrReady-order -->
-			<div class="modal fade" id="modal-confirmOrReady-order">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header bg-warning">
-						  	<h4 class="modal-title">Order Confirmation</h4>
-						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						    	<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="submitConfirmation()" autocomplete="off">
-							<div class="modal-body">
-					      		<input 
-					      			type="hidden" 
-					      			name="_token" 
-					      			:value="csrf"
-					      		>
-					      		<div class="row">
-									<div class="col-sm-12">
-										<div class="card card-outline">
-								            <div class="card-body">
-								            	
-												<ul class="nav nav-tabs justify-content-center mb-4" role="tablist">
-													<li class="nav-item">
-														<a class="nav-link" data-toggle="tab" href="#order">
-															Order
-														</a>
-													</li>
-													<li class="nav-item">
-														<a class="nav-link active" data-toggle="tab" href="#order-items">
-															Order Items
-														</a>
-													</li>
-												</ul>
-
-												<!-- Tab panes -->
-												<div class="tab-content">
-													<div id="order" class="container tab-pane fade">
-														<div class="row">
-										            		<div class="col-sm-12">
-										            			<div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Order id
-												              		</label>
-													                <div class="col-sm-6" >
-													                  	{{ singleOrderData.order.id }}
-													                </div>
-													            </div>
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Type 
-												              		</label>
-
-													                <div class="col-sm-6">
-													                	{{ singleOrderData.order.order_type }}
-													                </div>
-													            </div>
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			ASAP/Scheduled
-												              		</label>
-													                <div class="col-sm-6">
-													                  	{{
-													                  		singleOrderData.order.is_asap_order ?
-													                  		'ASAP' : singleOrderData.order.delivery_datetime
-													                  	}}
-													                </div>	
-													            </div> 
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Price
-												              		</label>
-													                <div class="col-sm-6">
-													                  	{{ singleOrderData.order.order_price }}
-													                </div>	
-													            </div>
-													            <!-- 
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Vat
-												              		</label>
-													                <div class="col-sm-6">
-													                  	{{ singleOrderData.order.vat }}
-													                </div>	
-													            </div>
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Discount
-												              		</label>
-													                <div class="col-sm-6">
-													                  	{{ singleOrderData.order.discount }}
-													                </div>	
-													            </div>
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Delivery-fee
-												              		</label>
-													                <div class="col-sm-6">
-													                  	{{ singleOrderData.order.delivery_fee }}
-													                </div>	
-													            </div> 
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Payable Price
-												              		</label>
-													                <div class="col-sm-6">
-													                  	{{ singleOrderData.order.net_payable }}
-													                </div>	
-													            </div> 
-													             -->
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Cutlery
-												              		</label>
-													                <div class="col-sm-6">
-													                  	{{ singleOrderData.order.cutlery_addition ? 'Added' : 'None' }}
-													                </div>	
-													            </div>
-													            <div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Ordered By
-												              		</label>
-													                <div class="col-sm-6">
-													                  	{{ 
-													                  		singleOrderData.order.orderer ? 
-													                  		singleOrderData.order.orderer.user_name : 'NA'  
-																		}}
-																		({{
-																			singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
-													                  		'Waiter' : 'Customer'
-																		}})
-													                </div>	
-													            </div>  
-										            		</div>
-										            	</div>
-													</div>
-													<div id="order-items" class="container tab-pane active">
-														<div class="row">
-										            		<div class="col-sm-12">
-										            			<div class="form-group row">		
-												              		<label class="col-sm-6 text-right">
-												              			Order Items
-												              		</label>
-													                <div class="col-sm-6">
-
-													                	<ul v-show="Boolean(singleOrderData.order.items!=null && singleOrderData.order.items.length)" 
-													                	>	
-																			<li v-for="(item, index) in singleOrderData.order.items" 
-																				:key="item.id"
-																			>	
-																				{{ item.restaurant_menu_item.name }}
-
-																				<span class="d-block"
-																					v-if="item.restaurant_menu_item.has_variation" 
-																				>
-																					(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation_id }} )
-																				</span>
-
-																				(quantity : {{ item.quantity }})
-
-																				<span 
-																					class="d-block" 
-																					v-if="item.additional_ordered_addons.length"
-																				>
-																					Extra Addons
-																				</span>
-
-																				<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
-
-																					<li v-for="(addon, index) in item.additional_ordered_addons">
-																						{{ addon.restaurant_menu_item_addon_id }}
-																					</li>
-																				</ul>
-
-																			</li>
-																		</ul>
-
-													                </div>	
-													            </div>  
-										            		</div>
-										            	</div>
-													</div>
-												</div>
-
-								            </div>
-								            <!-- /.card-body -->
-									    </div>
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer">
-							  	<button 
-							  		type="submit" 
-							  		name="cancel-order" 
-							  		@click="singleOrderData.order.orderReady=true" 
-							  		class="btn btn-outline-success float-right" 
-							  		v-if="singleOrderData.order.order_ready_confirmations && !confirmedOrder(singleOrderData.order.order_ready_confirmations) && acceptedOrder(singleOrderData.order.restaurant_acceptances)" 
-							  	>
-							  		Order-Ready
-							  	</button>
-
-							  	<button 
-							  		type="submit" 
-							  		name="confirm-order" 
-							  		@click="singleOrderData.order.orderReady=false" 
-							  		class="btn btn-outline-warning float-right" 
-							  		v-if="singleOrderData.order.restaurant_acceptances && !acceptedOrder(singleOrderData.order.restaurant_acceptances)"
-							  	>
-							  		Accept-Order
-							  	</button>
-							</div>
-						</form>
-					</div>
-				<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /modal-confirmOrReady-order -->
-
 			<!-- modal-order-cancelation -->
 			<div class="modal fade" id="modal-order-cancelation">
 				<div class="modal-dialog">
@@ -686,6 +476,7 @@
       	query : '',
     	perPage : 10,
     	loading : false,
+    	formSubmitionMode : false,
     	submitCancelationForm : true,
     	
     	allOrders : [],
@@ -853,25 +644,21 @@
 				this.singleOrderData.order.items = restaurant.items;
 				$("#modal-show-order").modal("show");
 			},
-			showOrderConfirmationModal(restaurant) {
-				this.singleOrderData.order = restaurant.order;
-				this.singleOrderData.order.items = restaurant.items;
-				this.singleOrderData.order.restaurant_id = this.restaurant_id;
-				$("#modal-confirmOrReady-order").modal("show");
-			},
 			submitConfirmation(){
 
-				$("#modal-confirmOrReady-order").modal("hide");
-				
+				this.formSubmitionMode = true;
+				this.singleOrderData.order.restaurant_id = this.restaurant_id;
+
 				axios
 					.post('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.order)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleOrderData.order = {};
-
 							this.allOrders = response.data;
 							this.showListDataForSelectedTab();
+
+							this.formSubmitionMode = false;
+							this.singleOrderData.order = {};
 
 							toastr.success(response.data.success, "Confirmed");
 						}
@@ -892,6 +679,7 @@
 				$("#modal-order-cancelation").modal("show");
 			},
 			cancelOrder(){
+				
 				if (!this.singleOrderData.orderCancelation.reason_id) {
 					this.submitCancelationForm = false;
 					this.errors.orderCancelation.reason = 'Reason is required';
