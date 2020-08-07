@@ -1104,17 +1104,21 @@
 			Pusher.logToConsole = true;
 
 			Echo.private(`notifyAdmin`)
-			.listen('UpdateAdmin', (broadcastedOrder) => {
+			.listen('.updation-for-admin', (broadcastedOrder) => {
 			    
 			    console.log(broadcastedOrder);
 
 			    // due to pagination, checking if this broadcasted one already exists 
 			    const objectExist = (orderObject) => orderObject.id==broadcastedOrder.id;
 
-			    // new order and not in the list or nothing in the list
-			    if ((broadcastedOrder.call_confirmation===-1 && !this.ordersToShow.some(objectExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
+			    // if the order is paid and already ringing restaurant end
+			    const restaurantRinging = (restaurantOrderRecord) => restaurantOrderRecord.food_order_acceptance==-1;
+
+			    // new order and not in the list or nothing in the list or new paid order
+			    if ((broadcastedOrder.call_confirmation===-1 && !this.ordersToShow.some(objectExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length) || (broadcastedOrder.call_confirmation===1 && broadcastedOrder.restaurant_acceptances.filter(restaurantRinging).length==broadcastedOrder.restaurant_acceptances.length)) {
+
 			    	this.ordersToShow.unshift(broadcastedOrder);
-			    	toastr.info("New order update arrives");
+			    	toastr.info("New order arrives");
 			    }
 			    // now showing the broadcastedOrder in this page
 			    else if (this.ordersToShow.some(objectExist)) {
@@ -1124,7 +1128,7 @@
 				    // this.ordersToShow.$set(index, broadcastedOrder);
 				    // this.$set(this.ordersToShow, index, broadcastedOrder)
 				    Vue.set(this.ordersToShow, index, broadcastedOrder)
-				    toastr.info("Old order update arrives");
+				    toastr.info("Old order-update arrives");
 			    }
 			    // else
 			    else {
