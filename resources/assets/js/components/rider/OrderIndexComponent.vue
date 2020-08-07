@@ -50,7 +50,7 @@
 									  	<tr v-show="deliveriesToShow.length"
 									    	v-for="(riderDeliveryRecord, index) in deliveriesToShow"
 									    	:key="riderDeliveryRecord.id" 
-									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' :  deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-warning' : 'bg-danger']" 
+									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' :  deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-warning' : timeOutDeliveryOrder(riderDeliveryRecord) ? 'bg-secondary' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ riderDeliveryRecord.order_id }}</td>
@@ -91,7 +91,7 @@
 								      			<button
 								      				type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)"
+									      			v-if="!cancelledOrder(riderDeliveryRecord) && !timeOutDeliveryOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)"
 									      			:disabled="formSubmitionMode"  
 									      			@click="orderAcceptanceConfirmation(riderDeliveryRecord)" 
 								      			>
@@ -386,7 +386,7 @@
 			    
 			Pusher.logToConsole = true;
 
-			Echo.private(`notifyRider`)
+			Echo.private(`notifyRider.` + this.rider_id)
 			.listen('UpdateRider', (riderDeliveryOrder) => {
 			    
 			    console.log(riderDeliveryOrder);
@@ -398,7 +398,7 @@
 			    if ((!this.deliveriesToShow.some(objectExist)) || (Array.isArray(this.deliveriesToShow) && !this.deliveriesToShow.length)) {
 			    	
 			    	this.deliveriesToShow.unshift(riderDeliveryOrder);
-			    	toastr.warning("New order delivery arrives");
+			    	toastr.info("New delivery-order arrives");
 			    }
 			    // now showing the order in this page
 			    else if (this.deliveriesToShow.some(objectExist)) {
@@ -407,8 +407,8 @@
 				    	);
 
 				    Vue.set(this.deliveriesToShow, index, riderDeliveryOrder)
-				    toastr.warning("Old delivery-order arrives");
-				    console.log(index);
+				    toastr.info("Old delivery-order update arrives");
+				    // console.log(index);
 			    }
 			    
 		    	toastr.warning("Else order delivery arrives");
@@ -547,6 +547,14 @@
 				}
 
 				return false;
+
+			},
+			timeOutDeliveryOrder(riderDeliveryRecord) {
+
+			    // console.log(Date.now() - new Date(riderDeliveryRecord.created_at) > 1000 * 60);
+
+			    // one (1) minute ago
+			    return Date.now() - new Date(riderDeliveryRecord.created_at) > 1000 * 60 ; 	/* ms */
 
 			},
 			riderCancelledSameOrder(riderDeliveryRecord){
