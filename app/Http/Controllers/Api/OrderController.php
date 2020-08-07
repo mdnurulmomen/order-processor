@@ -11,7 +11,7 @@ use App\Events\UpdateRestaurant;
 use App\Models\OrderedRestaurant;
 use App\Models\RestaurantMenuItem;
 use App\Models\RiderDeliveryRecord;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderRequest;
 
@@ -109,8 +109,6 @@ class OrderController extends Controller
         }
 
         // }
-
-        // return $newOrder;
         
         if ($newOrder->call_confirmation==1) {
             $this->makeRestaurantOrderCalls($newOrder);
@@ -145,14 +143,15 @@ class OrderController extends Controller
 
     private function notifyRestaurant(OrderedRestaurant $orderedRestaurant)
     {
-        Log::info('UpdateRestaurant');
+        // Log::info('UpdateRestaurant');
         event(new UpdateRestaurant($orderedRestaurant));
     }
 
     private function notifyAdmin(Order $order) 
     {
-        Log::info('UpdateAdmin');
+        // Log::info('UpdateAdmin');
         event(new UpdateAdmin($order));
+
     }
 
 }
