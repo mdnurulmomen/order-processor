@@ -17,7 +17,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use App\Http\Resources\Web\OrderPickUpProgressionResource;
 use App\Http\Resources\Web\OrderReadyConfirmationResource;
 
-class UpdateAdmin implements ShouldBroadcastNow
+class UpdateAdmin implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -66,6 +66,16 @@ class UpdateAdmin implements ShouldBroadcastNow
             'waiter_serve_confirmation' => $this->order->waiterServeConfirmation,
             'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->order->restaurantOrderCancelations),
         ];
+    }
+
+    /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs() 
+    {
+        return 'updation-for-admin';
     }
 
     /**

@@ -12,8 +12,10 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use App\Http\Resources\Api\RiderOrderedRestaurantsResource;
+use App\Http\Resources\Api\RiderRestaurantsAcceptedResource;
 
-class UpdateRider implements ShouldBroadcastNow
+class UpdateRider implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -42,15 +44,14 @@ class UpdateRider implements ShouldBroadcastNow
             'delivery_order_acceptance' => $this->riderNewDeliveryRecord->delivery_order_acceptance,
             'order_id' => $this->riderNewDeliveryRecord->order_id,
             'rider_id' => $this->riderNewDeliveryRecord->rider_id,
-            // 'created_at' => $this->riderNewDeliveryRecord->created_at,
-            'order' => new RiderOrderResource($this->riderNewDeliveryRecord->order),
             'delivery' => $this->riderNewDeliveryRecord->delivery,
-            'restaurant_order_cancelations' => $this->riderNewDeliveryRecord->restaurantOrderCancelations,
-            'restaurants' => $this->riderNewDeliveryRecord->restaurants,
-            'restaurants_accepted' => $this->riderNewDeliveryRecord->restaurantsAccepted,
+            'order' => new RiderOrderResource($this->riderNewDeliveryRecord->order),
+            'rider_order_cancelations' => $this->riderNewDeliveryRecord->riderOrderCancelations,
             'rider_delivery_confirmation' => $this->riderNewDeliveryRecord->riderDeliveryConfirmation,
             'rider_food_pick_confirmations' => $this->riderNewDeliveryRecord->riderFoodPickConfirmations,
-            'rider_order_cancelations' => $this->riderNewDeliveryRecord->riderOrderCancelations,
+            'restaurant_order_cancelations' => $this->riderNewDeliveryRecord->restaurantOrderCancelations,
+            'restaurants' => RiderOrderedRestaurantsResource::collection($this->riderNewDeliveryRecord->restaurants),
+            'restaurants_accepted' => RiderRestaurantsAcceptedResource::collection($this->riderNewDeliveryRecord->restaurantsAccepted),
 
         ];
     }
@@ -62,7 +63,6 @@ class UpdateRider implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        // return new PrivateChannel('notifyRestaurant.'.$this->orderedRestaurants->restaurant_id);
-        return new PrivateChannel('notifyRider');
+        return new PrivateChannel('notifyRider.'.$this->riderNewDeliveryRecord->rider_id);
     }
 }

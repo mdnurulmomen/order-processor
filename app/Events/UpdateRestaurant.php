@@ -14,7 +14,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Http\Resources\Web\OrderedRestaurantItemResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class UpdateRestaurant implements ShouldBroadcastNow
+class UpdateRestaurant implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -46,6 +46,16 @@ class UpdateRestaurant implements ShouldBroadcastNow
     }
 
     /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs() 
+    {
+        return 'updation-for-restaurant';
+    }
+
+    /**
      * Get the channels the event should broadcast on.
      *
      * @return \Illuminate\Broadcasting\Channel|array
@@ -53,6 +63,5 @@ class UpdateRestaurant implements ShouldBroadcastNow
     public function broadcastOn()
     {
         return new PrivateChannel('notifyRestaurant.'.$this->orderedRestaurant->restaurant_id);
-        // return new PrivateChannel('notifyRestaurant');
     }
 }

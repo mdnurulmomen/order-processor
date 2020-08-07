@@ -21,6 +21,15 @@ class RiderDeliveryRecord extends Model
 
 	public $timestamps = false;
 
+	/**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+    ];
+
 	public function order()
 	{
 		return $this->belongsTo(Order::class, 'order_id', 'id');
