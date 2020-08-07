@@ -21,7 +21,7 @@ Broadcast::channel('notifyAdmin', function ($user) {
 }, ['guards' => 'admin']);
 
 Broadcast::channel('notifyRestaurant.{restaurantId}', function ($restaurant, $restaurantId) {
-    return $restaurant->id == $restaurantId;
+    return (int) $restaurant->id == $restaurantId;
 }, ['guards' => 'restaurant']);
 
 /*
@@ -30,12 +30,15 @@ Broadcast::channel('notifyRestaurant', function ($restaurant) {
 }, ['guards' => ['admin', 'restaurant']]);
 */
 
-/*
+
+// for now 'admin' guard is listed along with 'api' guard
 Broadcast::channel('notifyRider.{riderId}', function ($rider, $riderId) {
     return $rider->id == $riderId;
-}, ['guards' => 'api']);
-*/
+}, ['guards' => ['admin', 'api']]);
 
+
+/*
 Broadcast::channel('notifyRider', function ($rider) {
     return true;
 }, ['guards' => 'admin']);
+*/
