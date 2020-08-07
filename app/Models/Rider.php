@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\RiderEvaluation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Intervention\Image\ImageManagerStatic as ImageIntervention;
@@ -82,5 +83,10 @@ class Rider extends Model
 
             $this->attributes['nid_back_preview'] = $directory.$this->user_name.'_back_preview.jpg';
         }
+    }
+
+    public function evaluation() 
+    {
+        return $this->hasOne(RiderEvaluation::class, 'rider_id', 'id');
     }
 }
