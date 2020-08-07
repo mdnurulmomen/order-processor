@@ -522,7 +522,7 @@
 			Pusher.logToConsole = true;
 
 			Echo.private(`notifyRestaurant.` + this.restaurant_id)
-			.listen('UpdateRestaurant', (orderedRestaurant) => {
+			.listen('.updation-for-restaurant', (orderedRestaurant) => {
 
 			    console.log(orderedRestaurant);
 
