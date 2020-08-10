@@ -19,7 +19,7 @@ class CreateOrderServeProgressionsTable extends Migration
             $table->increments('id');
             $table->tinyInteger('waiter_serve_confirmation')->default(-1); // initially pending (-1 for pending, 1 for confirm, 0 for cancel)
             $table->unsignedInteger('order_id')->unique();
-            $table->unsignedMediumInteger('restaurant_id');
+            // $table->unsignedMediumInteger('restaurant_id');
             $table->unsignedMediumInteger('waiter_id');
             $table->timestamps();
         });

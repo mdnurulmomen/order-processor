@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Web;
 use App\Models\Order;
 use App\Models\Rider;
 use App\Models\Customer;
+use App\Models\Restaurant;
 use App\Jobs\NotifyRiders;
 use App\Events\UpdateRider;
 use App\Events\UpdateAdmin;
 use Illuminate\Http\Request;
+use App\Events\UpdateWaiters;
 use App\Models\RiderEvaluation;
 use App\Events\UpdateRestaurant;
 use App\Models\OrderedRestaurant;
@@ -17,7 +19,6 @@ use App\Models\RiderDeliveryRecord;
 use App\Models\RestaurantEvaluation;
 use App\Http\Controllers\Controller;
 use App\Models\RestaurantOrderRecord;
-use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -266,6 +267,7 @@ class OrderController extends Controller
 	 	]);
 
 	 	$orderToConfirm = Order::findOrFail($order);
+	 	$expectedRestaurant = Restaurant::findOrFail($request->restaurant_id);
 
  		if ($request->orderReady) {
  			
@@ -275,14 +277,22 @@ class OrderController extends Controller
  		}else {
 
  			$orderAccepted = $this->makeRestaurantOrderAccepted($orderToConfirm, $request->restaurant_id);
+ 		
  		}
-
 
  		// checking if order is for home-delivery, order is from customer and any rider notification is already broadcasted
 		if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer instanceof Customer && !RiderDeliveryRecord::where('order_id', $order)->exists()) {
 
 			// make rider call with RiderDeliveryRecord
 			$this->makeRiderOrderCall($orderToConfirm);
+
+		}
+
+		// checking if order is for serve-on-table and restaurant has any approved waiter
+		else if ($orderToConfirm->order_type==='serve-on-table' && $expectedRestaurant->waiters()->where('admin_approval', 1)->exists()) {
+
+			// make waiter call with RestaurantOrderRecord
+			$this->notifyRestaurantWaiters($orderToConfirm, $request->restaurant_id);
 
 		}
 
@@ -439,6 +449,91 @@ class OrderController extends Controller
         return $this->showRiderAllOrders($request->rider_id, $perPage);
 
     }
+
+
+    // Waiter
+	public function showWaiterAllOrders($restaurant, $perPage = false)
+	{
+	 	if ($perPage) {
+
+            return response()->json([
+
+				'all' => RestaurantOrderRecord::with([
+							'orderedRestaurants' => function($orderedRestaurant) use ($restaurant) {
+						    	$orderedRestaurant->where('restaurant_id', $restaurant)->with(['items.selectedItemVariation', 'items.additionalOrderedAddons', 'items.restaurantMenuItem']);
+							}
+						])
+						->with([
+							'orderCancellationReasons' => function($orderCancellationReason) use ($restaurant) {
+						    	$orderCancellationReason->where('restaurant_id', $restaurant);
+							}
+						])
+						->with([
+							'orderReadyConfirmations' => function($orderReadyConfirmation) use ($restaurant) {
+						    	$orderReadyConfirmation->where('restaurant_id', $restaurant);
+							}
+						])
+						->with(['orderServeProgression', 'order.orderer'])
+						->where('restaurant_id', $restaurant)
+						->where('food_order_acceptance', 1)
+						->whereHas('order', function($q) {
+	   						$q->where('order_type', 'serve-on-table');
+						})
+						->latest()
+						->paginate($perPage),
+            
+            ], 200);
+
+	 	}
+
+	 	return response(Order::get(), 200);
+	}
+
+	public function confirmOrderPresentation(Request $request, $order, $perPage)
+    {
+        // validation
+        $request->validate([
+            'orderServed' => 'required|boolean',
+            'waiter_id' => 'required|exists:waiters,id',
+            'restaurant_id' => ['required',
+            	function ($attribute, $value, $fail) use ($order) {
+                    
+                    $validWaiter = Restaurant::find($value)->waiters()->where('restaurant_id', $value)->exists();
+                    
+                    if (!$validWaiter) {
+                        $fail('Invalid Waiter or Restaurant');
+                    }
+                }
+        	]
+        ]);
+
+        $orderToServe = Order::findOrFail($order);
+
+        // if already cancelled order or delivery-order is more than 30 seconds ago 
+        if ($this->cancelledOrder($orderToServe)) {
+        	
+        	return $this->showWaiterAllOrders($request->restaurant_id, $perPage);
+
+        }
+
+        // if order is ready
+        else if ($request->orderServed && $orderToServe->orderReadyConfirmations()->where('restaurant_id', $request->restaurant_id)->where('food_ready_confirmation', 1)->exists()) {
+                
+            $orderToServe->waiterServeConfirmation()->create([
+            	'waiter_serve_confirmation' => 1,
+            	'waiter_id' => $request->waiter_id,
+            ]);
+
+	        // Broadcast to admin for restaurant order ready confirmation
+	        $this->notifyAdmin($orderToServe);
+        
+        }
+
+        return $this->showWaiterAllOrders($request->restaurant_id, $perPage);
+
+    }
+
+
 
     private function cancelledOrder(Order $order)
     {
@@ -597,8 +692,6 @@ class OrderController extends Controller
 		$allNearestRiders = $allNearestRiders->reject(function ($rider) use ($cancelledRiderId){
 												    return $rider->id==$cancelledRiderId;
 												});
-		// Log::info($allNearestRiders);
-		// NotifyRiders::dispatch($order, $allNearestRiders);
 		
 		$delay = 0;
 
@@ -610,6 +703,13 @@ class OrderController extends Controller
 
 		}
 
+	}
+
+	private function notifyRestaurantWaiters(Order $order, $restaurantId)
+	{
+		// broadcast for waiter with RestaurantOrderRecord
+		$restaurantOrderRecord = $order->restaurantAcceptances()->where('restaurant_id', $restaurantId)->first();
+		event(new UpdateWaiters($restaurantOrderRecord));
 	}
 
 	// should calculate the nearest rider and snoozing time laterly

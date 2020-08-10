@@ -244,6 +244,16 @@
                   </router-link>
                 </li>
 
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'admin.waiterOrders.index' }" 
+                    v-bind:class="[(currentPage.includes('/waiter-orders')) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Waiter-Orders</p>
+                  </router-link>
+                </li>
+
               </ul>
             </li>
 
@@ -361,6 +371,7 @@
               </ul>
             </li>
 
+        <!-- 
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-copy"></i>
@@ -499,6 +510,7 @@
                 </li>
               </ul>
             </li>
+        -->
             
           </ul>
         </nav>

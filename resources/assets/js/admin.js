@@ -204,6 +204,11 @@ const router = new VueRouter({
             name: 'admin.riderOrders.index',
             component: () => import(/* webpackChunkName : "js/rider-order-list" */ './components/rider/OrderIndexComponent.vue')
 		},
+		{
+			path: '/waiter-orders',
+            name: 'admin.waiterOrders.index',
+            component: () => import(/* webpackChunkName : "js/waiter-order-list" */ './components/waiter/OrderIndexComponent.vue')
+		},
 
 		
 		{
