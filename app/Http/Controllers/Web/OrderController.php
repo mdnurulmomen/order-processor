@@ -88,8 +88,8 @@ class OrderController extends Controller
 		$request->validate([
 	 		'cancelledBy' => 'required|in:Customer,Rider,Restaurants',
 	 		'reason_id' => 'required_if:cancelledBy,Rider|required_if:cancelledBy,Restaurants',
-	 		// 'rider_id' => 'required_if:cancelledBy,Rider',
 	 		'restaurant_id' => 'required_if:cancelledBy,Restaurants',
+	 		// 'rider_id' => 'required_if:cancelledBy,Rider',
 	 	]);
 
 		$orderToCancel = Order::findOrFail($order);	 	
@@ -320,6 +320,7 @@ class OrderController extends Controller
 			        function ($attribute, $value, $fail) use ($order) {
 			            $restaurantExist = RestaurantOrderRecord::where('restaurant_id', $value)
 			            										->where('order_id', $order)
+			            										->where('food_order_acceptance', -1)
 			            										->exists();
 			            if (!$restaurantExist) {
 			                $fail('Invalid Restaurant or Order');
@@ -331,7 +332,7 @@ class OrderController extends Controller
 		$orderToCancel = Order::findOrFail($order);
 
 		// Checking if this restaurant is in restaurant order record for this same order
-		if ($orderToCancel->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->exists()) {
+		// if ($orderToCancel->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->exists()) {
 			
 			// cancelling just arrived order request
 			$this->cancelRestaurantOrderRequest($orderToCancel, $request->restaurant_id);
@@ -344,7 +345,8 @@ class OrderController extends Controller
 	 		$this->notifyAdmin($orderToCancel);
 
 	 		return $this->showAllRestaurantOrders($request->restaurant_id, $perPage);
-		}
+		
+		// }
 
 		return response('Bad Request', 401);
 	}
@@ -357,7 +359,7 @@ class OrderController extends Controller
 
             return response()->json([
 
-               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'restaurants.items.restaurantMenuItem', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'delivery', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
+               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'restaurants.items.restaurantMenuItem', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
             
             ], 200);
 
@@ -399,10 +401,12 @@ class OrderController extends Controller
         // if already not accepted
         if ($request->orderAccepted && $deliveryToConfirm->delivery_order_acceptance==0 && !$this->timeOutDeliveryOrder($deliveryToConfirm)) {
                 
+            // accepting rider-delivery-order
             $deliveryToConfirm->update([
                 'delivery_order_acceptance' => 1
             ]);
 
+            // Nullifying rider paused-time 
             $deliveryToConfirm->rider()->update([
             	'paused_at' => NULL
             ]);
@@ -497,7 +501,7 @@ class OrderController extends Controller
             'waiter_id' => 'required|exists:waiters,id',
             'restaurant_id' => ['required',
             	function ($attribute, $value, $fail) use ($order) {
-                    
+                    // if this restaurant has this specific waiter
                     $validWaiter = Restaurant::find($value)->waiters()->where('restaurant_id', $value)->exists();
                     
                     if (!$validWaiter) {
@@ -516,8 +520,8 @@ class OrderController extends Controller
 
         }
 
-        // if order is ready
-        else if ($request->orderServed && $orderToServe->orderReadyConfirmations()->where('restaurant_id', $request->restaurant_id)->where('food_ready_confirmation', 1)->exists()) {
+        // if order is ready and not already served
+        else if ($request->orderServed && $orderToServe->orderReadyConfirmations()->where('restaurant_id', $request->restaurant_id)->where('food_ready_confirmation', 1)->exists() && !$orderToServe->waiterServeConfirmation()->exists()) {
                 
             $orderToServe->waiterServeConfirmation()->create([
             	'waiter_serve_confirmation' => 1,
@@ -665,7 +669,7 @@ class OrderController extends Controller
 		$restaurnatOrderToAccept = $order->restaurantAcceptances()->where('restaurant_id', $restaurant)->first();
 
 		// if exists & not accepted yet
- 		if ($restaurnatOrderToAccept && $restaurnatOrderToAccept->food_order_acceptance!=1) {
+ 		if ($restaurnatOrderToAccept && $restaurnatOrderToAccept->food_order_acceptance==-1) {
 
 			return $restaurnatOrderToAccept->update(['food_order_acceptance' => 1]);
 
@@ -735,7 +739,7 @@ class OrderController extends Controller
     		foreach ($riderDeliveryRecord->restaurantsAccepted as $restaurantOrderRecord) {
             		
 		    	$riderDeliveryRecord->riderFoodPickConfirmations()->create([
-		            'rider_food_pick_confirmation' => -1,
+		            // 'rider_food_pick_confirmation' => -1,
 		            'restaurant_id'=>$restaurantOrderRecord->restaurant_id,
 		            'rider_id'=>$riderDeliveryRecord->rider_id,
 		        ]);

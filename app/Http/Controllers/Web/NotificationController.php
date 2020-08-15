@@ -12,6 +12,7 @@ class NotificationController extends Controller
 	{
 		
 		if ($perPage) {
+			
 			/*
 			return response()->json([
 			   'current' => Notification::paginate($perPage),
@@ -88,7 +89,7 @@ class NotificationController extends Controller
 		return $this->showAllNotifications($perPage);
 	}
 
-	/*
+/*
 	public function restoreNotification($notification, $perPage)
 	{
 		$notificationToRestore = Notification::withTrashed()->find($notification);
@@ -101,7 +102,7 @@ class NotificationController extends Controller
 
 		return $this->showAllNotifications($perPage);
 	}
-	*/
+*/
 
 	public function searchAllNotifications($search, $perPage)
 	{

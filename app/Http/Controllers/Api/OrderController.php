@@ -123,8 +123,8 @@ class OrderController extends Controller
 
     private function makeRestaurantOrderCalls(Order $order)
     {
-        // checking for order confirmation and if already has made
-        if ($order->call_confirmation===1 && !$order->restaurantAcceptances()->exists()) {
+        // checking if already has made
+        if (!$order->restaurantAcceptances()->exists()) {
            
             foreach ($order->restaurants as $orderedRestaurant) {
 

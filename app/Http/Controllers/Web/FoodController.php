@@ -79,17 +79,8 @@ class FoodController extends Controller
 
   	public function searchAllMeals($search, $perPage)
 	{
-		$columnsToSearch = ['name'];
-
-		$query = Meal::withTrashed();
-
-		foreach($columnsToSearch as $column)
-		{
-			$query->orWhere($column, 'like', "%$search%");
-		}
-
 		return response()->json([
-			'all' => $query->paginate($perPage),  
+			'all' => Meal::withTrashed()->where('name', 'like', "%$search%")->paginate($perPage),  
 		], 200);
 	}
 
@@ -165,17 +156,8 @@ class FoodController extends Controller
 
   	public function searchAllMenuCategories($search, $perPage)
 	{
-		$columnsToSearch = ['name'];
-
-		$query = MenuCategory::withTrashed();
-
-		foreach($columnsToSearch as $column)
-		{
-			$query->orWhere($column, 'like', "%$search%");
-		}
-
 		return response()->json([
-			'all' => $query->paginate($perPage),  
+			'all' => MenuCategory::withTrashed()->where('name', 'like', "%$search%")->paginate($perPage),  
 		], 200);
 	}
 
@@ -248,17 +230,8 @@ class FoodController extends Controller
 
   	public function searchAllCuisines($search, $perPage)
 	{
-		$columnsToSearch = ['name'];
-
-		$query = Cuisine::withTrashed();
-
-		foreach($columnsToSearch as $column)
-		{
-			$query->orWhere($column, 'like', "%$search%");
-		}
-
 		return response()->json([
-			'all' => $query->paginate($perPage),  
+			'all' => Cuisine::withTrashed()->where('name', 'like', "%$search%")->paginate($perPage),  
 		], 200);
 	}
 
@@ -331,17 +304,8 @@ class FoodController extends Controller
 
   	public function searchAllAddons($search, $perPage)
 	{
-		$columnsToSearch = ['name'];
-
-		$query = Addon::withTrashed();
-
-		foreach($columnsToSearch as $column)
-		{
-			$query->orWhere($column, 'like', "%$search%");
-		}
-
 		return response()->json([
-			'all' => $query->paginate($perPage),  
+			'all' => Addon::withTrashed()->where('name', 'like', "%$search%")->paginate($perPage),  
 		], 200);
 	}
 
@@ -413,17 +377,8 @@ class FoodController extends Controller
 
   	public function searchAllVariations($search, $perPage)
 	{
-		$columnsToSearch = ['variation_name'];
-
-		$query = ItemVariation::withTrashed();
-
-		foreach($columnsToSearch as $column)
-		{
-			$query->orWhere($column, 'like', "%$search%");
-		}
-
 		return response()->json([
-			'all' => $query->paginate($perPage),  
+			'all' => ItemVariation::withTrashed()->where('variation_name', 'like', "%$search%")->paginate($perPage),  
 		], 200);
 	}
 
