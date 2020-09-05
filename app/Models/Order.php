@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\OrderedRestaurant;
 use App\Models\OrderDeliveryInfo;
+use App\Models\TableBookingDetail;
 use App\Models\OrderPaymentDetail;
 use App\Models\RiderDeliveryRecord;
 use App\Models\OrderServeProgression;
@@ -13,6 +14,7 @@ use App\Models\OrderReadyConfirmation;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\OrderDeliveryProgression;
 use App\Models\RiderOrderCancelationReason;
+use App\Models\CustomerOrderCancelationReason;
 use App\Models\RestaurantOrderCancelationReason;
 
 class Order extends Model
@@ -22,7 +24,9 @@ class Order extends Model
       ];
 
       protected $casts = [
+         'is_asap_order' => 'boolean',
          'cutlery_addition' => 'boolean',
+         'call_confirmation' => 'boolean',
       ];
 
       /**
@@ -79,6 +83,11 @@ class Order extends Model
          return $this->hasOne(OrderServeProgression::class, 'order_id', 'id');
       }
 
+      public function customerOrderCancelation()
+      {
+         return $this->hasOne(CustomerOrderCancelationReason::class, 'order_id', 'id');
+      }
+
       public function restaurantOrderCancelations()
       {
          return $this->hasMany(RestaurantOrderCancelationReason::class, 'order_id', 'id');
@@ -87,5 +96,10 @@ class Order extends Model
       public function riderOrderCancelations()
       {
          return $this->hasMany(RiderOrderCancelationReason::class, 'order_id', 'id');
+      }
+
+      public function reservation()
+      {
+         return $this->hasOne(TableBookingDetail::class, 'order_id', 'id');
       }
 }

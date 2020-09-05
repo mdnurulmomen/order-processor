@@ -700,6 +700,7 @@
 				this.submitForm = true;
 
 				this.singleWaiterData.waiter = {};
+				this.singleWaiterData.restaurantObject = {};
 
 				$('#modal-createOrEdit-waiter').modal('show');
 			},

@@ -34,7 +34,7 @@
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" data-toggle="tab" href="#others">
-						Others
+						System
 					</a>
 				</li>
 			</ul>
@@ -42,7 +42,7 @@
 			<!-- Tab panes -->
 			<div class="tab-content">
 
-				<div class="tab-pane container active" id="payment">	
+				<div class="tab-pane fade show active" id="payment">	
 					<div class="row">
 						<div  
 							v-show="!loading" 
@@ -190,7 +190,7 @@
 					</div>
 				</div>
 
-				<div class="tab-pane container fade" id="contact">	
+				<div class="tab-pane fade show fade" id="contact">	
 					<div class="row">
 						<div  
 							v-show="!loading" 
@@ -300,7 +300,7 @@
 					</div>
 				</div>
 
-				<div class="tab-pane container fade" id="delivery">	
+				<div class="tab-pane fade show fade" id="delivery">	
 					<div class="row">
 						<div  v-show="!loading" class="col-sm-12">
 							<div class="card card-primary card-outline">
@@ -401,7 +401,7 @@
 					</div>
 				</div>
 
-				<div class="tab-pane container fade" id="others">	
+				<div class="tab-pane fade show fade" id="others">	
 					<div class="row">
 
 						<div  
