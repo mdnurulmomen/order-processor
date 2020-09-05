@@ -18,7 +18,7 @@ class RiderOrderResource extends JsonResource
         return [
             'id' => $this->id,
             'is_asap_order' => $this->is_asap_order,
-            'delivery_datetime' => $this->delivery_datetime,
+            'order_schedule' => $this->order_schedule,
             'cutlery_addition' => $this->cutlery_addition,
             'order_price' => $this->order_price,
             'vat' => $this->vat,

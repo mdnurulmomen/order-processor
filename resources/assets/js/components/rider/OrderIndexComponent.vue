@@ -200,7 +200,7 @@
 								                <div class="col-sm-6">
 								                  	{{
 								                  		singleOrderData.order.is_asap_order ?
-								                  		'ASAP' : singleOrderData.order.delivery_datetime
+								                  		'ASAP' : singleOrderData.order.order_schedule
 								                  	}}
 								                </div>	
 								            </div>

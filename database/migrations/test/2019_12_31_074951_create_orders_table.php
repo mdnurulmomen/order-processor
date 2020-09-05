@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->string('order_type');
             $table->boolean('is_asap_order')->default(true);
-            $table->timestamp('delivery_datetime')->nullable();
+            $table->timestamp('order_schedule')->nullable();
             $table->unsignedMediumInteger('order_price');
             $table->tinyInteger('vat');
             $table->unsignedTinyInteger('discount')->default(0);
@@ -27,7 +27,7 @@ class CreateOrdersTable extends Migration
             $table->boolean('cutlery_addition')->default(false);
             $table->string('orderer_type'); // Counter / Waiter / Customer
             $table->unsignedInteger('orderer_id');
-            $table->tinyInteger('call_confirmation')->default(-1);
+            $table->tinyInteger('customer_confirmation')->default(-1);
             $table->timestamps();
         });
     }
