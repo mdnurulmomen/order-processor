@@ -78,7 +78,7 @@ class Order extends Model
          return $this->hasOne(OrderDeliveryProgression::class, 'order_id', 'id');
       }
 
-      public function waiterServeConfirmation()
+      public function orderServeConfirmation()
       {
          return $this->hasOne(OrderServeProgression::class, 'order_id', 'id');
       }

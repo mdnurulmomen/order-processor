@@ -26,7 +26,7 @@ class OrderController extends Controller
 	{
 		return response()->json([
 
-			'expectedOrder' => Order::with(['orderer', 'restaurants.items.restaurantMenuItem', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order),
+			'expectedOrder' => Order::with(['orderer', 'restaurants.items.restaurantMenuItem', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order),
 		
 		], 200);
 	}
@@ -37,29 +37,29 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage),
+               'all' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage),
 
-               'new' => Order::where('customer_confirmation', -1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage),
+               'new' => Order::where('customer_confirmation', -1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage),
 
-               'deliveredOrServed' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])
+               'deliveredOrServed' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
                					->whereHas('riderDeliveryConfirmation', function($q){
 				   					$q->where('rider_delivery_confirmation', 1);
 								})
-								->orWhereHas('waiterServeConfirmation', function($q){
-				   					$q->where('waiter_serve_confirmation', 1);
+								->orWhereHas('orderServeConfirmation', function($q){
+				   					$q->where('food_serve_confirmation', 1);
 								})
 								->latest()->paginate($perPage),				
 
-               'cancelled' => Order::where('customer_confirmation', 0)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])
+               'cancelled' => Order::where('customer_confirmation', 0)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
                					->orHas('restaurantOrderCancelations')
                					->orWhereHas('restaurantAcceptances', function($q){
 				   					$q->where('food_order_acceptance', 0);
 								})
                					->latest()->paginate($perPage),
 
-               'prepaid' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->has('payment')->latest()->paginate($perPage),
+               'prepaid' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->has('payment')->latest()->paginate($perPage),
                			
-               'postpaid' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])->doesntHave('payment')->latest()->paginate($perPage),
+               'postpaid' => Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->doesntHave('payment')->latest()->paginate($perPage),
                
             ], 200);
 
@@ -165,7 +165,7 @@ class OrderController extends Controller
 
   	public function searchAllOrders($search, $perPage)
 	{	
-		$query = Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'waiterServeConfirmation', 'restaurantOrderCancelations.restaurant'])
+		$query = Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
 						->where('id', 'like', "%$search%")
 						->orWhere('order_type', 'like', "%$search%")
 						->orWhere('is_asap_order', 'like', "%$search%")
@@ -205,7 +205,7 @@ class OrderController extends Controller
         	$q->orWhere('user_name', 'like', "%$search%");
         });
 
-        $query->orWhereHas('waiterServeConfirmation', function($q)use ($search){
+        $query->orWhereHas('orderServeConfirmation', function($q)use ($search){
         	$q->where('waiter_id', 'like', "%$search%");
         });
 
@@ -236,16 +236,16 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation', 'items.additionalOrderedAddons', 'order.orderer', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
+               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation', 'items.additionalOrderedAddons', 'order.orderer', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
 				               			->whereHas('order', function($q){
 						   					$q->where('customer_confirmation', 1)
 						   					  ->orWhere('order_type', 'reservation');
 										})
 				       					->latest()->paginate($perPage),
 
-               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation', 'items.additionalOrderedAddons', 'order.orderer', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.waiterServeConfirmation', 'order.restaurantOrderCancelations'])
-										->whereHas('order.waiterServeConfirmation', function($q){
-						   					$q->where('waiter_serve_confirmation', 1);
+               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation', 'items.additionalOrderedAddons', 'order.orderer', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
+										->whereHas('order.orderServeConfirmation', function($q){
+						   					$q->where('food_serve_confirmation', 1);
 										})
 										->latest()->paginate($perPage),
                
@@ -278,7 +278,8 @@ class OrderController extends Controller
 			            }
 			        },
 		    ],
-		    'orderReady' => 'boolean'
+		    'orderReady' => 'boolean',
+		    'serveOrder' => 'boolean'
 	 	]);
 
 	 	$orderToConfirm = Order::findOrFail($order);
@@ -289,19 +290,27 @@ class OrderController extends Controller
 
 	 	}
 
+ 		else if ($request->serveOrder) {
+
+ 			$orderServed = $this->makeRestaurantOrderServed($orderToConfirm, 'App\Models\Restaurant', $request->restaurant_id);
+ 			$orderConfirmed = $this->makeRestaurantOrderReady($orderToConfirm, $request->restaurant_id);
+ 			$orderAccepted = $this->makeRestaurantOrderAccepted($orderToConfirm, $request->restaurant_id);
+
+ 		}
  		else if ($request->orderReady) {
  			
  			$orderConfirmed = $this->makeRestaurantOrderReady($orderToConfirm, $request->restaurant_id);
  			$orderAccepted = $this->makeRestaurantOrderAccepted($orderToConfirm, $request->restaurant_id);
 
- 		}else {
+ 		}
+ 		else {
 
  			$orderAccepted = $this->makeRestaurantOrderAccepted($orderToConfirm, $request->restaurant_id);
  		
  		}
 
  		// checking if order is for home-delivery, order is from customer and any rider notification is already broadcasted
-		if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer instanceof Customer && !RiderDeliveryRecord::where('order_id', $order)->exists()) {
+		if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer instanceof Customer && !$orderToConfirm->riderAssignment()->exists()) {
 
 			// make rider call with RiderDeliveryRecord
 			$this->makeRiderOrderCall($orderToConfirm);
@@ -311,14 +320,8 @@ class OrderController extends Controller
 		// checking if order is for serve-on-table and restaurant has any approved waiter
 		else if ($orderToConfirm->order_type==='serve-on-table') {
 
-			// $expectedRestaurant = Restaurant::findOrFail($request->restaurant_id);
-
-			if (Restaurant::findOrFail($request->restaurant_id)->waiters()->where('admin_approval', 1)->exists()) {
-
-				// make waiter call with RestaurantOrderRecord
-				$this->notifyRestaurantWaiters($orderToConfirm, $request->restaurant_id);
-
-			}
+			// make waiter call with RestaurantOrderRecord
+			$this->notifyRestaurantWaiters($orderAccepted, $request->restaurant_id);
 
 		}
 
@@ -548,12 +551,9 @@ class OrderController extends Controller
         }
 
         // if order is ready and not already served
-        else if ($request->orderServed && $orderToServe->orderReadyConfirmations()->where('restaurant_id', $request->restaurant_id)->where('food_ready_confirmation', 1)->exists() && !$orderToServe->waiterServeConfirmation()->exists()) {
-                
-            $orderToServe->waiterServeConfirmation()->create([
-            	'waiter_serve_confirmation' => 1,
-            	'waiter_id' => $request->waiter_id,
-            ]);
+        else if ($request->orderServed && $orderToServe->orderReadyConfirmations()->where('restaurant_id', $request->restaurant_id)->where('food_ready_confirmation', 1)->exists() && !$orderToServe->orderServeConfirmation()->exists()) {
+
+            $this->makeRestaurantOrderServed($orderToServe, 'App\Models\Waiter', $request->waiter_id);
 
 	        // Broadcast to admin for restaurant order ready confirmation
 	        $this->notifyAdmin($orderToServe);
@@ -732,9 +732,11 @@ class OrderController extends Controller
 		// if exists & not accepted yet
  		if ($restaurnatOrderToAccept && $restaurnatOrderToAccept->food_order_acceptance==-1) {
 
-			return $restaurnatOrderToAccept->update(['food_order_acceptance' => 1]);
+			$restaurnatOrderToAccept->update(['food_order_acceptance' => 1]);
 
 		}
+
+		return $restaurnatOrderToAccept;
 	}
 
 	private function makeRestaurantOrderReady(Order $order, $restaurant)
@@ -746,6 +748,19 @@ class OrderController extends Controller
 											 			'food_ready_confirmation' => 1,
 											 			'restaurant_id' => $restaurant,
 											 		]);
+		}
+	}
+
+	private function makeRestaurantOrderServed(Order $order, $className, $id)
+	{
+		// if not already entered for this order & restaurant
+		if (!$order->orderServeConfirmation()->exists()) {
+			
+			$order->orderServeConfirmation()->create([
+	 			'food_serve_confirmation' => 1,
+	 			'confirmer_id' => $id,
+	 			'confirmer_type' => $className,
+	 		]);
 		}
 	}
 
@@ -770,11 +785,14 @@ class OrderController extends Controller
 
 	}
 
-	private function notifyRestaurantWaiters(Order $order, $restaurantId)
+	private function notifyRestaurantWaiters(RestaurantOrderRecord $restaurantOrderRecord, $restaurantId)
 	{
-		// broadcast for waiter with RestaurantOrderRecord
-		$restaurantOrderRecord = $order->restaurantAcceptances()->where('restaurant_id', $restaurantId)->first();
-		event(new UpdateWaiters($restaurantOrderRecord));
+		if (Restaurant::find($restaurantId)->waiters()->where('admin_approval', 1)->exists()) {
+			
+			// broadcast for waiter with RestaurantOrderRecord
+			event(new UpdateWaiters($restaurantOrderRecord));
+
+		}
 	}
 
 	// should calculate the nearest rider and snoozing time laterly

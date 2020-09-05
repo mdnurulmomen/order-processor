@@ -94,11 +94,11 @@
 									  	<tr v-show="ordersToShow.length"
 									    	v-for="(restaurant, index) in ordersToShow"
 									    	:key="restaurant.id" 
-									    	:class="[(cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) || !confirmedReservationOrder(restaurant.order)) ? 'bg-secondary' : confirmedOrder(restaurant.order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(restaurant.order.restaurant_acceptances) ? 'bg-warning' : 'bg-danger']" 
+									    	:class="orderRowClass(restaurant.order)" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ restaurant.order_id }}</td>
-								    		<td>{{ restaurant.order.order_type }}</td>
+								    		<td>{{ restaurant.order.order_type | capitalize }}</td>
 								    		<!-- <td></td> -->
 								    		<td>
 								      			<button 
@@ -113,9 +113,20 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations) && confirmedReservationOrder(restaurant.order)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && orderToServe(restaurant.order) && confirmedReservationOrder(restaurant.order)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=true;submitConfirmation()" 
+									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.serveOrder=true;confirmOrder()" 
+								      			>
+								        			<i class="fas fa-bell"></i>
+							        				Serve-Order
+								      			</button>
+								      			<!-- disabled if restaurant already confirmed as ready-->
+								      			<button 
+									      			type="button" 
+									      			class="btn btn-primary btn-sm" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !readyOrder(restaurant.order.order_ready_confirmations) && confirmedReservationOrder(restaurant.order)" 
+									      			:disabled="formSubmitionMode" 
+									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=true;confirmOrder()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 							        				Order-Ready
@@ -123,10 +134,10 @@
 								      			<!-- if restaurant not accepted yet-->
 								      			<button 
 									      			type="button" 
-									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations) && !acceptedOrder(restaurant.order.restaurant_acceptances) && confirmedReservationOrder(restaurant.order)" 
+									      			class="btn btn-warning btn-sm" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !readyOrder(restaurant.order.order_ready_confirmations) && !acceptedOrder(restaurant.order.restaurant_acceptances) && confirmedReservationOrder(restaurant.order)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=false;submitConfirmation()" 
+									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=false;confirmOrder()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 								        			Accept-Order
@@ -657,7 +668,7 @@
 				this.singleOrderData.order.items = restaurant.items;
 				$("#modal-show-order").modal("show");
 			},
-			submitConfirmation(){
+			confirmOrder(){
 
 				this.formSubmitionMode = true;
 				this.singleOrderData.order.restaurant_id = this.restaurant_id;
@@ -701,15 +712,18 @@
 
 				$("#modal-order-cancelation").modal("hide");
 				
+				this.formSubmitionMode = true;
+
 				axios
 					.put('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.orderCancelation)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleOrderData.order = {};
-
 							this.allOrders = response.data;
 							this.showListDataForSelectedTab();
+
+							this.formSubmitionMode = false;
+							this.singleOrderData.order = {};
 
 							toastr.success(response.data.success, "Cancelled");
 						}
@@ -724,6 +738,7 @@
 					});
 			},
 		    searchData() {
+
 				axios
 				.get(
 					"/api/orders/search/"+ this.query +"/" + this.perPage +
@@ -738,6 +753,7 @@
 				.catch(e => {
 					console.log(e);
 				});
+
 			},
 			cancelledOrder(orderAcceptedRestaurants, restaurantOrderCancelations) {
 				
@@ -757,6 +773,7 @@
 				return cancelled;
 			},
 			acceptedOrder(restaurantAcceptances) {
+
 				if (restaurantAcceptances.length) {
 					return restaurantAcceptances.some(
 						currentRestaurantAcceptance => (currentRestaurantAcceptance.restaurant_id==this.restaurant_id && currentRestaurantAcceptance.food_order_acceptance==1)
@@ -765,7 +782,8 @@
 
 				return false;
 			},
-			confirmedOrder(orderReadyConfirmations) {
+			readyOrder(orderReadyConfirmations) {
+
 				if (orderReadyConfirmations.length) {
 					return orderReadyConfirmations.some(
 						currentRestaurantConfirmation => (currentRestaurantConfirmation.restaurant_id==this.restaurant_id && currentRestaurantConfirmation.food_ready_confirmation==1)
@@ -774,12 +792,9 @@
 				
 				return false;
 			},
-
 			confirmedReservationOrder(order) {
 
-				console.log(order);
-
-				if (order.order_type=='reservation' && order.customer_confirmation==-1) {
+				if (this.defineOrderType(order)=='reservation' && order.customer_confirmation==-1) {
 
 					return false;
 
@@ -788,12 +803,70 @@
 				// paid reservation or not even a reservation order
 				return true;
 			}, 
-
 			defineOrderType(order) {
 
 				return order.order_type;
 
+			},
+			orderToServe(order) {
+
+				if (this.servingOrder(order) && !this.servedOrder(order)) {
+
+					return true;
+
+				}
+
+				return false;
+
+			},
+			// order is for serve 
+			servingOrder(order) {
+
+				if (this.defineOrderType(order)==='reservation' || this.defineOrderType(order)==='serve-on-table' ) {
+
+					return true;
+
+				}
+
+				return false;
+
+			},
+			// completed order
+			servedOrder(order) {
+
+				if (order.order_serve_confirmation && order.order_serve_confirmation.food_serve_confirmation==1) {
+					return true;
+				}else
+					return false;
+
+			},
+			orderRowClass(order) {
+
+				if (this.cancelledOrder(order.restaurant_acceptances, order.restaurant_order_cancelations) || !this.confirmedReservationOrder(order)) {
+
+					return 'bg-secondary';
+				}
+				else if (this.servingOrder(order) && this.servedOrder(order)) {
+					
+					return 'bg-success';
+				}
+				else if (this.servingOrder(order) && this.readyOrder(order.order_ready_confirmations)) {
+					
+					return 'bg-primary';
+				}
+				else if (!this.servingOrder(order) && this.readyOrder(order.order_ready_confirmations)) {
+					
+					return 'bg-success';
+				}
+				else if (this.acceptedOrder(order.restaurant_acceptances)) {
+
+					return 'bg-warning';
+				}
+				else
+					return 'bg-danger';
+
 			}
+
 		}
   	}
 
