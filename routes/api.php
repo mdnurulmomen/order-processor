@@ -28,6 +28,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::get('/restaurant-menu-items/{expectedRestaurant}', 'RestaurantController@getRestaurantMenuItems');
 
 			Route::post('/orders', 'OrderController@createNewOrder');
+			
+			Route::post('reservations', 'OrderController@createNewReservation');
+			Route::post('reservation-confirmations', 'OrderController@confirmReservation');
 
 		});
 	});

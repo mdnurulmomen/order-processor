@@ -17,12 +17,12 @@ class CreateTableBookingDetailsTable extends Migration
         Schema::create('table_booking_details', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->unsignedTinyInteger('guest_number')->default(1);
-            $table->timestamp('arriving_time')->useCurrent();
+            // $table->timestamp('arriving_time')->useCurrent();
             $table->string('mobile', 13);
-            $table->timestamp('max_payment_time')->useCurrent();
-            $table->unsignedMediumInteger('restaurant_id');
             $table->boolean('booking_confirmation')->default(false);
             $table->unsignedInteger('order_id')->nullable();
+            $table->unsignedMediumInteger('restaurant_id');
+            $table->timestamp('max_payment_time')->useCurrent();
         });
     }
 

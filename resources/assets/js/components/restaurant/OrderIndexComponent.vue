@@ -94,7 +94,7 @@
 									  	<tr v-show="ordersToShow.length"
 									    	v-for="(restaurant, index) in ordersToShow"
 									    	:key="restaurant.id" 
-									    	:class="[cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) ? 'bg-secondary' : confirmedOrder(restaurant.order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(restaurant.order.restaurant_acceptances) ? 'bg-warning' : 'bg-danger']" 
+									    	:class="[(cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) || !confirmedReservationOrder(restaurant.order)) ? 'bg-secondary' : confirmedOrder(restaurant.order.order_ready_confirmations) ? 'bg-success' : acceptedOrder(restaurant.order.restaurant_acceptances) ? 'bg-warning' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ restaurant.order_id }}</td>
@@ -113,7 +113,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations) && confirmedReservationOrder(restaurant.order)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=true;submitConfirmation()" 
 								      			>
@@ -124,7 +124,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations) && !acceptedOrder(restaurant.order.restaurant_acceptances)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !confirmedOrder(restaurant.order.order_ready_confirmations) && !acceptedOrder(restaurant.order.restaurant_acceptances) && confirmedReservationOrder(restaurant.order)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=false;submitConfirmation()" 
 								      			>
@@ -135,7 +135,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-secondary btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !acceptedOrder(restaurant.order.restaurant_acceptances)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !acceptedOrder(restaurant.order.restaurant_acceptances) && confirmedReservationOrder(restaurant.order)" 
 									      			@click="showOrderCancelationModal(restaurant.order)" 
 								      			>
 								        			<i class="fas fa-times"></i>
@@ -200,7 +200,7 @@
 					<div class="modal-content">
 						<div class="modal-header bg-info">
 						  	<h4 class="modal-title">
-						  		Order Details
+						  		{{ defineOrderType(singleOrderData.order) | capitalize }} Details
 						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    <span aria-hidden="true">&times;</span></button>
@@ -223,101 +223,98 @@
 							<!-- Tab panes -->
 							<div class="tab-content">
 								<div id="show-order-details" class="container tab-pane fade">
-									<div class="row">
-					            		<div class="col-sm-12">
-					            			<div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Order id
-							              		</label>
-								                <div class="col-sm-6" >
-								                  	{{ singleOrderData.order.id }}
-								                </div>
-								            </div>
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Type 
-							              		</label>
+									
+			            			<div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Order id
+					              		</label>
+						                <div class="col-sm-6" >
+						                  	{{ singleOrderData.order.id }}
+						                </div>
+						            </div>
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Type 
+					              		</label>
 
-								                <div class="col-sm-6">
-								                	{{ singleOrderData.order.order_type }}
-								                </div>
-								            </div>
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			ASAP/Scheduled
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{
-								                  		singleOrderData.order.is_asap_order ?
-								                  		'ASAP' : singleOrderData.order.delivery_datetime
-								                  	}}
-								                </div>	
-								            </div> 
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Price
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.order_price }}
-								                </div>	
-								            </div>
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Vat
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.vat }}
-								                </div>	
-								            </div>
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Discount
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.discount }}
-								                </div>	
-								            </div>
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Delivery-fee
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.delivery_fee }}
-								                </div>	
-								            </div> 
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Payable Price
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.net_payable }}
-								                </div>	
-								            </div> 
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Cutlery
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.cutlery_addition ? 'Added' : 'None' }}
-								                </div>	
-								            </div> 
-								            <div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Ordered By
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ 
-								                  		singleOrderData.order.orderer ? 
-								                  		singleOrderData.order.orderer.user_name : 'NA'  
-													}}
-													({{
-														singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
-								                  		'Waiter' : 'Customer'
-													}})
-								                </div>	
-								            </div>  
-					            		</div>
-					            	</div>
+						                <div class="col-sm-6">
+						                	{{ singleOrderData.order.order_type | capitalize }}
+						                </div>
+						            </div>
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			ASAP/Scheduled
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{
+						                  		singleOrderData.order.is_asap_order ?
+						                  		'ASAP' : singleOrderData.order.order_schedule
+						                  	}}
+						                </div>	
+						            </div> 
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Price
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{ singleOrderData.order.order_price }}
+						                </div>	
+						            </div>
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Vat
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{ singleOrderData.order.vat }}
+						                </div>	
+						            </div>
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Discount
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{ singleOrderData.order.discount }}
+						                </div>	
+						            </div>
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Delivery-fee
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{ singleOrderData.order.delivery_fee }}
+						                </div>	
+						            </div> 
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Payable Price
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{ singleOrderData.order.net_payable }}
+						                </div>	
+						            </div> 
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Cutlery
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{ singleOrderData.order.cutlery_addition ? 'Added' : 'None' }}
+						                </div>	
+						            </div> 
+						            <div class="form-group row">		
+					              		<label class="col-sm-6 text-right">
+					              			Ordered By
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{ 
+						                  		singleOrderData.order.orderer ? 
+						                  		singleOrderData.order.orderer.user_name : 'NA' | capitalize 
+											}}
+											({{
+												singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
+						                  		'Waiter' : 'Customer'
+											}})
+						                </div>	
+						            </div>
 								</div>
 								<div id="show-order-items-details" class="container tab-pane active">
 									<div class="row">
@@ -328,7 +325,7 @@
 							              		</label>
 								                <div class="col-sm-6">
 
-								                	<ul v-show="Boolean(singleOrderData.order.items!=null && singleOrderData.order.items.length)" 
+								                	<ul v-show="Boolean(singleOrderData.order.items && singleOrderData.order.items.length)" 
 								                	>	
 														<li v-for="(item, index) in singleOrderData.order.items" 
 															:key="item.id"
@@ -359,6 +356,14 @@
 
 														</li>
 													</ul>
+
+													<p 
+														class="text-danger" 
+														v-show="Boolean(singleOrderData.order.items && !singleOrderData.order.items.length)"
+													>
+														No Items Found Yet
+													</p>
+
 								                </div>	
 								            </div>  
 					            		</div>
@@ -385,7 +390,7 @@
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
-						  		Order Cancelation
+						  		{{ defineOrderType(singleOrderData.order) | capitalize }} Cancelation
 						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
@@ -570,6 +575,14 @@
 					this.searchData();
 				}
 			},
+		},
+
+		filters: {
+			capitalize: function (value) {
+				if (!value) return ''
+				value = value.toString()
+				return value.charAt(0).toUpperCase() + value.slice(1)
+			}
 		},
 
 		methods : {
@@ -761,6 +774,26 @@
 				
 				return false;
 			},
+
+			confirmedReservationOrder(order) {
+
+				console.log(order);
+
+				if (order.order_type=='reservation' && order.customer_confirmation==-1) {
+
+					return false;
+
+				}
+
+				// paid reservation or not even a reservation order
+				return true;
+			}, 
+
+			defineOrderType(order) {
+
+				return order.order_type;
+
+			}
 		}
   	}
 

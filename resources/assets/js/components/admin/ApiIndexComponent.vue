@@ -118,7 +118,6 @@
 					purpose : 'Show restaurant menu items',
 					parameters : {},
 				},
-
 				{
 					url : 'orders',
 					method : 'post',
@@ -126,7 +125,7 @@
 					parameters : {
 						'order_type (required)' : 'home-delivery/serve-on-table/take-away/reservation', 
 						'is_asap_order (required)' : 'true/false',
-						'delivery_datetime (required if not asap)' : 'date',
+						'order_schedule (required if not asap)' : 'date',
 						'order_price (required)' : 'numeric', 
 						'vat (required)' : 'numeric', 
 						'discount (required)' : 'numeric', 
@@ -170,6 +169,86 @@
 							}
 						]
 					}
+				},
+				{
+					url : 'reservations',
+					method : 'post',
+					purpose : 'Post new reservation',
+					parameters : {
+						"order" : {
+							'order_type (required)' : 'reservation', 
+							'order_price (required)' : 'numeric', 
+							'vat (required)' : 'numeric', 
+							'discount (required)' : 'numeric', 
+							'net_payable (required)' : 'numeric', 
+							'cutlery_addition' : 'boolean', 
+							'orderer_type (required)' : 'customer', 
+							'orderer_id (required)' : 'numeric', 
+						},
+
+						"payment" : {
+							'payment_method (required)' : 'cash/bkash/card', 
+							'payment_id (required if not cash)' : 'string', 
+						},
+						
+						"reservation" : {
+							"restaurant_id (required)" : "numeric",
+							"guest_number (required)" : "numeric",
+							"arriving_time (required)" : "timestamp",
+							"mobile (required)" : "11 digit"
+						},
+ 
+						'menuItems (required)' : [
+							{
+								'id (required)' : 'numeric',
+								'quantity (required)' : 'numeric',
+								'itemVariations (required)' : { 
+									'id (required if not false)' : 'numeric'
+								},
+								'itemAddons' : [
+									{
+										'id (required if not empty-array)' : 'numeric',
+										'quantity (required if not empty-array)' : 'numeric'
+									}
+								],
+								'customization' : 'string'
+							}
+						]
+
+							
+					}
+				},
+				{
+					url : 'reservation-confirmations',
+					method : 'post',
+					purpose : 'Confirm a pending reservation',
+					parameters : {
+						"reservation" : {
+					        "order_id (required)" : 'numeric',
+					        "restaurant_id (required)" : 'numeric',
+					        "reservation_id (required)" : 'numeric'
+					    },
+					    "payment (required)":{
+					        "payment_method (required)" : "card/bkash",
+					        "payment_id (required)" : "string"
+					    },
+						"menuItems (required)" : [
+							{
+								"id (required)" : 'numeric',  
+								"quantity (required)" : 'numeric',  
+								'itemVariations (required)' : { 
+									'id (required if not false/menu-item has variation)' : 'numeric'
+								},
+								'itemAddons' : [
+									{
+										'id (required if not empty-array)' : 'numeric',
+										'quantity (required if not empty-array)' : 'numeric'
+									}
+								],
+								"customization":"string"
+							}	
+						]
+					},
 				},
 			];
 

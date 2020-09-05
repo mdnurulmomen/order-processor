@@ -28,7 +28,7 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'order_type'=>'required|in:home-delivery,serve-on-table,take-away,reservation',
+            'order_type'=>'required|in:home-delivery,serve-on-table,take-away',
             'is_asap_order'=>'required_without:delivery_datetime|boolean',
             'delivery_datetime'=>'required_if:is_asap_order,false|date|date_format:Y-m-d H:i:s|after:'.now()->subMinutes(3),
             'order_price'=>'required|numeric',

@@ -9,6 +9,8 @@ use App\Models\Kitchen;
 use App\Models\MenuCategory;
 use App\Models\RestaurantDeal;
 use App\Models\RestaurantAdmin;
+use App\Models\TableBookingDetail;
+use App\Models\RestaurantBookingStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -99,5 +101,16 @@ class Restaurant extends Model
     public function menuCategories()
     {
         return $this->hasMany(RestaurantMenuCategory::class, 'restaurant_id', 'id');
-    } 
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(TableBookingDetail::class, 'restaurant_id', 'id');
+    }
+
+    public function booking()
+    {
+        return $this->hasOne(RestaurantBookingStatus::class, 'restaurant_id', 'id');
+    }
+
 }
