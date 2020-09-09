@@ -37,7 +37,7 @@ class RestaurantOrderResource extends JsonResource
             'orderer' => $this->orderer,
             'restaurant_acceptances' => RestaurantAcceptanceResource::collection($this->restaurantAcceptances),
             'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->orderReadyConfirmations),
-            'waiter_serve_confirmation' => $this->waiterServeConfirmation,
+            'order_serve_confirmation' => $this->orderServeConfirmation,
             'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->restaurantOrderCancelations),
         ];
     }

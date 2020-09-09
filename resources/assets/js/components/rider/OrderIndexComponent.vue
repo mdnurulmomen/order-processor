@@ -81,11 +81,11 @@
 									      			class="btn btn-primary btn-sm" 
 									      			v-if="!cancelledOrder(riderDeliveryRecord) && !allRestaurantPickedUp(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && acceptedDeliveryOrder(riderDeliveryRecord)" 
 									      			v-for="restaurantOrderRecord in riderDeliveryRecord.restaurants_accepted" 
-									      			:disabled="formSubmitionMode" 
+									      			:disabled="Boolean(formSubmitionMode || pickedUp(riderDeliveryRecord, restaurantOrderRecord.restaurant.id))" 
 									      			:key="restaurantOrderRecord.id" 
 									      			@click="orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord)" 
 								      			>
-								      				{{ 'Pick Up from' + restaurantOrderRecord.restaurant.name }}
+								      				{{ 'Pick Up from ' + restaurantOrderRecord.restaurant.name }}
 								      			</button>
 								      			<!-- accept button -->
 								      			<button
@@ -281,8 +281,29 @@
 																<li v-for="(item, index) in orderedRestaurant.items" 
 																	:key="item.id"
 																>	
-																	{{ item.restaurant_menu_item.name }}  
+																	{{ item.restaurant_menu_item.name }}
+
+																	<span class="d-block"
+																		v-if="item.restaurant_menu_item.has_variation" 
+																	>
+																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.variation_name }})
+																	</span>
+
 																	(quantity : {{ item.quantity }})
+
+																	<span 
+																		class="d-block font-weight-bold" 
+																		v-if="item.additional_ordered_addons.length"
+																	>
+																		Extra Addons
+																	</span>
+
+																	<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
+
+																		<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
+																			{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name }}
+																		</li>
+																	</ul>
 																</li>
 															</ol>
 														</li>
@@ -407,11 +428,11 @@
 				    	);
 
 				    Vue.set(this.deliveriesToShow, index, riderDeliveryOrder)
-				    toastr.info("Old delivery-order update arrives");
+				    toastr.info("Delivery-order update arrives");
 				    // console.log(index);
 			    }
 			    
-		    	toastr.warning("Else order delivery arrives");
+		    	toastr.warning("Else");
 
 			});
 
@@ -466,15 +487,18 @@
 			},
 			orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord){
 
+				console.log(riderDeliveryRecord);
+				console.log(restaurantOrderRecord);
+
 				this.formSubmitionMode = true;
 				this.singleOrderData.rider = {};
-				this.singleOrderData.rider.rider_id = this.rider_id;
 
 				this.singleOrderData.rider.orderPicked = true;
 				this.singleOrderData.rider.orderDropped = false;
 				this.singleOrderData.rider.orderAccepted = false;
+				this.singleOrderData.rider.rider_id = this.rider_id;
 
-				this.singleOrderData.rider.restaurant_id = restaurantOrderRecord.restaurant_id;
+				this.singleOrderData.rider.restaurant_id = restaurantOrderRecord.restaurant.id;
 
 				this.singleOrderData.order = riderDeliveryRecord.order;
 				this.submitConfirmation();
@@ -484,11 +508,11 @@
 
 				this.formSubmitionMode = true;
 				this.singleOrderData.rider = {};
-				this.singleOrderData.rider.rider_id = this.rider_id;
 
 				this.singleOrderData.rider.orderPicked = false;
 				this.singleOrderData.rider.orderDropped = true;
 				this.singleOrderData.rider.orderAccepted = false;
+				this.singleOrderData.rider.rider_id = this.rider_id;
 
 				this.singleOrderData.order = riderDeliveryRecord.order;
 				this.submitConfirmation();
@@ -498,21 +522,17 @@
 
 				this.formSubmitionMode = true;
 				this.singleOrderData.rider = {};
-				this.singleOrderData.rider.rider_id = this.rider_id;
 
 				this.singleOrderData.rider.orderPicked = false;
 				this.singleOrderData.rider.orderDropped = false;
 				this.singleOrderData.rider.orderAccepted = true;
+				this.singleOrderData.rider.rider_id = this.rider_id;
 
 				this.singleOrderData.order = riderDeliveryRecord.order;
 				this.submitConfirmation();
 
 			},
-			submitConfirmation(){
-
-				// console.log(this.singleOrderData.order);
-				// console.log(this.singleOrderData.rider);
-				// return;
+			submitConfirmation() {
 				
 				$("#modal-acceptOrPickOrDrop-order").modal("hide");
 
@@ -604,6 +624,11 @@
 			acceptedDeliveryOrder(riderDeliveryRecord){
 				return riderDeliveryRecord.delivery_order_acceptance==1 ? true : false;
 			},
+			pickedUp(riderDeliveryRecord, restaurantId) {
+				return 	riderDeliveryRecord.rider_food_pick_confirmations.some(
+					orderPickUp => (orderPickUp.rider_food_pick_confirmation == 1 && orderPickUp.restaurant_id == restaurantId)
+				);
+			}
 		}
   	}
 

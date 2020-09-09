@@ -265,7 +265,7 @@
 																	<span class="d-block"
 																		v-if="item.restaurant_menu_item.has_variation" 
 																	>
-																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation_id }} )
+																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.variation_name }} )
 																	</span>
 
 																	(quantity : {{ item.quantity }})
@@ -279,8 +279,8 @@
 
 																	<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
 
-																		<li v-for="(addon, index) in item.additional_ordered_addons">
-																			{{ addon.restaurant_menu_item_addon_id }}
+																		<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
+																			{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name }}
 																		</li>
 																	</ul>
 

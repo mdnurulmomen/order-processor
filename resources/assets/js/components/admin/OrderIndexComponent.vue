@@ -488,11 +488,11 @@
 									    			</span>
 
 									    			<span 
-									    				v-if="singleOrderData.order.rider_assignment"
-									    				:class="[singleOrderData.order.rider_assignment ? 'badge-warning' : 'badge-danger', 'badge d-block']"
+									    				v-if="riderAssigned(singleOrderData.order)"
+									    				:class="[riderAssigned(singleOrderData.order) ? 'badge-warning' : 'badge-danger', 'badge d-block']"
 									    			>
 									    				{{ 
-									    					singleOrderData.order.rider_assignment ? 'Rider Assigned' : 'Not-assigned' 
+									    					riderAssigned(singleOrderData.order) ? 'Rider Assigned' : 'Not-assigned' 
 									    				}}
 									    			</span>
 
@@ -546,11 +546,11 @@
 									    				}}
 									    			</span>
 
-									    			<span v-if="singleOrderData.order.waiter_serve_confirmation"
-									    				:class="[singleOrderData.order.waiter_serve_confirmation.waiter_serve_confirmation==1 ? 'badge-success' : 'badge-secondary', 'badge d-block']"
+									    			<span v-if="singleOrderData.order.order_serve_confirmation"
+									    				:class="[singleOrderData.order.order_serve_confirmation.food_serve_confirmation==1 ? 'badge-success' : 'badge-secondary', 'badge d-block']"
 									    			>
 									    				{{ 
-									    					waiterFoodServeStatus(singleOrderData.order.waiter_serve_confirmation)
+									    					foodServeStatus(singleOrderData.order.order_serve_confirmation)
 									    				}}
 									    			</span>
 										    		
@@ -579,8 +579,30 @@
 																<li v-for="(item, index) in orderedRestaurant.items" 
 																	:key="item.id"
 																>	
-																	{{ item.restaurant_menu_item.name }}  
+																	{{ item.restaurant_menu_item.name }} 
+
+																	<span class="d-block"
+																		v-if="item.restaurant_menu_item.has_variation" 
+																	>
+																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.variation_name }} )
+																	</span>
+
 																	(quantity : {{ item.quantity }})
+
+																	<span 
+																		class="d-block font-weight-bold" 
+																		v-if="item.additional_ordered_addons.length"
+																	>
+																		Extra Addons
+																	</span>
+
+																	<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
+
+																		<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
+																			{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name }}
+																		</li>
+																	</ul>
+
 																</li>
 															</ol>
 
@@ -624,20 +646,20 @@
 															</dd>
 															
 															<dd v-if="singleOrderData.order.delivery.customer_address.additional_hint"> 
-																{{ 
-										                  			(singleOrderData.order.delivery.customer_address.additional_hint)
-											                  	}}
+																({{ 
+										                  			singleOrderData.order.delivery.customer_address.additional_hint
+											                  	}})
 															</dd>
 
-															<dd>-
+															<dd class="font-weight-bold">-
 																{{ 
-										                  			singleOrderData.order.delivery.customer_address.address_name
+										                  			singleOrderData.order.delivery.customer_address.address_name | capitalize
 											                  	}}
 															</dd>
 
 															<dd>- 
 																{{ 
-										                  			singleOrderData.order.delivery.additional_info
+										                  			singleOrderData.order.delivery.additional_info | capitalize
 											                  	}}
 															</dd>
 														</dl> 
@@ -679,7 +701,6 @@
 									class="btn btn-danger dropdown-toggle" 
 									data-toggle="dropdown" 
 									v-if="!deliveredOrServedOrder(singleOrderData.order) && !cancelledOrder(singleOrderData.order)" 
-									:disabled="Boolean(!reservationOrder(singleOrderData.order) && !orderConfirmed(singleOrderData.order))" 
 								>
 									<i class="fas fa-times"></i>
 									Cancel
@@ -690,7 +711,7 @@
 						      			type="button" 
 						      			class="btn btn-outline-danger btn-sm dropdown-item" 
 						      			@click="showRiderCancelationModal()" 
-						      			:disabled="Boolean(formSubmitionMode || singleOrderData.order.rider_assignment===null || riderPickedOrder(singleOrderData.order))"
+						      			:disabled="Boolean(formSubmitionMode || !riderAssigned(singleOrderData.order) || riderPickedOrder(singleOrderData.order))"
 					      			>
 					        			<i class="fas fa-cancel"></i>
 					        			Cancelled by Rider
@@ -1152,7 +1173,8 @@
 
 							this.allOrders = response.data;
 							this.showListDataForSelectedTab();
-							this.updateCurrentOrder();
+							// this.updateCurrentOrder();
+							this.fetchExpectedOrderDetail(this.singleOrderData.order);
 
 							this.formSubmitionMode = false;
 							
@@ -1219,7 +1241,8 @@
 
 							this.allOrders = response.data;
 							this.showListDataForSelectedTab();
-							this.updateCurrentOrder();
+							// this.updateCurrentOrder();
+							this.fetchExpectedOrderDetail(this.singleOrderData.order);
 
 							this.formSubmitionMode = false;
 							
@@ -1300,7 +1323,7 @@
 
 				if (order.rider_delivery_confirmation && order.rider_delivery_confirmation.rider_delivery_confirmation==1) {
 					return 'Order Deliverd';
-				}else if (order.waiter_serve_confirmation && order.waiter_serve_confirmation.waiter_serve_confirmation==1) {
+				}else if (order.order_serve_confirmation && order.order_serve_confirmation.food_serve_confirmation==1) {
 					return 'Order Served';
 				}else
 					return false;
@@ -1370,10 +1393,10 @@
 			initialOrderClass(order) {
 
 				if (this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
-					return 'bg-warning'
+					return 'bg-secondary'
 				}
 				else if(!this.reservationOrder(order) && this.orderToBeConfirmed(order)){
-					return 'bg-danger';
+					return 'bg-dark';
 				}
 				else if (this.orderConfirmed(order)) {
 					return 'bg-success';
@@ -1411,16 +1434,18 @@
 			orderCallConfirmationClass(order) {
 				
 				if (this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
-					return 'badge-warning';
+					return 'badge-secondary';
 				}
 				else if (!this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
-					return 'badge-danger';
-				}else if (this.orderConfirmed(order)) {
+					return 'badge-dark';
+				}
+				else if (this.orderConfirmed(order)) {
 					return 'badge-success';
 				}
 				else if(this.cancelledOrder(order)) {
 					return 'badge-secondary';
-				}else
+				}
+				else
 					return false;
 
 			},
@@ -1438,9 +1463,9 @@
 			},
 			restaurantOrderAcceptanceClass(restaurantOrderRecord) {
 				if (restaurantOrderRecord.food_order_acceptance==-1) {
-					return 'badge-primary';
+					return 'badge-danger';
 				}else if (restaurantOrderRecord.food_order_acceptance==1) {
-					return 'badge-success';
+					return 'badge-warning';
 				}else 
 					return 'badge-secondary';		
 			},
@@ -1479,7 +1504,7 @@
 					return 'Rider cancelled ' + riderFoodPickUpConfirmation.restaurant.name;
 					// return riderFoodPickUpConfirmation.rider.user_name +' has cancelled order of '+riderFoodPickUpConfirmation.restaurant.name;
 				}else if (riderFoodPickUpConfirmation.rider_food_pick_confirmation==1) {
-					return 'Picked-up from' + riderFoodPickUpConfirmation.restaurant.name;
+					return 'Picked-up from ' + riderFoodPickUpConfirmation.restaurant.name;
 					// return riderFoodPickUpConfirmation.rider.user_name +' picked-up from ' + riderFoodPickUpConfirmation.restaurant.name;
 				}else {
 					return 'Not picked-up yet';
@@ -1500,15 +1525,21 @@
 				else
 					return 'No response';
 			},
-			waiterFoodServeStatus(waiterServeConfirmation) {
-				if (waiterServeConfirmation.waiter_serve_confirmation==1) {
+			foodServeStatus(foodServeConfirmation) {
+				if (foodServeConfirmation.food_serve_confirmation==1) {
 					return 'Served';
-				}else if (waiterServeConfirmation.waiter_serve_confirmation===-1) {
+				}else if (foodServeConfirmation.food_serve_confirmation===-1) {
 					'Not served yet';
 				}
 				else
 					return 'Cancelled';
 			},
+			riderAssigned(order) {
+				if (order.rider_assignment) {
+					return true;
+				}
+				return false;
+			}
 			
 		}
   	}

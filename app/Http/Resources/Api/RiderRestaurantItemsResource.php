@@ -3,6 +3,9 @@
 namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Api\SelectedItemVariationResource;
+use App\Http\Resources\Api\AdditionalOrderedAddonResource;
+
 
 class RiderRestaurantItemsResource extends JsonResource
 {
@@ -18,8 +21,8 @@ class RiderRestaurantItemsResource extends JsonResource
             'restaurant_menu_item_id' => $this->restaurant_menu_item_id,
             'quantity' => $this->quantity,
             'restaurant_menu_item' => $this->restaurantMenuItem,
-            'selected_item_variation' => $this->selectedItemVariation,
-            'additional_ordered_addons' => $this->additionalOrderedAddons,
+            'selected_item_variation' => new SelectedItemVariationResource($this->selectedItemVariation),
+            'additional_ordered_addons' => AdditionalOrderedAddonResource::collection($this->additionalOrderedAddons),
         ];
     }
 }
