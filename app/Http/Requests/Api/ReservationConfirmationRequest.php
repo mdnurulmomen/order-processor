@@ -5,6 +5,8 @@ namespace App\Http\Requests\Api;
 use Illuminate\Validation\Rule;
 use App\Models\TableBookingDetail;
 use App\Models\RestaurantMenuItem;
+use App\Models\RestaurantMenuItemAddon;
+use App\Models\RestaurantMenuItemVariation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ReservationConfirmationRequest extends FormRequest
@@ -51,21 +53,28 @@ class ReservationConfirmationRequest extends FormRequest
                 'required',
                 'exists:restaurant_menu_items,id',
                 function ($attribute, $value, $fail) {
-                    
-                    $menuRestaurantId = RestaurantMenuItem::find($value)->restaurantMenuCategory->restaurant_id;
-                    $givenRestaurantId = $this->input('reservation.restaurant_id');
 
-                    if ($menuRestaurantId !== $givenRestaurantId) {
+                    $menuItem = RestaurantMenuItem::find($value);
+                    
+                    if (empty($menuItem)) {
+                        $fail($attribute.' is invalid.');
+                    }
+
+                    // $menuRestaurantId = $menuItem->restaurantMenuCategory->restaurant_id;
+                    // $givenRestaurantId = $this->input('reservation.restaurant_id');
+
+                    else if ($menuItem->restaurantMenuCategory->restaurant_id !== $this->input('reservation.restaurant_id')) {
                         $fail($attribute.' is invalid.');
                     }
                 },
             ],
             'menuItems.*.quantity' => 'required|numeric',
 
-            'menuItems.*.itemVariations' => 'required',
-            'menuItems.*.itemVariations.id' => [
-                'required_unless:menuItems.*.itemVariations,0', 
+            'menuItems.*.itemVariation' => 'required',
+            'menuItems.*.itemVariation.id' => [
+                'required_unless:menuItems.*.itemVariation,0', 
                 'numeric', 
+                /*
                 function ($attribute, $value, $fail) {
                     $variationAvailable = RestaurantMenuItem::where('id', $this->input('menuItems.*.id'))->has_variation;
 
@@ -73,21 +82,89 @@ class ReservationConfirmationRequest extends FormRequest
                         $fail($attribute.' is required.');
                     }
                 },
+                */
             ],
-            // 'menuItems.*.itemVariations.id' => 'required_unless:menuItems.*.itemVariations,0|numeric|exists:restaurant_menu_item_variations,variation_id',
+            // 'menuItems.*.itemVariation.id' => 'required_unless:menuItems.*.itemVariation,0|numeric|exists:restaurant_menu_item_variations,variation_id',
             
             'menuItems.*.itemAddons' => 'present|array|min:0',
             'menuItems.*.itemAddons.*.id' => ['required_unless:menuItems.*.itemAddons.*,', 'numeric', 
+                    /*
                     Rule::exists('restaurant_menu_item_addons', 'addon_id')->where(function ($query) {
                         $query->where('restaurant_menu_item_id', $this->input('menuItems.*.id'));
                     }),
+                    */
             ],
             'menuItems.*.itemAddons.*.quantity' => 'required_unless:menuItems.*.itemAddons.*,|numeric',
             // 'menuItems.*.itemAddons.*.id' => 'required_unless:menuItems.*.itemAddons.*,|numeric|exists:restaurant_menu_item_addons,addon_id',
-             
 
             'menuItems.*.customization' => 'nullable|string',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(
+            function ($validator) {
+
+                $this->payment = json_decode(json_encode($this->input('payment')));
+                $this->menuItems = json_decode(json_encode($this->input('menuItems')));
+                $this->reservation = json_decode(json_encode($this->input('reservation')));
+
+                foreach ($this->menuItems as $menuItemKey => $restaurantMenuItem) {
+
+                    $expectedMenuItem = RestaurantMenuItem::find($restaurantMenuItem->id);
+   
+                    if (empty($expectedMenuItem)) {
+                        
+                        $validator->errors()->add("menuItems.$menuItemKey", 'Menu item id is invalid');
+
+                    }
+
+                    else if ($expectedMenuItem->has_variation && !empty($restaurantMenuItem->itemVariation)) {
+                        
+                        $expectedMenuItemVariation = RestaurantMenuItemVariation::find($restaurantMenuItem->itemVariation->id);
+
+                        if (empty($expectedMenuItemVariation) || $expectedMenuItemVariation->restaurant_menu_item_id!==$expectedMenuItem->id) {
+                            
+                            $validator->errors()->add("menuItems.$menuItemKey.itemVariation", 'Item variation id is invalid');
+
+                        }
+
+                    }
+
+                    else if ($expectedMenuItem->has_variation && empty($restaurantMenuItem->itemVariation)) {
+                        
+                        $validator->errors()->add("menuItems.$menuItemKey", 'Menu item has variation');
+
+                    }
+
+                    if (!empty($expectedMenuItem) && $expectedMenuItem->has_addon && !empty($restaurantMenuItem->itemAddons)) {
+                        
+                        // Log::warning($menuItemKey);
+                        // Log::info($restaurantMenuItem->itemAddons);
+
+                        foreach ($restaurantMenuItem->itemAddons as $itemAddonKey => $itemAddon) {
+                            
+                            $expectedMenuItemAddon = RestaurantMenuItemAddon::find($itemAddon->id);
+
+                            if (empty($expectedMenuItemAddon) || $expectedMenuItemAddon->restaurant_menu_item_id!==$expectedMenuItem->id) {
+                                
+                                $validator->errors()->add("menuItems.$menuItemKey.itemAddons.$itemAddonKey", 'Menu item has no such addon');
+
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        );
     }
 
     /**
@@ -112,15 +189,15 @@ class ReservationConfirmationRequest extends FormRequest
 
             'menuItems.*.id.required'  => 'Menu item id is required',
             // 'menuItems.*.id.exists'  => 'Menu item id is invalid',
-            'menuItems.*.quantity.required'  => 'Menu-item quantity is required',
-            'menuItems.*.quantity.numeric'  => 'Menu-item quantity is invalid',
+            'menuItems.*.quantity.required'  => 'Menu item quantity is required',
+            'menuItems.*.quantity.numeric'  => 'Menu item quantity is invalid',
 
-            'menuItems.*.itemVariations.required'  => 'Menu-item-variation is required',
-            'menuItems.*.itemVariations.id.required'  => 'Item variation id is required',
-            'menuItems.*.itemVariations.id.*'  => 'Item variation id is invalid',
+            'menuItems.*.itemVariation.required'  => 'Menu item variation is required',
+            'menuItems.*.itemVariation.id.required'  => 'Item variation id is required',
+            'menuItems.*.itemVariation.id.*'  => 'Item variation id is invalid',
 
-            'menuItems.*.itemAddons.present' => 'Menu-item-addons is required',
-            'menuItems.*.itemAddons.array' => 'Menu-item-addons must be an array',
+            'menuItems.*.itemAddons.present' => 'Menu item addons is required',
+            'menuItems.*.itemAddons.array' => 'Menu item addons must be an array',
             'menuItems.*.itemAddons.*.id.required'  => 'Addon item id is required',
             'menuItems.*.itemAddons.*.id.*'  => 'Addon item id is invalid',
             'menuItems.*.itemAddons.*.quantity.required'  => 'Addon quantity is required',
