@@ -102,4 +102,9 @@ class Order extends Model
       {
          return $this->hasOne(TableBookingDetail::class, 'order_id', 'id');
       }
+
+      public function riderCall()
+      {
+         return $this->hasOne(RiderDeliveryRecord::class, 'order_id', 'id');
+      }
 }

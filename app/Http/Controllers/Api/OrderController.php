@@ -23,28 +23,26 @@ class OrderController extends Controller
     public function createNewOrder(OrderRequest $request)
     {        
         $newOrder = Order::create([
-            'order_type' => $request->order_type,
-            'is_asap_order' => $request->is_asap_order ?? false,
-            'order_schedule' => $request->order_schedule ?? NULL,
-            'order_price' => $request->order_price,
-            'vat' => $request->vat,
-            'discount' => $request->discount,
-            'delivery_fee' => $request->delivery_fee,
-            'net_payable' => $request->net_payable,
-            'payment_method' => $request->payment_method,
-            'cutlery_addition' => $request->cutlery_addition ?? false,
-            'orderer_type' => $request->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
-            'orderer_id' => $request->orderer_id,
-            'customer_confirmation' => ($request->orderer_type==='customer' && $request->payment_method==='cash') ? -1 : 1, 
+            'order_type' => $request->order->order_type,
+            'is_asap_order' => $request->order->is_asap_order ?? false,
+            'order_schedule' => $request->order->order_schedule ?? NULL,
+            'order_price' => $request->order->order_price,
+            'vat' => $request->order->vat,
+            'discount' => $request->order->discount,
+            'delivery_fee' => $request->order->delivery_fee,
+            'net_payable' => $request->order->net_payable,
+            'payment_method' => $request->payment->payment_method,
+            'cutlery_addition' => $request->order->cutlery_addition ?? false,
+            'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
+            'orderer_id' => $request->order->orderer_id,
+            'customer_confirmation' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1, 
         ]);
 
-        if ($request->payment_method !=='cash' && $request->payment_id) {
+        if ($request->payment->payment_method !=='cash' && $request->payment->payment_id) {
             $newOrderPayment = $newOrder->payment()->create([
-                'payment_id'=>$request->payment_id
+                'payment_id'=>$request->payment->payment_id
             ]);
         }
-
-        $request->orderItems = json_decode(json_encode($request->orderItems));
 
         foreach ($request->orderItems as $orderItem) {
             
@@ -63,9 +61,9 @@ class OrderController extends Controller
 
                 $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
 
-                if ($addedMenuItem->has_variation && !empty($menuItem->itemVariations) && !empty($menuItem->itemVariations->id)) {
+                if ($addedMenuItem->has_variation && !empty($menuItem->itemVariation) && !empty($menuItem->itemVariation->id)) {
                     $orderedNewItem->selectedItemVariation()->create([
-                        'restaurant_menu_item_variation_id'=>$menuItem->itemVariations->id
+                        'restaurant_menu_item_variation_id'=>$menuItem->itemVariation->id
                     ]);
                 }
 
@@ -88,26 +86,24 @@ class OrderController extends Controller
 
         // if ($request->orderer_type==='customer') {
             
-        if ($request->order_type==='home-delivery') {
+        if ($request->order->order_type==='home-delivery') {
 
-            if ($request->delivery_new_address) {
-                
-                $request->delivery_new_address = json_decode(json_encode($request->delivery_new_address));
+            if ($request->order->delivery_new_address) {
 
                 $customerNewAddress = CustomerAddress::create([
-                    'house' => $request->delivery_new_address->house,
-                    'road' => $request->delivery_new_address->road,
-                    'additional_hint' => $request->delivery_new_address->additional_hint ?? NULL,
-                    'lat' => $request->delivery_new_address->lat,
-                    'lang' => $request->delivery_new_address->lang,
-                    'address_name' => $request->delivery_new_address->address_name,
-                    'customer_id' => $request->orderer_id,
+                    'house' => $request->order->delivery_new_address->house,
+                    'road' => $request->order->delivery_new_address->road,
+                    'additional_hint' => $request->order->delivery_new_address->additional_hint ?? NULL,
+                    'lat' => $request->order->delivery_new_address->lat,
+                    'lang' => $request->order->delivery_new_address->lang,
+                    'address_name' => $request->order->delivery_new_address->address_name,
+                    'customer_id' => $request->order->orderer_id,
                 ]);
             }
         
             $newOrderAddress = $newOrder->delivery()->create([
-                'additional_info'=>$request->delivery_additional_info,
-                'delivery_address_id'=>$request->delivery_address_id ?? $customerNewAddress->id,
+                'additional_info'=>$request->order->delivery_additional_info,
+                'delivery_address_id'=>$request->order->delivery_address_id ?? $customerNewAddress->id,
             ]);
         }
 
@@ -126,10 +122,6 @@ class OrderController extends Controller
 
     public function createNewReservation(ReservationRequest $request)
     {   
-        $request->order = json_decode(json_encode($request->order));
-        $request->payment = json_decode(json_encode($request->payment));
-        $request->reservation = json_decode(json_encode($request->reservation));
-
         $expectedRestaurant = Restaurant::find($request->reservation->restaurant_id);
 
         $newOrder = $this->createReservationOrder($request);
@@ -143,7 +135,7 @@ class OrderController extends Controller
 
             $this->saveNewPayment($newOrder, $request->payment->payment_id);
             $this->makeRestaurantOrderRecord($newOrder, $request->reservation->restaurant_id);
-            $this->makeOrderItems($orderedRestaurant, json_decode(json_encode($request->menuItems)));
+            $this->makeOrderItems($orderedRestaurant, $request->menuItems);
             // $this->confirmReservation($newOrder, $orderedRestaurant, $request);
 
             $reservationMsg = 'Reservation request has been confirmed';
@@ -162,8 +154,6 @@ class OrderController extends Controller
 
     public function confirmReservation(ReservationConfirmationRequest $request)
     {
-        $request->reservation = json_decode(json_encode($request->reservation));
-
         $expectedReservation = TableBookingDetail::find($request->reservation->reservation_id);
 
         if (!$expectedReservation->booking_confirmation && $expectedReservation->max_payment_time->lessThan(now())) {
@@ -171,14 +161,8 @@ class OrderController extends Controller
                 'message' => 'Payment time is over'
             ], 403);
         }
-        else if ($expectedReservation->booking_confirmation) {
-            return response()->json([
-                'message' => 'Already confirmed reservation'
-            ], 403);
-        }
         
         $expectedOrder = Order::find($request->reservation->order_id);
-        $request->payment = json_decode(json_encode($request->payment));
         $expectedOrderedRestaurant = $expectedOrder->restaurants->first();
         // $expectedOrderedRestaurant = OrderedRestaurant::find($request->reservation->ordered_restaurant_id);
 
@@ -186,7 +170,7 @@ class OrderController extends Controller
         $this->confirmTableReservation($expectedReservation);
         $this->saveNewPayment($expectedOrder, $request->payment->payment_id);
         $this->makeRestaurantOrderRecord($expectedOrder, $request->reservation->restaurant_id);
-        $this->makeOrderItems($expectedOrderedRestaurant, json_decode(json_encode($request->menuItems)));
+        $this->makeOrderItems($expectedOrderedRestaurant, $request->menuItems);
 
         // Broadcast for admin
         $this->notifyAdmin($expectedOrder);
@@ -279,9 +263,9 @@ class OrderController extends Controller
 
                 $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
 
-                if ($addedMenuItem->has_variation && !empty($menuItem->itemVariations) && !empty($menuItem->itemVariations->id)) {
+                if ($addedMenuItem->has_variation && !empty($menuItem->itemVariation) && !empty($menuItem->itemVariation->id)) {
                     $orderedNewItem->selectedItemVariation()->create([
-                        'restaurant_menu_item_variation_id'=>$menuItem->itemVariations->id
+                        'restaurant_menu_item_variation_id'=>$menuItem->itemVariation->id
                     ]);
                 }
 

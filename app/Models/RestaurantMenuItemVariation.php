@@ -10,6 +10,8 @@ class RestaurantMenuItemVariation extends Model
 {
    	use SoftDeletes;
 
+   	public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,7 +21,6 @@ class RestaurantMenuItemVariation extends Model
         'id'
     ];
 
-   	public $timestamps = false;
 
    	public function variation()
     {

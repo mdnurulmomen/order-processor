@@ -63,7 +63,7 @@ class UpdateAdmin implements ShouldBroadcast
             'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->order->orderReadyConfirmations),
             'rider_food_pick_confirmations' => OrderPickUpProgressionResource::collection($this->order->riderFoodPickConfirmations),
             'rider_delivery_confirmation' => $this->order->riderDeliveryConfirmation ? new RiderDeliveryResource($this->order->riderDeliveryConfirmation) : null,
-            'waiter_serve_confirmation' => $this->order->waiterServeConfirmation,
+            'order_serve_confirmation' => $this->order->orderServeConfirmation,
             'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->order->restaurantOrderCancelations),
         ];
     }
