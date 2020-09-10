@@ -71,7 +71,7 @@ class RestaurantController extends Controller
          
          $newRestaurant->address = $request->address;
          $newRestaurant->min_order = $request->min_order;
-         $newRestaurant->max_booking = $request->max_booking;
+         // $newRestaurant->max_booking = $request->max_booking;
          $newRestaurant->is_post_paid = $request->is_post_paid ?? 0;
          $newRestaurant->has_parking = $request->has_parking ?? 0;
          $newRestaurant->is_self_service = $request->is_self_service ?? 0;
@@ -84,6 +84,12 @@ class RestaurantController extends Controller
          $newRestaurant->banner_preview = $request->banner_preview;
          
          $newRestaurant->save();
+
+         $restaurantReservation = $newRestaurant->booking()->create([
+            'total_seat' => $request->max_booking,
+            'engaged_seat' => 0,
+            'seat_left' => $request->max_booking
+         ]);
 
    		return $this->showAllRestaurants($perPage);
    	}
@@ -122,7 +128,7 @@ class RestaurantController extends Controller
          
          $restaurantToUpdate->address = $request->address;
          $restaurantToUpdate->min_order = $request->min_order;
-         $restaurantToUpdate->max_booking = $request->max_booking;
+         // $restaurantToUpdate->max_booking = $request->max_booking;
          $restaurantToUpdate->is_post_paid = $request->is_post_paid;
          $restaurantToUpdate->has_parking = $request->has_parking;
          $restaurantToUpdate->is_self_service = $request->is_self_service;
@@ -133,6 +139,14 @@ class RestaurantController extends Controller
          $restaurantToUpdate->banner_preview = $request->banner_preview;
          
          $restaurantToUpdate->save();
+
+         $restaurantUpdatedReservation = $restaurantToUpdate->booking()->updateOrCreate(
+            ['restaurant_id' => $restaurantToUpdate->id],
+            [
+               'total_seat' => $request->max_booking, 
+               'seat_left' => $request->max_booking - ($restaurantToUpdate->booking->engaged_seat ?? 0),
+            ]
+         );
 
          return $this->showAllRestaurants($perPage);
       }
@@ -169,7 +183,7 @@ class RestaurantController extends Controller
 
       public function searchAllRestaurants($search, $perPage)
       {
-         $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order', 'max_booking'];
+         $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order'];
 
          $query = Restaurant::withTrashed()->with('restaurantAdmin');
 
