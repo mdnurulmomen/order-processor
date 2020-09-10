@@ -46,7 +46,8 @@ class RestaurantController extends Controller
    			// 'lng'=>'required|unique:menu_categories,name|max:50',
    			'address'=>'required|string|max:255',
    			// 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-   			'min_order'=>'required|numeric|min:100|max:65535',
+            'min_order'=>'required|numeric|min:100|max:65535',
+   			'max_booking'=>'required|numeric|min:0|max:1000',
             'is_post_paid'=>'nullable|boolean',
    			'has_parking'=>'nullable|boolean',
             'is_self_service'=>'nullable|boolean',
@@ -70,6 +71,7 @@ class RestaurantController extends Controller
          
          $newRestaurant->address = $request->address;
          $newRestaurant->min_order = $request->min_order;
+         $newRestaurant->max_booking = $request->max_booking;
          $newRestaurant->is_post_paid = $request->is_post_paid ?? 0;
          $newRestaurant->has_parking = $request->has_parking ?? 0;
          $newRestaurant->is_self_service = $request->is_self_service ?? 0;
@@ -95,6 +97,7 @@ class RestaurantController extends Controller
             'name'=>'required|string|max:50|unique:restaurants,name,'.$restaurantToUpdate->id,
             'mobile'=>'required|max:13|unique:restaurants,mobile,'.$restaurantToUpdate->id,
             'min_order'=>'required|numeric|min:100|max:65535',
+            'max_booking'=>'required|numeric|min:0|max:1000',
             'website'=>'nullable|url|max:255',
             // 'lat'=>'required|unique:menu_categories,name|max:50',
             // 'lng'=>'required|unique:menu_categories,name|max:50',
@@ -119,6 +122,7 @@ class RestaurantController extends Controller
          
          $restaurantToUpdate->address = $request->address;
          $restaurantToUpdate->min_order = $request->min_order;
+         $restaurantToUpdate->max_booking = $request->max_booking;
          $restaurantToUpdate->is_post_paid = $request->is_post_paid;
          $restaurantToUpdate->has_parking = $request->has_parking;
          $restaurantToUpdate->is_self_service = $request->is_self_service;
@@ -165,7 +169,7 @@ class RestaurantController extends Controller
 
       public function searchAllRestaurants($search, $perPage)
       {
-         $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order'];
+         $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order', 'max_booking'];
 
          $query = Restaurant::withTrashed()->with('restaurantAdmin');
 
@@ -773,7 +777,7 @@ class RestaurantController extends Controller
 
          $newMenuItem = RestaurantMenuItem::create([
             'name' => $request->name,
-            'detail' => $request->detail,
+            'detail' => $request->detail ?? '',
             'has_variation' => $request->has_variation ?? false,
             'has_addon' => $request->has_addon ?? false,
             'price' => $request->price ?? 0,
@@ -815,9 +819,11 @@ class RestaurantController extends Controller
 
             }
 
+         /*
             $newMenuItem->update([
                'price' => min($request->price_addon_items)
             ]);
+         */
 
          }
 
@@ -826,7 +832,7 @@ class RestaurantController extends Controller
 
       public function updateRestaurantMenuItem(Request $request, $menuItem, $perPage)
       {
-         $menuItemToUpdate = RestaurantMenuItem::find($menuItem);
+         $menuItemToUpdate = RestaurantMenuItem::findOrFail($menuItem);
 
          $request->validate([
             'name'=>'required|string|max:255',
@@ -845,7 +851,7 @@ class RestaurantController extends Controller
 
          $menuItemToUpdate->update([
             'name' => $request->name,
-            'detail' => $request->detail,
+            'detail' => $request->detail ?? '',
             'has_variation' => $request->has_variation ?? false,
             'has_addon' => $request->has_addon ?? false,
             'price' => $request->price ?? 0,
@@ -957,9 +963,11 @@ class RestaurantController extends Controller
 
             }
 
+         /*
             $menuItemToUpdate->update([
                'price' => min($request->price_addon_items)
             ]);
+         */
 
          }
 

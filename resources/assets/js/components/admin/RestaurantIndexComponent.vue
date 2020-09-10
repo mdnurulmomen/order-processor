@@ -176,7 +176,7 @@
 
 								      			<button 
 									      			type="button" 
-									      			class="btn btn-success btn-sm"
+									      			class="btn btn-dark btn-sm"
 									      			@click="showRestaurantMenuList(restaurant)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
@@ -370,12 +370,20 @@
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
+							              			Maximum Booking Seats :
+							              		</label>
+								                <div class="col-sm-6">
+								                  	{{singleRestaurantData.restaurant.max_booking || 'No Booking'}}
+								                </div>	
+								            </div>
+								            <div class="form-group row">		
+							              		<label class="col-sm-6 text-right">
 							              			Minimum Order :
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{singleRestaurantData.restaurant.min_order}} tk
 								                </div>	
-								            </div> 
+								            </div>
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Payment :
@@ -494,6 +502,30 @@
 									                          	</div>
 									                        </div>
 
+									                        <div class="form-group row">
+									                        	<div class="col-12">
+									                        		<div class="row text-right">
+																  		<label for="inputAdminApproval3" class="col-sm-6 col-form-label">
+																  			<!-- Rst-Admin Approval -->
+																  		</label>
+																  		<div class="col-sm-6">
+																  			
+																			<toggle-button 
+									                                  			:sync="true" 
+									                                  			v-model="singleRestaurantData.restaurant.admin_approval" 
+									                                  			value="true" 
+									                                  			:width="140"  
+									                                  			:height="30" 
+									                                  			:font-size="15" 
+									                                  			:color="{checked: 'green', unchecked: 'red'}" 
+									                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
+								                                  			/>
+																    			
+																  		</div>
+									                        		</div>
+									                        	</div>
+															</div>
+
 									                        <hr class="mt-1">
 
 									                        <div class="form-group row">
@@ -538,31 +570,8 @@
 									                          	</div>
 
 																<div class="col-6">
-																	<div class="row">
-																  		<label for="inputAdminApproval3" class="col-sm-4 col-form-label text-right">
-																  			Admin Approval
-																  		</label>
-																  		<div class="col-sm-8">
-																  			
-																			<toggle-button 
-									                                  			:sync="true" 
-									                                  			v-model="singleRestaurantData.restaurant.admin_approval" 
-									                                  			value="true" 
-									                                  			:width="130"  
-									                                  			:height="30" 
-									                                  			:font-size="15" 
-									                                  			:color="{checked: 'green', unchecked: 'red'}" 
-									                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
-								                                  			/>
-																    			
-																  		</div>
-																	</div>
-																</div>
-									                        </div>
 
-									                        <div class="form-group row">
-									                          	<div class="col-6">
-									                            	<div class="row">
+																	<div class="row">
 									                              		<label for="inputName3" class="col-sm-4 col-form-label text-right">
 									                              			Restaurant Name
 									                              		</label>
@@ -582,12 +591,14 @@
 									                                  		
 									                              		</div>
 									                          		</div>
-									                      		</div>
+																</div>
+									                        </div>
 
+									                        <div class="form-group row">
 									                      		<div class="col-6">
 										                            <div class="row">
 										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
-										                              		Mobile
+										                              		Rest. Mobile
 										                              	</label>
 										                              	<div class="col-sm-8">
 										                              		
@@ -608,6 +619,33 @@
 										                              	</div>
 										                            </div>
 									                          	</div>
+
+									                          	<div class="col-6">
+									                            	<div class="row">
+										                              	<div class="col-sm-4 text-right">
+											                                <label for="inputWebsite3" class="col-form-label">
+											                                  Website
+											                                </label>
+										                                	(if any)
+										                              	</div>
+										                              	<div class="col-sm-8">
+										                              	
+										                                  	<input 
+											                                  	type="url" 
+											                                  	class="form-control" 
+											                                  	v-model="singleRestaurantData.restaurant.website" 
+											                                  	placeholder="Restaurant Website" 
+											                                  	:class="!errors.restaurant.website  ? 'is-valid' : 'is-invalid'"
+											                                  	@keyup="validateFormInput('restaurant.website')"
+											                                >
+										                                  	<div 
+											                                  	class="invalid-feedback"
+											                                >
+																		        {{errors.restaurant.website}}
+																		  	</div>
+										                              	</div>
+										                            </div>
+									                      		</div>
 									                        </div>
 
 									                        <div class="form-group row">
@@ -639,31 +677,29 @@
 										                      	</div>
 									                          	<div class="col-6">
 										                            <div class="row">
-										                              <div class="col-sm-4 text-right">
-										                                <label for="inputWebsite3" class="col-form-label">
-										                                  Website
-										                                </label>
-										                                (if any)
-										                              </div>
-										                              <div class="col-sm-8">
-										                              	
-									                                  	<input 
-										                                  	type="url" 
-										                                  	class="form-control" 
-										                                  	v-model="singleRestaurantData.restaurant.website" 
-										                                  	placeholder="Restaurant Website" 
-										                                  	:class="!errors.restaurant.website  ? 'is-valid' : 'is-invalid'"
-										                                  	@keyup="validateFormInput('restaurant.website')"
-										                                >
+										                              	<label for="inputMaxBooking3" class="col-sm-4 col-form-label text-right">
+										                              		Max Booking
+										                              	</label>
+										                              	<div class="col-sm-8">
+										                              		
+									                                  		<input 
+										                                  		type="number" 
+										                                  		class="form-control" 
+										                                  		v-model.number="singleRestaurantData.restaurant.max_booking" 
+										                                  		placeholder="Max Booking Seats"
+										                                  		min="0" 
+										                                  		max="1000" 
+										                                  		step="1" 
+										                                  		:class="!errors.restaurant.max_booking  ? 'is-valid' : 'is-invalid'"
+										                                  		@keyup="validateFormInput('restaurant.max_booking')"
+										                                  	>
+										                                  		
+										                                  	<div class="invalid-feedback">
+																		        {{ errors.restaurant.max_booking }}
+																		  	</div>
 
-									                                  	<div 
-										                                  	class="invalid-feedback"
-										                                >
-																	        {{errors.restaurant.website}}
-																	  	</div>
-										                                  	
-										                              </div>
-										                            </div>
+										                              	</div>
+										                          	</div>
 									                          	</div>
 									                        </div>
 
@@ -1839,6 +1875,13 @@
 			},
 		    storeRestaurant() {
 
+		    	if (this.step < 3) {
+
+		    		this.nextPage();
+		    		return;
+
+		    	}
+
 				$("#modal-createOrEdit-restaurant").modal("hide");
 
 				this.singleRestaurantData.restaurant.banner_preview = this.restaurantNewBanner;
@@ -2059,6 +2102,7 @@
 					this.validateFormInput ('restaurant.name');
 					this.validateFormInput ('restaurant.mobile');
 					this.validateFormInput ('restaurant.min_order');
+					this.validateFormInput ('restaurant.max_booking');
 					this.validateFormInput ('restaurant.website');
 				
 				}else {
@@ -2135,6 +2179,21 @@
 						else {
 							this.submitForm = true;
 							this.$delete(this.errors.restaurant, 'min_order');
+						}
+
+						break;
+
+					case 'restaurant.max_booking' :
+
+						if (!this.singleRestaurantData.restaurant.max_booking) {
+							this.errors.restaurant.max_booking = 'Number Seats is required';
+						}
+						else if (this.singleRestaurantData.restaurant.max_booking < 0 || this.singleRestaurantData.restaurant.max_booking > 1000) {
+							this.errors.restaurant.max_booking = 'Value should be between 0 and 1000';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.restaurant, 'max_booking');
 						}
 
 						break;
