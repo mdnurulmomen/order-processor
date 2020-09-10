@@ -871,29 +871,31 @@
 									</div>
 								</div>
 							</div>
-							<div class="modal-footer justify-content-between">
+							<div class="modal-footer flex-column">
 								<div class="col-sm-12 text-right">
-									<span class="text-danger p-0 m-0 small" 
-										  v-show="!submitForm"
+									<span 
+										class="text-white small" 
+										v-show="!submitForm"
 									>
 								  		Please input all required fields
 								  	</span>
 								</div>
-							  	<button 
-								  	type="button" 
-								  	class="btn btn-outline-light" 
-								  	data-dismiss="modal"
-							  	>
-							  		Close
-							  	</button>
-
-							  	<button 
-							  		type="submit" 
-							  		:disabled="!submitForm" 
-							  		class="btn btn-outline-light"
-							  	>
-							  		Add Menu-Category
-							  	</button>
+								<div class="col-sm-12 d-flex justify-content-between">
+								  	<button 
+									  	type="button" 
+									  	class="btn btn-outline-light" 
+									  	data-dismiss="modal"
+								  	>
+								  		Close
+								  	</button>
+								  	<button 
+								  		type="submit" 
+								  		class="btn btn-outline-light"
+								  		:disabled="!submitForm" 
+								  	>
+								  		Add Menu-Category
+								  	</button>
+								</div>
 							</div>
 						</form>
 					</div>
@@ -1118,6 +1120,9 @@
 		      // `this` points to the vm instance
 		      if (this.restaurantAllMenuCategories.length) {
 	      		return this.restaurantAllMenuCategories[0].restaurant.name;
+		      }
+		      else if (this.$route.params.restaurantName) {
+		      	return this.$route.params.restaurantName;
 		      }
 
 		      return 'Current Restaurant';

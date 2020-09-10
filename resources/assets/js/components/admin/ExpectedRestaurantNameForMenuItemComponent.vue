@@ -54,7 +54,10 @@
 		                                  		@close="validateFormInput()"
 	                                  		>
 		                                	</multiselect>
-										  	<div class="invalid-feedback">
+										  	<div 
+										  		v-show="errors.restaurant" 
+										  		class="text-danger"
+										  	>
 										        {{ errors.restaurant }}
 										  	</div>
 										</div>
@@ -70,7 +73,7 @@
 							                  	class="text-danger small" 
 							                  	v-show="!submitForm"
 						                  	>
-										  		Please input required fields
+										  		Please select one
 								          	</div>
 										</div>
 									</div>

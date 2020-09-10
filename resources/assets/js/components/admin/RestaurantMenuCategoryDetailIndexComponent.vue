@@ -564,6 +564,9 @@
 		      	if (this.restaurantMenuCategoriesToShow.length) {
 	      			return this.restaurantMenuCategoriesToShow[0].restaurant.name;
 		      	}
+		      	else if (this.$route.params.restaurantName) {
+					return this.$route.params.restaurantName;
+				}
 
 		      	return 'Current Restaurant';
 		    },
