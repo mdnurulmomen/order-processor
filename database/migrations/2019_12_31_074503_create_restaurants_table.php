@@ -23,6 +23,7 @@ class CreateRestaurantsTable extends Migration
             $table->string('website')->nullable();
             $table->string('banner_preview')->nullable();
             $table->unsignedMediumInteger('min_order')->default(150);
+            $table->unsignedMediumInteger('max_booking')->default(100);
             // $table->string('meal_tags')->nullable();
             // $table->string('food_tags')->nullable();
             $table->boolean('is_post_paid')->default(false);
