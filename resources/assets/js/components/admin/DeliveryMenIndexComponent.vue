@@ -618,7 +618,7 @@
 				                                  			:sync="true" 
 				                                  			v-model="singleDeliveryManData.deliveryMan.admin_approval" 
 				                                  			value="true" 
-				                                  			:width="130"  
+				                                  			:width="140"  
 				                                  			:height="30" 
 				                                  			:font-size="15" 
 				                                  			:color="{checked: 'green', unchecked: 'red'}" 
