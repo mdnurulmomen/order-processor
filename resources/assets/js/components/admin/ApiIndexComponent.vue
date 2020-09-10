@@ -123,37 +123,48 @@
 					method : 'post',
 					purpose : 'Post new order',
 					parameters : {
-						'order_type (required)' : 'home-delivery/serve-on-table/take-away/reservation', 
-						'is_asap_order (required)' : 'true/false',
-						'order_schedule (required if not asap)' : 'date',
-						'order_price (required)' : 'numeric', 
-						'vat (required)' : 'numeric', 
-						'discount (required)' : 'numeric', 
-						'delivery_fee (required)' : 'numeric', 
-						'net_payable (required)' : 'numeric', 
-						'payment_method (required)' : 'cash/bkash/card', 
-						'payment_id (required if not cash)' : 'string', 
-						'cutlery_addition' : 'true/false', 
-						'orderer_type (required)' : 'customer/waiter', 
-						'orderer_id (required)' : 'numeric', 
-						'delivery_new_address (required if no delivery_address_id)' : { 
-							'house (required)' : 'string',
-							'road (required)' : 'string',
-							'lat (required)' : 'string',
-							'lang (required)' : 'string',
-							'address_name (required)'  : 'string',
-							'additional_hint'  : 'string',
+
+						"order" : {
+
+							'order_type (required)' : 'home-delivery/serve-on-table/take-away', 
+							'is_asap_order (required)' : 'true/false',
+							'order_schedule (required if not asap)' : 'date',
+							'order_price (required)' : 'numeric', 
+							'vat (required)' : 'numeric', 
+							'discount (required)' : 'numeric', 
+							'delivery_fee (required)' : 'numeric', 
+							'net_payable (required)' : 'numeric',
+							'cutlery_addition' : 'boolean', 
+							'orderer_type (required)' : 'customer/waiter', 
+							'orderer_id (required)' : 'numeric', 
+							'delivery_new_address (required if no delivery_address_id)' : { 
+								'house (required)' : 'string',
+								'road (required)' : 'string',
+								'lat (required)' : 'string',
+								'lang (required)' : 'string',
+								'address_name (required)'  : 'string',
+								'additional_hint'  : 'string'
+							},
+							'delivery_address_id (required without delivery_new_address)' : 'string', 
+							'delivery_additional_info' : 'string', 
+
 						},
-						'delivery_address_id (required without delivery_new_address)' : 'string', 
-						'delivery_additional_info' : 'string', 
-						'orderItems (required)' : [
+
+						"payment" : {
+
+							'payment_method (required)' : 'cash/bkash/card', 
+							'payment_id (required if not cash)' : 'string'
+
+						},
+
+						"orderItems (required)" : [
 							{
 								'restaurant_id (required)' : 'numeric', 
 								'menuItems (required)' : [
 									{
 										'id (required)' : 'numeric',
 										'quantity (required)' : 'numeric',
-										'itemVariations (required)' : { 
+										'itemVariation (required)' : { 
 											'id (required if not false)' : 'numeric'
 										},
 										'itemAddons' : [
@@ -202,7 +213,7 @@
 							{
 								'id (required)' : 'numeric',
 								'quantity (required)' : 'numeric',
-								'itemVariations (required)' : { 
+								'itemVariation (required)' : { 
 									'id (required if not false)' : 'numeric'
 								},
 								'itemAddons' : [
@@ -236,7 +247,7 @@
 							{
 								"id (required)" : 'numeric',  
 								"quantity (required)" : 'numeric',  
-								'itemVariations (required)' : { 
+								'itemVariation (required)' : { 
 									'id (required if not false/menu-item has variation)' : 'numeric'
 								},
 								'itemAddons' : [
