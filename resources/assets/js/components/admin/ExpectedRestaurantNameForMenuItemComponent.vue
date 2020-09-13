@@ -73,7 +73,7 @@
 							                  	class="text-danger small" 
 							                  	v-show="!submitForm"
 						                  	>
-										  		Please select one
+										  		Please Restaurant
 								          	</div>
 										</div>
 									</div>

@@ -207,7 +207,7 @@ class OrderController extends Controller
         });
 
         $query->orWhereHas('orderServeConfirmation', function($q)use ($search){
-        	$q->where('waiter_id', 'like', "%$search%");
+        	$q->where('confirmer_id', 'like', "%$search%");
         });
 
         $query->orWhereHas('payment', function($q)use ($search){
