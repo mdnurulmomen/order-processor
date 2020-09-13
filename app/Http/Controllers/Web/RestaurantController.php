@@ -24,10 +24,10 @@ class RestaurantController extends Controller
    	{
    		if ($perPage) {
             return response()->json([
-               'all' => Restaurant::withTrashed()->with('restaurantAdmin')->latest()->paginate($perPage),
-               'approved' => Restaurant::where('admin_approval', 1)->with('restaurantAdmin')->latest()->paginate($perPage),
-               'nonApproved' => Restaurant::where('admin_approval', 0)->with('restaurantAdmin')->latest()->paginate($perPage),
-               'trashed' => Restaurant::onlyTrashed()->with('restaurantAdmin')->latest()->paginate($perPage),
+               'all' => Restaurant::withTrashed()->with(['restaurantAdmin', 'booking'])->latest()->paginate($perPage),
+               'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantAdmin', 'booking'])->latest()->paginate($perPage),
+               'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantAdmin', 'booking'])->latest()->paginate($perPage),
+               'trashed' => Restaurant::onlyTrashed()->with(['restaurantAdmin', 'booking'])->latest()->paginate($perPage),
                
             ], 200);
          }

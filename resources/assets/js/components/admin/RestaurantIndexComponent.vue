@@ -394,7 +394,7 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Self-service :
+							              			Service :
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{singleRestaurantData.restaurant.is_self_service ? 'Self-service' : 'Waiter service'}}
@@ -1738,6 +1738,7 @@
     		showRestaurantDetailModal(restaurant) {
 
 				this.singleRestaurantData.restaurant = restaurant;
+				this.singleRestaurantData.restaurant.max_booking = restaurant.booking ? restaurant.booking.total_seat : 0;
 
 				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
 
@@ -1928,6 +1929,8 @@
 				this.errors.restaurant = {};
 
 				this.singleRestaurantData.restaurant = restaurant;
+				this.singleRestaurantData.restaurant.max_booking = restaurant.booking ? restaurant.booking.total_seat : 0;
+
 				this.service_schedule  = JSON.parse(restaurant.service_schedule);
 				this.booking_break_schedule = JSON.parse(restaurant.booking_break_schedule);
 
