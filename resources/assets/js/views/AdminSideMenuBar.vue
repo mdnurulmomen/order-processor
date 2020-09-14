@@ -316,12 +316,13 @@
               >
                 <i class="nav-icon fas fa-percent"></i>
                 <p>
-                  Discounts
+                  Coupons
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
 
+              <!-- 
                 <li class="nav-item">
                   <router-link 
                     :to="{ name: 'admin.discounts.index' }" 
@@ -331,6 +332,7 @@
                     <p>Rates</p>
                   </router-link>
                 </li>
+              -->
 
                 <li class="nav-item">
                   <router-link 

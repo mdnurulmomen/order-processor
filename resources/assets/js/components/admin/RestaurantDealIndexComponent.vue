@@ -112,7 +112,7 @@
 								    			{{ restaurant.deal ? restaurant.deal.native_discount : 'No Deal' }}
 								    		</td>
 								    		<td>
-								    			{{ restaurant.deal ? restaurant.deal.discount.rate : 'No Deal' }}
+								    			{{ restaurant.deal ? restaurant.deal.net_discount : 'No Deal' }}
 								    		</td>
 								    		<td>
 								    			{{ restaurant.deal ? (restaurant.deal.delivery_fee_addition ? 'Yes' : 'No') : 'No Deal' }}
@@ -230,7 +230,10 @@
 					                                  		@close="validateFormInput('restaurantDeal.restaurant')"
 				                                  		>
 					                                	</multiselect>
-									                	<div class="invalid-feedback">
+									                	<div 
+									                		class="text-danger" 
+									                		v-show="errors.restaurantDeal.restaurant"
+									                	>
 												        	{{ 
 												        		errors.restaurantDeal.restaurant 
 												        	}}
@@ -243,25 +246,29 @@
 								              			Net Discount
 								              		</label>
 									                <div class="col-sm-7">
-									                  	<multiselect 
-				                                  			v-model="singleRestaurantDealData.discountObject"
-				                                  			placeholder="Discount Rate" 
-					                                  		label="rate" 
-					                                  		track-by="id" 
-					                                  		:options="allDiscounts" 
-					                                  		:required="true"
-					                                  		:class="!errors.restaurantDeal.discount  ? 'is-valid' : 'is-invalid'"
-					                                  		:allow-empty="false"
-					                                  		selectLabel = "Press/Click"
-					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantDeal.discount')"
-				                                  		>
-					                                	</multiselect>
-									                	<div class="invalid-feedback">
-												        	{{
-												        		errors.restaurantDeal.discount 
-												        	}}
-												  		</div>
+									                	<div class="input-group mb-3">
+										                	<input 
+																type="number" 
+																class="form-control" 
+																v-model.number="singleRestaurantDealData.restaurantDeal.net_discount" 
+																min="0" 
+																max="100" 
+																step=".1" 
+																placeholder="Discount Rate" 
+																:class="!errors.restaurantDeal.net_discount  ? 'is-valid' : 'is-invalid'"
+																@keyup="validateFormInput('restaurantDeal.net_discount')"
+										                	>
+															<div class="input-group-append">
+																<span class="input-group-text">
+																	%
+																</span>
+															</div>
+										                	<div class="invalid-feedback">
+													        	{{ 
+													        		errors.restaurantDeal.net_discount 
+													        	}}
+													  		</div>
+									                	</div>
 									                </div>	
 								              	</div>
 
@@ -457,12 +464,11 @@
 				// sale_percentage : null,
 				// restaurant_promotional_discount : null,
 				// native_discount : null,
-				// discount_id : null,
+				// net_discount : null,
 				// delivery_fee_addition : null,
 				// restaurant_id : null,
         	},
 
-        	discountObject : {},
     	},
 
     	allDiscounts : [],
@@ -497,12 +503,6 @@
 					this.singleRestaurantDealData.restaurantDeal.restaurant_id = restaurantObject.id;
 				}else
 					this.singleRestaurantDealData.restaurantDeal.restaurant_id = null;
-			},
-			'singleRestaurantDealData.discountObject' : function(discountObject){
-				if (discountObject) {
-					this.singleRestaurantDealData.restaurantDeal.discount_id = discountObject.id;
-				}else
-					this.singleRestaurantDealData.restaurantDeal.discount_id = null;
 			},
 			query : function(val){
 
@@ -604,15 +604,15 @@
 
 				// this.singleRestaurantDealData = {};
 				this.singleRestaurantDealData.restaurantDeal = {};
-				this.singleRestaurantDealData.discountObject = {};
 				this.singleRestaurantDealData.restaurantObject = {};
 
 				$('#modal-createOrEdit-deal').modal('show');
 			},
     		storeRestaurantDeal(){
 
-				if (Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0 || Object.keys(this.singleRestaurantDealData.discountObject).length === 0) {
+				if (Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0) {
 					
+					this.errors.restaurantDeal.restaurant = 'Restaurant name is required';
 					this.submitForm = false;
 					return;
 				}
@@ -627,7 +627,6 @@
 
 							// this.singleRestaurantDealData = {};
 							this.singleRestaurantDealData.restaurantDeal = {};
-							this.singleRestaurantDealData.discountObject = {};
 							this.singleRestaurantDealData.restaurantObject = {};
 
 							this.allRestaurantDeals = response.data;
@@ -655,14 +654,14 @@
 
 				this.singleRestaurantDealData.restaurantDeal = restaurant.deal;
 				this.singleRestaurantDealData.restaurantObject = restaurant;
-				this.singleRestaurantDealData.discountObject = restaurant.deal.discount;
 
 				$("#modal-createOrEdit-deal").modal("show");
 			},
 			updateRestaurantDeal(){
 
-				if (Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0 || Object.keys(this.singleRestaurantDealData.discountObject).length === 0) {
+				if (Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0) {
 					
+					this.errors.restaurantDeal.restaurant = 'Restaurant name is required';
 					this.submitForm = false;
 					return;
 				}
@@ -677,7 +676,6 @@
 
 							// this.singleRestaurantDealData = {};
 							this.singleRestaurantDealData.restaurantDeal = {};
-							this.singleRestaurantDealData.discountObject = {};
 							this.singleRestaurantDealData.restaurantObject = {};
 
 							if (this.query === '') {
@@ -735,17 +733,18 @@
 
 						break;
 
-					case 'restaurantDeal.discount' :
+					case 'restaurantDeal.net_discount' :
 
-						if (Object.keys(this.singleRestaurantDealData.discountObject).length === 0) {
-							this.errors.restaurantDeal.discount = 'Discount rate is required';
-						}else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
+						if (!this.singleRestaurantDealData.restaurantDeal.net_discount) {
+							this.errors.restaurantDeal.net_discount = 'Discount rate is required';
+						}
+						else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.restaurantDeal.net_discount) {
 
-							this.errors.restaurantDeal.discount = 'Promotional with Native discount should be equal to Net discount';
+							this.errors.restaurantDeal.net_discount = 'Promotional with Native discount should be equal to Net discount';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantDeal, 'discount');
+							this.$delete(this.errors.restaurantDeal, 'net_discount');
 						}
 
 						break;
@@ -756,13 +755,13 @@
 							
 							this.errors.restaurantDeal.restaurant_promotional_discount = 'Value should be between 0 and 100';
 						}
-						else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
+						else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.restaurantDeal.net_discount) {
 
 							this.errors.restaurantDeal.restaurant_promotional_discount = 'Promotional with Native discount should be equal to Net discount';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantDeal, 'discount');
+							this.$delete(this.errors.restaurantDeal, 'net_discount');
 							this.$delete(this.errors.restaurantDeal, 'restaurant_promotional_discount');
 							this.$delete(this.errors.restaurantDeal, 'native_discount');
 						}
@@ -774,13 +773,13 @@
 						if (this.singleRestaurantDealData.restaurantDeal.native_discount < 0 || this.singleRestaurantDealData.restaurantDeal.native_discount > 100) {
 
 							this.errors.restaurantDeal.native_discount = 'Value should be between 0 and 100';
-						}else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.discountObject.rate) {
+						}else if ((this.singleRestaurantDealData.restaurantDeal.native_discount + this.singleRestaurantDealData.restaurantDeal.restaurant_promotional_discount) !== this.singleRestaurantDealData.restaurantDeal.net_discount) {
 
 							this.errors.restaurantDeal.native_discount = 'Promotional with Native discount should be equal to Net discount';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantDeal, 'discount');
+							this.$delete(this.errors.restaurantDeal, 'net_discount');
 							this.$delete(this.errors.restaurantDeal, 'restaurant_promotional_discount');
 							this.$delete(this.errors.restaurantDeal, 'native_discount');
 						}

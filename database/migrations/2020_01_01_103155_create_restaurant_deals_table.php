@@ -18,7 +18,7 @@ class CreateRestaurantDealsTable extends Migration
             $table->float('sale_percentage', 5, 2)->default(0);
             $table->float('restaurant_promotional_discount', 5, 2)->default(0);
             $table->float('native_discount', 5, 2)->default(0);
-            $table->unsignedTinyInteger('discount_id');
+            $table->unsignedTinyInteger('net_discount')->default(0);
             $table->boolean('delivery_fee_addition')->default(true);
             $table->unsignedMediumInteger('restaurant_id')->unique();
             $table->softDeletes();

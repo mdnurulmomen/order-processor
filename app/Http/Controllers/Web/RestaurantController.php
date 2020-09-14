@@ -558,7 +558,7 @@ class RestaurantController extends Controller
             'sale_percentage'=>'numeric|min:0|max:100',
             'restaurant_promotional_discount'=>'numeric|min:0|max:100',
             'native_discount'=>'numeric|min:0|max:100',
-            'discount_id'=>'required|numeric|exists:discounts,id',
+            'net_discount'=>'required|numeric',
             'delivery_fee_addition'=>'nullable|boolean',
             'restaurant_id'=>'required|numeric|exists:restaurants,id|unique:restaurant_deals,restaurant_id',
          ]);
@@ -567,7 +567,7 @@ class RestaurantController extends Controller
             'sale_percentage' => $request->sale_percentage,
             'restaurant_promotional_discount' => $request->restaurant_promotional_discount,
             'native_discount' => $request->native_discount,
-            'discount_id' => $request->discount_id,
+            'net_discount' => $request->net_discount,
             'delivery_fee_addition' => $request->delivery_fee_addition ?? false,
             'restaurant_id' => $request->restaurant_id,
          ]);
@@ -583,7 +583,7 @@ class RestaurantController extends Controller
             'sale_percentage'=>'numeric|min:0|max:100',
             'restaurant_promotional_discount'=>'numeric|min:0|max:100',
             'native_discount'=>'numeric|min:0|max:100',
-            'discount_id'=>'required|numeric|exists:discounts,id',
+            'net_discount'=>'required|numeric',
             'delivery_fee_addition'=>'nullable|boolean',
             'restaurant_id'=>'required|numeric|exists:restaurants,id|unique:restaurant_deals,restaurant_id,'.$restaurantDealToUpdate->id,
          ]);
@@ -591,7 +591,7 @@ class RestaurantController extends Controller
          $restaurantDealToUpdate->sale_percentage = $request->sale_percentage;        
          $restaurantDealToUpdate->restaurant_promotional_discount = $request->restaurant_promotional_discount;
          $restaurantDealToUpdate->native_discount = $request->native_discount;        
-         $restaurantDealToUpdate->discount_id = $request->discount_id;     
+         $restaurantDealToUpdate->net_discount = $request->net_discount;     
          $restaurantDealToUpdate->delivery_fee_addition = $request->delivery_fee_addition ?? false;        
          $restaurantDealToUpdate->restaurant_id = $request->restaurant_id;     
          $restaurantDealToUpdate->save();        
