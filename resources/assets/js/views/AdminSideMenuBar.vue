@@ -84,7 +84,7 @@
                 href="#" 
                 v-bind:class="[currentPage.includes('/orders') ? 'active' : '', 'nav-link']"
               >
-                <i class="nav-icon fas fa-bell"></i>
+                <i class="nav-icon fab fa-first-order"></i>
                 <p>
                   Orders
                   <i class="right fas fa-angle-left"></i>
@@ -288,7 +288,7 @@
                 href="#" 
                 v-bind:class="[(currentPage.includes('/cancelation-reasons') || currentPage.includes('/cancelation-reasons')) ? 'active' : '', 'nav-link']"
               >
-                <i class="nav-icon fas fa-bell"></i>
+                <i class="nav-icon fas fa-times"></i>
                 <p>
                   Cancelations
                   <i class="right fas fa-angle-left"></i>
