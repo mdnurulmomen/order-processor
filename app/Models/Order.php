@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\AsapOrder;
+use App\Models\OrderCutlery;
+use App\Models\ScheduledOrder;
 use App\Models\OrderedRestaurant;
 use App\Models\OrderDeliveryInfo;
 use App\Models\TableBookingDetail;
@@ -35,6 +38,21 @@ class Order extends Model
       public function orderer()
       {
         return $this->morphTo(__FUNCTION__, 'orderer_type', 'orderer_id');
+      }
+
+      public function asap()
+      {
+         return $this->hasOne(AsapOrder::class, 'order_id', 'id');
+      }
+
+      public function scheduled()
+      {
+         return $this->hasOne(ScheduledOrder::class, 'order_id', 'id');
+      }
+
+      public function cutleryAdded()
+      {
+         return $this->hasOne(OrderCutlery::class, 'order_id', 'id');
       }
 
       public function payment()

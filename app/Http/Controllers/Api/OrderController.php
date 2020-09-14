@@ -24,19 +24,27 @@ class OrderController extends Controller
     {        
         $newOrder = Order::create([
             'order_type' => $request->order->order_type,
-            'is_asap_order' => $request->order->is_asap_order ?? false,
-            'order_schedule' => $request->order->order_schedule ?? NULL,
             'order_price' => $request->order->order_price,
             'vat' => $request->order->vat,
             'discount' => $request->order->discount,
             'delivery_fee' => $request->order->delivery_fee,
             'net_payable' => $request->order->net_payable,
             'payment_method' => $request->payment->payment_method,
-            'cutlery_addition' => $request->order->cutlery_addition ?? false,
             'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
             'orderer_id' => $request->order->orderer_id,
             'customer_confirmation' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1, 
         ]);
+
+        if ($request->order->is_asap_order) {
+            $this->createAsapOrder($newOrder);
+        }
+        else {
+            $this->createScheduledOrder($newOrder, $request->order->order_schedule);           
+        }
+
+        if ($request->order->cutlery_addition) {
+            $this->addCutlery($newOrder);
+        }
 
         if ($request->payment->payment_method !=='cash' && $request->payment->payment_id) {
             $newOrderPayment = $newOrder->payment()->create([
@@ -125,6 +133,12 @@ class OrderController extends Controller
         $expectedRestaurant = Restaurant::find($request->reservation->restaurant_id);
 
         $newOrder = $this->createReservationOrder($request);
+
+        if ($request->order->cutlery_addition) {
+            $this->addCutlery($newOrder);
+        }
+
+        $this->createScheduledOrder($newOrder, $request->reservation->arriving_time);
         $this->createTableReservation($expectedRestaurant, $request, $newOrder->id);
         $this->updateRestaurantBookingStatus($expectedRestaurant, $request->reservation);
         $orderedRestaurant = $this->createOrderedRestaurant($newOrder, $request->reservation->restaurant_id);
@@ -200,19 +214,33 @@ class OrderController extends Controller
     {
         return Order::create([
             'order_type' => $request->order->order_type,
-            'is_asap_order' => false,
-            'order_schedule' => $request->reservation->arriving_time,
             'order_price' => $request->order->order_price,
             'vat' => $request->order->vat,
             'discount' => $request->order->discount,
             'delivery_fee' => 0,
             'net_payable' => $request->order->net_payable,
             'payment_method' => $request->payment->payment_method,
-            'cutlery_addition' => $request->order->cutlery_addition ?? false,
             'orderer_type' => "App\Models\Customer",
             'orderer_id' => $request->order->orderer_id,
             'customer_confirmation' => ($request->payment->payment_method!=='cash' && $request->payment->payment_id) ? 1 : -1, 
         ]);
+    }
+
+    private function createAsapOrder(Order $order)
+    {
+        $order->asap()->create([]);
+    }
+
+    private function createScheduledOrder(Order $order, $schedule)
+    {
+        $order->scheduled()->create([
+            'order_schedule' => $schedule
+        ]);
+    }
+
+    private function addCutlery(Order $order)
+    {
+        $order->cutleryAdded()->create([]);
     }
 
     private function createTableReservation(Restaurant $restaurant, Request $request, $orderId)

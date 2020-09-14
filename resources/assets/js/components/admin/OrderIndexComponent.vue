@@ -394,14 +394,14 @@
 								                	{{ singleOrderData.order.order_type | capitalize }}
 								                </div>
 								            </div>
-								            <div class="form-group row">		
+								            <div class="form-group row" v-if="singleOrderData.order.asap || singleOrderData.order.scheduled">		
 							              		<label class="col-sm-6 text-right">
 							              			ASAP/Scheduled
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{
-								                  		singleOrderData.order.is_asap_order ?
-								                  		'ASAP' : singleOrderData.order.order_schedule
+								                  		singleOrderData.order.asap ?
+								                  		'ASAP' : singleOrderData.order.scheduled.order_schedule
 								                  	}}
 								                </div>	
 								            </div> 
@@ -459,7 +459,7 @@
 							              			Cutlery
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.cutlery_addition ? 'Added' : 'None' }}
+								                  	{{ singleOrderData.order.cutlery_added ? 'Added' : 'None' }}
 								                </div>	
 								            </div> 
 								            

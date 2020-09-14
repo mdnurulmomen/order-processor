@@ -16,15 +16,15 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->string('order_type');
-            $table->boolean('is_asap_order')->default(true);
-            $table->timestamp('order_schedule')->nullable();
+            // $table->boolean('is_asap_order')->default(true);
+            // $table->timestamp('order_schedule')->nullable();
             $table->unsignedMediumInteger('order_price');
             $table->tinyInteger('vat');
             $table->unsignedTinyInteger('discount')->default(0);
             $table->unsignedTinyInteger('delivery_fee')->default(0);
             $table->unsignedMediumInteger('net_payable');
             $table->string('payment_method', 20);
-            $table->boolean('cutlery_addition')->default(false);
+            // $table->boolean('cutlery_addition')->default(false);
             $table->string('orderer_type'); // Counter / Waiter / Customer
             $table->unsignedInteger('orderer_id');
             $table->tinyInteger('customer_confirmation')->default(-1);
