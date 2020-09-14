@@ -109,11 +109,13 @@ const router = new VueRouter({
             name: 'admin.restaurantAdmins.index',
             component: () => import(/* webpackChunkName : "js/restaurant-admin-list" */ './components/admin/RestaurantAdminIndexComponent.vue')
 		},
-		{
-			path: '/discounts',
-            name: 'admin.discounts.index',
-            component: () => import(/* webpackChunkName : "js/discount-list" */ './components/admin/DiscountIndexComponent.vue')
-		},
+		
+		// {
+			// path: '/discounts',
+            // name: 'admin.discounts.index',
+            // component: () => import(/* webpackChunkName : "js/discount-list" */ './components/admin/DiscountIndexComponent.vue')
+		// },
+
 		{
 			path: '/add-ons',
             name: 'admin.addons.index',

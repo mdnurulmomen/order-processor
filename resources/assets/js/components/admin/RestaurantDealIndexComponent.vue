@@ -115,7 +115,16 @@
 								    			{{ restaurant.deal ? restaurant.deal.net_discount : 'No Deal' }}
 								    		</td>
 								    		<td>
-								    			{{ restaurant.deal ? (restaurant.deal.delivery_fee_addition ? 'Yes' : 'No') : 'No Deal' }}
+								    			<span v-if="restaurant.deal"
+								    				:class="[restaurant.deal.delivery_fee_addition ? 'badge-warning' : 'badge-info', 'right badge']"
+								    			>
+								    				{{ 
+								    					restaurant.deal.delivery_fee_addition ? 'Applicable' : 'Not-Applicable' 
+								    				}}
+								    			</span>
+								    			<span v-else class="badge-danger right badge">
+								    				No Deal
+								    			</span>
 								    		</td>
 								    		<td>
 										      	<button type="button" 
@@ -471,7 +480,6 @@
 
     	},
 
-    	allDiscounts : [],
     	allRestaurants : [],
 
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -491,7 +499,6 @@
 		},
 
 		created(){
-			this.fetchAllDiscounts();
 			this.fetchAllRestaurants();
 			this.fetchAllRestaurantDeals();
 		},
@@ -534,20 +541,6 @@
 					this.restaurantDealsToShow = this.allRestaurantDeals.trashed.data;
 					this.pagination = this.allRestaurantDeals.trashed;
 				}
-			},
-			fetchAllDiscounts(){
-				this.loading = true;
-				axios
-					.get('/api/discounts')
-					.then(response => {
-						if (response.status == 200) {
-							this.loading = false;
-							this.allDiscounts = response.data;
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					});
 			},
 			fetchAllRestaurants(){
 				this.loading = true;

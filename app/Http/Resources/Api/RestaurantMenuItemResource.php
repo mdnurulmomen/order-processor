@@ -14,9 +14,7 @@ class RestaurantMenuItemResource extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {
-        // return parent::toArray($request);
-        
+    {   
         return [
 
             'name' => $this->name,
@@ -30,7 +28,7 @@ class RestaurantMenuItemResource extends JsonResource
             'is_post_paid' => $this->is_post_paid,
             'is_self_service' => $this->is_self_service,
             'has_parking' => $this->has_parking,
-			'discount' => $this->deal->discount->rate,
+			'discount' => $this->deal->net_discount,
             'service_schedule' => json_decode($this->service_schedule),
             'booking_break_schedule' => json_decode($this->booking_break_schedule),
 

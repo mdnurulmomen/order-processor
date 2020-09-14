@@ -17,9 +17,9 @@ class RiderOrderResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'is_asap_order' => $this->is_asap_order,
-            'order_schedule' => $this->order_schedule,
-            'cutlery_addition' => $this->cutlery_addition,
+            'asap' => $this->whenLoaded('asap'),
+            'scheduled' => $this->whenLoaded('scheduled'),
+            'cutlery_added' => $this->whenLoaded('cutlery_added'),
             'order_price' => $this->order_price,
             'vat' => $this->vat,
             'discount' => $this->discount,

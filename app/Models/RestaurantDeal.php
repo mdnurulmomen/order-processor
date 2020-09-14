@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Discount;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -36,8 +35,4 @@ class RestaurantDeal extends Model
     	return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');
     }
 
-    public function discount()
-    {
-    	return $this->belongsTo(Discount::class, 'discount_id', 'id');
-    }
 }

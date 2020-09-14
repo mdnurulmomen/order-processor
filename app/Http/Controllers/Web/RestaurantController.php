@@ -543,13 +543,13 @@ class RestaurantController extends Controller
       {
          if ($perPage) {
             return response()->json([
-               'current' => Restaurant::with(['deal', 'deal.discount'])->paginate($perPage),
-               'trashed' => Restaurant::onlyTrashed()->with(['deal', 'deal.discount'])->paginate($perPage),
+               'current' => Restaurant::with('deal')->paginate($perPage),
+               'trashed' => Restaurant::onlyTrashed()->with('deal')->paginate($perPage),
 
             ], 200);
          }
 
-         return response(Restaurant::with(['deal', 'deal.discount'])->get(), 200);
+         return response(Restaurant::with('deal')->get(), 200);
       }
 
       public function createRestaurantDeal(Request $request, $perPage = false)
@@ -601,7 +601,7 @@ class RestaurantController extends Controller
 
       public function searchAllRestaurantDeals($search, $perPage)
       {
-         $query = Restaurant::withTrashed()->with(['deal', 'deal.discount']);
+         $query = Restaurant::withTrashed()->with('deal');
 
          $query->where('name', 'like', "%$search%");
 
@@ -613,7 +613,7 @@ class RestaurantController extends Controller
 
          });
          
-         $query->orWhereHas('deal.discount', function($q) use ($search){
+         $query->orWhereHas('deal', function($q) use ($search){
             $q->where('rate', 'like', "%$search%");
          });
 
