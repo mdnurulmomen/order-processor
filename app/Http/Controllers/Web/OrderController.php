@@ -386,6 +386,12 @@ class OrderController extends Controller
 			// Broadcast to admin for restaurant order cancelation
 	 		$this->notifyAdmin($orderToCancel);
 
+	 		if ($orderToCancel->riderAssignment()->exists()) {
+	 			
+	 			$this->notifyRider($orderToCancel->riderAssignment);
+
+	 		}
+
 	 		return $this->showAllRestaurantOrders($request->restaurant_id, $perPage);
 		
 		// }

@@ -150,11 +150,11 @@
 								    			-->
 								    			<span 
 								    				v-else 
-								    				v-for="(restaurantOrderRecord, index) in order.restaurant_acceptances" 
-								    				:class="[orderProgressionClass(order, index), 'badge d-block']"
+								    				v-for="restaurantOrderRecord in order.restaurant_acceptances" 
+								    				:class="[orderProgressionClass(order, restaurantOrderRecord.restaurant_id), 'badge d-block']"
 								    			>	
 								    				{{ 
-								    					secondaryOrder(order, index)
+								    					secondaryOrder(order, restaurantOrderRecord.restaurant_id)
 								    				}}
 								    			</span>
 
@@ -268,12 +268,12 @@
 				    			<div 
 				    				class="progress-bar progress-bar-striped progress-bar-animated" 
 				    				v-if="singleOrderData.order.restaurant_acceptances.length" 
-				    				v-for="(restaurantOrderRecord, index) in singleOrderData.order.restaurant_acceptances" 
-				    				:class="[orderProgressionClass(singleOrderData.order, index)]" 
+				    				v-for="restaurantOrderRecord in singleOrderData.order.restaurant_acceptances" 
+				    				:class="[orderProgressionClass(singleOrderData.order, restaurantOrderRecord.restaurant_id)]" 
 									:style="{ width: (60/singleOrderData.order.restaurant_acceptances.length) + '%' }"
 								>
 									{{ 
-				    					secondaryOrder(singleOrderData.order, index)
+				    					secondaryOrder(singleOrderData.order, restaurantOrderRecord.restaurant_id)
 				    				}}
 								</div>
 
@@ -1348,32 +1348,72 @@
 
 			},
 			// secondary order class definer
-			orderProgressionClass(order, index) {
-				if (this.secondaryOrder(order, index).includes("cancelled")) {
+			orderProgressionClass(order, restaurant) {
+
+				// console.log('Secondary value is : ' + this.secondaryOrder(order, restaurant));
+
+				if (this.secondaryOrder(order, restaurant).includes("cancelled")) {
 					return 'badge-secondary bg-secondary';
-				}else if (this.secondaryOrder(order, index).includes("picked-up")) {
+				}else if (this.secondaryOrder(order, restaurant).includes("picked-up")) {
 					return 'badge-success bg-success';
-				}else if (this.secondaryOrder(order, index).includes("ready")) {
+				}else if (this.secondaryOrder(order, restaurant).includes("ready")) {
 					return 'badge-success bg-success';
-				}else if (this.secondaryOrder(order, index).includes("accepted")) {
+				}else if (this.secondaryOrder(order, restaurant).includes("accepted")) {
 					return 'badge-warning bg-warning';
-				}else if (this.secondaryOrder(order, index).includes("ringing")) {
+				}else if (this.secondaryOrder(order, restaurant).includes("ringing")) {
 					return 'badge-danger bg-danger';
 				}
 			},
 			// after call confirmation
-			secondaryOrder(order, index) {
+			secondaryOrder(order, restaurant) {
 				
+				// console.log(this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant));
+
+				// if current restaurant cancelled
+				if (order.restaurant_order_cancelations.length && typeof this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant) !== 'undefined') {
+
+					return this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant).restaurant.name + ' cancelled order';
+
+				}
+				// if current restaurant picked up
+				else if (order.rider_food_pick_confirmations.length && typeof this.riderPickedThisRestaurant(order.rider_food_pick_confirmations, restaurant) !== 'undefined') {
+
+					return 'Order picked-up from ' + this.riderPickedThisRestaurant(order.rider_food_pick_confirmations, restaurant).restaurant.name;
+
+				}
+				// if current restaurant order is ready
+				else if (order.order_ready_confirmations.length && typeof this.restaurantIsReady(order.order_ready_confirmations, restaurant) !== 'undefined') {
+
+					return this.restaurantIsReady(order.order_ready_confirmations, restaurant).restaurant.name + ' is ready';
+
+				}
+				// if curent restaurant has accepted ?
+				else if (order.restaurant_acceptances.length && typeof this.restaurantHasAcceptedOrder(order.restaurant_acceptances, restaurant) !== 'undefined') {
+
+					return this.restaurantHasAcceptedOrder(order.restaurant_acceptances, restaurant).restaurant.name + ' has accepted';
+
+				}
+				// if current restaurant ringing ?
+				else if (order.restaurant_acceptances.length && typeof this.restaurantIsRinging(order.restaurant_acceptances, restaurant) !== 'undefined') {
+
+					return this.restaurantIsRinging(order.restaurant_acceptances, restaurant).restaurant.name + ' is ringing';
+
+				}
+				else 
+					return false;
+
+		/*
+
 				// this restaurant cancelled the order ?
-				if(order.restaurant_order_cancelations[index] && order.restaurant_order_cancelations[index].hasOwnProperty('reason_id')) {
+				if(order.restaurant_order_cancelations.length >= index && order.restaurant_order_cancelations[index].hasOwnProperty('reason_id')) {
 					return order.restaurant_order_cancelations[index].restaurant.name + ' cancelled order';
 				}
 				// if picked up
-				else if (order.rider_food_pick_confirmations[index] && order.rider_food_pick_confirmations[index].rider_food_pick_confirmation==1) {
+				else if (order.rider_food_pick_confirmations >= index && order.rider_food_pick_confirmations[index].rider_food_pick_confirmation==1) {
 					return 'Order picked-up from ' + order.rider_food_pick_confirmations[index].restaurant.name;	
 				}
 				// ready ?
-				else if (order.order_ready_confirmations[index] && order.order_ready_confirmations[index].food_ready_confirmation==1) {
+				else if (order.order_ready_confirmations >= index && order.order_ready_confirmations[index].food_ready_confirmation==1) {
 					return order.order_ready_confirmations[index].restaurant.name + ' is ready';
 				}
 				// restaurant ringing or accepted ?
@@ -1387,6 +1427,8 @@
 						return false;
 						// 	return order.restaurant_acceptances[index].restaurant.name +' has cancelled';
 				}
+
+		*/
 
 			},
 			// initial class for every order
@@ -1539,6 +1581,52 @@
 					return true;
 				}
 				return false;
+			},
+			// current restaurant cancelled this order
+			restaurantCancelledOrder(restaurantOrderCancelations, restaurant) {
+				
+				return restaurantOrderCancelations.find(
+					cancelation => (cancelation.restaurant_id === restaurant)
+				);
+
+				/*
+					return restaurantOrderCancelations.some(
+						cancelation => (cancelation.restaurant_id === restaurant)
+					);
+				*/
+
+			},
+			// current restaurant has been picked Up
+			riderPickedThisRestaurant(riderPickUpConfirmations, restaurant) {
+				
+				return riderPickUpConfirmations.find(
+					pickedUp => (pickedUp.restaurant_id === restaurant && pickedUp.rider_food_pick_confirmation==1)
+				);
+
+			},
+			// current restaurant is ready
+			restaurantIsReady(orderReadyConfirmations, restaurant) {
+				
+				return orderReadyConfirmations.find(
+					orderReady => (orderReady.restaurant_id === restaurant && orderReady.food_ready_confirmation==1)
+				);
+
+			},
+			// current restaurant has accepted
+			restaurantHasAcceptedOrder(restaurantOrderAcceptances, restaurant) {
+				
+				return restaurantOrderAcceptances.find(
+					restaurantOrderRecord => (restaurantOrderRecord.restaurant_id === restaurant && restaurantOrderRecord.food_order_acceptance==1)
+				);
+
+			},
+			// current restaurant is ringing
+			restaurantIsRinging(restaurantOrderAcceptances, restaurant) {
+				
+				return restaurantOrderAcceptances.find(
+					restaurantOrderRecord => (restaurantOrderRecord.restaurant_id === restaurant && restaurantOrderRecord.food_order_acceptance==-1)
+				);
+
 			}
 			
 		}
