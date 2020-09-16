@@ -35,6 +35,6 @@ class RestaurantMenuCategory extends Model
 
    	public function restaurantMenuItems()
    	{
-   		return $this->hasMany(RestaurantMenuItem::class, 'restaurant_menu_category_id', 'id')->withTrashed();
+   		return $this->hasMany(RestaurantMenuItem::class, 'restaurant_menu_category_id', 'id');
    	}
 }

@@ -11,6 +11,6 @@ class RestaurantCuisine extends Model
 
    	public function cuisine()
    	{
-   		return $this->belongsTo(Cuisine::class, 'cuisine_id', 'id');
+   		return $this->belongsTo(Cuisine::class, 'cuisine_id', 'id')->withTrashed();
    	}
 }

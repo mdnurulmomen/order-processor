@@ -23,6 +23,6 @@ class RestaurantMenuItemAddon extends Model
 
     public function addon()
     {
-        return $this->belongsTo(Addon::class, 'addon_id', 'id');
+        return $this->belongsTo(Addon::class, 'addon_id', 'id')->withTrashed();
     }
 }

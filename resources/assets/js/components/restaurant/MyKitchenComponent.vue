@@ -116,7 +116,7 @@
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
-							this.myKitchen = response.data.kitchen;
+							this.myKitchen = response.data.kitchen || {};
 							// console.log(response.data.kitchen);
 							// console.log(this.myKitchen.restaurant.name);
 						}

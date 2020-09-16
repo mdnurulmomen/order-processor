@@ -24,6 +24,6 @@ class RestaurantMenuItemVariation extends Model
 
    	public function variation()
     {
-        return $this->belongsTo(ItemVariation::class, 'variation_id', 'id');
+        return $this->belongsTo(ItemVariation::class, 'variation_id', 'id')->withTrashed();
     }
 }

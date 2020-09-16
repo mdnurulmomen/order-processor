@@ -24,7 +24,7 @@ class RestaurantOrderRecord extends Model
 
 	public function restaurant()
   {
-    return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');
+    return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id')->withTrashed();
   }
 
   public function orderedRestaurants()

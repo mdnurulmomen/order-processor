@@ -33,6 +33,6 @@ class OrderItem extends Model
 
       public function restaurantMenuItem()
       {
-         return $this->belongsTo(RestaurantMenuItem::class, 'restaurant_menu_item_id', 'id');
+         return $this->belongsTo(RestaurantMenuItem::class, 'restaurant_menu_item_id', 'id')->withTrashed();
       }
 }
