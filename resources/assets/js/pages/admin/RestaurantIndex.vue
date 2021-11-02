@@ -141,7 +141,7 @@
 									      			@click="showRestaurantDetailModal(restaurant)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
-								        			Sum
+								        			View
 								      			</button>
 
 										      	<button 
@@ -449,6 +449,28 @@
 							>
 
 								<input type="hidden" name="_token" :value="csrf">
+
+								<div v-show="! loading" class="row">
+									<div class="col-sm-12">
+									  	<div class="card">
+										    <div class="card-header text-center">
+
+										      	<div class="progress">
+										        	<div class="progress-bar bg-success w-50" v-show="step>=1">
+										          		Profile
+										        	</div>
+										        	<div class="progress-bar bg-info w-25" v-show="step>=2">
+										          		Address
+										        	</div>
+										        	<div class="progress-bar bg-danger w-25" v-show="step>=3">
+										          		Service & Schedule
+										        	</div>
+										      	</div>
+
+										    </div>
+									  	</div>
+									</div>
+								</div>
 
 								<transition-group name="fade">
 
@@ -794,7 +816,7 @@
 									          	</div>  
 									        </div>
 
-									        <div class="row mb-2">
+									        <div class="row mb-2 mt-2">
 									          	<div class="col-6 text-left">
 								                  	<button type="button" 
 								                  		class="btn btn-outline-secondary btn-sm rounded-pill" 
@@ -1091,8 +1113,8 @@
 									          	</div>  
 									        </div>
 
-									        <div class="row mb-2">
-									          	<div class="col-4 text-left">
+									        <div class="row mb-2 mt-2">
+									          	<div class="col-6 text-left">
 								                  	<button 
 									                  	type="button" 
 									                  	class="btn btn-outline-secondary btn-sm rounded-pill" 
@@ -1102,7 +1124,7 @@
 								                  	</button>
 								                </div>
 								                
-									          	<div class="col-8 text-right">
+									          	<div class="col-6 text-right">
 									                <div class="text-danger small" v-show="!submitForm">
 												  		Please input required fields
 										          	</div>
@@ -1117,36 +1139,9 @@
 								            </div>
 									  	</div>
 									</div>
-
 								</transition-group>
-
-								<div v-show="!loading" class="row">
-									<div class="col-sm-12">
-
-									  	<div class="card">
-										    <div class="card-header text-center">
-
-										      	<div class="progress">
-										        	<div class="progress-bar bg-success w-50" v-show="step>=1">
-										          		Profile
-										        	</div>
-										        	<div class="progress-bar bg-info w-25" v-show="step>=2">
-										          		Address
-										        	</div>
-										        	<div class="progress-bar bg-danger w-25" v-show="step>=3">
-										          		Service & Schedule
-										        	</div>
-										      	</div>
-
-										    </div>
-									  	</div>
-									  
-									</div>
-								</div>
-
 							</form>
 							<!-- form end -->
-							
 						</div>
 					</div>
 					<!-- /.modal-content -->
@@ -2069,7 +2064,7 @@
 			},
 			showRestaurantMenuList(restaurant) {
 				this.$router.push({
-			 		name: 'admin.restaurantMenuItem.index', 
+			 		name: 'restaurant-menu-items', 
 			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
 				});
 			},

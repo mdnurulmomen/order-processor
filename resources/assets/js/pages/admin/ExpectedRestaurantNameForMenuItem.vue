@@ -149,7 +149,7 @@
 					return;
 				}
 				this.$router.push({
-			 		name: 'admin.restaurantMenuItem.index', 
+			 		name: 'restaurant-menu-items', 
 			 		params: { restaurant : this.restaurant.id, restaurantName : this.restaurant.name }, 
 				});
 			},

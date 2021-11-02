@@ -5,10 +5,9 @@
 
     <!-- Navbar for back/forward button -->
     <nav 
-      class="main-header navbar navbar-expand position-relative" 
-      style="top: 55px;z-index: 0"
+      class="main-header navbar navbar-expand position-relative p-3" 
+      style="top: 55px;z: 0"
     >
-
       <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">
@@ -16,9 +15,9 @@
             type="button" 
             class="btn btn-default btn-sm" 
             v-on:click="$router.go(-1);" 
-            title="Go back" 
+            title="Go Back" 
           >
-            <i class="fas fa-backward"></i>
+            <i class="fa fa-arrow-left"></i>
           </button>
         </li>
       </ul>
@@ -30,13 +29,12 @@
             type="button" 
             class="btn btn-default btn-sm" 
             v-on:click="$router.go(1);" 
-            title="Go back" 
+            title="Go Next" 
           >
-            <i class="fas fa-forward"></i>
+            <i class="fa fa-arrow-right"></i>
           </button>
         </li>
       </ul>
-
     </nav>
     <!-- /.navbar -->
 
@@ -50,7 +48,7 @@
             <!-- Add icons to the links using the .nav-icon class
                  with font-awesome or any other icon font library -->
             <li class="nav-item has-treeview menu-open">
-              <a href="#" v-bind:class="[(currentPage.includes('home') || currentPage.includes('dashboard')) ? 'active' : '', 'nav-link']">
+              <a href="#" :class="[['home', 'dashboard2', 'dashboard3'].includes(currentRoute) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-home"></i>
                 <p>
                   Dashboard
@@ -59,30 +57,41 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.home' }"  class="nav-link">
+                  <router-link 
+                    :to="{ name: 'home' }"  
+                    :class="[currentRoute=='home' ? 'active' : '', 'nav-link']"
+                  >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v1</p>
+                    <p>Home </p>
                   </router-link>
                 </li>
+
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.dashboard2' }"  class="nav-link">
+                  <router-link 
+                    :to="{ name: 'dashboard2' }"  
+                    :class="[currentRoute=='dashboard2' ? 'active' : '', 'nav-link']"
+                  >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v2</p>
+                    <p>Dashboard 2</p>
                   </router-link>
                 </li>
+
                 <li class="nav-item">
-                  <router-link :to="{ name: 'admin.dashboard3' }"  class="nav-link">
+                  <router-link 
+                    :to="{ name: 'dashboard3' }"  
+                    :class="[currentRoute=='dashboard3' ? 'active' : '', 'nav-link']"
+                  >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v3</p>
+                    <p>Dashboard 3</p>
                   </router-link>
                 </li>
               </ul>
             </li>
 
-            <li class="nav-item has-treeview menu-open">
+            <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                v-bind:class="[currentPage.includes('/orders') ? 'active' : '', 'nav-link']"
+                :class="[['orders', 'rider-orders', 'waiter-orders'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fab fa-first-order"></i>
                 <p>
@@ -93,151 +102,18 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'admin.orders.index' }" 
-                    v-bind:class="[(currentPage.includes('/orders')) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'orders' }" 
+                    :class="[currentRoute=='orders' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Orders</p>
                   </router-link>
                 </li>
-              </ul>
-            </li>
-
-            <li class="nav-item has-treeview menu-open">
-              <a href="#" v-bind:class="[(currentPage.includes('restaurant-admins') || currentPage.includes('restaurants') || currentPage.includes('kitchens') || currentPage.includes('restaurant-deals') || currentPage.includes('restaurant-meals') || currentPage.includes('restaurant-cuisines') || currentPage.includes('/waiters') || currentPage.includes('/restaurant-menu-categories')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-hotel"></i>
-                <p>
-                  Restaurants
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurants.index' }" v-bind:class="[(currentPage.includes('/restaurants')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurants</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantDeals.index' }" v-bind:class="[(currentPage.includes('/restaurant-deals')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurant Deals</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantMeals.index' }" v-bind:class="[(currentPage.includes('/restaurant-meals')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurant Meals</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantAdmins.index' }" v-bind:class="[(currentPage.includes('/restaurant-admins')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurant Admins</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.waiters.index' }"  v-bind:class="[(currentPage.includes('/waiters')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurant Waiters</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantCuisines.index' }" v-bind:class="[(currentPage.includes('/restaurant-cuisines')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurant Cuisines</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.kitchens.index' }"  v-bind:class="[(currentPage.includes('/kitchens')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurant Kitchens</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.expectedRestaurantForMenuItem.index' }"  v-bind:class="[(currentPage.includes('/restaurant-menu-items')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Rst Menu-Items</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.restaurantMenuCategories.index' }"  v-bind:class="[(currentPage.includes('/restaurant-menu-categories')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Rst Menu-Categories</p>
-                  </router-link>
-                </li>
-              </ul>
-            </li>
-
-            <li class="nav-item has-treeview menu-open">
-              <a href="#" v-bind:class="[(currentPage.includes('/cuisines') || currentPage.includes('/menu-categories') || currentPage.includes('/meals') || currentPage.includes('/add-ons') || currentPage.includes('/item-variations')) ? 'active' : '', 'nav-link']">
-                <i class="nav-icon fas fa-utensils"></i>
-                <p>
-                  Food Items
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.meals.index' }"    v-bind:class="[(currentPage.includes('/meals')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Meals</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.cuisines.index' }"   v-bind:class="[(currentPage.includes('/cuisines')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Cuisines</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.addons.index' }"    v-bind:class="[(currentPage.includes('/add-ons')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Add-ons</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.itemVariations.index' }"  v-bind:class="[(currentPage.includes('/item-variations')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Item Variations</p>
-                  </router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'admin.menuCategories.index' }"  v-bind:class="[(currentPage.includes('/menu-categories')) ? 'active' : '', 'nav-link']">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Menu Categories</p>
-                  </router-link>
-                </li>
-              </ul>
-            </li>
-
-            <li class="nav-item has-treeview menu-open">
-              <a 
-                href="#" 
-                v-bind:class="[(currentPage.includes('/delivery-men') || currentPage.includes('/delivery-men')) ? 'active' : '', 'nav-link']"
-              >
-                <i class="nav-icon fas fa-bicycle"></i>
-                <p>
-                  Delivery-Men
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'admin.deliveryMen.index' }" 
-                    v-bind:class="[(currentPage.includes('/delivery-men')) ? 'active' : '', 'nav-link']"
-                  >
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Riders</p>
-                  </router-link>
-                </li>
-
-                <li class="nav-item">
-                  <router-link 
-                    :to="{ name: 'admin.riderOrders.index' }" 
-                    v-bind:class="[(currentPage.includes('/rider-orders')) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'rider-orders' }" 
+                    :class="[currentRoute=='rider-orders' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Rider-Orders</p>
@@ -246,21 +122,212 @@
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'admin.waiterOrders.index' }" 
-                    v-bind:class="[(currentPage.includes('/waiter-orders')) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'waiter-orders' }" 
+                    :class="[currentRoute=='waiter-orders' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Waiter-Orders</p>
                   </router-link>
                 </li>
-
               </ul>
             </li>
 
-            <li class="nav-item has-treeview menu-open">
+            <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                v-bind:class="[(currentPage.includes('/notifications') || currentPage.includes('/notifications')) ? 'active' : '', 'nav-link']"
+                :class="[['meals', 'cuisines', 'addons', 'item-variations', 'menu-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+              >
+                <i class="nav-icon fas fa-utensils"></i>
+                <p>
+                  Assets
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'meals' }"    
+                    :class="[currentRoute=='meals' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Meals</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'cuisines' }"   
+                    :class="[currentRoute=='cuisines' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Cuisines</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'addons' }"    
+                    :class="[currentRoute=='addons' ? 'active' : '', 'nav-link']">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Addons</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'item-variations' }" 
+                    :class="[currentRoute=='item-variations' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Item Variations</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'menu-categories' }"  
+                    :class="[currentRoute=='menu-categories' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Menu Categories</p>
+                  </router-link>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item has-treeview">
+              <a 
+                href="#" 
+                :class="[['restaurants', 'restaurant-deals', 'restaurant-meals', 'restaurant-admins', 'waiters', 'restaurant-cuisines', 'kitchens', 'expected-restaurant-menu-items', 'restaurant-menu-items', 'restaurant-menu-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+              >
+                <i class="nav-icon fas fa-hotel"></i>
+                <p>
+                  Restaurants
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'restaurants' }" 
+                    :class="[currentRoute=='restaurants' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Restaurants</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'restaurant-deals' }" 
+                    :class="[currentRoute=='restaurant-deals' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Deals</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'restaurant-meals' }" 
+                    :class="[currentRoute=='restaurant-meals' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Meals</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'restaurant-admins' }" 
+                    :class="[currentRoute=='restaurant-admins' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Owners</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'waiters' }"  
+                    :class="[currentRoute=='waiters' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Waiters</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'restaurant-cuisines' }" 
+                    :class="[currentRoute=='restaurant-cuisines' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Cuisines</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'kitchens' }"  
+                    :class="[currentRoute=='kitchens' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Kitchens</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'expected-restaurant-menu-items' }"  
+                    :class="[['expected-restaurant-menu-items', 'restaurant-menu-items'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Menu-Items</p>
+                  </router-link>
+                </li>
+
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'restaurant-menu-categories' }"  
+                    :class="[['restaurant-menu-categories', 'restaurant-menu-category-details'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Menu Categories</p>
+                  </router-link>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item has-treeview">
+              <a 
+                href="#" 
+                :class="[['delivery-men'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+              >
+                <i class="nav-icon fas fa-bicycle"></i>
+                <p>
+                  Delivery-Men
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <router-link 
+                    :to="{ name: 'delivery-men' }" 
+                    :class="[currentRoute=='delivery-men' ? 'active' : '', 'nav-link']"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Delivery-Men</p>
+                  </router-link>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item has-treeview">
+              <a 
+                href="#" 
+                :class="[['notifications'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-bell"></i>
                 <p>
@@ -269,24 +336,22 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
-
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'admin.notifications.index' }" 
-                    v-bind:class="[(currentPage.includes('/notifications')) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'notifications' }" 
+                    :class="[currentRoute=='notifications' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Notifications</p>
                   </router-link>
                 </li>
-
               </ul>
             </li>
 
-            <li class="nav-item has-treeview menu-open">
+            <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                v-bind:class="[(currentPage.includes('/cancelation-reasons') || currentPage.includes('/cancelation-reasons')) ? 'active' : '', 'nav-link']"
+                :class="[['cancelation-reasons'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-times"></i>
                 <p>
@@ -295,24 +360,22 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
-
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'admin.cancelationReasons.index' }" 
-                    v-bind:class="[(currentPage.includes('/cancelation-reasons')) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'cancelation-reasons' }" 
+                    :class="[currentRoute=='cancelation-reasons' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Reasons</p>
                   </router-link>
                 </li>
-
               </ul>
             </li>
 
-            <li class="nav-item has-treeview menu-open">
+            <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                v-bind:class="[(currentPage.includes('/discounts') || currentPage.includes('/coupons')) ? 'active' : '', 'nav-link']"
+                :class="[['coupons'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-percent"></i>
                 <p>
@@ -320,13 +383,13 @@
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
 
+              <ul class="nav nav-treeview">
               <!-- 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'admin.discounts.index' }" 
-                    v-bind:class="[(currentPage.includes('/discounts')) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'discounts' }" 
+                    :class="[currentRoute=='discounts' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Rates</p>
@@ -336,21 +399,20 @@
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'admin.coupons.index' }" 
-                    v-bind:class="[(currentPage.includes('/coupons')) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'coupons' }" 
+                    :class="[currentRoute=='coupons' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Coupons</p>
                   </router-link>
                 </li>
-
               </ul>
             </li>
 
-            <li class="nav-item has-treeview menu-open">
+            <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                v-bind:class="[(currentPage.includes('/api-list') || currentPage.includes('/api-list')) ? 'active' : '', 'nav-link']"
+                :class="[['api-list'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-key"></i>
                 <p>
@@ -358,18 +420,17 @@
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
 
+              <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'admin.apiList.index' }" 
-                    v-bind:class="[(currentPage.includes('/api-list')) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'api-list' }" 
+                    :class="[currentRoute=='api-list' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>API List</p>
                   </router-link>
                 </li>
-
               </ul>
             </li>
 
@@ -528,7 +589,7 @@
         <!-- 
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">{{ currentPage }}</h1>
+            <h1 class="m-0 text-dark">{{ currentRoute }}</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -557,8 +618,8 @@
   
   export default {
     computed:{
-      currentPage(){
-        return this.$route.path;
+      currentRoute(){
+        return this.$route.name;
       } 
     },
   }

@@ -50,8 +50,8 @@
 
             <li class="nav-item">
               <router-link 
-                :to="{ name: 'restaurant.home' }" 
-                v-bind:class="[(currentPage.includes('home')) ? 'active' : '', 'nav-link']"
+                :to="{ name: 'home' }" 
+                :class="[currentRoute=='home' ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-home"></i>
                 <p>
@@ -62,8 +62,8 @@
 
             <li class="nav-item">
               <router-link 
-                :to="{ name: 'restaurant.orders.index' }" 
-                v-bind:class="[(currentPage.includes('/orders')) ? 'active' : '', 'nav-link']"
+                :to="{ name: 'orders' }" 
+                :class="[currentRoute=='orders' ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-bell"></i>
                 <p>
@@ -74,7 +74,7 @@
             </li>
 
             <li class="nav-item has-treeview menu-open">
-              <a href="#" v-bind:class="[(currentPage.includes('/my-meals') || currentPage.includes('/my-cuisines') || currentPage.includes('/my-menu-items') || currentPage.includes('/my-kitchen') || currentPage.includes('/my-waiters')) ? 'active' : '', 'nav-link']">
+              <a href="#" :class="[['my-meals', 'my-cuisines', 'my-menu-items', 'my-kitchen', 'my-waiters'].includes(currentRoute) ? 'active' : '', 'nav-link']">
                 <i class="nav-icon fas fa-hotel"></i>
                 <p>
                   My Restaurant
@@ -83,31 +83,31 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <router-link :to="{ name: 'restaurant.myMeals.index' }" v-bind:class="[(currentPage.includes('/my-meals')) ? 'active' : '', 'nav-link']">
+                  <router-link :to="{ name: 'my-meals' }" :class="[currentRoute=='my-meals' ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Meals</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'restaurant.myCuisines.index' }" v-bind:class="[(currentPage.includes('/my-cuisines')) ? 'active' : '', 'nav-link']">
+                  <router-link :to="{ name: 'my-cuisines' }" :class="[currentRoute=='my-cuisines' ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Cuisines</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'restaurant.myMenuItems.index' }"  v-bind:class="[(currentPage.includes('/my-menu-items')) ? 'active' : '', 'nav-link']">
+                  <router-link :to="{ name: 'my-menu-items' }"  :class="[currentRoute=='my-menu-items' ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Menu-Items</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'restaurant.myKitchen' }"  v-bind:class="[(currentPage.includes('/my-kitchen')) ? 'active' : '', 'nav-link']">
+                  <router-link :to="{ name: 'my-kitchen' }"  :class="[currentRoute=='my-kitchen' ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Kitchens</p>
+                    <p>Kitchen</p>
                   </router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'restaurant.myWaiters.index' }"  v-bind:class="[(currentPage.includes('/my-waiters')) ? 'active' : '', 'nav-link']">
+                  <router-link :to="{ name: 'my-waiters' }"  :class="[currentRoute=='my-waiters' ? 'active' : '', 'nav-link']">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Waiters</p>
                   </router-link>
@@ -137,8 +137,8 @@
   
   export default {
     computed:{
-      currentPage(){
-        return this.$route.path;
+      currentRoute(){
+        return this.$route.name;
       } 
     },
   }

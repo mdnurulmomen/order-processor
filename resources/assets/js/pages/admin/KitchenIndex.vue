@@ -365,7 +365,7 @@
 				                                  			:sync="true" 
 				                                  			v-model="singleKitchenData.kitchen.admin_approval" 
 				                                  			value="true" 
-				                                  			:width="130"  
+				                                  			:width="140"  
 				                                  			:height="30" 
 				                                  			:font-size="15" 
 				                                  			:color="{checked: 'green', unchecked: 'red'}" 

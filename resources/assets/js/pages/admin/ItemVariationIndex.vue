@@ -20,11 +20,11 @@
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">Menu Categories List</h2>
+							<h2 class="lead float-left mt-1">Variation List</h2>
 
-                        	<button type="button" @click="showMenuCategoryCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
+                        	<button type="button" @click="showVariationCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                Add Menu Category
+                                Add Variation
 					      	</button>
 						</div>
 
@@ -34,10 +34,10 @@
 									<div class="col-sm-6">
 									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentMenuCategories">Current</a>
+												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentVariations">Current</a>
 											</li>
 											<li class="nav-item flex-fill">
-												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedMenuCategories">Trashed</a>
+												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedVariations">Trashed</a>
 											</li>
 										</ul>
 									</div>
@@ -61,35 +61,35 @@
 									<thead>
 										<tr>
 											<th scope="col">#</th>
-											<th scope="col">Name</th>
+											<th scope="col">Variation Name</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-									  	<tr v-show="menuCategoriesToShow.length"
-									    	v-for="(menuCategory, index) in menuCategoriesToShow"
-									    	:key="menuCategory.id"
+									  	<tr v-show="variationsToShow.length"
+									    	v-for="(variation, index) in variationsToShow"
+									    	:key="variation.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ menuCategory.name}}</td>
+								    		<td>{{ variation.variation_name}}</td>
 								    		<td>
-										      	<button type="button" v-show="menuCategory.deleted_at === null" @click="showMenuCategoryEditModal(menuCategory)" class="btn btn-primary btn-sm">
+										      	<button type="button" v-show="variation.deleted_at === null" @click="showVariationEditModal(variation)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
 								      			<button
-								        			v-show="menuCategory.deleted_at === null"
+								        			v-show="variation.deleted_at === null"
 								        			type="button"
-								        			@click="showMenuCategoryDeletionModal(menuCategory)"
+								        			@click="showVariationDeletionModal(variation)"
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
 								        			Delete
 								      			</button>
 								      			<button
-								        			v-show="menuCategory.deleted_at !== null"
+								        			v-show="variation.deleted_at !== null"
 								        			type="button"
-								        			@click="showMenuCategoryRestoreModal(menuCategory)"
+								        			@click="showVariationRestoreModal(variation)"
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-undo"></i>
@@ -97,9 +97,9 @@
 								      			</button>
 								    		</td>
 									  	</tr>
-									  	<tr v-show="!menuCategoriesToShow.length">
+									  	<tr v-show="!variationsToShow.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No menu-category found.</div>
+									      		<div class="alert alert-danger" role="alert">Sorry, No variation found.</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -118,7 +118,7 @@
 									<button 
 										type="button" 
 										class="btn btn-primary btn-sm" 
-										@click="query === '' ? fetchAllMenuCategories() : searchData()"
+										@click="query === '' ? fetchAllItemVariations() : searchData()"
 									>
 										Reload
 										<i class="fas fa-sync"></i>
@@ -129,7 +129,7 @@
 										v-if="pagination.last_page > 1"
 										:pagination="pagination"
 										:offset="5"
-										@paginate="query === '' ? fetchAllMenuCategories() : searchData()"
+										@paginate="query === '' ? fetchAllItemVariations() : searchData()"
 									>
 									</pagination>
 								</div>
@@ -139,12 +139,12 @@
 				</div>	
 			</div>
 
-			<!-- /.modal-createOrEdit-menuCategory -->
-			<div class="modal fade" id="modal-createOrEdit-menuCategory">
+			<!-- /.modal-createOrEdit-variation -->
+			<div class="modal fade" id="modal-createOrEdit-variation">
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
-						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Menu Category</h4>
+						  	<h4 class="modal-title">{{ editMode ? 'Edit' : 'Create' }} Variation</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -152,14 +152,14 @@
 					  	<!-- form start -->
 					  	<form 
 						  	class="form-horizontal" 
-						  	v-on:submit.prevent=" editMode ? updateMenuCategory() : storeMenuCategory()"
+						  	v-on:submit.prevent=" editMode ? updateVariation() : storeVariation()"
 						  	autocomplete="off"
 					  	>
 							<div class="modal-body text-dark">
 
 					      		<input 
 						      		type="hidden" 
-						      		name="_token" 
+						      		variation_name="_token" 
 						      		:value="csrf"
 					      		>
 
@@ -169,19 +169,19 @@
 								            <div class="card-body">
 								              	<div class="form-group row">
 									              		
-								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Category Name</label>
+								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Variation Name</label>
 									                <div class="col-sm-8">
 									                  	<input 
 															type="text" 
 															class="form-control" 
-															v-model="singleMenuCategoryData.menuCategory.name" 
-															placeholder="Menu Category Name" 
+															v-model="singleVariationData.variation.variation_name" 
+															placeholder="Eg. Large / 12 inch / Half" 
 															required="true"
-															:class="!errors.menuCategory.name  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('menuCategory.name')"
+															:class="!errors.variation.name  ? 'is-valid' : 'is-invalid'"
+															@keyup="validateFormInput"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.menuCategory.name }}
+												        	{{ errors.variation.name }}
 												  		</div>
 									                </div>	
 									              	
@@ -214,7 +214,7 @@
 								  		class="btn btn-outline-light"
 								  		:disabled="!submitForm" 
 								  	>
-								  		{{ editMode ? 'Update' : 'Create' }} Menu-Category
+								  		{{ editMode ? 'Update' : 'Create' }} Variation
 								  	</button>
 								</div>
 							</div>
@@ -224,27 +224,27 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal-createOrEdit-menuCategory-->
+			<!-- /.modal-createOrEdit-variation-->
 
-			<!-- modal-menuCategory-delete-confirmation -->
-			<div class="modal fade" id="modal-menuCategory-delete-confirmation">
+			<!-- modal-variation-delete-confirmation -->
+			<div class="modal fade" id="modal-variation-delete-confirmation">
 				<div class="modal-dialog">
 					<div class="modal-content bg-danger">
 						<div class="modal-header">
-						  	<h4 class="modal-title">Menu Category Deletion</h4>
+						  	<h4 class="modal-title">Variation Deletion</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="destroyMenuCategory" autocomplete="off">
+					  	<form class="form-horizontal" v-on:submit.prevent="destroyVariation" autocomplete="off">
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to delete this menu category ?? </h5>
+					      		<h5>Are you sure want to delete variation ?? </h5>
 					      		<h5 style="color:#c6cacc">
 					      			<small>
 					      				But once you want, you can retreive it from bin.
@@ -267,27 +267,27 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /modal-menuCategory-delete-confirmation -->
+			<!-- /modal-variation-delete-confirmation -->
 
-			<!-- modal-menuCategory-restore-confirmation -->
-			<div class="modal fade" id="modal-menuCategory-restore-confirmation">
+			<!-- modal-variation-restore-confirmation -->
+			<div class="modal fade" id="modal-variation-restore-confirmation">
 				<div class="modal-dialog">
 					<div class="modal-content bg-danger">
 						<div class="modal-header">
-						  	<h4 class="modal-title">Menu Category Restoration</h4>
+						  	<h4 class="modal-title">Variation Restoration</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="restoreMenuCategory()" autocomplete="off">
+					  	<form class="form-horizontal" v-on:submit.prevent="restoreVariation()" autocomplete="off">
 							<div class="modal-body">
 					      		<input 
 					      			type="hidden" 
-					      			name="_token" 
+					      			variation_name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to restore this menu category ?? </h5>
+					      		<h5>Are you sure want to restore variation ?? </h5>
 							</div>
 							<div class="modal-footer justify-content-between">
 							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
@@ -305,7 +305,7 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal-menuCategory-restore-confirmation -->
+			<!-- /.modal-variation-restore-confirmation -->
 
 	    </section>
 
@@ -317,15 +317,14 @@
 
 	import axios from 'axios';
 
-	var singleMenuCategoryData = {
-    	menuCategory : {
-			// id : null,
-			// name : null,
-			// deleted_at : null,
+	var singleVariationData = {
+    	variation : {
+			variation_name : null,
+			deleted_at : null,
     	},
     };
 
-	var menuCategoryListData = {
+	var variationListData = {
       	query : '',
     	perPage : 10,
     	loading : false,
@@ -334,18 +333,18 @@
     	editMode : false,
     	
     	currentTab : 'current',
-    	allMenuCategories : [],
-    	menuCategoriesToShow : [],
+    	allVariations : [],
+    	variationsToShow : [],
 
     	pagination: {
         	current_page: 1
       	},
 
     	errors : {
-    		menuCategory : {},
+    		variation : {},
     	},
 
-        singleMenuCategoryData : singleMenuCategoryData,
+        singleVariationData : singleVariationData,
 
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     };
@@ -353,17 +352,17 @@
 	export default {
 
 	    data() {
-	        return menuCategoryListData;
+	        return variationListData;
 		},
 
 		created(){
-			this.fetchAllMenuCategories();
+			this.fetchAllItemVariations();
 		},
 
 		watch : {
 			query : function(val){
 				if (val==='') {
-					this.fetchAllMenuCategories();
+					this.fetchAllItemVariations();
 				}
 				else {
 					this.pagination.current_page = 1;
@@ -373,31 +372,31 @@
 		},
 
 		methods : {
-			showCurrentMenuCategories(){
+			showCurrentVariations(){
 				this.currentTab = 'current';
 				this.showDataListOfSelectedTab();
 			},
-			showTrashedMenuCategories(){
+			showTrashedVariations(){
 				this.currentTab = 'trashed';
 				this.showDataListOfSelectedTab();
 			},
 			showDataListOfSelectedTab(){
 				if (this.currentTab=='current') {
-					this.menuCategoriesToShow = this.allMenuCategories.current.data;
-					this.pagination = this.allMenuCategories.current;
+					this.variationsToShow = this.allVariations.current.data;
+					this.pagination = this.allVariations.current;
 				}else {
-					this.menuCategoriesToShow = this.allMenuCategories.trashed.data;
-					this.pagination = this.allMenuCategories.trashed;
+					this.variationsToShow = this.allVariations.trashed.data;
+					this.pagination = this.allVariations.trashed;
 				}
 			},
-			fetchAllMenuCategories(){
+			fetchAllItemVariations(){
 				this.loading = true;
 				axios
-					.get('/api/menu-categories/' + this.perPage +'?page='+ this.pagination.current_page)
+					.get('/api/item-variations/' + this.perPage +'?page='+ this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
-							this.allMenuCategories = response.data;
+							this.allVariations = response.data;
 							this.showDataListOfSelectedTab();
 						}
 					})
@@ -408,7 +407,7 @@
 			changeNumberContents() {
 				this.pagination.current_page = 1;
 				if (this.query === '') {
-					this.fetchAllMenuCategories();
+					this.fetchAllItemVariations();
 				}else {
 					this.pagination.current_page = 1;
 					this.searchData();
@@ -416,34 +415,33 @@
     		},
 			reload() {
 				if (this.query === '') {
-					this.fetchAllMenuCategories();
+					this.fetchAllItemVariations();
 				}else {
 					this.pagination.current_page = 1;
 					this.searchData();
 				}
     		},
-			showMenuCategoryCreateModal(){
-
+			showVariationCreateModal(){
 				this.editMode = false;
-				this.errors.menuCategory = {};
+				this.errors.variation = {};
 				this.submitForm = true;
 
-				this.singleMenuCategoryData.menuCategory = {};
+				this.singleVariationData.variation = {};
 
-				$('#modal-createOrEdit-menuCategory').modal('show');
+				$('#modal-createOrEdit-variation').modal('show');
 			},
-    		storeMenuCategory(){
+    		storeVariation(){
 
-				$('#modal-createOrEdit-menuCategory').modal('hide');
+				$('#modal-createOrEdit-variation').modal('hide');
 				
 				axios
-					.post('/menu-categories/'+ this.perPage, this.singleMenuCategoryData.menuCategory)
+					.post('/item-variations/'+ this.perPage, this.singleVariationData.variation)
 					.then(response => {
 
 						if (response.status == 200) {
-							this.singleMenuCategoryData.menuCategory = {};
+							this.singleVariationData.variation = {};
 
-							this.allMenuCategories = response.data;
+							this.allVariations = response.data;
 
 							this.query = '';
 							this.currentTab = 'current';
@@ -460,27 +458,27 @@
 				      	}
 					});
 			},
-			showMenuCategoryEditModal(menuCategory) {
+			showVariationEditModal(variation) {
 				this.editMode = true;
 				this.submitForm = true;
-				this.errors.menuCategory = {};
-				this.singleMenuCategoryData.menuCategory = menuCategory;
-				$("#modal-createOrEdit-menuCategory").modal("show");
+				this.errors.variation = {};
+				this.singleVariationData.variation = variation;
+				$("#modal-createOrEdit-variation").modal("show");
 			},
-			updateMenuCategory(){
+			updateVariation(){
 
-				$('#modal-createOrEdit-menuCategory').modal('hide');
+				$('#modal-createOrEdit-variation').modal('hide');
 				
 				axios
-					.put('/menu-categories/' + this.singleMenuCategoryData.menuCategory.id + '/' + this.perPage, this.singleMenuCategoryData.menuCategory)
+					.put('/item-variations/' + this.singleVariationData.variation.id + '/' + this.perPage, this.singleVariationData.variation)
 					.then(response => {
 
 						if (response.status == 200) {
 
-							this.singleMenuCategoryData.menuCategory = {};
+							this.singleVariationData.variation = {};
 
 							if (this.query === '') {
-								this.allMenuCategories = response.data;
+								this.allVariations = response.data;
 								this.showDataListOfSelectedTab();
 							}
 							else {
@@ -499,23 +497,23 @@
 				      	}
 					});
 			},
-			showMenuCategoryDeletionModal(menuCategory) {
-				this.singleMenuCategoryData.menuCategory = menuCategory;
-				$("#modal-menuCategory-delete-confirmation").modal("show");
+			showVariationDeletionModal(variation) {
+				this.singleVariationData.variation = variation;
+				$("#modal-variation-delete-confirmation").modal("show");
 			},
-			destroyMenuCategory(){
+			destroyVariation(){
 
-				$("#modal-menuCategory-delete-confirmation").modal("hide");
+				$("#modal-variation-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/menu-categories/'+this.singleMenuCategoryData.menuCategory.id+'/'+this.perPage)
+					.delete('/item-variations/' + this.singleVariationData.variation.id+ '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleMenuCategoryData.menuCategory = {};
+							this.singleVariationData.variation = {};
 
 							if (this.query === '') {
-								this.allMenuCategories = response.data;
+								this.allVariations = response.data;
 								this.showDataListOfSelectedTab();
 							}
 							else {
@@ -535,23 +533,23 @@
 				      	}
 					});
 			},
-			showMenuCategoryRestoreModal(menuCategory) {
-				this.singleMenuCategoryData.menuCategory = menuCategory;
-				$("#modal-menuCategory-restore-confirmation").modal("show");
+			showVariationRestoreModal(variation) {
+				this.singleVariationData.variation = variation;
+				$("#modal-variation-restore-confirmation").modal("show");
 			},
-			restoreMenuCategory(){
+			restoreVariation(){
 
-				$("#modal-menuCategory-restore-confirmation").modal("hide");
+				$("#modal-variation-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/menu-categories/'+this.singleMenuCategoryData.menuCategory.id+'/'+this.perPage)
+					.patch('/item-variations/' + this.singleVariationData.variation.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleMenuCategoryData.menuCategory = {};
+							this.singleVariationData.variation = {};
 
 							if (this.query === '') {
-								this.allMenuCategories = response.data;
+								this.allVariations = response.data;
 								this.showDataListOfSelectedTab();
 							}
 							else {
@@ -575,32 +573,32 @@
 				
 				axios
 				.get(
-					"/api/menu-categories/search/"+ this.query +"/" + this.perPage +
+					"/api/item-variations/search/"+ this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
 				.then(response => {
-					this.allMenuCategories = response.data;
-					this.menuCategoriesToShow = this.allMenuCategories.all.data;
-					this.pagination = this.allMenuCategories.all;
+					this.allVariations = response.data;
+					this.variationsToShow = this.allVariations.all.data;
+					this.pagination = this.allVariations.all;
 				})
 				.catch(e => {
 					console.log(e);
 				});
 			},
-			validateFormInput (formInputName) {
+			validateFormInput () {
 				
 				this.submitForm = false;
 
-				if (!this.singleMenuCategoryData.menuCategory.name) {
-					this.errors.menuCategory.name = 'Menu Category name is required';
+				if (!this.singleVariationData.variation.variation_name) {
+					this.errors.variation.name = 'Variation name is required';
 				}
-				else if (!this.singleMenuCategoryData.menuCategory.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-					this.errors.menuCategory.name = 'No special characters';
+				else if (!this.singleVariationData.variation.variation_name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+					this.errors.variation.name = 'No special characters';
 				}
 				else{
 					this.submitForm = true;
-					this.$delete(this.errors.menuCategory, 'name');
+					this.$delete(this.errors.variation, 'name');
 				}
 	 
 			},

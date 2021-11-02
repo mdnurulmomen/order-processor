@@ -36,14 +36,14 @@
                         			class="btn btn-secondary btn-sm float-right mb-2 ml-1"
                         	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                Add Menu-Item
+                                Menu-Item
 					      	</button>
 
                         	<button type="button" 
                         			@click="showRestaurantAllMenuCategories" class="btn btn-default btn-sm float-right mb-2"
                         	>
 					        	<i class="fa fa-eye" aria-hidden="true"></i>
-                                Added Menu-Categories
+                                Menu-Categories
 					      	</button>
 						</div>
 
@@ -303,7 +303,7 @@
 
 			<!-- /.modal-createOrEdit-restaurantMenuItem -->
 			<div class="modal fade" id="modal-createOrEdit-restaurantMenuItem">
-				<div class="modal-dialog">
+				<div class="modal-dialog modal-lg">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
@@ -1293,7 +1293,7 @@
     		},
     		showRestaurantAllMenuCategories(){
 				this.$router.push({
-			 		name: 'admin.restaurantMenuCategoryDetail.index', 
+			 		name: 'restaurant-menu-category-details', 
 			 		params: { 
 			 			restaurant : this.$route.params.restaurant,
 			 		}, 

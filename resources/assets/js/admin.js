@@ -9,14 +9,14 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 // Registering component globally
-Vue.component('pagination', require('./pages/PaginationComponent.vue').default);
+Vue.component('pagination', require('./pages/Pagination.vue').default);
 
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
  * components and automatically register them with their "basename".
  *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+ * Eg. ./pages/Example.vue -> <example-component></example-component>
  */
 
 // const files = require.context('./', true, /\.vue$/i)
@@ -25,33 +25,33 @@ Vue.component('pagination', require('./pages/PaginationComponent.vue').default);
 // Importing empty scss file for webpack 4 bug
 import appScss from './../sass/emptyScssForWebpackBug.scss';
 
-import App from './views/AdminSideMenuBar.vue';
+import App from './pages/AdminSideMenuBar.vue';
 
-// import Home from './components/admin/HomeComponent.vue';
-// import Dashboard2 from './components/admin/Dashboard2.vue';
-// import Dashboard3 from './components/admin/Dashboard3.vue';
-// import Profile from './components/admin/ProfileComponent.vue';
-// import Setting from './components/admin/SettingComponent.vue';
-// import RestaurantIndexComponent from './components/admin/RestaurantIndexComponent.vue';
-// import MealIndexComponent from './components/admin/MealIndexComponent.vue';
-// import MenuCategoryIndexComponent from './components/admin/MenuCategoryIndexComponent.vue';
-// import CuisineIndexComponent from './components/admin/CuisineIndexComponent.vue';
-// import RestaurantAdminIndexComponent from './components/admin/RestaurantAdminIndexComponent.vue';
-// import NotFoundComponent from './components/admin/NotFoundComponent.vue';
-// import DiscountIndexComponent from './components/admin/DiscountIndexComponent.vue';
-// import AddonIndexComponent from './components/admin/AddonIndexComponent.vue';
-// import ItemVariationIndexComponent from './components/admin/ItemVariationIndexComponent.vue';
-// import KitchenIndexComponent from './components/admin/KitchenIndexComponent.vue';
-// import WaiterIndexComponent from './components/admin/WaiterIndexComponent.vue';
-// import DeliveryMenIndexComponent from './components/admin/DeliveryMenIndexComponent.vue';
-// import RestaurantDealIndexComponent from './components/admin/RestaurantDealIndexComponent.vue';
-// import RestaurantMealIndexComponent from './components/admin/RestaurantMealIndexComponent.vue';
-// import RestaurantMenuCategoryIndexComponent from './components/admin/RestaurantMenuCategoryIndexComponent.vue';
-// import RestaurantCuisineIndexComponent from './components/admin/RestaurantCuisineIndexComponent.vue';
-// import RestaurantMenuItemIndexComponent from './components/admin/RestaurantMenuItemIndexComponent.vue';
-// import RestaurantMenuCategoryDetailIndexComponent from './components/admin/RestaurantMenuCategoryDetailIndexComponent.vue';
-// import NotificationIndexComponent from './components/admin/NotificationIndexComponent.vue';
-// import CouponIndexComponent from './components/admin/CouponIndexComponent.vue';
+// import Home from './pages/admin/Home.vue';
+// import Dashboard2 from './pages/admin/Dashboard2.vue';
+// import Dashboard3 from './pages/admin/Dashboard3.vue';
+// import Profile from './pages/admin/Profile.vue';
+// import Setting from './pages/admin/Setting.vue';
+// import RestaurantIndexComponent from './pages/admin/RestaurantIndex.vue';
+// import MealIndexComponent from './pages/admin/MealIndex.vue';
+// import MenuCategoryIndexComponent from './pages/admin/MenuCategoryIndex.vue';
+// import CuisineIndexComponent from './pages/admin/CuisineIndex.vue';
+// import RestaurantAdminIndexComponent from './pages/admin/RestaurantAdminIndex.vue';
+// import NotFoundComponent from './pages/admin/NotFound.vue';
+// import DiscountIndexComponent from './pages/admin/DiscountIndex.vue';
+// import AddonIndexComponent from './pages/admin/AddonIndex.vue';
+// import ItemVariationIndexComponent from './pages/admin/ItemVariationIndex.vue';
+// import KitchenIndexComponent from './pages/admin/KitchenIndex.vue';
+// import WaiterIndexComponent from './pages/admin/WaiterIndex.vue';
+// import DeliveryMenIndexComponent from './pages/admin/DeliveryMenIndex.vue';
+// import RestaurantDealIndexComponent from './pages/admin/RestaurantDealIndex.vue';
+// import RestaurantMealIndexComponent from './pages/admin/RestaurantMealIndex.vue';
+// import RestaurantMenuCategoryIndexComponent from './pages/admin/RestaurantMenuCategoryIndex.vue';
+// import RestaurantCuisineIndexComponent from './pages/admin/RestaurantCuisineIndex.vue';
+// import RestaurantMenuItemIndexComponent from './pages/admin/RestaurantMenuItemIndex.vue';
+// import RestaurantMenuCategoryDetailIndexComponent from './pages/admin/RestaurantMenuCategoryDetailIndex.vue';
+// import NotificationIndexComponent from './pages/admin/NotificationIndex.vue';
+// import CouponIndexComponent from './pages/admin/CouponIndex.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -61,162 +61,162 @@ const router = new VueRouter({
 	routes : [
 		{
 			path: '/home',
-            name: 'admin.home',
-            component: () => import(/* webpackChunkName : "js/home-component" */ './components/admin/HomeComponent.vue')
+            name: 'home',
+            component: () => import(/* webpackChunkName : "js/home-component" */ './pages/admin/Home.vue')
 		},
 		{
 			path: '/dashboard2',
-            name: 'admin.dashboard2',
-            component: () => import(/* webpackChunkName : "js/dashboard2" */ './components/admin/Dashboard2.vue')
+            name: 'dashboard2',
+            component: () => import(/* webpackChunkName : "js/dashboard2" */ './pages/admin/Dashboard2.vue')
 		},
 		{
 			path: '/dashboard3',
-            name: 'admin.dashboard3',
-            component: () => import(/* webpackChunkName : "js/dashboard3" */ './components/admin/Dashboard3.vue')
+            name: 'dashboard3',
+            component: () => import(/* webpackChunkName : "js/dashboard3" */ './pages/admin/Dashboard3.vue')
 		},
 		{
 			path: '/profile',
-            name: 'admin.profile',
-            component: () => import(/* webpackChunkName : "js/profile" */ './components/admin/ProfileComponent.vue')
+            name: 'profile',
+            component: () => import(/* webpackChunkName : "js/profile" */ './pages/admin/Profile.vue')
 		},
 		{
 			path: '/settings',
-            name: 'admin.setting',
-            component: () => import(/* webpackChunkName : "js/settings" */ './components/admin/SettingComponent.vue')
+            name: 'setting',
+            component: () => import(/* webpackChunkName : "js/settings" */ './pages/admin/Setting.vue')
 		},
 		{
 			path: '/restaurants',
-            name: 'admin.restaurants.index',
-            component: () => import(/* webpackChunkName : "js/restaurant-list" */ './components/admin/RestaurantIndexComponent.vue')
+            name: 'restaurants',
+            component: () => import(/* webpackChunkName : "js/restaurant-list" */ './pages/admin/RestaurantIndex.vue')
 		},
 		{
 			path: '/meals',
-            name: 'admin.meals.index',
-            component: () => import(/* webpackChunkName : "js/meal-list" */ './components/admin/MealIndexComponent.vue')
+            name: 'meals',
+            component: () => import(/* webpackChunkName : "js/meal-list" */ './pages/admin/MealIndex.vue')
 		},
 		{
 			path: '/menu-categories',
-            name: 'admin.menuCategories.index',
-            component: () => import(/* webpackChunkName : "js/menu-category-list" */ './components/admin/MenuCategoryIndexComponent.vue')
+            name: 'menu-categories',
+            component: () => import(/* webpackChunkName : "js/menu-category-list" */ './pages/admin/MenuCategoryIndex.vue')
 		},
 		{
 			path: '/cuisines',
-            name: 'admin.cuisines.index',
-            component: () => import(/* webpackChunkName : "js/cuisine-list" */ './components/admin/CuisineIndexComponent.vue')
+            name: 'cuisines',
+            component: () => import(/* webpackChunkName : "js/cuisine-list" */ './pages/admin/CuisineIndex.vue')
 		},
 		{
 			path: '/restaurant-admins',
-            name: 'admin.restaurantAdmins.index',
-            component: () => import(/* webpackChunkName : "js/restaurant-admin-list" */ './components/admin/RestaurantAdminIndexComponent.vue')
+            name: 'restaurant-admins',
+            component: () => import(/* webpackChunkName : "js/restaurant-admin-list" */ './pages/admin/RestaurantAdminIndex.vue')
 		},
 		
 		// {
 			// path: '/discounts',
-            // name: 'admin.discounts.index',
-            // component: () => import(/* webpackChunkName : "js/discount-list" */ './components/admin/DiscountIndexComponent.vue')
+            // name: 'discounts',
+            // component: () => import(/* webpackChunkName : "js/discount-list" */ './pages/admin/DiscountIndex.vue')
 		// },
 
 		{
-			path: '/add-ons',
-            name: 'admin.addons.index',
-            component: () => import(/* webpackChunkName : "js/addon-list" */ './components/admin/AddonIndexComponent.vue')
+			path: '/addons',
+            name: 'addons',
+            component: () => import(/* webpackChunkName : "js/addon-list" */ './pages/admin/AddonIndex.vue')
 		},
 		{
 			path: '/item-variations',
-            name: 'admin.itemVariations.index',
-            component: () => import(/* webpackChunkName : "js/item-variation-list" */ './components/admin/ItemVariationIndexComponent.vue')
+            name: 'item-variations',
+            component: () => import(/* webpackChunkName : "js/item-variation-list" */ './pages/admin/ItemVariationIndex.vue')
 		},
 		{
 			path: '/kitchens',
-            name: 'admin.kitchens.index',
-            component: () => import(/* webpackChunkName : "js/kitchen-list" */ './components/admin/KitchenIndexComponent.vue')
+            name: 'kitchens',
+            component: () => import(/* webpackChunkName : "js/kitchen-list" */ './pages/admin/KitchenIndex.vue')
 		},
 		{
 			path: '/waiters',
-            name: 'admin.waiters.index',
-            component: () => import(/* webpackChunkName : "js/waiter-list" */ './components/admin/WaiterIndexComponent.vue')
+            name: 'waiters',
+            component: () => import(/* webpackChunkName : "js/waiter-list" */ './pages/admin/WaiterIndex.vue')
 		},
 		{
 			path: '/restaurant-deals',
-            name: 'admin.restaurantDeals.index',
-            component: () => import(/* webpackChunkName : "js/restaurant-deal-list" */ './components/admin/RestaurantDealIndexComponent.vue')
+            name: 'restaurant-deals',
+            component: () => import(/* webpackChunkName : "js/restaurant-deal-list" */ './pages/admin/RestaurantDealIndex.vue')
 		},
 		{
 			path: '/restaurant-meals',
-            name: 'admin.restaurantMeals.index',
-            component: () => import(/* webpackChunkName : "js/restaurant-meal-list" */ './components/admin/RestaurantMealIndexComponent.vue')
+            name: 'restaurant-meals',
+            component: () => import(/* webpackChunkName : "js/restaurant-meal-list" */ './pages/admin/RestaurantMealIndex.vue')
 		},
 		{
 			path: '/restaurant-menu-categories',
-            name: 'admin.restaurantMenuCategories.index',
-            component: () => import(/* webpackChunkName : "js/restaurant-menu-category-list" */ './components/admin/RestaurantMenuCategoryIndexComponent.vue')
+            name: 'restaurant-menu-categories',
+            component: () => import(/* webpackChunkName : "js/restaurant-menu-category-list" */ './pages/admin/RestaurantMenuCategoryIndex.vue')
 		},
 		{
 			path: '/restaurant-cuisines',
-            name: 'admin.restaurantCuisines.index',
-            component: () => import(/* webpackChunkName : "js/restaurant-cuisine-list" */ './components/admin/RestaurantCuisineIndexComponent.vue')
+            name: 'restaurant-cuisines',
+            component: () => import(/* webpackChunkName : "js/restaurant-cuisine-list" */ './pages/admin/RestaurantCuisineIndex.vue')
 		},
 		{
 			path: '/restaurant-menu-items/:restaurant',
-		    name: 'admin.restaurantMenuItem.index',
-		    component: () => import(/* webpackChunkName : "js/restaurant-menu-item-list" */ './components/admin/RestaurantMenuItemIndexComponent.vue'),
+		    name: 'restaurant-menu-items',
+		    component: () => import(/* webpackChunkName : "js/restaurant-menu-item-list" */ './pages/admin/RestaurantMenuItemIndex.vue'),
 		},
 		{
 			path: '/restaurant-menu-category-details/:restaurant',
-		    name: 'admin.restaurantMenuCategoryDetail.index',
-		    component: () => import(/* webpackChunkName : "js/restaurant-menu-category-detail-list" */ './components/admin/RestaurantMenuCategoryDetailIndexComponent.vue'),
+		    name: 'restaurant-menu-category-details',
+		    component: () => import(/* webpackChunkName : "js/restaurant-menu-category-detail-list" */ './pages/admin/RestaurantMenuCategoryDetailIndex.vue'),
 		},
 		{
 			path: '/delivery-men',
-            name: 'admin.deliveryMen.index',
-            component: () => import(/* webpackChunkName : "js/delivery-man-list" */ './components/admin/DeliveryMenIndexComponent.vue')
+            name: 'delivery-men',
+            component: () => import(/* webpackChunkName : "js/delivery-man-list" */ './pages/admin/DeliveryMenIndex.vue')
 		},
 		{
 			path: '/notifications',
-            name: 'admin.notifications.index',
-            component: () => import(/* webpackChunkName : "js/notification-list" */ './components/admin/NotificationIndexComponent.vue')
+            name: 'notifications',
+            component: () => import(/* webpackChunkName : "js/notification-list" */ './pages/admin/NotificationIndex.vue')
 		},
 		{
 			path: '/coupons',
-            name: 'admin.coupons.index',
-            component: () => import(/* webpackChunkName : "js/coupon-list" */ './components/admin/CouponIndexComponent.vue')
+            name: 'coupons',
+            component: () => import(/* webpackChunkName : "js/coupon-list" */ './pages/admin/CouponIndex.vue')
 		},
 		{
 			path: '/cancelation-reasons',
-            name: 'admin.cancelationReasons.index',
-            component: () => import(/* webpackChunkName : "js/cancelation-reason-list" */ './components/admin/CancelationReasonIndexComponent.vue')
+            name: 'cancelation-reasons',
+            component: () => import(/* webpackChunkName : "js/cancelation-reason-list" */ './pages/admin/CancelationReasonIndex.vue')
 		},
 		{
 			path: '/api-list',
-            name: 'admin.apiList.index',
-            component: () => import(/* webpackChunkName : "js/api-list" */ './components/admin/ApiIndexComponent.vue')
+            name: 'api-list',
+            component: () => import(/* webpackChunkName : "js/api-list" */ './pages/admin/ApiIndex.vue')
 		},
 		{
 			path: '/restaurant-menu-items',
-		    name: 'admin.expectedRestaurantForMenuItem.index',
-		    component: () => import(/* webpackChunkName : "js/expected-restaurant-name-for-menu-item-list" */ './components/admin/ExpectedRestaurantNameForMenuItemComponent.vue'),
+		    name: 'expected-restaurant-menu-items',
+		    component: () => import(/* webpackChunkName : "js/expected-restaurant-name-for-menu-item-list" */ './pages/admin/ExpectedRestaurantNameForMenuItem.vue'),
 		},
 		{
 			path: '/orders',
-            name: 'admin.orders.index',
-            component: () => import(/* webpackChunkName : "js/order-list" */ './components/admin/OrderIndexComponent.vue')
+            name: 'orders',
+            component: () => import(/* webpackChunkName : "js/order-list" */ './pages/admin/OrderIndex.vue')
 		},
 		{
 			path: '/rider-orders',
-            name: 'admin.riderOrders.index',
-            component: () => import(/* webpackChunkName : "js/rider-order-list" */ './components/rider/OrderIndexComponent.vue')
+            name: 'rider-orders',
+            component: () => import(/* webpackChunkName : "js/rider-order-list" */ './pages/rider/OrderIndex.vue')
 		},
 		{
 			path: '/waiter-orders',
-            name: 'admin.waiterOrders.index',
-            component: () => import(/* webpackChunkName : "js/waiter-order-list" */ './components/waiter/OrderIndexComponent.vue')
+            name: 'waiter-orders',
+            component: () => import(/* webpackChunkName : "js/waiter-order-list" */ './pages/waiter/OrderIndex.vue')
 		},
 
 		
 		{
 			path: '/404',
-            name: 'admin.routeNotFound',
-            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFoundComponent.vue')
+            name: 'routeNotFound',
+            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFound.vue')
 		},
 		{
 			path: '*',

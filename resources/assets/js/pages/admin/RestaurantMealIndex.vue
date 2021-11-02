@@ -15,20 +15,19 @@
 				</div>
 			</div>
 		
-			<div class="row" v-show="!loading">
+			<div 
+				class="row" 
+				v-show="!loading"
+			>
 				<div class="col-sm-12">
 
 					<div class="card">
 						<div class="card-header">
-							<h2 class="lead float-left mt-1">Restaurant Cuisine List</h2>
+							<h2 class="lead float-left mt-1">Restaurant Meal List</h2>
 
-                        	<button 
-	                        	type="button" 
-	                        	@click="showRestaurantCuisineCreateModal" 
-	                        	class="btn btn-secondary btn-sm float-right mb-2"
-                        	>
+                        	<button type="button" @click="showRestaurantMealCreateModal" class="btn btn-secondary btn-sm float-right mb-2">
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                Add Restaurant-Cuisine
+                                Add Restaurant-Meal
 					      	</button>
 						</div>
 
@@ -54,13 +53,13 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Restaurant Name</th>
-											<th scope="col">Cuisines</th>
+											<th scope="col">Meals</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-									  	<tr v-show="allRestaurantCuisines.length"
-									    	v-for="(restaurant, index) in allRestaurantCuisines"
+									  	<tr v-show="allRestaurantMeals.length"
+									    	v-for="(restaurant, index) in allRestaurantMeals"
 									    	:key="restaurant.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
@@ -74,32 +73,27 @@
 								    			</span>
 								    		</td>
 								    		<td>
-							    				<p class="small text-danger" v-show="restaurant.restaurant_cuisines.length === 0">
-							                		Cuisine not available or trashed
+							    				<p class="small text-danger" v-show="restaurant.restaurant_meal_categories.length === 0">
+							                		Meal not available or trashed
 							                	</p>
 
-								    			<ul>
-													<li v-for="cuisine in restaurant.restaurant_cuisines" 
-														:key="cuisine.id"
-													>
+								    			<ul v-show="restaurant.restaurant_meal_categories.length">
+													<li v-for="meal in restaurant.restaurant_meal_categories" 
+														:key="meal.id">
 													
-														{{ cuisine.name }}
+														{{ meal.name }}
 													
 													</li>
 												</ul>
 								    		</td>
 								    		<td>
-										      	<button 
-										      		type="button" 
-										      		@click="showRestaurantCuisineEditModal(restaurant)" 
-										      		class="btn btn-primary btn-sm"
-										      	>
+										      	<button type="button" @click="showRestaurantMealEditModal(restaurant)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
 								      			<button 
 								        			type="button" 
-								        			@click="showRestaurantCuisineDeletionModal(restaurant)"
+								        			@click="showRestaurantMealDeletionModal(restaurant)"
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
@@ -107,9 +101,11 @@
 								      			</button>
 								    		</td>
 									  	</tr>
-									  	<tr v-show="!allRestaurantCuisines.length">
+									  	<tr v-show="!allRestaurantMeals.length">
 								    		<td colspan="6">
-									      		<div class="alert alert-danger" role="alert">Sorry, No cuisine or restaurant found.</div>
+									      		<div class="alert alert-danger" role="alert">
+									      			Sorry, No Meal or Restaurant found.
+									      		</div>
 									    	</td>
 									  	</tr>
 									</tbody>
@@ -117,7 +113,11 @@
 							</div>	
 							<div class="row d-flex align-items-center align-content-center">
 								<div class="col-sm-1">
-									<select class="form-control" v-model="perPage" @change="changeNumberContents()">
+									<select 
+										class="form-control" 
+										v-model="perPage" 
+										@change="changeNumberContents()"
+									>
 										<option>10</option>
 										<option>20</option>
 										<option>30</option>
@@ -129,7 +129,7 @@
 									<button 
 										type="button" 
 										class="btn btn-primary btn-sm" 
-										@click="query === '' ? fetchAllRestaurantCuisines() : searchData()"
+										@click="query === '' ? fetchAllRestaurantMeals() : searchData()"
 									>
 										Reload
 										<i class="fas fa-sync"></i>
@@ -140,7 +140,7 @@
 										v-if="pagination.last_page > 1"
 										:pagination="pagination"
 										:offset="5"
-										@paginate="query === '' ? fetchAllRestaurantCuisines() : searchData()"
+										@paginate="query === '' ? fetchAllRestaurantMeals() : searchData()"
 									>
 									</pagination>
 								</div>
@@ -150,22 +150,23 @@
 				</div>	
 			</div>
 
-			<!-- /.modal-createOrEdit-restaurantCuisine -->
-			<div class="modal fade" id="modal-createOrEdit-restaurantCuisine">
+			<!-- /.modal-createOrEdit-restaurantMeal -->
+			<div class="modal fade" id="modal-createOrEdit-restaurantMeal">
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
-						  		{{ editMode ? 'Edit' : 'Create' }} Restaurant-Cuisine
+						  		{{ editMode ? 'Edit' : 'Create' }} Restaurant-Meal
 						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
+
 					  	<!-- form start -->
 					  	<form 
 						  	class="form-horizontal" 
-						  	v-on:submit.prevent=" editMode ? updateRestaurantCuisine() : storeRestaurantCuisine()"
+						  	v-on:submit.prevent=" editMode ? updateRestaurantMeal() : storeRestaurantMeal()"
 						  	autocomplete="off"
 					  	>
 							<div class="modal-body text-dark">
@@ -192,23 +193,23 @@
 									                <div class="col-sm-8">
 									                  	
 									                  	<multiselect 
-				                                  			v-model="singleRestaurantCuisineData.restaurantObject"
+				                                  			v-model="singleRestaurantMealData.restaurantObject"
 				                                  			placeholder="Restaurant Name" 
 					                                  		label="name" 
 					                                  		track-by="id" 
 					                                  		:options="restaurantsFiltered" 
 					                                  		:required="true"
-					                                  		:class="!errors.restaurantCuisine.restaurant  ? 'is-valid' : 'is-invalid'"
-					                                  		:allow-empty="false"
+					                                  		:class="!errors.restaurantMeal.restaurant  ? 'is-valid' : 'is-invalid'"
+					                                  		:allow-empty="false" 
 					                                  		selectLabel = "Press/Click"
 					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantCuisine.restaurant')"
+					                                  		@close="validateFormInput('restaurantMeal.restaurant')"
 				                                  		>
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
 												        	{{ 
-												        		errors.restaurantCuisine.restaurant 
+												        		errors.restaurantMeal.restaurant 
 												        	}}
 												  		</div>
 									                </div>	
@@ -221,31 +222,30 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Cuisine Name
+								              			Meal Name
 								              		</label>
 
 									                <div class="col-sm-8">
 									                  	
 									                  	<multiselect 
-				                                  			v-model="singleRestaurantCuisineData.cuisineObjects"
-				                                  			placeholder="Cuisine Names" 
+				                                  			v-model="singleRestaurantMealData.mealObjects"
+				                                  			placeholder="Meal Names" 
 					                                  		label="name" 
 					                                  		track-by="id" 
-					                                  		:options="allCuisines" 
+					                                  		:options="allMeals" 
 					                                  		:required="true" 
 					                                  		:multiple="true" 
-					                                  		:class="!errors.restaurantCuisine.cuisine ? 'is-valid' : 'is-invalid'"
+					                                  		:close-on-select="false"
+					                                  		:class="!errors.restaurantMeal.meal ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
 					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantCuisine.cuisine')"
+					                                  		@close="validateFormInput('restaurantMeal.meal')"
 				                                  		>
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ 
-												        		errors.restaurantCuisine.cuisine 
-												        	}}
+												        	{{ errors.restaurantMeal.meal }}
 												  		</div>
 									                </div>	
 									              	
@@ -256,6 +256,7 @@
 									</div>
 								</div>
 							</div>
+
 							<div class="modal-footer flex-column">
 								<div class="col-sm-12 text-right">
 									<span 
@@ -278,7 +279,7 @@
 								  		class="btn btn-outline-light"
 								  		:disabled="!submitForm" 
 								  	>
-								  		{{ editMode ? 'Update' : 'Create' }} Restaurant-Cuisine
+								  		{{ editMode ? 'Update' : 'Create' }} Restaurant-Meal
 								  	</button>
 								</div>
 							</div>
@@ -288,14 +289,14 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal-createOrEdit-restaurantCuisine-->
+			<!-- /.modal-createOrEdit-restaurantMeal-->
 
-			<!-- modal-restaurantCuisine-delete-confirmation -->
-			<div class="modal fade" id="modal-restaurantCuisine-delete-confirmation">
+			<!-- modal-restaurantMeal-delete-confirmation -->
+			<div class="modal fade" id="modal-restaurantMeal-delete-confirmation">
 				<div class="modal-dialog">
 					<div class="modal-content bg-danger">
 						<div class="modal-header">
-						  	<h4 class="modal-title">Restaurant-Cuisine Deletion</h4>
+						  	<h4 class="modal-title">Restaurant-Meal Deletion</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
 							</button>
@@ -303,7 +304,7 @@
 					  	<!-- form start -->
 					  	<form 
 						  	class="form-horizontal" 
-						  	v-on:submit.prevent="destroyRestaurantCuisine" 
+						  	v-on:submit.prevent="destroyRestaurantMeal" 
 						  	autocomplete="off"
 					  	>
 							<div class="modal-body">
@@ -318,11 +319,13 @@
 					      			</small>
 					      		</h5>
 					      		<h5>
-					      			Are you sure want to delete restaurant cuisine ??
+					      			Are you sure want to delete restaurant meal ??
 					      		</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
-							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">
+							  		Close
+							  	</button>
 
 							  	<button 
 							  		type="submit" 
@@ -337,7 +340,7 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /modal-restaurantCuisine-delete-confirmation -->
+			<!-- /modal-restaurantMeal-delete-confirmation -->
 
 	    </section>
 
@@ -350,15 +353,15 @@
 	import axios from 'axios';
 	import Multiselect from 'vue-multiselect';
 
-	var singleRestaurantCuisineData = {
+	var singleRestaurantMealData = {
 		
-    	cuisineObjects : [],
+    	mealObjects : [],
     	restaurantObject : {
 			
     	},
 
-    	restaurantCuisine : {
-			cuisine_id : [],
+    	restaurantMeal : {
+			meal_id : [],
 			restaurant_id : null,
     	}
     };
@@ -371,21 +374,21 @@
 
     	editMode : false,
     	
-    	allCuisines : [],
+    	allMeals : [],
     	allRestaurants : [],
     	restaurantsFiltered : [],
 
-    	allRestaurantCuisines : [],
+    	allRestaurantMeals : [],
 
     	pagination: {
         	current_page: 1
       	},
 
     	errors : {
-    		restaurantCuisine : {},
+    		restaurantMeal : {},
     	},
 
-        singleRestaurantCuisineData : singleRestaurantCuisineData,
+        singleRestaurantMealData : singleRestaurantMealData,
 
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     };
@@ -401,46 +404,46 @@
 		},
 
 		created(){
-			this.fetchAllCuisines();
+			this.fetchAllMeals();
 			this.fetchAllRestaurants();
-			this.fetchAllRestaurantCuisines();
+			this.fetchAllRestaurantMeals();
 		},
 
 		watch : {
 			query : function(val){
 				if (val==='') {
-					this.fetchAllRestaurantCuisines();
+					this.fetchAllRestaurantMeals();
 				}
 				else {
 					this.pagination.current_page = 1;
 					this.searchData();
 				}
 			},
-			'singleRestaurantCuisineData.cuisineObjects' : function(cuisineObjects){
+			'singleRestaurantMealData.mealObjects' : function(mealObjects){
 				let array = [];
-				$.each(cuisineObjects, function(key, value) {
+				$.each(mealObjects, function(key, value) {
 			     	array.push(value.id);
 			   	});
-		     	this.singleRestaurantCuisineData.restaurantCuisine.cuisine_id = array;
+		     	this.singleRestaurantMealData.restaurantMeal.meal_id = array;
 			},
-			'singleRestaurantCuisineData.restaurantObject' : function(restaurantObject){
+			'singleRestaurantMealData.restaurantObject' : function(restaurantObject){
 				if (restaurantObject) {
-					this.singleRestaurantCuisineData.restaurantCuisine.restaurant_id = restaurantObject.id;
+					this.singleRestaurantMealData.restaurantMeal.restaurant_id = restaurantObject.id;
 				}else
-					this.singleRestaurantCuisineData.restaurantCuisine.restaurant_id = null;
+					this.singleRestaurantMealData.restaurantMeal.restaurant_id = null;
 			},
 		},
 
 		methods : {
 
-			fetchAllCuisines(){
+			fetchAllMeals(){
 				this.loading = true;
 				axios
-					.get('/api/cuisines/')
+					.get('/api/meals/')
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
-							this.allCuisines = response.data;
+							this.allMeals = response.data;
 						}
 					})
 					.catch(error => {
@@ -455,6 +458,7 @@
 						if (response.status == 200) {
 							this.loading = false;
 							this.allRestaurants = response.data;
+
 						/*
 							this.allRestaurants = this.allRestaurants.filter(
 								object => {
@@ -462,6 +466,7 @@
 								}
 							);
 						*/
+
 							this.restaurantsFiltered = this.allRestaurants;
 						}
 					})
@@ -469,16 +474,16 @@
 						console.log(error);
 					});
 			},
-			fetchAllRestaurantCuisines() {
+			fetchAllRestaurantMeals() {
 				this.loading = true;
 				axios
-					.get('/api/restaurant-cuisines/' + this.perPage +
+					.get('/api/restaurant-meals/' + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
-							this.allRestaurantCuisines = response.data.data;
+							this.allRestaurantMeals = response.data.data;
 							this.pagination = response.data;
 						}
 					})
@@ -489,7 +494,7 @@
 			changeNumberContents() {
 				this.pagination.current_page = 1;
 				if (this.query === '') {
-					this.fetchAllRestaurantCuisines();
+					this.fetchAllRestaurantMeals();
 				}else {
 					this.pagination.current_page = 1;
 					this.searchData();
@@ -497,45 +502,45 @@
     		},
 			reload() {
 				if (this.query === '') {
-					this.fetchAllRestaurantCuisines();
+					this.fetchAllRestaurantMeals();
 				}else {
 					this.pagination.current_page = 1;
 					this.searchData();
 				}
     		},
-			showRestaurantCuisineCreateModal(){
+			showRestaurantMealCreateModal(){
 				this.editMode = false;
 				this.submitForm = true;
-				this.errors.restaurantCuisine = {};
+				this.errors.restaurantMeal = {};
 
 				this.restaurantsFiltered = this.allRestaurants;
 
-				this.singleRestaurantCuisineData.restaurantObject = {};
-				this.singleRestaurantCuisineData.cuisineObjects = [];
+				this.singleRestaurantMealData.restaurantObject = {};
+				this.singleRestaurantMealData.mealObjects = [];
 
-				$('#modal-createOrEdit-restaurantCuisine').modal('show');
+				$('#modal-createOrEdit-restaurantMeal').modal('show');
 			},
-    		storeRestaurantCuisine(){
+    		storeRestaurantMeal(){
 
-    			if (!this.singleRestaurantCuisineData.restaurantCuisine.restaurant_id || this.singleRestaurantCuisineData.restaurantCuisine.cuisine_id.length === 0) {
+    			if (!this.singleRestaurantMealData.restaurantMeal.restaurant_id || this.singleRestaurantMealData.restaurantMeal.meal_id.length === 0) {
 					
 					this.submitForm = false;
 					return;
 				}
 
-				$('#modal-createOrEdit-restaurantCuisine').modal('hide');
+				$('#modal-createOrEdit-restaurantMeal').modal('hide');
 				
 				axios
-					.post('/restaurant-cuisines/'+ this.perPage, this.singleRestaurantCuisineData.restaurantCuisine)
+					.post('/restaurant-meals/'+ this.perPage, this.singleRestaurantMealData.restaurantMeal)
 					.then(response => {
 
 						if (response.status == 200) {
 							
-							this.singleRestaurantCuisineData.restaurantObject = {};
-							this.singleRestaurantCuisineData.cuisineObjects = [];
+							this.singleRestaurantMealData.restaurantObject = {};
+							this.singleRestaurantMealData.mealObjects = [];
 
 							this.query = '';
-							this.allRestaurantCuisines = response.data.data;
+							this.allRestaurantMeals = response.data.data;
 							this.pagination = response.data;
 
 							toastr.success(response.data.success, "Added");
@@ -550,11 +555,11 @@
 				      	}
 					});
 			},
-			showRestaurantCuisineEditModal(restaurant) {
+			showRestaurantMealEditModal(restaurant) {
 
 				this.editMode = true;
 				this.submitForm = true;
-				this.errors.restaurantCuisine = {};
+				this.errors.restaurantMeal = {};
 
 				this.restaurantsFiltered = this.allRestaurants.filter(
 					object => {
@@ -562,32 +567,32 @@
 					}
 				);
 				
-				this.singleRestaurantCuisineData.restaurantObject = restaurant;
-				this.singleRestaurantCuisineData.cuisineObjects = restaurant.restaurant_cuisines;
+				this.singleRestaurantMealData.restaurantObject = restaurant;
+				this.singleRestaurantMealData.mealObjects = restaurant.restaurant_meal_categories;
 
-				$("#modal-createOrEdit-restaurantCuisine").modal("show");
+				$("#modal-createOrEdit-restaurantMeal").modal("show");
 			},
-			updateRestaurantCuisine(){
+			updateRestaurantMeal(){
 
-				if (!this.singleRestaurantCuisineData.restaurantCuisine.restaurant_id || this.singleRestaurantCuisineData.restaurantCuisine.cuisine_id.length === 0) {
+				if (!this.singleRestaurantMealData.restaurantMeal.restaurant_id || this.singleRestaurantMealData.restaurantMeal.meal_id.length === 0) {
 					
 					this.submitForm = false;
 					return;
 				}
-				
-				$('#modal-createOrEdit-restaurantCuisine').modal('hide');
+
+				$('#modal-createOrEdit-restaurantMeal').modal('hide');
 				
 				axios
-					.put('/restaurant-cuisines/' + this.singleRestaurantCuisineData.restaurantCuisine.restaurant_id + '/' + this.perPage, this.singleRestaurantCuisineData.restaurantCuisine)
+					.put('/restaurant-meals/' + this.singleRestaurantMealData.restaurantMeal.restaurant_id + '/' + this.perPage, this.singleRestaurantMealData.restaurantMeal)
 					.then(response => {
 
 						if (response.status == 200) {
 
-							this.singleRestaurantCuisineData.restaurantObject = {};
-							this.singleRestaurantCuisineData.cuisineObjects = [];
+							this.singleRestaurantMealData.restaurantObject = {};
+							this.singleRestaurantMealData.mealObjects = [];
 
 							if (this.query === '') {
-								this.allRestaurantCuisines = response.data.data;
+								this.allRestaurantMeals = response.data.data;
 								this.pagination = response.data;
 							}
 							else {
@@ -606,23 +611,23 @@
 				      	}
 					});
 			},
-			showRestaurantCuisineDeletionModal(restaurant) {
-				this.singleRestaurantCuisineData.restaurantObject = restaurant;
-				$("#modal-restaurantCuisine-delete-confirmation").modal("show");
+			showRestaurantMealDeletionModal(restaurant) {
+				this.singleRestaurantMealData.restaurantObject = restaurant;
+				$("#modal-restaurantMeal-delete-confirmation").modal("show");
 			},
-			destroyRestaurantCuisine(){
+			destroyRestaurantMeal(){
 
-				$("#modal-restaurantCuisine-delete-confirmation").modal("hide");
+				$("#modal-restaurantMeal-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/restaurant-cuisines/'+this.singleRestaurantCuisineData.restaurantObject.id+'/'+this.perPage)
+					.delete('/restaurant-meals/'+this.singleRestaurantMealData.restaurantObject.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleRestaurantCuisineData.restaurantObject = {};
+							this.singleRestaurantMealData.restaurantObject = {};
 
 							if (this.query === '') {
-								this.allRestaurantCuisines = response.data.data;
+								this.allRestaurantMeals = response.data.data;
 								this.pagination = response.data;
 							}
 							else {
@@ -646,12 +651,12 @@
 				
 				axios
 				.get(
-					"/api/restaurant-cuisines/search/"+ this.query +"/" + this.perPage +
+					"/api/restaurant-meals/search/"+ this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
 				.then(response => {
-					this.allRestaurantCuisines = response.data.all.data;
+					this.allRestaurantMeals = response.data.all.data;
 					this.pagination = response.data.all;
 				})
 				.catch(e => {
@@ -664,26 +669,26 @@
 
 				switch(formInputName) {
 
-					case 'restaurantCuisine.restaurant' :
+					case 'restaurantMeal.restaurant' :
 
-						if (Object.keys(this.singleRestaurantCuisineData.restaurantObject).length === 0) {
-							this.errors.restaurantCuisine.restaurant = 'Restaurant name is required';
+						if (Object.keys(this.singleRestaurantMealData.restaurantObject).length === 0) {
+							this.errors.restaurantMeal.restaurant = 'Restaurant name is required';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantCuisine, 'restaurant');
+							this.$delete(this.errors.restaurantMeal, 'restaurant');
 						}
 
 						break;
 
-					case 'restaurantCuisine.cuisine' :
+					case 'restaurantMeal.meal' :
 
-						if (Object.keys(this.singleRestaurantCuisineData.cuisineObjects).length === 0) {
-							this.errors.restaurantCuisine.cuisine = 'Cuisine name is required';
+						if (Object.keys(this.singleRestaurantMealData.mealObjects).length === 0) {
+							this.errors.restaurantMeal.meal = 'Meal name is required';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantCuisine, 'cuisine');
+							this.$delete(this.errors.restaurantMeal, 'meal');
 						}
 
 						break;

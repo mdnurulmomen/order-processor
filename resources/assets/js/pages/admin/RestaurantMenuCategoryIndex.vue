@@ -36,7 +36,7 @@
                         	 	class="btn btn-secondary btn-sm float-right mb-2"
                         	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                Add Restaurant-menu-categories
+                                Menu Categories
 					      	</button>
 				      	 	
 						</div>
@@ -271,6 +271,7 @@
 					                                  		:options="allMenuCategories" 
 					                                  		:required="true" 
 					                                  		:multiple="true" 
+					                                  		:close-on-select="false" 
 					                                  		:class="!errors.restaurantMenuCategory.menuCategory ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
@@ -296,7 +297,7 @@
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_from"
-				                                  			placeholder="Category Name" 
+				                                  			placeholder="Start Time" 
 					                                  		:options="restaurantScheduleHours" 
 					                                  		selectLabel = "Click to select"
 					                                  		deselect-label="Click to remove"
@@ -314,7 +315,7 @@
 									                <div class="col-sm-8">
 									                	<multiselect 
 				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_to"
-				                                  			placeholder="Category Name" 
+				                                  			placeholder="End Time" 
 					                                  		:options="restaurantScheduleHours" 
 					                                  		selectLabel = "Click to select"
 					                                  		deselect-label="Click to remove"
@@ -532,7 +533,7 @@
     		},
 			showRestaurantMenuCategoryDetails(restaurant){
 				this.$router.push({
-			 		name: 'admin.restaurantMenuCategoryDetail.index', 
+			 		name: 'restaurant-menu-category-details', 
 			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
 				});
 			},
@@ -703,7 +704,7 @@
 			},
 			showRestaurantMenuList(restaurant) {
 				this.$router.push({
-			 		name: 'admin.restaurantMenuItem.index', 
+			 		name: 'restaurant-menu-items', 
 			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
 				});
 			},

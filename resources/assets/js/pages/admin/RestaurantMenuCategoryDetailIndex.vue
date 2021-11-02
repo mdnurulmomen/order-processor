@@ -40,7 +40,7 @@
 	                        	class="btn btn-secondary btn-sm float-right mb-2 ml-1"
                         	>
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                More menu categories
+                                Menu categories
 					      	</button>
 
 					      	<button 
@@ -211,7 +211,7 @@
 
 			<!-- /.modal-createOrEdit-restaurantMenuCategory -->
 			<div class="modal fade" id="modal-createOrEdit-restaurantMenuCategory">
-				<div class="modal-dialog">
+				<div class="modal-dialog modal-lg">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
@@ -281,7 +281,7 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Menu-Category Name
+								              			Menu-Categories
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -294,6 +294,7 @@
 					                                  		:options="allMenuCategories" 
 					                                  		:required="true" 
 					                                  		:multiple="!editMode" 
+					                                  		:close-on-select="false"
 					                                  		:class="!errors.restaurantMenuCategory.menuCategory ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
@@ -938,7 +939,7 @@
 			},
 			showRestaurantMenuList() {
 				this.$router.push({
-			 		name: 'admin.restaurantMenuItem.index', 
+			 		name: 'restaurant-menu-items', 
 			 		params: { 
 			 			restaurant : this.restaurantSingleMenuCategoryData.restaurantObject.id, 
 			 		}, 

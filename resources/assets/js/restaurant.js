@@ -9,14 +9,14 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 // Registering component globally
-Vue.component('pagination', require('./pages/PaginationComponent.vue').default);
+Vue.component('pagination', require('./pages/Pagination.vue').default);
 
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
  * components and automatically register them with their "basename".
  *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+ * Eg. ./pages/Example.vue -> <example-component></example-component>
  */
 
 // const files = require.context('./', true, /\.vue$/i)
@@ -25,7 +25,7 @@ Vue.component('pagination', require('./pages/PaginationComponent.vue').default);
 // Importing empty scss file for webpack 4 bug
 import appScss from './../sass/emptyScssForWebpackBug.scss';
 
-import App from './views/RestaurantSideMenuBar.vue';
+import App from './pages/RestaurantSideMenuBar.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -35,57 +35,57 @@ const router = new VueRouter({
 	routes : [
 		{
 			path: '/home',
-            name: 'restaurant.home',
-            component: () => import(/* webpackChunkName : "js/home-component" */ './components/restaurant/HomeComponent.vue')
+            name: 'home',
+            component: () => import(/* webpackChunkName : "js/home-component" */ './pages/restaurant/Home.vue')
 		},
 		{
 			path: '/profile',
-            name: 'restaurant.profile',
-            component: () => import(/* webpackChunkName : "js/profile" */ './components/restaurant/ProfileComponent.vue')
+            name: 'profile',
+            component: () => import(/* webpackChunkName : "js/profile" */ './pages/restaurant/Profile.vue')
 		},
 		{
 			path: '/settings',
-            name: 'restaurant.setting',
-            component: () => import(/* webpackChunkName : "js/settings" */ './components/restaurant/SettingComponent.vue')
+            name: 'setting',
+            component: () => import(/* webpackChunkName : "js/settings" */ './pages/restaurant/Setting.vue')
 		},
 
 
 		{
 			path: '/my-meals',
-            name: 'restaurant.myMeals.index',
-            component: () => import(/* webpackChunkName : "js/my-meals-list" */ './components/restaurant/MealIndexComponent.vue')
+            name: 'my-meals',
+            component: () => import(/* webpackChunkName : "js/my-meals-list" */ './pages/restaurant/MealIndex.vue')
 		},
 		{
 			path: '/my-cuisines',
-            name: 'restaurant.myCuisines.index',
-            component: () => import(/* webpackChunkName : "js/my-cuisines-list" */ './components/restaurant/CuisineIndexComponent.vue')
+            name: 'my-cuisines',
+            component: () => import(/* webpackChunkName : "js/my-cuisines-list" */ './pages/restaurant/CuisineIndex.vue')
 		},
 		{
 			path: '/my-menu-items',
-            name: 'restaurant.myMenuItems.index',
-            component: () => import(/* webpackChunkName : "js/my-menu-items-list" */ './components/restaurant/MenuItemIndexComponent.vue')
+            name: 'my-menu-items',
+            component: () => import(/* webpackChunkName : "js/my-menu-items-list" */ './pages/restaurant/MenuItemIndex.vue')
 		},
 		{
 			path: '/my-menu-categories',
-            name: 'restaurant.myMenuCategories.index',
-            component: () => import(/* webpackChunkName : "js/my-menu-categories-list" */ './components/restaurant/MenuCategoryIndexComponent')
+            name: 'my-menu-categories',
+            component: () => import(/* webpackChunkName : "js/my-menu-categories-list" */ './pages/restaurant/MenuCategoryIndex')
 		},
 		
 
 		{
 			path: '/my-kitchen',
-            name: 'restaurant.myKitchen',
-            component: () => import(/* webpackChunkName : "js/my-kitchen" */ './components/restaurant/MyKitchenComponent.vue')
+            name: 'my-kitchen',
+            component: () => import(/* webpackChunkName : "js/my-kitchen" */ './pages/restaurant/MyKitchen.vue')
 		},
 		{
 			path: '/my-waiters',
-            name: 'restaurant.myWaiters.index',
-            component: () => import(/* webpackChunkName : "js/my-waiters-list" */ './components/restaurant/WaiterIndexComponent.vue')
+            name: 'my-waiters',
+            component: () => import(/* webpackChunkName : "js/my-waiters-list" */ './pages/restaurant/WaiterIndex.vue')
 		},
 		{
 			path: '/orders',
-            name: 'restaurant.orders.index',
-            component: () => import(/* webpackChunkName : "js/order-list" */ './components/restaurant/OrderIndexComponent.vue')
+            name: 'orders',
+            component: () => import(/* webpackChunkName : "js/order-list" */ './pages/restaurant/OrderIndex.vue')
 		},
 
 		
@@ -95,8 +95,8 @@ const router = new VueRouter({
 		},
 		{
 			path: '/404',
-            name: 'restaurant.routeNotFound',
-            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFoundComponent.vue')
+            name: 'routeNotFound',
+            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFound.vue')
 		},
 	],
 });
