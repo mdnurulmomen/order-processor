@@ -157,8 +157,12 @@ class RestaurantController extends Controller
          
          if ($expectedRestaurant) {
 
+            $expectedRestaurant->meals()->delete();
             $expectedRestaurant->kitchen()->delete();
             $expectedRestaurant->waiters()->delete();
+            $expectedRestaurant->cuisines()->delete();
+            $expectedRestaurant->menuCategories()->delete();
+            
             $expectedRestaurant->delete();
             
          }
@@ -172,8 +176,12 @@ class RestaurantController extends Controller
          
          if ($expectedRestaurant && $expectedRestaurant->restaurantAdmin()->exists()) {
 
+            $expectedRestaurant->meals()->restore();
             $expectedRestaurant->kitchen()->restore();
             $expectedRestaurant->waiters()->restore();
+            $expectedRestaurant->cuisines()->restore();
+            $expectedRestaurant->menuCategories()->restore();
+
             $expectedRestaurant->restore();
 
          }

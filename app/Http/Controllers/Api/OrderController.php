@@ -145,7 +145,7 @@ class OrderController extends Controller
 
         $reservationMsg = 'Reservation request has been accepted';
 
-        if ($newOrder->customer_confirmation==1 && !empty($request->menuItems)) {
+        if ($newOrder->customer_confirmation==1 && ! empty($request->menuItems)) {
 
             $this->saveNewPayment($newOrder, $request->payment->payment_id);
             $this->makeRestaurantOrderRecord($newOrder, $request->reservation->restaurant_id);
@@ -170,7 +170,7 @@ class OrderController extends Controller
     {
         $expectedReservation = TableBookingDetail::find($request->reservation->reservation_id);
 
-        if (!$expectedReservation->booking_confirmation && $expectedReservation->max_payment_time->lessThan(now())) {
+        if (! $expectedReservation->booking_confirmation && $expectedReservation->max_payment_time->lessThan(now())) {
             return response()->json([
                 'message' => 'Payment time is over'
             ], 403);
@@ -193,7 +193,7 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => 'Reservation has been confirmed'
-        ], 201);
+        ], 200);
     }
 
     private function confirmTableReservation(TableBookingDetail $table)
@@ -222,7 +222,7 @@ class OrderController extends Controller
             'payment_method' => $request->payment->payment_method,
             'orderer_type' => "App\Models\Customer",
             'orderer_id' => $request->order->orderer_id,
-            'customer_confirmation' => ($request->payment->payment_method!=='cash' && $request->payment->payment_id) ? 1 : -1, 
+            'customer_confirmation' => ($request->payment->payment_method !== 'cash' && $request->payment->payment_id) ? 1 : -1, 
         ]);
     }
 

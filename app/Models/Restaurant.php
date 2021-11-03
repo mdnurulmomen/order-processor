@@ -7,9 +7,12 @@ use App\Models\Waiter;
 use App\Models\Cuisine;
 use App\Models\Kitchen;
 use App\Models\MenuCategory;
+use App\Models\RestaurantMeal;
 use App\Models\RestaurantDeal;
 use App\Models\RestaurantAdmin;
+use App\Models\RestaurantCuisine;
 use App\Models\TableBookingDetail;
+use App\Models\RestaurantMenuCategory;
 use App\Models\RestaurantBookingStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -101,6 +104,16 @@ class Restaurant extends Model
     public function menuCategories()
     {
         return $this->hasMany(RestaurantMenuCategory::class, 'restaurant_id', 'id');
+    }
+
+    public function cuisines()
+    {
+        return $this->hasMany(RestaurantCuisine::class, 'restaurant_id', 'id');
+    }
+
+    public function meals()
+    {
+        return $this->hasMany(RestaurantMeal::class, 'restaurant_id', 'id');
     }
 
     public function reservations()

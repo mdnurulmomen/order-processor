@@ -304,7 +304,7 @@
 								                <div class="col-sm-6">
 								                  	{{ 
 								                  		singleOrderData.order.orderer ? 
-								                  		singleOrderData.order.orderer.user_name : 'NA'  
+								                  		singleOrderData.order.orderer.user_name : 'NA' | capitalize 
 													}}
 													({{
 														singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
@@ -416,6 +416,14 @@
 
 			});
 
+		},
+
+		filters: {
+			capitalize: function (value) {
+				if (!value) return ''
+				value = value.toString()
+				return value.charAt(0).toUpperCase() + value.slice(1)
+			}
 		},
 
 		methods : {

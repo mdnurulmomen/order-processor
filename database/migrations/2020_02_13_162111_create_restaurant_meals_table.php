@@ -17,6 +17,7 @@ class CreateRestaurantMealsTable extends Migration
             $table->mediumIncrements('id');
             $table->unsignedSmallInteger('meal_id');
             $table->unsignedMediumInteger('restaurant_id');
+            $table->softDeletes();
         });
     }
 

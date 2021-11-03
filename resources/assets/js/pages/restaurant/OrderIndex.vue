@@ -341,27 +341,27 @@
 														<li v-for="(item, index) in singleOrderData.order.items" 
 															:key="item.id"
 														>	
-															{{ item.restaurant_menu_item.name }}
+															{{ item.restaurant_menu_item.name | capitalize }}
 
 															<span class="d-block"
 																v-if="item.restaurant_menu_item.has_variation" 
 															>
-																(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.variation_name }} )
+																(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.variation_name | capitalize }} )
 															</span>
 
-															(quantity : {{ item.quantity }})
+															(Quantity : {{ item.quantity }})
 
 															<span 
 																class="d-block font-weight-bold" 
 																v-if="item.additional_ordered_addons.length"
 															>
-																Extra Addons
+																Addons
 															</span>
 
 															<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
 
 																<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
-																	{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name }}
+																	{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name | capitalize }} ({{ additionalOrderedAddon.quantity }})
 																</li>
 															</ul>
 
