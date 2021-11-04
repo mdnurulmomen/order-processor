@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::post('login', 'LoginController@userLogin');
 			Route::post('register', 'RegisterController@userRegister');
 			
-			Route::post('user-profiles', 'ProfileController@updateUserProfile');
+			Route::put('user-profiles/{user}', 'ProfileController@updateUserProfile');
 			Route::post('user-password', 'ProfileController@updateUserPassword');
 			
 			Route::get('/restaurants/{expectedLatitude}/{expectedLongitude}', 'RestaurantController@getRestaurants');
@@ -37,6 +37,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			
 			Route::post('reservations', 'OrderController@createNewReservation');
 			Route::post('reservation-confirmations', 'OrderController@confirmReservation');
+
+			Route::any('{any}', function(){
+			    return response()->json([
+			        'status'    => false,
+			        'message'   => 'Route Not Found.',
+			    ], 500);
+			})->where('any', '.*');
 
 		});
 	});
