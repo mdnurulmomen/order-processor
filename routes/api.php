@@ -23,6 +23,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 		Route::name('api.')->group(function () {    
 
 			Route::get('/general-info', 'SettingController@getGeneralInfo');
+
+			Route::post('login', 'LoginController@userLogin');
+			Route::post('register', 'RegisterController@userRegister');
+			
+			Route::post('user-profiles', 'ProfileController@updateUserProfile');
+			Route::post('user-password', 'ProfileController@updateUserPassword');
 			
 			Route::get('/restaurants/{expectedLatitude}/{expectedLongitude}', 'RestaurantController@getRestaurants');
 			Route::get('/restaurant-menu-items/{expectedRestaurant}', 'RestaurantController@getRestaurantMenuItems');

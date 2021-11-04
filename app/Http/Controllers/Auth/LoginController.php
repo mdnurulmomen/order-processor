@@ -56,7 +56,7 @@ class LoginController extends Controller
     // Customer Login
     protected function attemptLogin(Request $request) 
     {
-        if ($this->attemptCustomerLoginWithMobile($request) || $this->attemptCustomerLoginWithUsername($request)) {
+        if ($this->attemptCustomerLoginWithMobile($request) || $this->attemptCustomerLoginWithUsername($request) || $this->attemptCustomerLoginWithEmail($request)) {
             return true;
         }
     }
@@ -146,6 +146,13 @@ class LoginController extends Controller
     {
         return $this->guard()->attempt(
             ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+        );   
+    }
+
+    protected function attemptCustomerLoginWithEmail(Request $request)
+    {
+        return $this->guard()->attempt(
+            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
         );   
     }
 

@@ -40,6 +40,19 @@ class Customer extends Authenticatable
     ];
 
     /**
+     * Get all of the address's.
+     */
+    public function addresses()
+    {
+        return $this->hasMany(CustomerAddress::class, 'customer_id', 'id');
+    }
+
+    public function coupons()
+    {
+        return $this->hasMany(CustomerCoupon::class, 'customer_id', 'id');
+    }
+
+    /**
      * Get all of the order's.
      */
     public function orders()
