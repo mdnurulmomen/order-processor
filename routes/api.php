@@ -28,6 +28,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::post('register', 'RegisterController@userRegister');
 			
 			Route::put('user-profiles/{user}', 'ProfileController@updateUserProfile');
+			Route::post('user-addresses', 'ProfileController@addUserAddress');
+			Route::put('user-addresses/{user}/{address}', 'ProfileController@updateUserAddress');
 			Route::post('user-password', 'ProfileController@updateUserPassword');
 			
 			Route::get('/restaurants/{expectedLatitude}/{expectedLongitude}', 'RestaurantController@getRestaurants');
