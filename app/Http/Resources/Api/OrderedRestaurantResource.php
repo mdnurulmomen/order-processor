@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RiderRestaurantsAcceptedResource extends JsonResource
+class OrderedRestaurantResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,8 @@ class RiderRestaurantsAcceptedResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'food_order_acceptance' => $this->food_order_acceptance,
-            'restaurant' => $this->restaurant,
+            'restaurant' => $this->restaurant->name,
+            'items' => OrderedRestaurantMenuItemResource::collection($this->items),
         ];
     }
 }

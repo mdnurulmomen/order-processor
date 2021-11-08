@@ -35,6 +35,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::get('/restaurants/{expectedLatitude}/{expectedLongitude}', 'RestaurantController@getRestaurants');
 			Route::get('/restaurant-menu-items/{expectedRestaurant}', 'RestaurantController@getRestaurantMenuItems');
 
+			Route::get('/user-orders/{user}/{perPage?}', 'OrderController@getUserOrders');
 			Route::post('/orders', 'OrderController@createNewOrder');
 			
 			Route::post('reservations', 'OrderController@createNewReservation');

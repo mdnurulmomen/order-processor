@@ -7,7 +7,7 @@ use App\Http\Resources\Api\SelectedItemVariationResource;
 use App\Http\Resources\Api\AdditionalOrderedAddonResource;
 
 
-class RiderRestaurantItemsResource extends JsonResource
+class OrderedRestaurantMenuItemResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,8 +21,9 @@ class RiderRestaurantItemsResource extends JsonResource
             'restaurant_menu_item_id' => $this->restaurant_menu_item_id,
             'quantity' => $this->quantity,
             'restaurant_menu_item' => $this->restaurantMenuItem,
-            'selected_item_variation' => new SelectedItemVariationResource($this->selectedItemVariation),
+            'selected_item_variation' => $this->when($this->restaurantMenuItem->has_variation, new SelectedItemVariationResource($this->selectedItemVariation)),
             'additional_ordered_addons' => AdditionalOrderedAddonResource::collection($this->additionalOrderedAddons),
+            'custom_instruction' => $this->when($this->orderedItemCustomization, $this->orderedItemCustomization ? $this->orderedItemCustomization->custom_instruction : 'No Custom Instruction'),
         ];
     }
 }

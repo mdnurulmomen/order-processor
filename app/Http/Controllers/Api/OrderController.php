@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
+use App\Models\Customer;
 use App\Models\Restaurant;
 use App\Events\UpdateAdmin;
 use Illuminate\Http\Request;
@@ -15,11 +16,40 @@ use App\Models\RiderDeliveryRecord;
 // use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderRequest;
+use App\Http\Resources\Api\OrderResource;
 use App\Http\Requests\Api\ReservationRequest;
+use App\Http\Resources\Api\OrderCollection;
 use App\Http\Requests\Api\ReservationConfirmationRequest;
 
 class OrderController extends Controller
 {
+    public function getUserOrders($user, $perPage = false)
+    {
+        if ($perPage) {
+            
+            return new OrderCollection(
+                Order::whereHasMorph('orderer', [Customer::class], 
+                    function($query) use($user) {
+                        $query->where('id', $user);
+                    }
+                )->paginate($perPage)
+            );
+
+        }
+        else {
+
+            return OrderResource::collection(
+                Order::whereHasMorph('orderer', [Customer::class], 
+                    function($query) use($user) {
+                        $query->where('id', $user);
+                    }
+                )->get()
+            );
+
+        }
+
+    }
+
     public function createNewOrder(OrderRequest $request)
     {        
         $newOrder = Order::create([

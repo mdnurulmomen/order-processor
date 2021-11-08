@@ -3,9 +3,8 @@
 namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Api\RiderRestaurantItemsResource;
 
-class RiderOrderedRestaurantsResource extends JsonResource
+class OrderedRestaurantAcceptanceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +16,8 @@ class RiderOrderedRestaurantsResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'restaurant_id' => $this->restaurant_id,
-            'order_id' => $this->order_id,
+            'food_order_acceptance' => $this->food_order_acceptance,
             'restaurant' => $this->restaurant,
-            'items' => RiderRestaurantItemsResource::collection($this->items),
         ];
     }
 }
