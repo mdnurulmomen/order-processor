@@ -53,7 +53,7 @@ class ReservationRequest extends FormRequest
                 'exists:restaurants,id',
                 function ($attribute, $value, $fail) {
 
-                    $availableSeats = Restaurant::find($value)->booking->seat_left;
+                    $availableSeats = Restaurant::findOrFail($value)->booking->seat_left;
 
                     if ($availableSeats < $this->input('reservation.guest_number')) {
                         $fail($attribute.' is more than available seats');
@@ -69,7 +69,7 @@ class ReservationRequest extends FormRequest
                 'exists:restaurant_menu_items,id',
                 function ($attribute, $value, $fail) {
 
-                    $menuItem = RestaurantMenuItem::find($value);
+                    $menuItem = RestaurantMenuItem::findOrFail($value);
                     
                     if ($menuItem->restaurantMenuCategory->restaurant_id != $this->input('reservation.restaurant_id')) {
                         $fail($attribute.' is invalid.');
@@ -130,7 +130,7 @@ class ReservationRequest extends FormRequest
 
                 foreach ($this->menuItems as $menuItemKey => $restaurantMenuItem) {
 
-                    $expectedMenuItem = RestaurantMenuItem::find($restaurantMenuItem->id);
+                    $expectedMenuItem = RestaurantMenuItem::findOrFail($restaurantMenuItem->id);
 
                     if ($expectedMenuItem->has_variation && empty($restaurantMenuItem->itemVariation)) {
                         
@@ -140,7 +140,7 @@ class ReservationRequest extends FormRequest
 
                     else if ($expectedMenuItem->has_variation && ! empty($restaurantMenuItem->itemVariation)) {
                         
-                        $expectedMenuItemVariation = RestaurantMenuItemVariation::find($restaurantMenuItem->itemVariation->id);
+                        $expectedMenuItemVariation = RestaurantMenuItemVariation::findOrFail($restaurantMenuItem->itemVariation->id);
 
                         if (empty($expectedMenuItemVariation) || $expectedMenuItemVariation->restaurant_menu_item_id != $expectedMenuItem->id) {
                             
@@ -154,7 +154,7 @@ class ReservationRequest extends FormRequest
 
                         foreach ($restaurantMenuItem->itemAddons as $itemAddonKey => $itemAddon) {
                             
-                            $expectedMenuItemAddon = RestaurantMenuItemAddon::find($itemAddon->id);
+                            $expectedMenuItemAddon = RestaurantMenuItemAddon::findOrFail($itemAddon->id);
 
                             if (empty($expectedMenuItemAddon) || $expectedMenuItemAddon->restaurant_menu_item_id != $expectedMenuItem->id) {
                                 

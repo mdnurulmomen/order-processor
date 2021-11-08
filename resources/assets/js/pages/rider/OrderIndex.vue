@@ -410,7 +410,7 @@
 			Echo.private(`notifyRider.` + this.rider_id)
 			.listen('UpdateRider', (riderDeliveryOrder) => {
 			    
-			    console.log(riderDeliveryOrder);
+			    // console.log(riderDeliveryOrder);
 
 			    // due to pagination, checking if this broadcasted one already exists 
 			    const objectExist = (orderObject) => orderObject.id==riderDeliveryOrder.id;
@@ -487,8 +487,8 @@
 			},
 			orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord){
 
-				console.log(riderDeliveryRecord);
-				console.log(restaurantOrderRecord);
+				// console.log(riderDeliveryRecord);
+				// console.log(restaurantOrderRecord);
 
 				this.formSubmitionMode = true;
 				this.singleOrderData.rider = {};

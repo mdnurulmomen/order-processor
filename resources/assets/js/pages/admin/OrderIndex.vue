@@ -981,7 +981,7 @@
 			Echo.private(`notifyAdmin`)
 			.listen('.updation-for-admin', (broadcastedOrder) => {
 			    
-			    console.log(broadcastedOrder);
+			    // console.log(broadcastedOrder);
 
 			    // due to pagination, checking if this broadcasted one already exists 
 			    const objectExist = (orderObject) => orderObject.id==broadcastedOrder.id;
@@ -1149,7 +1149,7 @@
 					.then(response => {		
 						if (response.status == 200) {
 							this.singleOrderData.order = response.data.expectedOrder;
-							console.log(this.singleOrderData.order);
+							// console.log(this.singleOrderData.order);
 						}
 					})
 					.catch(error => {

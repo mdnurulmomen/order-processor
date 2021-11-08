@@ -41,7 +41,7 @@ class UpdateRestaurant implements ShouldBroadcast
             'order_id' => $this->orderedRestaurant->order_id,
             'restaurant_id' => $this->orderedRestaurant->restaurant_id,
             'order' => new RestaurantOrderResource($this->orderedRestaurant->order),
-            'items'=>OrderedRestaurantItemResource::collection($this->orderedRestaurant->items)
+            'items'=> OrderedRestaurantItemResource::collection($this->orderedRestaurant->items)
         ];
     }
 

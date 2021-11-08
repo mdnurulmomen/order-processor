@@ -82,13 +82,13 @@ class OrderController extends Controller
             ]);
         }
 
-        foreach ($request->orderItems as $orderItem) {
+        foreach ($request->restaurants as $orderedRestaurant) {
             
             $orderedNewRestaurant = $newOrder->restaurants()->create([
-                'restaurant_id' => $orderItem->restaurant_id,
+                'restaurant_id' => $orderedRestaurant->restaurant_id,
             ]);
 
-            $request->menuItems = json_decode(json_encode($orderItem->menuItems));
+            $request->menuItems = json_decode(json_encode($orderedRestaurant->menuItems));
 
             foreach ($request->menuItems as $menuItem) {
 
@@ -308,7 +308,7 @@ class OrderController extends Controller
 
     private function makeOrderItems(OrderedRestaurant $orderedNewRestaurant, $menuItems) 
     {
-        // foreach ($orderItems as $orderItem) {            
+        // foreach ($restaurants as $orderedRestaurant) {            
 
             // $menuItems = json_decode(json_encode($menuItems));
 
