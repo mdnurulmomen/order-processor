@@ -98,20 +98,40 @@ class ProfileController extends Controller
         
         $customer = Customer::findOrFail($request->user);
 
+        /*
         if ($customer->addresses->count() > 3) {
             return response()->json([
                 'warning' => "Customer has already maximum addresses"
              ], 401);
         }
+        */
+        
+        $sameNamedAddress = $customer->addresses()->where('address_name', $request->address['address_name'])->first();
 
-        $customer->addresses()->create([
-            'house' => $request->address['house'],
-            'road' => $request->address['road'],
-            'additional_hint' => $request->address['additional_hint'],
-            'lat' => $request->address['lat'],
-            'lang' => $request->address['lang'],
-            'address_name' => $request->address['address_name']
-        ]);
+        if ($sameNamedAddress) {
+            
+            $sameNamedAddress->update([
+                'house' => $request->address['house'],
+                'road' => $request->address['road'],
+                'additional_hint' => $request->address['additional_hint'],
+                'lat' => $request->address['lat'],
+                'lang' => $request->address['lang'],
+                'address_name' => $request->address['address_name']
+            ]);
+
+        }
+        else {
+
+            $customer->addresses()->create([
+                'house' => $request->address['house'],
+                'road' => $request->address['road'],
+                'additional_hint' => $request->address['additional_hint'],
+                'lat' => $request->address['lat'],
+                'lang' => $request->address['lang'],
+                'address_name' => $request->address['address_name']
+            ]);
+
+        }
 
         return response()->json([
             'data' => UserAddressResource::collection($customer->addresses)

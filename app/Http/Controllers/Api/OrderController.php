@@ -126,22 +126,42 @@ class OrderController extends Controller
             
         if ($request->order->order_type==='home-delivery') {
 
-            if ($request->order->delivery_new_address) {
+            if ($request->order->delivery_new_address && empty($request->order->delivery_address_id)) {
 
-                $customerNewAddress = CustomerAddress::create([
-                    'house' => $request->order->delivery_new_address->house,
-                    'road' => $request->order->delivery_new_address->road,
-                    'additional_hint' => $request->order->delivery_new_address->additional_hint ?? NULL,
-                    'lat' => $request->order->delivery_new_address->lat,
-                    'lang' => $request->order->delivery_new_address->lang,
-                    'address_name' => $request->order->delivery_new_address->address_name,
-                    'customer_id' => $request->order->orderer_id,
-                ]);
+                $existingAddress = CustomerAddress::where('customer_id', $request->order->orderer_id)->where('address_name', $request->order->delivery_new_address->address_name)->first();
+
+                if ($existingAddress) {
+                    
+                    $existingAddress->update([
+                        'house' => $request->order->delivery_new_address->house,
+                        'road' => $request->order->delivery_new_address->road,
+                        'additional_hint' => $request->order->delivery_new_address->additional_hint ?? NULL,
+                        'lat' => $request->order->delivery_new_address->lat,
+                        'lang' => $request->order->delivery_new_address->lang,
+                        'address_name' => $request->order->delivery_new_address->address_name,
+                        // 'customer_id' => $request->order->orderer_id
+                    ]);
+
+                }
+                else {
+
+                    $customerNewAddress = CustomerAddress::create([
+                        'house' => $request->order->delivery_new_address->house,
+                        'road' => $request->order->delivery_new_address->road,
+                        'additional_hint' => $request->order->delivery_new_address->additional_hint ?? NULL,
+                        'lat' => $request->order->delivery_new_address->lat,
+                        'lang' => $request->order->delivery_new_address->lang,
+                        'address_name' => $request->order->delivery_new_address->address_name,
+                        'customer_id' => $request->order->orderer_id,
+                    ]);
+
+                }
+
             }
         
             $newOrderAddress = $newOrder->delivery()->create([
                 'additional_info'=>$request->order->delivery_additional_info,
-                'delivery_address_id'=>$request->order->delivery_address_id ?? $customerNewAddress->id,
+                'delivery_address_id'=>$request->order->delivery_address_id ?? $customerNewAddress->id ?? $existingAddress->id,
             ]);
         }
 

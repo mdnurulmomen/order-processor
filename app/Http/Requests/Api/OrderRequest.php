@@ -53,6 +53,9 @@ class OrderRequest extends FormRequest
                     else if ($this->input('order.orderer_type') === 'waiter' && ! Waiter::where('id', $value)->exists()) {
                         return $fail($attribute.' is invalid.');
                     }
+                    else if ($this->input('order.orderer_type') === 'waiter' && $this->input('order.order_type') === 'home-delivery') {
+                        return $fail('Delivery order is invalid.');
+                    }
                     
                     /*
                         if (!Customer::where('id', $value)->exists() && !Waiter::where('id', $value)->exists()) { 
