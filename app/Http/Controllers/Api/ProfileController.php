@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\UserResource;
 use App\Http\Resources\Api\UserAddressResource;
 
 class ProfileController extends Controller
 {
+    public function showUserDetail($user)
+    {   
+        $userToUpdate = Customer::findOrFail($user);
+        return new UserResource($userToUpdate);
+    }
+
     public function updateUserSetting(Request $request, $user)
     {
         $request->validate([

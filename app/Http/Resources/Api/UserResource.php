@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserLoginResponseResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,12 +14,7 @@ class UserLoginResponseResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
-        
         return [
-
-            'api_token' => "",
-
             'id' => $this->id,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
@@ -35,7 +30,6 @@ class UserLoginResponseResource extends JsonResource
             'addresses' => UserAddressResource::collection($this->addresses),
             'coupons' => $this->coupons,
             'orders' => OrderResource::collection($this->orders)
-            
         ];
     }
 }
