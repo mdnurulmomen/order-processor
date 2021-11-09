@@ -36,7 +36,9 @@ class Customer extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        // 'email_verified_at' => 'datetime',
+        'app_notification' => 'boolean',
+        'email_notification' => 'boolean'
     ];
 
     /**

@@ -11,14 +11,33 @@ use App\Http\Resources\Api\UserAddressResource;
 
 class ProfileController extends Controller
 {
+    public function updateUserSetting(Request $request, $user)
+    {
+        $request->validate([
+            'app_notification'=>'required|boolean',
+            'email_notification'=>'required|boolean'
+        ]);
+        
+        $userToUpdate = Customer::findOrFail($user);
+
+        $userToUpdate->app_notification = $request->app_notification ?? false;
+        $userToUpdate->email_notification = $request->email_notification ?? false;
+
+        $userToUpdate->save();
+
+        return response()->json([
+            'data' => $userToUpdate
+        ], 200);
+    }
+
     public function updateUserProfile(Request $request, $user)
     {
         $userToUpdate = Customer::findOrFail($user);
         
         $request->validate([
-            'first_name'=>'nullable|string|max:50',
-            'last_name'=>'nullable|string|max:50',
-            'user_name'=>'string|required|max:13|bail|unique:customers,user_name,'.$userToUpdate->id,
+            'first_name'=>'nullable|string|max:255',
+            'last_name'=>'nullable|string|max:255',
+            'user_name'=>'string|required|max:255|bail|unique:customers,user_name,'.$userToUpdate->id,
             'mobile'=>'string|required|max:13|bail|unique:customers,mobile,'.$userToUpdate->id,
             'email'=>'email|required|bail|unique:customers,email,'.$userToUpdate->id,
             // 'profile_picture'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',

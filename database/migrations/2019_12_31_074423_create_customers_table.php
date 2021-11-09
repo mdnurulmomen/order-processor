@@ -22,6 +22,8 @@ class CreateCustomersTable extends Migration
             $table->string('email', 50)->nullable()->unique();
             $table->string('password'); // Login with username / mobile
             $table->rememberToken();
+            $table->boolean('app_notification')->default(true);
+            $table->boolean('email_notification')->default(true);
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

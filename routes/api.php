@@ -27,6 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::post('login', 'LoginController@userLogin');
 			Route::post('register', 'RegisterController@userRegister');
 			
+			Route::put('user-settings/{user}', 'ProfileController@updateUserSetting');
 			Route::put('user-profiles/{user}', 'ProfileController@updateUserProfile');
 			Route::post('user-addresses', 'ProfileController@addUserAddress');
 			Route::put('user-addresses/{user}/{address}', 'ProfileController@updateUserAddress');
