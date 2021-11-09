@@ -30,9 +30,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::get('users/{user}', 'ProfileController@showUserDetail');
 			Route::put('user-settings/{user}', 'ProfileController@updateUserSetting');
 			Route::put('user-profiles/{user}', 'ProfileController@updateUserProfile');
+			
 			Route::post('user-addresses', 'ProfileController@addUserAddress');
 			Route::put('user-addresses/{user}/{address}', 'ProfileController@updateUserAddress');
+			
 			Route::post('user-password', 'ProfileController@updateUserPassword');
+			
+			Route::get('user-favourites/{customer_address_id}', 'CustomerController@getUserFavourites');
+			Route::post('user-favourites', 'CustomerController@setUserFavourite');
+			Route::delete('user-favourites/{customer_favourite_id}', 'CustomerController@removeUserFavourite');
 			
 			Route::get('/restaurants/{expectedLatitude}/{expectedLongitude}', 'RestaurantController@getRestaurants');
 			Route::get('/restaurant-menu-items/{expectedRestaurant}', 'RestaurantController@getRestaurantMenuItems');

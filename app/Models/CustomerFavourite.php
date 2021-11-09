@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerAddress extends Model
+class CustomerFavourite extends Model
 {
     public $timestamps = false;
     protected $guarded = ['id'];
 
-    public function favourites()
+    public function restaurant()
     {
-    	return $this->hasMany(CustomerFavourite::class, 'customer_address_id', 'id');
+    	return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');
     }
 }
