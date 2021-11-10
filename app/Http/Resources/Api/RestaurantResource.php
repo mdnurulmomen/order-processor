@@ -35,6 +35,7 @@ class RestaurantResource extends JsonResource
             'meals' => RestaurantMealResource::collection($this->restaurantMealCategories),
             'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
             'menu_categories' => RestaurantMenuCategoryResource::collection($this->restaurantMenuCategories),
+            'reviews' => RestaurantReviewResource::collection($this->reviews),
             
             'min_order' => $this->min_order,
             'is_post_paid' => $this->is_post_paid,

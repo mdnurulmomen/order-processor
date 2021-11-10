@@ -10,7 +10,7 @@ use App\Http\Resources\Api\UserLoginResponseResource;
 
 class RegisterController extends Controller
 {
-    public function userRegister(Request $request)
+    public function userRegistration(Request $request)
     {
         $request->validate([
             'first_name' => ['string', 'max:255'],

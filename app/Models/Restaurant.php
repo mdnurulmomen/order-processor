@@ -126,4 +126,9 @@ class Restaurant extends Model
         return $this->belongsToMany(Meal::class, 'restaurant_meals', 'restaurant_id', 'meal_id');
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(RestaurantReview::class, 'restaurant_id', 'id');
+    }
+
 }

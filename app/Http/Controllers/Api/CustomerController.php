@@ -14,7 +14,7 @@ class CustomerController extends Controller
 		return UserFavouriteResource::collection(CustomerFavourite::where('customer_address_id', $customer_address_id)->get());
     }
 
-    public function setUserFavourite(Request $request)
+    public function addUserFavourite(Request $request)
     {
     	$request->validate([
     		// 'lat' => 'required|string',

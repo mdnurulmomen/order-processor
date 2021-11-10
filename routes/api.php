@@ -25,7 +25,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::get('/general-info', 'SettingController@getGeneralInfo');
 
 			Route::post('login', 'LoginController@userLogin');
-			Route::post('register', 'RegisterController@userRegister');
+			Route::post('register', 'RegisterController@userRegistration');
 			
 			Route::get('users/{user}', 'ProfileController@showUserDetail');
 			Route::put('user-settings/{user}', 'ProfileController@updateUserSetting');
@@ -37,7 +37,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::post('user-password', 'ProfileController@updateUserPassword');
 			
 			Route::get('user-favourites/{customer_address_id}', 'CustomerController@getUserFavourites');
-			Route::post('user-favourites', 'CustomerController@setUserFavourite');
+			Route::post('user-favourites', 'CustomerController@addUserFavourite');
 			Route::delete('user-favourites/{customer_favourite_id}', 'CustomerController@removeUserFavourite');
 			
 			Route::post('/restaurants', 'RestaurantController@getRestaurants');
@@ -45,6 +45,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 			Route::get('/user-orders/{user}/{perPage?}', 'OrderController@getUserOrders');
 			Route::post('/orders', 'OrderController@createNewOrder');
+
+			Route::get('/restaurant-reviews/{restaurant}/{perPage?}', 'RestaurantController@getRestaurantReview');
+			Route::post('/restaurant-reviews', 'RestaurantController@addRestaurantReview');
 			
 			Route::post('reservations', 'OrderController@createNewReservation');
 			Route::post('reservation-confirmations', 'OrderController@confirmReservation');
