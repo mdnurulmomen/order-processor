@@ -40,8 +40,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 			Route::post('user-favourites', 'CustomerController@setUserFavourite');
 			Route::delete('user-favourites/{customer_favourite_id}', 'CustomerController@removeUserFavourite');
 			
-			Route::get('/restaurants/{expectedLatitude}/{expectedLongitude}', 'RestaurantController@getRestaurants');
-			Route::get('/restaurant-menu-items/{expectedRestaurant}', 'RestaurantController@getRestaurantMenuItems');
+			Route::post('/restaurants', 'RestaurantController@getRestaurants');
+			Route::post('/restaurant-menu-items', 'RestaurantController@getRestaurantMenuItems');
 
 			Route::get('/user-orders/{user}/{perPage?}', 'OrderController@getUserOrders');
 			Route::post('/orders', 'OrderController@createNewOrder');

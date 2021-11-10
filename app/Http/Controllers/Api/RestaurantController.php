@@ -11,26 +11,31 @@ use App\Http\Resources\Api\RestaurantMenuItemResource;
 
 class RestaurantController extends Controller
 {
-   	public function getRestaurants($latitude, $longitude)
+   	public function getRestaurants(Request $request)
    	{
-   		// setting primarily
-   		$latitude = '23.781800';
-   		$longitude = '90.415710';
+   		$request->validate([
+            'latitude' => 'required|string',
+            'longitude' => 'required|string',
+         ]);
 
    		$restaurants = Restaurant::with(['restaurantCuisines', 'restaurantMealCategories', 'restaurantMenuCategories'])
                                     ->where('admin_approval', 1)
 						                  ->where('taking_order', 1)
-                                    ->whereBetween('lat', [intval($latitude-1), intval($latitude+1)])
-   						               ->whereBetween('lng', [intval($longitude-1), intval($longitude+1)])
+                                    ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
+   						               ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)])
                                     ->get();
 
    		// return new RestaurantCollection(); // aggregations, items
          return RestaurantResource::collection($restaurants);
    	}
 
-      public function getRestaurantMenuItems($expectedRestaurant)
+      public function getRestaurantMenuItems(Request $request)
       {
-         $restaurantMenuItems =  Restaurant::findOrFail($expectedRestaurant)->with(['menuCategories.menuCategory', 'menuCategories.restaurantMenuItems.restaurantMenuItemVariations', 'menuCategories.restaurantMenuItems.restaurantMenuItemAddons'])->get();
+         $request->validate([
+            'id' => 'required|numeric|exists:restaurants,id'
+         ]);
+
+         $restaurantMenuItems =  Restaurant::findOrFail($request->id)->with(['menuCategories.menuCategory', 'menuCategories.restaurantMenuItems.restaurantMenuItemVariations', 'menuCategories.restaurantMenuItems.restaurantMenuItemAddons'])->get();
 
          return RestaurantMenuItemResource::collection($restaurantMenuItems);
       }
