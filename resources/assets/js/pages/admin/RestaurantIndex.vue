@@ -167,7 +167,7 @@
 								      			<button
 								        			type="button"
 								        			class="btn btn-danger btn-sm"
-								        			v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin !== null"
+								        			v-show="restaurant.deleted_at !== null && restaurant.admin !== null"
 								        			@click="showRestaurantRestoreModal(restaurant)"
 							      				>
 								        			<i class="fas fa-undo"></i>
@@ -185,7 +185,7 @@
 
 								      			<p 	
 								      				class="text-danger" 
-								      				v-show="restaurant.deleted_at !== null && restaurant.restaurant_admin === null"
+								      				v-show="restaurant.deleted_at !== null && restaurant.admin === null"
 								      			>
 								      				Trashed Admin
 								      			</p>
@@ -1735,7 +1735,7 @@
 				this.singleRestaurantData.restaurant = restaurant;
 				this.singleRestaurantData.restaurant.max_booking = restaurant.booking ? restaurant.booking.total_seat : 0;
 
-				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
+				this.singleRestaurantData.restaurantAdminObject = restaurant.admin;
 
 				$("#modal-show-restaurant").modal("show");
 			},
@@ -1929,7 +1929,7 @@
 				this.service_schedule  = JSON.parse(restaurant.service_schedule);
 				this.booking_break_schedule = JSON.parse(restaurant.booking_break_schedule);
 
-				this.singleRestaurantData.restaurantAdminObject = restaurant.restaurant_admin;
+				this.singleRestaurantData.restaurantAdminObject = restaurant.admin;
 		    	
 				$("#modal-createOrEdit-restaurant").modal("show");
 			},

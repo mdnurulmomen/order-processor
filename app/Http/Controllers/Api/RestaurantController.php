@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Meal;
+use App\Models\Cuisine;
 use App\Models\Restaurant;
+use App\Models\MenuCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\RestaurantMenuCategory;
@@ -16,14 +19,63 @@ class RestaurantController extends Controller
    		$request->validate([
             'latitude' => 'required|string',
             'longitude' => 'required|string',
+            // 'preference' => 'nullable',
+            'preference.type' => [
+               'nullable', 'string', 'in:meal,cuisine,menu', 
+               function ($attribute, $value, $fail) use ($request) {
+                  if ($value === 'meal' && Meal::find($request->input('preference.id')) === null) {
+                      $fail('Invalid meal preference.');
+                  }
+                  else if ($value === 'cuisine' && Cuisine::find($request->input('preference.id')) === null) {
+                      $fail('Invalid cuisine preference.');
+                  }
+                  else if ($value === 'menu' && MenuCategory::find($request->input('preference.id')) === null) {
+                      $fail('Invalid menu preference.');
+                  }
+              },
+            ],
+            'preference.id' => 'nullable|required_unless:preference.type,'
          ]);
 
-   		$restaurants = Restaurant::with(['restaurantCuisines', 'restaurantMealCategories', 'restaurantMenuCategories'])
-                                    ->where('admin_approval', 1)
-						                  ->where('taking_order', 1)
-                                    ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
-   						               ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)])
-                                    ->get();
+         $restaurantsInArea = Restaurant::with(['booking', 'restaurantCuisines', 'restaurantMealCategories', 'restaurantMenuCategories'])
+                        ->where('admin_approval', 1)
+                        ->where('taking_order', 1)
+                        ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
+                        ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)]);
+
+   		if (! empty($request->preference['type']) && $request->preference['id']) {
+            
+            if ($request->preference['type']=='meal') {
+               
+               $restaurants = $restaurantsInArea->whereHas('meals', function ($query) use ($request) {
+                                  $query->where('meal_id', $request->preference['id']);
+                              })
+                              ->get();
+
+            }
+            else if ($request->preference['type']=='cuisine') {
+               
+               $restaurants = $restaurantsInArea->whereHas('cuisines', function ($query) use ($request) {
+                                  $query->where('cuisine_id', $request->preference['id']);
+                              })
+                              ->get();
+
+            }
+            else if ($request->preference['type']=='menu') {
+               
+               $restaurants = $restaurantsInArea->whereHas('menuCategories', function ($query) use ($request) {
+                                  $query->where('menu_category_id', $request->preference['id']);
+                              })
+                              ->get();
+
+            }
+
+         }
+         else {
+
+            $restaurants = $restaurantsInArea->get();
+
+         }
 
    		// return new RestaurantCollection(); // aggregations, items
          return RestaurantResource::collection($restaurants);

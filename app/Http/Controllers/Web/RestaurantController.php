@@ -24,10 +24,10 @@ class RestaurantController extends Controller
    	{
    		if ($perPage) {
             return response()->json([
-               'all' => Restaurant::withTrashed()->with(['restaurantAdmin', 'booking'])->latest()->paginate($perPage),
-               'approved' => Restaurant::where('admin_approval', 1)->with(['restaurantAdmin', 'booking'])->latest()->paginate($perPage),
-               'nonApproved' => Restaurant::where('admin_approval', 0)->with(['restaurantAdmin', 'booking'])->latest()->paginate($perPage),
-               'trashed' => Restaurant::onlyTrashed()->with(['restaurantAdmin', 'booking'])->latest()->paginate($perPage),
+               'all' => Restaurant::withTrashed()->with(['admin', 'booking'])->latest()->paginate($perPage),
+               'approved' => Restaurant::where('admin_approval', 1)->with(['admin', 'booking'])->latest()->paginate($perPage),
+               'nonApproved' => Restaurant::where('admin_approval', 0)->with(['admin', 'booking'])->latest()->paginate($perPage),
+               'trashed' => Restaurant::onlyTrashed()->with(['admin', 'booking'])->latest()->paginate($perPage),
                
             ], 200);
          }
@@ -174,7 +174,7 @@ class RestaurantController extends Controller
       {
          $expectedRestaurant = Restaurant::onlyTrashed()->find($restaurantToRestore);
          
-         if ($expectedRestaurant && $expectedRestaurant->restaurantAdmin()->exists()) {
+         if ($expectedRestaurant && $expectedRestaurant->admin()->exists()) {
 
             $expectedRestaurant->meals()->restore();
             $expectedRestaurant->kitchen()->restore();
@@ -193,7 +193,7 @@ class RestaurantController extends Controller
       {
          $columnsToSearch = ['name', 'mobile', 'address', 'website', 'min_order'];
 
-         $query = Restaurant::withTrashed()->with('restaurantAdmin');
+         $query = Restaurant::withTrashed()->with('admin');
 
          foreach($columnsToSearch as $column)
          {
@@ -239,9 +239,9 @@ class RestaurantController extends Controller
          return $this->showAllRestaurantAdmins($perPage);
       }
 
-      public function updateRestaurantAdmin(Request $request, $restaurantAdmin, $perPage)
+      public function updateRestaurantAdmin(Request $request, $admin, $perPage)
       {
-         $restaurantAdminToUpdate = RestaurantAdmin::find($restaurantAdmin);
+         $restaurantAdminToUpdate = RestaurantAdmin::find($admin);
 
          $request->validate([
             'user_name'=>'required|string|max:50|unique:restaurant_admins,user_name,'.$restaurantAdminToUpdate->id,
@@ -1125,12 +1125,14 @@ class RestaurantController extends Controller
 
          foreach ($request->menu_category_id as $restaurantNewMenuCategory) {
             
-            if ($expectedRestaurant->restaurantMenuCategories()->where('menu_category_id', $restaurantNewMenuCategory)->count()) {
+            if ($expectedRestaurant->menuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->count()) {
                
-               $expectedRestaurant->restaurantMenuCategories()->wherePivot('menu_category_id', $restaurantNewMenuCategory)->update([
+               $expectedRestaurant->menuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->update([
                   'serving_from' => $request->serving_from,
                   'serving_to' => $request->serving_to,
+                  'deleted_at' => NULL
                ]);
+               
             }
 
             else{
@@ -1138,7 +1140,7 @@ class RestaurantController extends Controller
                $expectedRestaurant->restaurantMenuCategories()->syncWithoutDetaching([
                   $restaurantNewMenuCategory => [
                      'serving_from' => $request->serving_from,
-                     'serving_to' => $request->serving_to,
+                     'serving_to' => $request->serving_to
                   ]
                ]);
 

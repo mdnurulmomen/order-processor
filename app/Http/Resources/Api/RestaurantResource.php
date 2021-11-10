@@ -31,9 +31,10 @@ class RestaurantResource extends JsonResource
             'website' => $this->website,
             'banner_preview' => $this->banner_preview,
             
-            'availableMeals' => RestaurantMealResource::collection($this->restaurantMealCategories),
-            'availableCuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
-            'availableMenuCategories' => RestaurantMenuCategoryResource::collection($this->restaurantMenuCategories),
+            'booking' => new RestaurantBookingResource($this->booking),
+            'meals' => RestaurantMealResource::collection($this->restaurantMealCategories),
+            'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
+            'menu_categories' => RestaurantMenuCategoryResource::collection($this->restaurantMenuCategories),
             
             'min_order' => $this->min_order,
             'is_post_paid' => $this->is_post_paid,

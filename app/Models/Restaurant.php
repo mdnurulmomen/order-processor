@@ -66,24 +66,9 @@ class Restaurant extends Model
         }
     }
 
-    public function restaurantAdmin()
+    public function admin()
     {
         return $this->belongsTo(RestaurantAdmin::class, 'restaurant_admins_id', 'id');
-    }
-
-    public function restaurantCuisines()
-    {
-        return $this->belongsToMany(Cuisine::class, 'restaurant_cuisines', 'restaurant_id', 'cuisine_id');
-    }
-
-    public function restaurantMenuCategories()
-    {
-        return $this->belongsToMany(MenuCategory::class, 'restaurant_menu_categories', 'restaurant_id', 'menu_category_id')->withPivot('id', 'serving_from', 'serving_to');
-    }
-
-    public function restaurantMealCategories()
-    {
-        return $this->belongsToMany(Meal::class, 'restaurant_meals', 'restaurant_id', 'meal_id');
     }
 
     public function kitchen()
@@ -124,6 +109,21 @@ class Restaurant extends Model
     public function booking()
     {
         return $this->hasOne(RestaurantBookingStatus::class, 'restaurant_id', 'id');
+    }
+
+    public function restaurantCuisines()
+    {
+        return $this->belongsToMany(Cuisine::class, 'restaurant_cuisines', 'restaurant_id', 'cuisine_id');
+    }
+
+    public function restaurantMenuCategories()
+    {
+        return $this->belongsToMany(MenuCategory::class, 'restaurant_menu_categories', 'restaurant_id', 'menu_category_id')->withPivot('id', 'serving_from', 'serving_to');
+    }
+
+    public function restaurantMealCategories()
+    {
+        return $this->belongsToMany(Meal::class, 'restaurant_meals', 'restaurant_id', 'meal_id');
     }
 
 }
