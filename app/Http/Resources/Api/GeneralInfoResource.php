@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Models\Meal;
+use App\Models\Cuisine;
+use App\Models\MenuCategory;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GeneralInfoResource extends JsonResource
@@ -17,6 +20,84 @@ class GeneralInfoResource extends JsonResource
         // return parent::toArray($request);
 
         return [
+            'app_name' => $this->app_name ?? 'Qupaid',
+            
+            'starting_greetings' => [
+                [
+                    "title" => "Starting Title 1",
+                    "preview" => "uploads/application/greeting1.jpg",
+                    "paragraph" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.",
+                ],
+
+                [
+                    "title" => "Starting Title 2",
+                    "preview" => "uploads/application/greeting2.jpg",
+                    "paragraph" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.",
+                ],
+
+                [
+                    "title" => "Starting Title 3",
+                    "preview" => "uploads/application/greeting3.jpg",
+                    "paragraph" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.",
+                ],
+            ], 
+
+            "accomplishment_message" => [
+                "title" => "Accomplishment Title",
+                "preview" => "uploads/application/thanks.jpg",
+                "paragraph" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.",
+            ],
+
+            "payment_methods" => [
+                [
+                    "name" => "Credit or Debit Card",
+                    "logo" => "uploads/application/card.png",
+                ],
+
+                [
+                    "name" => "BKash",
+                    "logo" => "uploads/application/bcash.png",
+                ],
+
+                [
+                    "name" => "Nagad",
+                    "logo" => "uploads/application/nagad.png",
+                ],
+            ],
+
+            "order_types" => [
+                [
+                    "name" => "Home Delivery",
+                    "logo" => "uploads/application/delivery.png",
+                ],
+
+                [
+                    "name" => "Pick Up",
+                    "logo" => "uploads/application/pick.png",
+                ],
+
+                [
+                    "name" => "Serve",
+                    "logo" => "uploads/application/serve.png",
+                ],
+
+                [
+                    "name" => "Reservation",
+                    "logo" => "uploads/application/reservation.png",
+                ]
+            ],
+
+            "search_preferences" => [
+                "cuisines" => RestaurantCuisineResource::collection(Cuisine::all()),    
+                "meals" => RestaurantMealResource::collection(Meal::all()),    
+                "menus" => RestaurantMenuCategoryResource::collection(MenuCategory::all())
+            ],
+
+            // "preferences" => RestaurantMenuCategoryResource::collection(MenuCategory::all()),
+
+
+
+
             'delivery_charge' => $this->delivery_charge,
             'multiple_delivery_charge_percentage' => $this->multiple_delivery_charge_percentage,
             'official_mail_address' => $this->official_mail_address,

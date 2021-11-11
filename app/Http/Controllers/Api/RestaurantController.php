@@ -23,21 +23,22 @@ class RestaurantController extends Controller
         'latitude' => 'required|string',
         'longitude' => 'required|string',
         // 'preference' => 'nullable',
-        'preference.type' => [
-          'nullable', 'string', 'in:meal,cuisine,menu', 
+        'preference.type' => [ 'nullable', 'string', 'in:meals,cuisines,menus' ],
+        'preference.ids' => 'nullable|array|required_unless:preference.type,',
+        'preference.ids.*' => [
+          'required_unless:preference.type,',
           function ($attribute, $value, $fail) use ($request) {
-            if ($value === 'meal' && Meal::find($request->input('preference.id')) === null) {
+            if ($request->input('preference.type') === 'meals' && Meal::find($value) === null) {
               $fail('Invalid meal preference.');
             }
-            else if ($value === 'cuisine' && Cuisine::find($request->input('preference.id')) === null) {
+            else if ($request->input('preference.type') === 'cuisines' && Cuisine::find($value) === null) {
               $fail('Invalid cuisine preference.');
             }
-            else if ($value === 'menu' && MenuCategory::find($request->input('preference.id')) === null) {
+            else if ($request->input('preference.type') === 'menus' && MenuCategory::find($value) === null) {
               $fail('Invalid menu preference.');
             }
           },
-        ],
-        'preference.id' => 'nullable|required_unless:preference.type,'
+        ]
       ]);
 
       $restaurantsInArea = Restaurant::with(['booking', 'restaurantCuisines', 'restaurantMealCategories', 'restaurantMenuCategories'])
@@ -46,28 +47,28 @@ class RestaurantController extends Controller
       ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
       ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)]);
 
-      if (! empty($request->preference['type']) && ! empty($request->preference['id'])) {
+      if (! empty($request->preference['type']) && ! empty($request->preference['ids'])) {
 
-        if ($request->preference['type']=='meal') {
+        if ($request->preference['type']=='meals') {
 
           $restaurants = $restaurantsInArea->whereHas('meals', function ($query) use ($request) {
-            $query->where('meal_id', $request->preference['id']);
+            $query->whereIn('meal_id', $request->preference['ids']);
           })
           ->get();
 
         }
-        else if ($request->preference['type']=='cuisine') {
+        else if ($request->preference['type']=='cuisines') {
 
           $restaurants = $restaurantsInArea->whereHas('cuisines', function ($query) use ($request) {
-            $query->where('cuisine_id', $request->preference['id']);
+            $query->whereIn('cuisine_id', $request->preference['ids']);
           })
           ->get();
 
         }
-        else if ($request->preference['type']=='menu') {
+        else if ($request->preference['type']=='menus') {
 
           $restaurants = $restaurantsInArea->whereHas('menuCategories', function ($query) use ($request) {
-            $query->where('menu_category_id', $request->preference['id']);
+            $query->whereIn('menu_category_id', $request->preference['ids']);
           })
           ->get();
 

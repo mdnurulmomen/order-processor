@@ -15,6 +15,7 @@ class UserFavouriteResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'restaurant' => $this->restaurant->name,
             'restaurant_id' => $this->restaurant_id,
         ];
