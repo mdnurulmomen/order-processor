@@ -6,12 +6,22 @@ use Illuminate\Http\Request;
 use App\Models\CustomerFavourite;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\UserFavouriteResource;
+use App\Http\Resources\Api\UserFavouriteCollection;
 
 class CustomerController extends Controller
 {
-    public function getUserFavourites($customer_address_id)
+    public function getUserFavourites($customer_address_id, $perPage = false)
     {	
-		return UserFavouriteResource::collection(CustomerFavourite::where('customer_address_id', $customer_address_id)->get());
+		if ($perPage) {
+            
+            return new UserFavouriteCollection(CustomerFavourite::where('customer_address_id', $customer_address_id)->paginate($perPage));
+
+        }
+        else {
+
+            return UserFavouriteResource::collection(CustomerFavourite::where('customer_address_id', $customer_address_id)->get());
+
+        }
     }
 
     public function addUserFavourite(Request $request)

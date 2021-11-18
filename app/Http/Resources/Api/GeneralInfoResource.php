@@ -68,21 +68,25 @@ class GeneralInfoResource extends JsonResource
             "order_types" => [
                 [
                     "name" => "Home Delivery",
+                    "code" => "home-delivery",
                     "logo" => "uploads/application/delivery.png",
                 ],
 
                 [
                     "name" => "Pick Up",
+                    "code" => "take-away",
                     "logo" => "uploads/application/pick.png",
                 ],
 
                 [
                     "name" => "Serve",
+                    "code" => "serve-on-table",
                     "logo" => "uploads/application/serve.png",
                 ],
 
                 [
                     "name" => "Reservation",
+                    "code" => "reservation",
                     "logo" => "uploads/application/reservation.png",
                 ]
             ],

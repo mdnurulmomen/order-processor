@@ -12,8 +12,10 @@ use App\Http\Controllers\Controller;
 // use App\Models\RestaurantMenuCategory;
 use App\Http\Resources\Api\RestaurantResource;
 use App\Http\Resources\Api\RestaurantReviewResource;
+use App\Http\Resources\Api\SearchedRestaurantResource;
 use App\Http\Resources\Api\RestaurantReviewCollection;
 use App\Http\Resources\Api\RestaurantMenuItemResource;
+use App\Http\Resources\Api\SearchedRestaurantCollection;
 
 class RestaurantController extends Controller
 {
@@ -22,6 +24,7 @@ class RestaurantController extends Controller
       $request->validate([
         'latitude' => 'required|string',
         'longitude' => 'required|string',
+        'perPage' => 'nullable|numeric',
         // 'preference' => 'nullable',
         'preference.type' => [ 'nullable', 'string', 'in:meals,cuisines,menus' ],
         'preference.ids' => 'nullable|array|required_unless:preference.type,',
@@ -41,50 +44,59 @@ class RestaurantController extends Controller
         ]
       ]);
 
-      $restaurantsInArea = Restaurant::with(['booking', 'restaurantCuisines', 'restaurantMealCategories', 'restaurantMenuCategories'])
-      ->where('admin_approval', 1)
-      ->where('taking_order', 1)
+      $restaurantsInArea = Restaurant::where('admin_approval', 1)->where('taking_order', 1)
       ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
       ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)]);
 
+      // preferences
       if (! empty($request->preference['type']) && ! empty($request->preference['ids'])) {
 
         if ($request->preference['type']=='meals') {
 
           $restaurants = $restaurantsInArea->whereHas('meals', function ($query) use ($request) {
             $query->whereIn('meal_id', $request->preference['ids']);
-          })
-          ->get();
+          });
 
         }
         else if ($request->preference['type']=='cuisines') {
 
           $restaurants = $restaurantsInArea->whereHas('cuisines', function ($query) use ($request) {
             $query->whereIn('cuisine_id', $request->preference['ids']);
-          })
-          ->get();
+          });
 
         }
         else if ($request->preference['type']=='menus') {
 
           $restaurants = $restaurantsInArea->whereHas('menuCategories', function ($query) use ($request) {
             $query->whereIn('menu_category_id', $request->preference['ids']);
-          })
-          ->get();
+          });
 
         }
 
       }
       else {
 
-        $restaurants = $restaurantsInArea->get();
+        $restaurants = $restaurantsInArea;
 
       }
 
-      // return new RestaurantCollection(); // aggregations, items
-      return RestaurantResource::collection($restaurants);
+      // pagination
+      if ($request->perPage) {
+        return new SearchedRestaurantCollection($restaurants->paginate($request->perPage));
+      }
+      else {
+        // return new RestaurantCollection(); // aggregations, items
+        return SearchedRestaurantResource::collection($restaurants->get());
+      }
+
     }
 
+    public function showRestaurantDetails($restaurant)
+    {
+      return new RestaurantResource(Restaurant::with(['booking', 'meals', 'cuisines', 'menuCategories.restaurantMenuItems', 'reviews'])->findOrFail($restaurant));
+    }
+
+    /*
     public function getRestaurantMenuItems(Request $request)
     {
       $request->validate([
@@ -95,6 +107,7 @@ class RestaurantController extends Controller
 
       return RestaurantMenuItemResource::collection($restaurantMenuItems);
     }
+    */
 
     public function getRestaurantReview($id, $perPage=false)
     {

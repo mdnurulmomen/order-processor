@@ -19,10 +19,10 @@ class RestaurantMenuCategoryDetailResource extends JsonResource
 
         return [
 
-            'restaurantMenuCategoryName' => $this->menuCategory->name,
+            'restaurant_menu_category_name' => $this->menuCategory->name,
             'serving_from' => $this->serving_from,
             'serving_to' => $this->serving_to,
-            'menuItems' => RestaurantMenuItemDetailResource::collection($this->restaurantMenuItems),
+            'menu_items' => RestaurantMenuItemDetailResource::collection($this->restaurantMenuItems),
 
         ];
     }

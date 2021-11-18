@@ -12,7 +12,7 @@ use App\Events\UpdateRestaurant;
 use App\Models\OrderedRestaurant;
 use App\Models\TableBookingDetail;
 use App\Models\RestaurantMenuItem;
-use App\Models\RiderDeliveryRecord;
+// use App\Models\RiderDeliveryRecord;
 // use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderRequest;
@@ -28,7 +28,7 @@ class OrderController extends Controller
         if ($perPage) {
             
             return new OrderCollection(
-                Order::whereHasMorph('orderer', [Customer::class], 
+                Order::whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
                     }
@@ -39,7 +39,7 @@ class OrderController extends Controller
         else {
 
             return OrderResource::collection(
-                Order::whereHasMorph('orderer', [Customer::class], 
+                Order::whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
                     }
@@ -47,7 +47,6 @@ class OrderController extends Controller
             );
 
         }
-
     }
 
     public function createNewOrder(OrderRequest $request)

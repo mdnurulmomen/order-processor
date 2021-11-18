@@ -19,7 +19,8 @@ class RestaurantCuisineResource extends JsonResource
         return [
 
             'id' => $this->id,
-            'name' => $this->name,
+            'cuisine_id' => $this->cuisine_id,
+            'name' => $this->cuisine->name,
 
         ];
         

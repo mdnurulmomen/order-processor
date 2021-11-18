@@ -18,7 +18,7 @@ class UserLoginResponseResource extends JsonResource
         
         return [
 
-            'api_token' => "",
+            'authorization' => "Bearer asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf",
 
             'id' => $this->id,
             'first_name' => $this->first_name,

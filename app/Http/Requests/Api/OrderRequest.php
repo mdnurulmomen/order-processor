@@ -34,8 +34,8 @@ class OrderRequest extends FormRequest
 
             'order'=>'required',
             'order.order_type'=>'required|in:home-delivery,serve-on-table,take-away',
-            'order.is_asap_order'=>'required_without:order_schedule|boolean',
-            'order.order_schedule'=>'required_if:is_asap_order,0|date|date_format:Y-m-d H:i:s|after:'.now()->subMinutes(3),
+            'order.is_asap_order'=>'required_without:order.order_schedule|boolean',
+            'order.order_schedule'=>'required_if:order.is_asap_order,0|date|date_format:Y-m-d H:i:s|after:'.now()->subMinutes(3),
             'order.order_price'=>'required|numeric',
             'order.vat'=>'required|numeric',
             'order.discount'=>'required|numeric',
