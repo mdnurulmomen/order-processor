@@ -286,7 +286,7 @@
 																	<span class="d-block"
 																		v-if="item.restaurant_menu_item.has_variation" 
 																	>
-																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.variation_name }})
+																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.name }})
 																	</span>
 
 																	(quantity : {{ item.quantity }})

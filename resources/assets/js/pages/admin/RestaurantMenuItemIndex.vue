@@ -131,7 +131,7 @@
 																  	>
 																    	
 																    	{{ 
-																    		itemVariation.variation_name 
+																    		itemVariation.name 
 																    	}}
 
 																    	<span 
@@ -475,7 +475,7 @@
 					                                  			v-model="variationObjects[index]"
 					                                  			placeholder="Variation Name" 
 						                                  		:options="allVariations" 
-						                                  		label="variation_name" 
+						                                  		label="name" 
 						                                  		track-by="id" 
 						                                  		:key="index"
 						                                  		:required="true"

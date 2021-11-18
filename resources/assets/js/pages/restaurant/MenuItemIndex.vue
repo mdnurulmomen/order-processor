@@ -123,7 +123,7 @@
 																  	>
 																    	
 																    	{{ 
-																    		itemVariation.variation_name 
+																    		itemVariation.name 
 																    	}}
 
 																    	<span 

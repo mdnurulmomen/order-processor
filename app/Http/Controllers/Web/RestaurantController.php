@@ -1037,8 +1037,7 @@ class RestaurantController extends Controller
                $q->where("name", 'like', "%$search%");
                $q->orWhere("detail", 'like', "%$search%");
                $q->orWhere("price", 'like', "%$search%");
-
-               $q->orWhere("variation_name", 'like', "%$search%");
+               $q->orWhere("name", 'like', "%$search%");
             });
          
          });

@@ -92,9 +92,9 @@ class GeneralInfoResource extends JsonResource
             ],
 
             "search_preferences" => [
-                "cuisines" => RestaurantCuisineResource::collection(Cuisine::all()),    
-                "meals" => RestaurantMealResource::collection(Meal::all()),    
-                "menus" => RestaurantMenuCategoryResource::collection(MenuCategory::all())
+                "cuisines" => AssetResource::collection(Cuisine::all()),    
+                "meals" => AssetResource::collection(Meal::all()),    
+                "menus" => AssetResource::collection(MenuCategory::all())
             ],
 
             // "preferences" => RestaurantMenuCategoryResource::collection(MenuCategory::all()),

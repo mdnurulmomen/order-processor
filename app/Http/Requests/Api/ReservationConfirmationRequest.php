@@ -37,7 +37,7 @@ class ReservationConfirmationRequest extends FormRequest
                 'required',
                 'exists:table_booking_details,id',
                 function ($attribute, $value, $fail) {
-                    $expectedReservation = TableBookingDetail::find($value);
+                    $expectedReservation = TableBookingDetail::findOrFail($value);
                     if ($expectedReservation->booking_confirmation || $expectedReservation->order_id != $this->input('reservation.order_id') || $expectedReservation->restaurant_id != $this->input('reservation.restaurant_id')) {
                         $fail($attribute.' is invalid.');
                     }

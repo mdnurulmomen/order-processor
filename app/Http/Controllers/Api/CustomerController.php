@@ -30,7 +30,8 @@ class CustomerController extends Controller
     		// 'lat' => 'required|string',
     		// 'lang' => 'required|string',
     		'restaurant_id' => 'required|numeric|exists:restaurants,id',
-    		'customer_address_id' => 'required|numeric|exists:customer_addresses,id'
+    		'customer_address_id' => 'required|numeric|exists:customer_addresses,id',
+            'per_page' => 'nullable|numeric'
     		// 'id' => 'required|numeric|exists:customers,id'
     	]);
 
@@ -45,15 +46,15 @@ class CustomerController extends Controller
 
     	}
 
-    	return $this->getUserFavourites($request->customer_address_id);
+    	return $this->getUserFavourites($request->customer_address_id, $request->per_page);
     }
 
-    public function removeUserFavourite($customer_favourite_id)
+    public function removeUserFavourite($customer_favourite_id, $perPage = false)
     {
         $existingFavourite = CustomerFavourite::findOrFail($customer_favourite_id);
         $customer_address_id = $existingFavourite->customer_address_id;    
         $existingFavourite->delete();
 
-        return $this->getUserFavourites($customer_address_id);
+        return $this->getUserFavourites($customer_address_id, $perPage);
     }
 }

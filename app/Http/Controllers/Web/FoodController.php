@@ -326,10 +326,10 @@ class FoodController extends Controller
 	public function createNewVariation(Request $request, $perPage = false)
 	{
 	 	$request->validate([
-	    	'variation_name'=>'required|unique:item_variations,variation_name|max:50'
+	    	'name'=>'required|unique:item_variations,name|max:50'
 	 	]);
 
-	 	$newVariation = ItemVariation::create(['variation_name' => $request->variation_name]);
+	 	$newVariation = ItemVariation::create(['name' => $request->name]);
 
 	 	return $this->showAllVariations($perPage);
 	}
@@ -339,11 +339,11 @@ class FoodController extends Controller
 	 	$variationToUpdate = ItemVariation::find($variation);
 
 	 	$request->validate([
-	    	'variation_name'=>'required|max:50|unique:item_variations,variation_name,'.$variationToUpdate->id,
+	    	'name'=>'required|max:50|unique:item_variations,name,'.$variationToUpdate->id,
 	 	]);
 
 	 	$variationToUpdate = $variationToUpdate->update([
-	 		'variation_name' => $request->variation_name
+	 		'name' => $request->name
 	 	]);
 
 	 	return $this->showAllVariations($perPage);
@@ -378,7 +378,7 @@ class FoodController extends Controller
   	public function searchAllVariations($search, $perPage)
 	{
 		return response()->json([
-			'all' => ItemVariation::withTrashed()->where('variation_name', 'like', "%$search%")->paginate($perPage),  
+			'all' => ItemVariation::withTrashed()->where('name', 'like', "%$search%")->paginate($perPage),  
 		], 200);
 	}
 

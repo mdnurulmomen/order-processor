@@ -33,13 +33,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::put('user-profiles/{user}', 'ProfileController@updateUserProfile')->name('user-profiles.update');
 				
 				Route::post('user-addresses', 'ProfileController@addUserAddress')->name('user-addresses.create');
-				Route::put('user-addresses/{user}/{address}', 'ProfileController@updateUserAddress')->name('user-addresses.update');
+				Route::put('users/{user}/addresses/{address}', 'ProfileController@updateUserAddress')->name('user-addresses.update');
 				
 				Route::post('user-password', 'ProfileController@updateUserPassword')->name('user-passwords.update');
 				
 				Route::get('user-favourites/{customer_address_id}/{perPage?}', 'CustomerController@getUserFavourites')->name('user-favourites.index');
 				Route::post('user-favourites', 'CustomerController@addUserFavourite')->name('user-favourites.create');
-				Route::delete('user-favourites/{customer_favourite_id}', 'CustomerController@removeUserFavourite')->name('user-favourites.destroy');
+				Route::delete('user-favourites/{customer_favourite_id}/{perPage?}', 'CustomerController@removeUserFavourite')->name('user-favourites.destroy');
 				
 				Route::post('/restaurants', 'RestaurantController@getRestaurants')->name('restaurants.index');
 				Route::get('/restaurants/{restaurant}', 'RestaurantController@showRestaurantDetails')->name('restaurants.show');

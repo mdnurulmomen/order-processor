@@ -15,7 +15,7 @@ class CreateItemVariationsTable extends Migration
     {
         Schema::create('item_variations', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('variation_name'); // different sizes, chicken, beef
+            $table->string('name'); // different sizes, chicken, beef
             $table->softDeletes();
         });
     }

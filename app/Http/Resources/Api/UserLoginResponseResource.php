@@ -34,7 +34,7 @@ class UserLoginResponseResource extends JsonResource
 
             'addresses' => UserAddressResource::collection($this->addresses),
             'coupons' => $this->coupons,
-            'orders' => OrderResource::collection($this->orders)
+            'orders' => /* OrderResource::collection($this->orders) */ route('api.v1.user-orders.index', [ 'user' => $this->id ])
             
         ];
     }

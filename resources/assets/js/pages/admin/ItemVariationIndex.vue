@@ -71,7 +71,7 @@
 									    	:key="variation.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ variation.variation_name}}</td>
+								    		<td>{{ variation.name}}</td>
 								    		<td>
 										      	<button type="button" v-show="variation.deleted_at === null" @click="showVariationEditModal(variation)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
@@ -157,12 +157,6 @@
 					  	>
 							<div class="modal-body text-dark">
 
-					      		<input 
-						      		type="hidden" 
-						      		variation_name="_token" 
-						      		:value="csrf"
-					      		>
-
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="card card-outline">
@@ -174,7 +168,7 @@
 									                  	<input 
 															type="text" 
 															class="form-control" 
-															v-model="singleVariationData.variation.variation_name" 
+															v-model="singleVariationData.variation.name" 
 															placeholder="Eg. Large / 12 inch / Half" 
 															required="true"
 															:class="!errors.variation.name  ? 'is-valid' : 'is-invalid'"
@@ -282,11 +276,6 @@
 					  	<!-- form start -->
 					  	<form class="form-horizontal" v-on:submit.prevent="restoreVariation()" autocomplete="off">
 							<div class="modal-body">
-					      		<input 
-					      			type="hidden" 
-					      			variation_name="_token" 
-					      			:value="csrf"
-					      		>
 					      		<h5>Are you sure want to restore variation ?? </h5>
 							</div>
 							<div class="modal-footer justify-content-between">
@@ -319,7 +308,7 @@
 
 	var singleVariationData = {
     	variation : {
-			variation_name : null,
+			name : null,
 			deleted_at : null,
     	},
     };
@@ -590,10 +579,10 @@
 				
 				this.submitForm = false;
 
-				if (!this.singleVariationData.variation.variation_name) {
+				if (!this.singleVariationData.variation.name) {
 					this.errors.variation.name = 'Variation name is required';
 				}
-				else if (!this.singleVariationData.variation.variation_name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+				else if (!this.singleVariationData.variation.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
 					this.errors.variation.name = 'No special characters';
 				}
 				else{

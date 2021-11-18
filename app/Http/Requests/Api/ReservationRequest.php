@@ -56,7 +56,7 @@ class ReservationRequest extends FormRequest
                     $availableSeats = Restaurant::findOrFail($value)->booking->seat_left;
 
                     if ($availableSeats < $this->input('reservation.guest_number')) {
-                        $fail($attribute.' is more than available seats');
+                        $fail($availableSeats.' seat is available');
                     }
                 },
             ],

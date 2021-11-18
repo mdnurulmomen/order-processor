@@ -24,7 +24,8 @@ class UserAddressResource extends JsonResource
             'additional_hint' => $this->additional_hint,
             'lat' => $this->lat,
             'lang' => $this->lang,
-            'address_name' => $this->address_name
+            'address_name' => $this->address_name,
+            'favourites' => $this->favourites
 
         ];
     }
