@@ -46,6 +46,7 @@ class Restaurant extends Model
         'booking_break_schedule' => 'json',
         'taking_order' => 'boolean',
         'admin_approval' => 'boolean',
+        'sponsored' => 'boolean',
     ];
     
    

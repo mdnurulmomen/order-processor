@@ -48,6 +48,12 @@ class GeneralInfoResource extends JsonResource
                 "paragraph" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.",
             ],
 
+            "promotional_sliders" => [
+                "uploads/application/promotional-1.jpg", 
+                "uploads/application/promotional-2.jpg",
+                "uploads/application/promotional-3.jpg"
+            ],
+
             "payment_methods" => [
                 [
                     "name" => "Credit or Debit Card",

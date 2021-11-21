@@ -45,6 +45,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::get('/restaurants/{restaurant}', 'RestaurantController@showRestaurantDetails')->name('restaurants.show');
 				// Route::post('/restaurant-menu-items', 'RestaurantController@getRestaurantMenuItems')->name('restaurant-menu-items.show');
 
+				Route::post('/sponsored-restaurants', 'RestaurantController@getSponsoredRestaurants')->name('sponsored-restaurants.index');
+				Route::post('/promoted-menu-items', 'RestaurantController@getSponsoredMenuItems')->name('promoted-menu-items.index');
+
 				Route::get('/user-orders/{user}/{perPage?}', 'OrderController@getUserOrders')->name('user-orders.index');
 				Route::post('/orders', 'OrderController@createNewOrder')->name('orders.create');
 

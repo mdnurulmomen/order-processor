@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class SearchedRestaurantCollection extends ResourceCollection
+class PromotedMenuItemCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -16,7 +16,7 @@ class SearchedRestaurantCollection extends ResourceCollection
     {
         return [
             'current_page' => $this->currentPage(),
-            'data'=> SearchedRestaurantResource::collection($this->collection),
+            'data'=> PromotedMenuItemResource::collection($this->collection),
             'first_page_url'=> $this->url(1),
             'from'=> $this->firstItem(),
             'last_page'=> $this->lastPage(),

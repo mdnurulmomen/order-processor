@@ -682,8 +682,7 @@
 
 								              	</div>
 
-								              	<div class="form-group row">
-									              		
+								              	<div class="form-group row">	
 								              		<label 
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
@@ -692,7 +691,6 @@
 								              		</label>
 
 									                <div class="col-sm-8">
-									                  	
 									                  	<toggle-button 
 				                                    		value ="true" 
 				                                    		:sync="true" 
@@ -703,9 +701,29 @@
 				                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
 				                                    		:labels="{checked: 'Enabled', unchecked: 'Disabled' }"
 				                                    	/>
-
 									                </div>	
-									              	
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label 
+								              			for="inputMenuName3" 
+								              			class="col-sm-4 col-form-label text-right"
+								              		>
+								              			Promoted 
+								              		</label>
+
+									                <div class="col-sm-8">
+									                  	<toggle-button 
+				                                    		value ="true" 
+				                                    		:sync="true" 
+				                                    		v-model="singleRestaurantMenuItemData.restaurantMenuItem.promoted" 
+				                                    		:width="140"  
+				                                    		:height="30" 
+				                                    		:font-size="15" 
+				                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+				                                    		:labels="{checked: 'Promoted', unchecked: 'No' }"
+				                                    	/>
+									                </div>	
 								              	</div>
 								            </div>
 								            <!-- /.card-body -->

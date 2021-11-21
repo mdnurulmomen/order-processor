@@ -48,6 +48,9 @@ class RestaurantController extends Controller
    			// 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'min_order'=>'required|numeric|min:100|max:65535',
    			'max_booking'=>'required|numeric|min:0|max:1000',
+            'admin_approval'=>'nullable|boolean',
+            'taking_order'=>'nullable|boolean',
+            'sponsored'=>'nullable|boolean',
             'is_post_paid'=>'nullable|boolean',
    			'has_parking'=>'nullable|boolean',
             'is_self_service'=>'nullable|boolean',
@@ -72,6 +75,8 @@ class RestaurantController extends Controller
          $newRestaurant->address = $request->address;
          $newRestaurant->min_order = $request->min_order;
          // $newRestaurant->max_booking = $request->max_booking;
+         $newRestaurant->taking_order = $request->taking_order ?? 0;
+         $newRestaurant->sponsored = $request->sponsored ?? 0;
          $newRestaurant->is_post_paid = $request->is_post_paid ?? 0;
          $newRestaurant->has_parking = $request->has_parking ?? 0;
          $newRestaurant->is_self_service = $request->is_self_service ?? 0;
@@ -109,6 +114,9 @@ class RestaurantController extends Controller
             // 'lng'=>'required|unique:menu_categories,name|max:50',
             'address'=>'required|string|max:255',
             // 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'admin_approval'=>'nullable|boolean',
+            'taking_order'=>'nullable|boolean',
+            'sponsored'=>'nullable|boolean',
             'is_post_paid'=>'required|boolean',
             'has_parking'=>'required|boolean',
             'is_self_service'=>'nullable|boolean',
@@ -129,6 +137,8 @@ class RestaurantController extends Controller
          $restaurantToUpdate->address = $request->address;
          $restaurantToUpdate->min_order = $request->min_order;
          // $restaurantToUpdate->max_booking = $request->max_booking;
+         $restaurantToUpdate->taking_order = $request->taking_order ?? 0;
+         $restaurantToUpdate->sponsored = $request->sponsored ?? 0;
          $restaurantToUpdate->is_post_paid = $request->is_post_paid;
          $restaurantToUpdate->has_parking = $request->has_parking;
          $restaurantToUpdate->is_self_service = $request->is_self_service;
@@ -791,6 +801,7 @@ class RestaurantController extends Controller
             'detail'=>'nullable|string|max:255',
             'has_variation'=>'boolean',
             'has_addon'=>'boolean',
+            'promoted'=>'nullable|boolean',
             'price'=>'nullable|numeric|min:0|max:65535',
             'customizable'=>'boolean',
             'restaurant_menu_category_id'=>'required|numeric|exists:restaurant_menu_categories,id',
@@ -804,6 +815,7 @@ class RestaurantController extends Controller
             'has_addon' => $request->has_addon ?? false,
             'price' => $request->price ?? 0,
             'customizable' => $request->customizable ?? false,
+            'promoted' => $request->promoted ?? false,
             'restaurant_menu_category_id' => $request->restaurant_menu_category_id,
          ]);
 
@@ -863,6 +875,7 @@ class RestaurantController extends Controller
             'variations_id' => 'required_if:has_variation,true|array',
             'price_item_variations' => 'required_if:has_variation,true|array',
             'has_addon'=>'boolean',
+            'promoted'=>'nullable|boolean',
             'addons_id' => 'required_if:has_addon,true|array',
             'price_addon_items' => 'required_if:has_addon,true|array',
             'price'=>'nullable|numeric|min:0|max:65535',
@@ -878,6 +891,7 @@ class RestaurantController extends Controller
             'has_addon' => $request->has_addon ?? false,
             'price' => $request->price ?? 0,
             'customizable' => $request->customizable ?? false,
+            'promoted' => $request->promoted ?? false,
             'restaurant_menu_category_id' => $request->restaurant_menu_category_id,
          ]);
 

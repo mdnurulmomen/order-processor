@@ -19,8 +19,10 @@ class CreateRestaurantMenuItemsTable extends Migration
             $table->text('detail')->nullable(); // A short description / quantity / half, full
             $table->boolean('has_variation')->default(false);
             $table->boolean('has_addon')->default(false);
+            $table->boolean('sponsored')->default(false);
             $table->unsignedSmallInteger('price'); // price / if variation exists, then price of minimum-one
             $table->boolean('customizable')->default(true);
+            $table->boolean('promoted')->default(false);
             $table->boolean('item_stock')->default(true);
             $table->unsignedMediumInteger('restaurant_menu_category_id');
             $table->softDeletes();

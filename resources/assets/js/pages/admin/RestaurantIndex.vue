@@ -330,12 +330,37 @@
 								                  	{{singleRestaurantData.restaurant.website ? singleRestaurantData.restaurant.website : 'No website'}}
 								                </div>	
 								            </div>
+
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Approval :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleRestaurantData.restaurant.admin_approval ? 'Approved' : 'Not approved'}}
+								                	<span :class="[singleRestaurantData.restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'badge']">
+								                		{{ singleRestaurantData.restaurant.admin_approval ? 'Approved' : 'Not-Approved'}}
+								                	</span>
+								                </div>	
+								            </div>
+
+								            <div class="form-group row">		
+							              		<label class="col-sm-6 text-right">
+							              			Taking Order :
+							              		</label>
+								                <div class="col-sm-6">
+								                	<span :class="[singleRestaurantData.restaurant.taking_order ? 'badge-success' : 'badge-danger', 'badge']">
+								                		{{ singleRestaurantData.restaurant.taking_order ? 'Yes' : 'No'}}
+								                	</span>
+								                </div>	
+								            </div> 
+
+								            <div class="form-group row">		
+							              		<label class="col-sm-6 text-right">
+							              			Sponsored :
+							              		</label>
+								                <div class="col-sm-6">
+								                	<span :class="[singleRestaurantData.restaurant.sponsored ? 'badge-danger' : 'badge-success', 'badge']">
+								                		{{ singleRestaurantData.restaurant.sponsored ? 'Sponsored' : 'Not-Sponsored'}}
+								                	</span>
 								                </div>	
 								            </div>  
 					            		</div>
@@ -525,13 +550,12 @@
 									                        </div>
 
 									                        <div class="form-group row">
-									                        	<div class="col-12">
-									                        		<div class="row text-right">
-																  		<label for="inputAdminApproval3" class="col-sm-6 col-form-label">
-																  			<!-- Rst-Admin Approval -->
+									                        	<div class="col-sm-12 d-flex justify-content-between">
+									                        		<div class="form-group">
+																  		<label for="inputAdminApproval3">
+																  			Admin Approval
 																  		</label>
-																  		<div class="col-sm-6">
-																  			
+																  		<div>
 																			<toggle-button 
 									                                  			:sync="true" 
 									                                  			v-model="singleRestaurantData.restaurant.admin_approval" 
@@ -541,8 +565,43 @@
 									                                  			:font-size="15" 
 									                                  			:color="{checked: 'green', unchecked: 'red'}" 
 									                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
-								                                  			/>
-																    			
+								                                  			/>		
+																  		</div>
+									                        		</div>
+
+									                        		<div class="form-group">
+																  		<label for="inputAdminApproval3">
+																  			Taking Order
+																  		</label>
+																  		<div>
+																			<toggle-button 
+									                                  			:sync="true" 
+									                                  			v-model="singleRestaurantData.restaurant.taking_order" 
+									                                  			value="true" 
+									                                  			:width="140"  
+									                                  			:height="30" 
+									                                  			:font-size="15" 
+									                                  			:color="{checked: 'green', unchecked: 'red'}" 
+									                                  			:labels="{checked: 'Yes', unchecked: 'No' }"
+								                                  			/>		
+																  		</div>
+									                        		</div>
+
+									                        		<div class="form-group">
+																  		<label for="inputAdminApproval3">
+																  			Sponsored
+																  		</label>
+																  		<div>
+																			<toggle-button 
+									                                  			:sync="true" 
+									                                  			v-model="singleRestaurantData.restaurant.sponsored" 
+									                                  			value="true" 
+									                                  			:width="140"  
+									                                  			:height="30" 
+									                                  			:font-size="15" 
+									                                  			:color="{checked: 'red', unchecked: 'green'}" 
+									                                  			:labels="{checked: 'Sponsored', unchecked: 'Not-sponsored' }"
+								                                  			/>		
 																  		</div>
 									                        		</div>
 									                        	</div>
@@ -724,7 +783,6 @@
 										                          	</div>
 									                          	</div>
 									                        </div>
-
 									                    </div>
 									                    <!-- /.card-body -->
 									              	</div>
@@ -743,31 +801,26 @@
 									          	</div>
 								            </div>
 									  	</div>
-
 									</div>
 
 									<div 
 										class="row" 
 										v-bind:key="2" 
 										v-show="step==2"
-									>
-									  
+									> 
 									  	<div class="col-sm-12">
 									        
 									        <h2 class="text-center mb-4 lead">Restaurant Address</h2>
 									      
 									        <div class="row">
-									          
 									          	<div class="col-sm-12">
 									            	<div class="card">
 									                    <div class="card-body">
-
 									                        <div class="form-group row">    
 									                          <label for="inputLocation3" class="col-sm-4 col-form-label text-right">
 									                          	Restaurant Location
 									                          </label>
 									                          	<div class="col-sm-8">
-									                    
 										                    		<vue-google-autocomplete
 										                    			id="restaurantEditAddress"
 			                        									classname="form-control"
@@ -781,7 +834,6 @@
 									                    			<!-- 
 									                              	<input type="text" class="form-control" v-model="restaurant.lat" placeholder="Restaurant Location" required>
 									                              	-->
-
 									                          	</div>   
 									                        </div>
 									                          
@@ -804,11 +856,69 @@
 									                                  	class="invalid-feedback" 
 									                                >
 																        {{ errors.restaurant.address }}
-																  	</div>
-										                              	
+																  	</div> 	
 									                          	</div>  
 									                        </div>
 
+									                        <div class="form-group row">
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          		Payment (cash)
+									                          	</label>
+									                          	<div class="col-sm-8 align-self-center">
+									                              	<div class="checkbox">
+								                                    	<toggle-button 
+									                                    	:sync="true" 
+									                                    	v-model="singleRestaurantData.restaurant.is_post_paid" 
+									                                    	value="true" 
+									                                    	:width="120"  
+									                                    	:height="30" 
+									                                    	:font-size="15" 
+									                                    	:color="{checked: 'green', unchecked: '#17a2b8'}" 
+									                                    	:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"
+									                                    />
+								                                	</div>	
+									                          	</div>  
+									                        </div>
+
+									                        <div class="form-group row">
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          		Parking
+									                          	</label>
+									                          	<div class="col-sm-8 align-self-center">
+									                              	<div class="checkbox">
+								                                    	<toggle-button 
+								                                    		value="true" 
+								                                    		:sync="true" 
+								                                    		v-model="singleRestaurantData.restaurant.has_parking" 
+								                                    		:width="120"  
+								                                    		:height="30" 
+								                                    		:font-size="15" 
+								                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
+								                                    		:labels="{checked: 'Available', unchecked: 'No Parking' }"
+							                                    		/>
+								                                	</div>	
+									                          	</div>  
+									                        </div>
+
+									                        <div class="form-group row">
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          		Self Service
+									                          	</label>
+									                          	<div class="col-sm-8 align-self-center">
+									                              	<div class="checkbox">
+								                                    	<toggle-button 
+								                                    		value ="true" 
+								                                    		:sync="true" 
+								                                    		v-model="singleRestaurantData.restaurant.is_self_service" 
+								                                    		:width="120"  
+								                                    		:height="30" 
+								                                    		:font-size="15" 
+								                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+								                                    		:labels="{checked: 'Yes', unchecked: 'No' }"
+								                                    	/>
+								                                	</div>	
+									                          	</div>  
+									                        </div>
 									                    </div>
 									                    <!-- /.card-body -->
 									              	</div>
@@ -859,9 +969,7 @@
 									          	<div class="col-sm-12">
 									            	<div class="card">
 									                    <div class="card-body">
-
 									                        <div class="form-group row mb-4">
-									                            
 									                          	<label for="inputServiceSchedule3" class="col-sm-2 col-form-label text-right">
 									                          		Service Schedule
 									                          	</label>
@@ -943,7 +1051,6 @@
 																        </div>
 																  	</div>
 									                          	</div> 
-									                            
 									                        </div>
 
 									                        <div class="form-group row mb-4">      
@@ -1029,83 +1136,6 @@
 														          	</div>
 									                          	</div>      
 									                        </div>
-
-									                        <div class="form-group row">
-									                          	<div class="col-sm-4">
-										                            <div class="form-group row">
-										                                
-										                              	<div class="col-sm-4 text-center">
-										                                	<label for="inputPayment3" class="col-form-label pb-0">
-										                                		Payment
-										                                	</label>
-										                                	<div>
-										                                		(cash)
-										                                	</div>
-										                                
-										                              	</div>
-
-										                              	<div class="col-sm-8 align-self-center text-center">
-										                                	<div class="checkbox">
-										                                    	<toggle-button 
-											                                    	:sync="true" 
-											                                    	v-model="singleRestaurantData.restaurant.is_post_paid" 
-											                                    	value="true" 
-											                                    	:width="120"  
-											                                    	:height="30" 
-											                                    	:font-size="15" 
-											                                    	:color="{checked: 'green', unchecked: '#17a2b8'}" 
-											                                    	:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"
-											                                    />
-										                                	</div>
-										                              	</div>
-										                          	</div>
-										                      	</div>
-									                          	<div class="col-sm-4">
-									                            	<div class="form-group row">
-									                              		<label for="inputParking3" class="col-sm-4 col-form-label text-center">
-									                              			Parking
-									                              		</label>
-									                              		<div class="col-sm-8 align-self-center text-center">
-									                                  		<div class="checkbox">
-									                                    		<toggle-button 
-										                                    		value="true" 
-										                                    		:sync="true" 
-										                                    		v-model="singleRestaurantData.restaurant.has_parking" 
-										                                    		:width="120"  
-										                                    		:height="30" 
-										                                    		:font-size="15" 
-										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
-										                                    		:labels="{checked: 'Available', unchecked: 'No Parking' }"
-									                                    		/>
-									                                		</div>
-									                              		</div>
-									                          		</div>
-									                      		</div>
-									                  			<div class="col-sm-4">
-									                            	<div class="form-group row">
-
-									                              		<label for="inputSelfService3" class="col-sm-4 col-form-label text-center">
-									                              			Self Service
-									                              		</label>
-									                                
-									                              		<div class="col-sm-8 align-self-center text-center">
-									                                  		<div class="checkbox">
-									                                    		<toggle-button 
-										                                    		value ="true" 
-										                                    		:sync="true" 
-										                                    		v-model="singleRestaurantData.restaurant.is_self_service" 
-										                                    		:width="120"  
-										                                    		:height="30" 
-										                                    		:font-size="15" 
-										                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
-										                                    		:labels="{checked: 'Yes', unchecked: 'No' }"
-										                                    	/>
-									                                		</div>
-									                              		</div>
-									                          		</div>
-									                      		</div>
-									                        </div>
-
 									                    </div>
 									                    <!-- /.card-body -->
 									              	</div>
