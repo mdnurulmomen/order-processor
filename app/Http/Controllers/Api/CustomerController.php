@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Order;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\CustomerFavourite;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\OrderResource;
+use App\Http\Resources\Api\OrderCollection;
 use App\Http\Resources\Api\UserFavouriteResource;
 use App\Http\Resources\Api\UserFavouriteCollection;
 
@@ -56,5 +60,65 @@ class CustomerController extends Controller
         $existingFavourite->delete();
 
         return $this->getUserFavourites($customer_address_id, $perPage);
+    }
+
+    public function getUserOrders($user, $perPage = false)
+    {
+        if ($perPage) {
+            
+            return new OrderCollection(
+                Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])
+                ->whereHasMorph('orderer', [ Customer::class ], 
+                    function($query) use($user) {
+                        $query->where('id', $user);
+                    }
+                )->paginate($perPage)
+            );
+
+        }
+        else {
+
+            return OrderResource::collection(
+                Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])
+                ->whereHasMorph('orderer', [ Customer::class ], 
+                    function($query) use($user) {
+                        $query->where('id', $user);
+                    }
+                )->get()
+            );
+
+        }
+    }
+
+    public function getUserReservations($user, $perPage = false)
+    {
+        if ($perPage) {
+            
+            return new OrderCollection(
+                Order::with(['scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])
+                ->whereHasMorph('orderer', [ Customer::class ], 
+                    function($query) use($user) {
+                        $query->where('id', $user);
+                    }
+                )
+                ->where('order_type', 'reservation')
+                ->paginate($perPage)
+            );
+
+        }
+        else {
+
+            return OrderResource::collection(
+                Order::with(['scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])
+                ->whereHasMorph('orderer', [ Customer::class ], 
+                    function($query) use($user) {
+                        $query->where('id', $user);
+                    }
+                )
+                ->where('order_type', 'reservation')
+                ->get()
+            );
+
+        }
     }
 }
