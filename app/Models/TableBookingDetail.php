@@ -25,4 +25,9 @@ class TableBookingDetail extends Model
     protected $dates = [
         'max_payment_time',
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
 }

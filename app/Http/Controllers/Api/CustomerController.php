@@ -6,11 +6,15 @@ use App\Models\Order;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\CustomerFavourite;
+use App\Models\TableBookingDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\OrderResource;
 use App\Http\Resources\Api\OrderCollection;
+use App\Http\Resources\Api\ReservationResource;
 use App\Http\Resources\Api\UserFavouriteResource;
+use App\Http\Resources\Api\ReservationCollection;
 use App\Http\Resources\Api\UserFavouriteCollection;
+use App\Http\Resources\Api\OrderedRestaurantResource;
 
 class CustomerController extends Controller
 {
@@ -72,7 +76,13 @@ class CustomerController extends Controller
                     function($query) use($user) {
                         $query->where('id', $user);
                     }
-                )->paginate($perPage)
+                )
+                ->where(function ($query) {
+                    $query->where('order_type', 'home-delivery')
+                    ->orWhere('order_type', 'serve-on-table')
+                    ->orWhere('order_type', 'take-away');
+                })
+                ->paginate($perPage)
             );
 
         }
@@ -84,7 +94,13 @@ class CustomerController extends Controller
                     function($query) use($user) {
                         $query->where('id', $user);
                     }
-                )->get()
+                )
+                ->where(function ($query) {
+                    $query->where('order_type', 'home-delivery')
+                    ->orWhere('order_type', 'serve-on-table')
+                    ->orWhere('order_type', 'take-away');
+                })
+                ->get()
             );
 
         }
@@ -92,33 +108,31 @@ class CustomerController extends Controller
 
     public function getUserReservations($user, $perPage = false)
     {
+        $reservations = TableBookingDetail::with('order')
+        ->whereHas('order', function ($query) use ($user) {
+            $query->where('order_type', 'reservation')
+            ->whereHasMorph('orderer', [ Customer::class ], 
+                function($query) use($user) {
+                    $query->where('id', $user);
+                }
+            );
+        });
+
         if ($perPage) {
             
-            return new OrderCollection(
-                Order::with(['scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])
-                ->whereHasMorph('orderer', [ Customer::class ], 
-                    function($query) use($user) {
-                        $query->where('id', $user);
-                    }
-                )
-                ->where('order_type', 'reservation')
-                ->paginate($perPage)
-            );
+            return new ReservationCollection($reservations->paginate($perPage));
 
         }
         else {
 
-            return OrderResource::collection(
-                Order::with(['scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])
-                ->whereHasMorph('orderer', [ Customer::class ], 
-                    function($query) use($user) {
-                        $query->where('id', $user);
-                    }
-                )
-                ->where('order_type', 'reservation')
-                ->get()
-            );
+            return ReservationResource::collection($reservations->get());
 
         }
+    }
+
+    public function showOrderedRestaurants($order)
+    {
+        $expectedOrder = Order::findOrFail($order);
+        return OrderedRestaurantResource::collection($expectedOrder->restaurants);
     }
 }

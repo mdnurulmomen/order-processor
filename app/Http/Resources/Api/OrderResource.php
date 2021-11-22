@@ -28,11 +28,11 @@ class OrderResource extends JsonResource
             'delivery_fee' => $this->when($this->delivery_fee, $this->delivery_fee),
             'net_payable' => $this->net_payable,
             'payment_method' => $this->payment_method,
-            'payment' => $this->when($this->payment_method != 'cash', $this->payment),
-            'delivery' => $this->when($this->delivery, $this->delivery),
+            'payment' => $this->when($this->payment_method != 'cash', $this->payment ? $this->payment->payment_id : false),
+            'delivery' => $this->when($this->delivery, $this->delivery ? $this->delivery->additional_info : false),
             // 'orderer' => $this->orderer,
             'confirmation' => $this->customer_confirmation,
-            'restaurants' => OrderedRestaurantResource::collection($this->restaurants),
+            'restaurants' => /*OrderedRestaurantResource::collection($this->restaurants)*/ route('api.v1.ordered-restaurants.show', ['order' => $this->id]),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

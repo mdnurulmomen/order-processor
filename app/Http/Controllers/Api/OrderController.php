@@ -197,6 +197,13 @@ class OrderController extends Controller
         }
         
         $expectedOrder = Order::find($request->reservation->order_id);
+
+        if ($expectedOrder->customer_confirmation != -1) {
+            return response()->json([
+                'message' => 'Already confirmed or cancelled reservation'
+            ], 422);
+        }
+        
         $expectedOrderedRestaurant = $expectedOrder->restaurants->first();
         // $expectedOrderedRestaurant = OrderedRestaurant::find($request->reservation->ordered_restaurant_id);
 

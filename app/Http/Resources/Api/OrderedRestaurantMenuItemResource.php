@@ -3,8 +3,8 @@
 namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Api\SelectedItemVariationResource;
-use App\Http\Resources\Api\AdditionalOrderedAddonResource;
+// use App\Http\Resources\Api\SelectedItemVariationResource;
+// use App\Http\Resources\Api\AdditionalOrderedAddonResource;
 
 
 class OrderedRestaurantMenuItemResource extends JsonResource
