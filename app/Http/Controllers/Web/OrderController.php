@@ -71,12 +71,25 @@ class OrderController extends Controller
 	public function confirmNewOrder(Request $request, $perPage)
 	{
 	 	$request->validate([
-	 		'id' => 'required|exists:orders,id'
+	 		'id' => 'required|exists:orders,id',
+	 		'order_type' => 'required|in:home-delivery,serve-on-table,take-away'
 	 	]);
+
+	 	/*
+	 	if ($request->order_type == 'reservation') {
+	 		
+	 		return response()->json(
+	 			[
+	 				'errors' => ['order' => ['Reservation is confirmed through API.']]
+	 			], 422
+	 		);
+
+	 	}
+	 	 */
 
 	 	$orderToConfirm = Order::findOrFail($request->id);
 	 	
-	 	if ($orderToConfirm->customer_confirmation) {			// -1
+	 	if ($orderToConfirm->customer_confirmation) {			// -1 / 1
 
 		 	$this->confirmCustomerOrderRequest($orderToConfirm);
 	 		$this->makeRestaurantOrderCalls($orderToConfirm);

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
-use App\Models\Customer;
 use App\Models\Restaurant;
 use App\Events\UpdateAdmin;
 use Illuminate\Http\Request;
@@ -16,39 +15,11 @@ use App\Models\RestaurantMenuItem;
 // use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderRequest;
-use App\Http\Resources\Api\OrderResource;
 use App\Http\Requests\Api\ReservationRequest;
-use App\Http\Resources\Api\OrderCollection;
 use App\Http\Requests\Api\ReservationConfirmationRequest;
 
 class OrderController extends Controller
 {
-    public function getUserOrders($user, $perPage = false)
-    {
-        if ($perPage) {
-            
-            return new OrderCollection(
-                Order::whereHasMorph('orderer', [ Customer::class ], 
-                    function($query) use($user) {
-                        $query->where('id', $user);
-                    }
-                )->paginate($perPage)
-            );
-
-        }
-        else {
-
-            return OrderResource::collection(
-                Order::whereHasMorph('orderer', [ Customer::class ], 
-                    function($query) use($user) {
-                        $query->where('id', $user);
-                    }
-                )->get()
-            );
-
-        }
-    }
-
     public function createNewOrder(OrderRequest $request)
     {        
         $newOrder = Order::create([
@@ -194,7 +165,7 @@ class OrderController extends Controller
 
         $reservationMsg = 'Reservation request has been accepted';
 
-        if ($newOrder->customer_confirmation==1 && ! empty($request->menuItems)) {
+        if ($newOrder->customer_confirmation==1 && ! empty($request->menuItems) && ! empty($request->payment->payment_id)) {
 
             $this->saveNewPayment($newOrder, $request->payment->payment_id);
             $this->makeRestaurantOrderRecord($newOrder, $request->reservation->restaurant_id);
@@ -219,7 +190,7 @@ class OrderController extends Controller
     {
         $expectedReservation = TableBookingDetail::find($request->reservation->reservation_id);
 
-        if (! $expectedReservation->booking_confirmation && $expectedReservation->max_payment_time->lessThan(now())) {
+        if (/* ! $expectedReservation->booking_confirmation && */ $expectedReservation->max_payment_time->lessThan(now())) {
             return response()->json([
                 'message' => 'Payment time is over'
             ], 403);
@@ -230,7 +201,7 @@ class OrderController extends Controller
         // $expectedOrderedRestaurant = OrderedRestaurant::find($request->reservation->ordered_restaurant_id);
 
         $this->confirmOrder($expectedOrder);
-        $this->confirmTableReservation($expectedReservation);
+        // $this->confirmTableReservation($expectedReservation);
         $this->saveNewPayment($expectedOrder, $request->payment->payment_id);
         $this->makeRestaurantOrderRecord($expectedOrder, $request->reservation->restaurant_id);
         $this->makeOrderItems($expectedOrderedRestaurant, $request->menuItems);
@@ -245,12 +216,14 @@ class OrderController extends Controller
         ], 200);
     }
 
+    /*
     private function confirmTableReservation(TableBookingDetail $table)
     {
         $table->update([
             'booking_confirmation' => 1
         ]);
     }
+    */
 
     private function confirmOrder(Order $order)
     {
@@ -297,7 +270,7 @@ class OrderController extends Controller
         $newReservation = $restaurant->reservations()->create([
             'guest_number'=>$request->reservation->guest_number,
             'mobile'=>$request->reservation->mobile,
-            'booking_confirmation'=>($request->payment->payment_method!=='cash' && $request->payment->payment_id) ? 1 : 0,   // cancelled by default
+            // 'booking_confirmation'=>($request->payment->payment_method!=='cash' && $request->payment->payment_id) ? 1 : 0,   // cancelled by default
             'order_id'=>$orderId,
             'max_payment_time'=> now()->addMinutes(60),          // delay time should be as per restaurant choice
         ]);

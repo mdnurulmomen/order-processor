@@ -18,9 +18,10 @@ class OrderResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'asap' => $this->whenLoaded('asap'),
-            'scheduled' => $this->whenLoaded('scheduled'),
-            'cutlery_added' => $this->whenLoaded('cutleryAdded'),
+            'order_type' => $this->order_type,
+            'asap' => /*$this->whenLoaded('asap')*/ $this->when($this->asap, $this->asap ? true : false),
+            'scheduled' => /*$this->whenLoaded('scheduled')*/ $this->when($this->scheduled, $this->scheduled ? $this->scheduled->order_schedule : false),
+            'cutlery_added' => /*$this->whenLoaded('cutleryAdded')*/ $this->when($this->cutleryAdded, $this->cutleryAdded ? true : false),
             'order_price' => $this->order_price,
             'vat' => $this->vat,
             'discount' => $this->discount,

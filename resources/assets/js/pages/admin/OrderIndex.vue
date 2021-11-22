@@ -686,7 +686,7 @@
 							<button 
 						  		type="button" 
 						  		class="btn btn-success flex-fill"
-						  		v-if="orderToBeConfirmed(singleOrderData.order) && !reservationOrder(singleOrderData.order)" 
+						  		v-if="orderToBeConfirmed(singleOrderData.order) && ! reservationOrder(singleOrderData.order)" 
 						  		@click="confirmOrder()" 
 						  		:disabled="formSubmitionMode" 
 						  	>
@@ -1434,10 +1434,15 @@
 			// initial class for every order
 			initialOrderClass(order) {
 
+				/*
+				if (this.orderToBeConfirmed(order)) {
+					return 'bg-dark'
+				}
+				*/
 				if (this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
 					return 'bg-secondary'
 				}
-				else if(!this.reservationOrder(order) && this.orderToBeConfirmed(order)){
+				else if(! this.reservationOrder(order) && this.orderToBeConfirmed(order)){
 					return 'bg-dark';
 				}
 				else if (this.orderConfirmed(order)) {
@@ -1448,13 +1453,18 @@
 			},
 			// before confirmation
 			initialOrder(order) {
-
+				/*
+				if (this.orderToBeConfirmed(order)) {
+					return "Unconfirmed";
+				}
+				*/
 				if (this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
 					return "Unconfirmed Reservation";
 				}
-				else if (!this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
+				else if (! this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
 					return 'To Be Confirmed';
-				}else if(this.cancelledOrder(order)) {
+				}
+				else if(this.cancelledOrder(order)) {
 					return 'Cancelled by Customer';
 				}
 				else
@@ -1475,10 +1485,15 @@
 			},
 			orderCallConfirmationClass(order) {
 				
+				/*
+				if (this.orderToBeConfirmed(order)) {
+					return 'badge-dark';
+				}
+				*/
 				if (this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
 					return 'badge-secondary';
 				}
-				else if (!this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
+				else if (! this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
 					return 'badge-dark';
 				}
 				else if (this.orderConfirmed(order)) {
@@ -1495,11 +1510,14 @@
 				
 				if (this.cancelledOrder(order)) {
 					return 'Cancelled';
-				}else if (this.orderConfirmed(order)) {
+				}
+				else if (this.orderConfirmed(order)) {
 					return 'Confirmed';
-				}else if (this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
+				}
+				else if (this.reservationOrder(order) && this.orderToBeConfirmed(order)) {
 					return "Unconfirmed Reservation";
-				}else
+				}
+				else
 					return 'To Be Confirmed';
 
 			},
