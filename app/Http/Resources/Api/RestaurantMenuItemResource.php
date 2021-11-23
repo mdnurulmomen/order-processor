@@ -35,7 +35,19 @@ class RestaurantMenuItemResource extends JsonResource
             // 'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
             // 'menu_categories' => RestaurantMenuCategoryResource::collection($this->restaurantMenuCategories),
             
-            'menu_categories' => RestaurantMenuCategoryDetailResource::collection($this->menuCategories),
+            // 'menu_categories' => RestaurantMenuCategoryDetailResource::collection($this->menuCategories),
+            
+            'id' => $this->id,
+            'name' => $this->name,
+            'detail' => $this->detail,
+            'has_variation' => $this->has_variation,
+            'has_addon' => $this->has_addon,
+            // 'variations' => $this->has_variation ? MenuItemVariationResource::collection($this->restaurantMenuItemVariations) : false,
+            // 'addons' => $this->has_addon ? MenuItemAddonResource::collection($this->restaurantMenuItemAddons) : false,
+            // 'price' => $this->price,
+            'customizable' => $this->customizable,
+            // 'item_stock' => $this->item_stock,
+            
         ];
     }
 }

@@ -16,7 +16,7 @@ class SelectedItemVariationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'restaurant_menu_item_variation' => new RestaurantMenuItemVariationResource($this->restaurantMenuItemVariation),
+            'restaurant_menu_item_variation' => /* new RestaurantMenuItemVariationResource($this->restaurantMenuItemVariation()->withTrashed()->first()) */ $this->restaurantMenuItemVariation()->withTrashed()->first()->variation->name,
         ];
     }
 }

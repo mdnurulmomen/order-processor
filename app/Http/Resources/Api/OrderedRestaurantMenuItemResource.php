@@ -20,7 +20,7 @@ class OrderedRestaurantMenuItemResource extends JsonResource
         return [
             'restaurant_menu_item_id' => $this->restaurant_menu_item_id,
             'quantity' => $this->quantity,
-            'restaurant_menu_item' => $this->restaurantMenuItem,
+            'restaurant_menu_item' => new RestaurantMenuItemResource($this->restaurantMenuItem),
             'selected_item_variation' => $this->when($this->restaurantMenuItem->has_variation, new SelectedItemVariationResource($this->selectedItemVariation)),
             'additional_ordered_addons' => AdditionalOrderedAddonResource::collection($this->additionalOrderedAddons),
             'custom_instruction' => $this->when($this->orderedItemCustomization, $this->orderedItemCustomization ? $this->orderedItemCustomization->custom_instruction : 'No Custom Instruction'),

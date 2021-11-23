@@ -28,7 +28,7 @@ class OrderResource extends JsonResource
             'delivery_fee' => $this->when($this->delivery_fee, $this->delivery_fee),
             'net_payable' => $this->net_payable,
             'payment_method' => $this->payment_method,
-            'payment' => $this->when($this->payment_method != 'cash', $this->payment ? $this->payment->payment_id : false),
+            'payment_id' => $this->when($this->payment_method != 'cash', $this->payment ? $this->payment->payment_id : false),
             'delivery' => $this->when($this->delivery, $this->delivery ? $this->delivery->additional_info : false),
             // 'orderer' => $this->orderer,
             'confirmation' => $this->customer_confirmation,

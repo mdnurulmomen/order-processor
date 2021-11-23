@@ -15,7 +15,7 @@ use App\Http\Resources\Api\RestaurantResource;
 use App\Http\Resources\Api\RestaurantReviewResource;
 use App\Http\Resources\Api\SearchedRestaurantResource;
 use App\Http\Resources\Api\RestaurantReviewCollection;
-use App\Http\Resources\Api\RestaurantMenuItemResource;
+// use App\Http\Resources\Api\RestaurantMenuItemResource;
 use App\Http\Resources\Api\SearchedRestaurantCollection;
 use App\Http\Resources\Api\SponsoredRestaurantCollection;
 use App\Http\Resources\Api\SponsoredRestaurantResource;
@@ -178,7 +178,7 @@ class RestaurantController extends Controller
 
     }
 
-    public function getSponsoredMenuItems(Request $request)
+    public function getPromotedMenuItems(Request $request)
     {
       $request->validate([
         'latitude' => 'required|string',

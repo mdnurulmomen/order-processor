@@ -24,6 +24,8 @@ class RestaurantMenuItemDetailResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'detail' => $this->detail,
+            'has_variation' => $this->has_variation,
+            'has_addon' => $this->has_addon,
             'variations' => $this->has_variation ? MenuItemVariationResource::collection($this->restaurantMenuItemVariations) : false,
             'addons' => $this->has_addon ? MenuItemAddonResource::collection($this->restaurantMenuItemAddons) : false,
             'price' => $this->price,

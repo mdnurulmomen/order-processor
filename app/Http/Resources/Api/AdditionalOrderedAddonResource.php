@@ -17,8 +17,8 @@ class AdditionalOrderedAddonResource extends JsonResource
     {
         return [
             
-            'restaurant_menu_item_addon' => new RestaurantMenuItemAddonResource($this->restaurantMenuItemAddon),
-            'restaurant_menu_item_addon_id' => $this->restaurant_menu_item_addon_id,
+            'restaurant_menu_item_addon' => /*new RestaurantMenuItemAddonResource($this->restaurantMenuItemAddon)*/ $this->restaurantMenuItemAddon->addon->name,
+            // 'restaurant_menu_item_addon_id' => $this->restaurant_menu_item_addon_id,
             'quantity' => $this->quantity,
             
         ];

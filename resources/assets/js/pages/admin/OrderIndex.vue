@@ -47,14 +47,12 @@
 									</div>
 								</div>
 							</div>
-
 						</div>
 
 						<div class="card-body">
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-sm-12">
-
 									  	<ul 
 										  	class="nav nav-tabs nav-justified mb-2" 
 										  	v-show="query === ''"
@@ -265,6 +263,7 @@
 				    				// for each restaurants in order
 				    				// after call confirmation
 				    			-->
+
 				    			<div 
 				    				class="progress-bar progress-bar-striped progress-bar-animated" 
 				    				v-if="singleOrderData.order.restaurant_acceptances.length" 
@@ -280,6 +279,7 @@
 								<!-- 
 									no option should be shown without picking/cancelling every restaurant orders 
 								-->
+
 								<div 
 				    				class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
 									style="width:15%"
@@ -289,7 +289,6 @@
 				    					deliveredOrServedOrder(singleOrderData.order)
 				    				}}
 								</div>
-
 							</div>
 
 							<ul class="nav nav-tabs justify-content-center mb-4" role="tablist">
@@ -317,7 +316,6 @@
 
 							<!-- Tab panes -->
 							<div class="tab-content">
-
 								<div id="orderer" class="container tab-pane active">
 									<div class="row">
 					            		<div class="col-sm-12">
@@ -385,6 +383,7 @@
 								                  	{{ singleOrderData.order.id }}
 								                </div>
 								            </div>
+								            
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Type 
@@ -394,6 +393,7 @@
 								                	{{ singleOrderData.order.order_type | capitalize }}
 								                </div>
 								            </div>
+
 								            <div class="form-group row" v-if="singleOrderData.order.asap || singleOrderData.order.scheduled">		
 							              		<label class="col-sm-6 text-right">
 							              			ASAP/Scheduled
@@ -405,6 +405,7 @@
 								                  	}}
 								                </div>	
 								            </div> 
+
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Price
@@ -413,6 +414,7 @@
 								                  	{{ singleOrderData.order.order_price }}
 								                </div>	
 								            </div>
+
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Vat
@@ -421,6 +423,7 @@
 								                  	{{ singleOrderData.order.vat }}
 								                </div>	
 								            </div>
+
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Discount
@@ -429,6 +432,7 @@
 								                  	{{ singleOrderData.order.discount }}
 								                </div>	
 								            </div>
+
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Delivery-fee
@@ -437,6 +441,7 @@
 								                  	{{ singleOrderData.order.delivery_fee }}
 								                </div>	
 								            </div> 
+
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Payable Price
@@ -445,6 +450,7 @@
 								                  	{{ singleOrderData.order.net_payable }}
 								                </div>	
 								            </div> 
+
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Payment type
@@ -453,7 +459,8 @@
 								                  	{{ singleOrderData.order.payment_method | capitalize }}
 								                  	(Payment id : {{ singleOrderData.order.payment ? singleOrderData.order.payment.payment_id : 'NA' }})
 								                </div>	
-								            </div> 
+								            </div>
+
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Cutlery
