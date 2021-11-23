@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrderResource extends JsonResource
+class UserOrderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,8 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
+        // return parent::toArray($request);
+
         return [
             'id' => $this->id,
             'order_type' => $this->order_type,
@@ -30,15 +32,7 @@ class OrderResource extends JsonResource
             'delivery' => $this->when($this->delivery, $this->delivery ? $this->delivery->additional_info : false),
             // 'orderer' => $this->orderer,
             'confirmation' => $this->customer_confirmation,
-            'restaurants' => OrderedRestaurantResource::collection($this->restaurants) /*route('api.v1.ordered-restaurants.show', ['order' => $this->id])*/,
-            'restaurant_acceptances' => OrderedRestaurantAcceptanceResource::collection($this->restaurantAcceptances),
-            'rider_assignment' => $this->riderAssignment,
-            'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->orderReadyConfirmations),
-            'rider_food_pick_confirmations' => OrderPickUpProgressionResource::collection($this->riderFoodPickConfirmations),
-            'rider_delivery_confirmation' => $this->riderDeliveryConfirmation ? new RiderDeliveryResource($this->riderDeliveryConfirmation) : null,
-            'order_serve_confirmation' => $this->orderServeConfirmation,
-            'customer_order_cancelation' => $this->customerOrderCancelation,
-            // 'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->restaurantOrderCancelations),
+            'restaurants' => /*OrderedRestaurantResource::collection($this->restaurants)*/ route('api.v1.ordered-restaurants.show', ['order' => $this->id]),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

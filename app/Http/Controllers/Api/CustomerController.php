@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\CustomerFavourite;
 use App\Models\TableBookingDetail;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\OrderResource;
-use App\Http\Resources\Api\OrderCollection;
+use App\Http\Resources\Api\UserOrderResource;
+use App\Http\Resources\Api\UserOrderCollection;
 use App\Http\Resources\Api\ReservationResource;
 use App\Http\Resources\Api\UserFavouriteResource;
 use App\Http\Resources\Api\ReservationCollection;
@@ -70,8 +70,8 @@ class CustomerController extends Controller
     {
         if ($perPage) {
             
-            return new OrderCollection(
-                Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])
+            return new UserOrderCollection(
+                Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
@@ -88,8 +88,8 @@ class CustomerController extends Controller
         }
         else {
 
-            return OrderResource::collection(
-                Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])
+            return UserOrderResource::collection(
+                Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);

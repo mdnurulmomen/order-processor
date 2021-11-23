@@ -15,7 +15,8 @@ class OrderedRestaurantResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'restaurant' => $this->restaurant->name,
+            'id' => $this->restaurant->id,
+            'name' => $this->restaurant->name,
             'items' => OrderedRestaurantMenuItemResource::collection($this->items),
         ];
     }

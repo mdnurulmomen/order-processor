@@ -34,7 +34,8 @@ class UserLoginResponseResource extends JsonResource
 
             'addresses' => UserAddressResource::collection($this->addresses),
             'coupons' => $this->coupons,
-            'orders' => /* OrderResource::collection($this->orders) */ route('api.v1.user-orders.index', [ 'user' => $this->id ])
+            'orders' => /* OrderResource::collection($this->orders) */ route('api.v1.user-orders.index', [ 'user' => $this->id, 'perPage' => 10, 'page=1' ]),
+            'reservations' => /*OrderResource::collection($this->orders)*/ route('api.v1.user-reservations.index', ['user' => $this->id, 'perPage' => 10, 'page=1'])
             
         ];
     }

@@ -15,6 +15,7 @@ use App\Models\RestaurantMenuItem;
 // use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderRequest;
+use App\Http\Resources\Api\OrderResource;
 use App\Http\Requests\Api\ReservationRequest;
 use App\Http\Requests\Api\ReservationConfirmationRequest;
 
@@ -221,6 +222,11 @@ class OrderController extends Controller
         return response()->json([
             'success' => 'Reservation has been confirmed'
         ], 200);
+    }
+
+    public function getOrderDetails($order)
+    {
+        return new OrderResource(Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])->findOrFail($order));
     }
 
     /*

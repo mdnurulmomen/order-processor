@@ -12,6 +12,7 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 /*
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -48,6 +49,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::post('/sponsored-restaurants', 'RestaurantController@getSponsoredRestaurants')->name('sponsored-restaurants.index');
 				Route::post('/promoted-menu-items', 'RestaurantController@getPromotedMenuItems')->name('promoted-menu-items.index');
 
+				Route::get('/orders/{order}', 'OrderController@getOrderDetails')->name('orders.show');
 				Route::get('/user-orders/{user}/{perPage?}', 'CustomerController@getUserOrders')->name('user-orders.index');
 				Route::get('/user-reservations/{user}/{perPage?}', 'CustomerController@getUserReservations')->name('user-reservations.index');
 				

@@ -23,7 +23,7 @@ class PromotedMenuItemResource extends JsonResource
             'variations' => $this->has_variation ? MenuItemVariationResource::collection($this->restaurantMenuItemVariations) : false,
             'customizable' => $this->customizable,
             'item_stock' => $this->item_stock,
-            'restaurant_menu_category_id' => $this->restaurant_menu_category_id,
+            // 'restaurant_menu_category_id' => $this->restaurant_menu_category_id,
             'restaurant_id' => $this->restaurantMenuCategory->restaurant_id,
             'restaurant_name' => $this->restaurantMenuCategory->restaurant->name
         ];

@@ -324,7 +324,7 @@ class OrderController extends Controller
  		// checking if order is for home-delivery, order is from customer and any rider notification is already broadcasted
 		if ($orderToConfirm->order_type==='home-delivery' && $orderToConfirm->orderer instanceof Customer) {
 
-			if (!$orderToConfirm->riderCall()->exists()) {
+			if (! $orderToConfirm->riderCall()->exists()) {
 
 				// make rider call with RiderDeliveryRecord
 				$this->makeRiderOrderCall($orderToConfirm);

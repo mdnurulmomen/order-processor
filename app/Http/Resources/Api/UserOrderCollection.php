@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class OrderCollection extends ResourceCollection
+class UserOrderCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.

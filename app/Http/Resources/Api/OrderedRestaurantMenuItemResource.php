@@ -18,8 +18,8 @@ class OrderedRestaurantMenuItemResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'restaurant_menu_item_id' => $this->restaurant_menu_item_id,
             'quantity' => $this->quantity,
+            'restaurant_menu_item_id' => $this->restaurant_menu_item_id,
             'restaurant_menu_item' => new RestaurantMenuItemResource($this->restaurantMenuItem),
             'selected_item_variation' => $this->when($this->restaurantMenuItem->has_variation, new SelectedItemVariationResource($this->selectedItemVariation)),
             'additional_ordered_addons' => AdditionalOrderedAddonResource::collection($this->additionalOrderedAddons),
