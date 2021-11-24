@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Api\RestaurantMenuItemDetailResource;
+// use App\Http\Resources\Api\RestaurantMenuItemDetailResource;
 
 class RestaurantMenuCategoryDetailResource extends JsonResource
 {
