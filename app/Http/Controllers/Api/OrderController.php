@@ -364,7 +364,7 @@ class OrderController extends Controller
     private function makeRestaurantOrderCalls(Order $order)
     {
         // checking if already has made
-        if (!$order->restaurantAcceptances()->exists()) {
+        if (! $order->restaurantAcceptances()->exists()) {
            
             foreach ($order->restaurants as $orderedRestaurant) {
 

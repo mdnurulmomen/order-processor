@@ -62,6 +62,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::post('reservations', 'OrderController@createNewReservation')->name('reservations.create');
 				Route::post('reservation-confirmations', 'OrderController@confirmReservation')->name('reservation-confirmations.create');
 
+				Route::post('/logout', 'CustomerController@logout')->name('logout');
+
 			});
 
 			Route::any('{any}', function(){

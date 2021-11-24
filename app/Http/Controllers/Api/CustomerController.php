@@ -135,4 +135,13 @@ class CustomerController extends Controller
         $expectedOrder = Order::findOrFail($order);
         return OrderedRestaurantResource::collection($expectedOrder->restaurants);
     }
+
+    public function logout(Request $request)
+    {
+        return [
+            "title" => "Thank You Title",
+            "preview" => "uploads/application/thanks.jpg",
+            "paragraph" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat."
+        ];
+    }
 }
