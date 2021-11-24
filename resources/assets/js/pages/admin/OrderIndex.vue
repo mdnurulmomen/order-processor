@@ -516,7 +516,7 @@
 									    			</span>
 
 									    			<span
-									    				v-if="singleOrderData.order.restaurant_order_cancelations.length" 
+									    				v-if="singleOrderData.order.hasOwnProperty('restaurant_order_cancelations') && singleOrderData.order.restaurant_order_cancelations.length" 
 									    				v-for="restaurantOrderCancelation in singleOrderData.order.restaurant_order_cancelations" 
 									    				v-show="cancelledLaterOrInitially(singleOrderData.order, restaurantOrderCancelation)" 
 									    				class="badge badge-secondary d-block"
@@ -720,8 +720,8 @@
 						      			@click="showRiderCancelationModal()" 
 						      			:disabled="Boolean(formSubmitionMode || !riderAssigned(singleOrderData.order) || riderPickedOrder(singleOrderData.order))"
 					      			>
-					        			<i class="fas fa-cancel"></i>
-					        			Cancelled by Rider
+					        			<i class="fas fa-times text-danger"></i>
+					        			By Rider
 					      			</button>
 									<!-- if not already cancelled order -->
 									<button 
@@ -730,7 +730,8 @@
 								  		@click="showCustomerCancelationModal()" 
 								  		:disabled="Boolean(formSubmitionMode || cancelledOrder(singleOrderData.order) || orderConfirmed(singleOrderData.order))"  
 								  	>
-								  		Cancelled by Customer
+								  		<i class="fas fa-times text-danger"></i>
+								  		By Customer
 								  	</button>
 
 									<!-- disabled if no restaurant accepted the order or already picked -->
@@ -740,8 +741,8 @@
 						      			@click="showRestaurantCancelationModal()" 
 						      			:disabled="Boolean(formSubmitionMode || allRestaurantOrderPicked(singleOrderData.order) || allRestaurantsCancelledOrder(singleOrderData.order))"
 					      			>
-					        			<i class="fas fa-cancel"></i>
-					        			Cancelled by Restaurant
+					        			<i class="fas fa-times text-danger"></i>
+					        			By Restaurant
 					      			</button>
 								</div>
 							</div>
@@ -792,32 +793,31 @@
 				              		</label>
 
 					                <div class="col-sm-8"> 
-
 					                	<select 
 											class="form-control" 
-											v-model="singleOrderData.orderCancelation.cancelledBy" 
-											@change="errors.orderCancelation.cancelledBy=null;submitCancelationForm = true;" 
+											v-model="singleOrderData.orderCancelation.canceller" 
+											@change="errors.orderCancelation.canceller=null;submitCancelationForm = true;" 
 										>
 											<option :value="null" selected="true" disabled="true">
-												Pick Cancelling Entity 
+												Pick Canceller Entity 
 											</option>
 											<option 
-												v-for="cancelledBy in ['customer', 'restaurants', 'rider']" 
-												:value="cancelledBy" 
+												v-for="canceller in ['customer', 'restaurants', 'rider']" 
+												:value="canceller" 
 											>
-												{{ cancelledBy | capitalize }}
+												{{ canceller | capitalize }}
 											</option>
 										</select>
 
-					                	<div class="text-danger" v-if="errors.orderCancelation.cancelledBy">
-								        	{{ errors.orderCancelation.cancelledBy }}
+					                	<div class="text-danger" v-if="errors.orderCancelation.canceller">
+								        	{{ errors.orderCancelation.canceller }}
 								  		</div>
 					                </div>	
 				              	</div>
 
 				              	<div 
 				              		class="form-group row" 
-				              		v-if="singleOrderData.orderCancelation.cancelledBy==='restaurants'"
+				              		v-if="singleOrderData.orderCancelation.canceller==='restaurants'"
 				              	>	
 				              		<label 
 				              			for="inputMenuName3" 
@@ -825,8 +825,8 @@
 				              		>
 				              			Restaurant Name
 				              		</label>
-					                <div class="col-sm-8">
 
+					                <div class="col-sm-8">
 										<select 
 											class="form-control" 
 											v-model="singleOrderData.orderCancelation.restaurant_id" 
@@ -850,8 +850,7 @@
 					                </div>
 				              	</div>
 
-				              	<div class="form-group row">
-					              		
+				              	<div class="form-group row">	
 				              		<label 
 				              			for="inputMenuName3" 
 				              			class="col-sm-4 col-form-label text-right"
@@ -860,7 +859,6 @@
 				              		</label>
 
 					                <div class="col-sm-8">
-
 	                                	<select 
 											class="form-control" 
 											v-model="singleOrderData.orderCancelation.reason_id" 
@@ -936,7 +934,7 @@
 			// restaurant : {},
 			reason_id : null,
 			restaurant_id : null,
-			cancelledBy : 'customer',
+			canceller : 'customer',
 		}
 	};
 
@@ -963,7 +961,7 @@
       		orderCancelation : {
       			reason : null,
       			restaurant : null,
-      			cancelledBy : null,
+      			canceller : null,
       		},
       	},
 
@@ -1198,28 +1196,22 @@
 					});
 			},
 			showCustomerCancelationModal() {
-				// this.fetchExpectedOrderDetail(order);
-				// console.log(this.singleOrderData.order);
-				this.singleOrderData.orderCancelation.cancelledBy = 'customer';
+				this.$set(this.singleOrderData.orderCancelation, 'canceller', 'customer');
 				$("#modal-restaurantOrRider-orderCancelation").modal("show");
 			},
 			showRiderCancelationModal() {
-				// this.fetchExpectedOrderDetail(order);
-				// console.log(this.singleOrderData.order);
-				this.singleOrderData.orderCancelation.cancelledBy = 'rider';
+				this.$set(this.singleOrderData.orderCancelation, 'canceller', 'rider');
 				$("#modal-restaurantOrRider-orderCancelation").modal("show");
 			},
 			showRestaurantCancelationModal() {
-				// this.fetchExpectedOrderDetail(order);
-				// console.log(this.singleOrderData.order);
-				this.singleOrderData.orderCancelation.cancelledBy = 'restaurants';
+				this.$set(this.singleOrderData.orderCancelation, 'canceller', 'restaurants');
 				$("#modal-restaurantOrRider-orderCancelation").modal("show");
 			},
 			cancelOrder() {
 
-				// if (this.singleOrderData.orderCancelation.cancelledBy==='restaurants' || this.singleOrderData.orderCancelation.cancelledBy === 'rider') {
+				// if (this.singleOrderData.orderCancelation.canceller==='restaurants' || this.singleOrderData.orderCancelation.canceller === 'rider') {
 
-					if (this.singleOrderData.orderCancelation.cancelledBy==='restaurants' && !this.singleOrderData.orderCancelation.restaurant_id) {	
+					if (this.singleOrderData.orderCancelation.canceller==='restaurants' && ! this.singleOrderData.orderCancelation.restaurant_id) {	
 
 						this.errors.orderCancelation.restaurant = 'Restaurant name is required';
 						this.submitCancelationForm = false;
@@ -1284,7 +1276,7 @@
 			allRestaurantsCancelledOrder(order) {
 				if (Object.keys(order).length) {
 
-					return order.restaurant_acceptances.length == order.restaurant_order_cancelations.length ? true : false;
+					return order.hasOwnProperty('restaurant_order_cancelations') && order.restaurant_acceptances.length == order.restaurant_order_cancelations.length ? true : false;
 				}
 
 				return false;
@@ -1377,7 +1369,7 @@
 				// console.log(this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant));
 
 				// if current restaurant cancelled
-				if (order.restaurant_order_cancelations.length && typeof this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant) !== 'undefined') {
+				if (order.hasOwnProperty('restaurant_order_cancelations') && order.restaurant_order_cancelations.length && typeof this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant) !== 'undefined') {
 
 					return this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant).restaurant.name + ' cancelled order';
 
