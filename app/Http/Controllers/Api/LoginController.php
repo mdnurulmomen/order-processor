@@ -30,7 +30,7 @@ class LoginController extends Controller
     public function userLogin(Request $request)
     {
         $request->validate([
-            'usernameOrEmailOrMobile' => 'required|string',
+            'username_or_email_or_mobile' => 'required|string',
             'password' => 'required|string',
         ]);
 
@@ -46,21 +46,21 @@ class LoginController extends Controller
     private function attemptUserLoginWithMobile(Request $request)
     {
         return \Auth::guard()->attempt(
-            [ 'mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1 ], $request->filled('remember')
+            [ 'mobile'=>$request->username_or_email_or_mobile, 'password'=>$request->password, 'active'=>1 ], $request->filled('remember')
         );   
     }
 
     private function attemptUserLoginWithUsername(Request $request)
     {
         return \Auth::guard()->attempt(
-            [ 'user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1 ], $request->filled('remember')
+            [ 'user_name'=>$request->username_or_email_or_mobile, 'password'=>$request->password, 'active'=>1 ], $request->filled('remember')
         );   
     }
 
     private function attemptUserLoginWithEmail(Request $request)
     {
         return \Auth::guard()->attempt(
-            [ 'email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1 ], $request->filled('remember')
+            [ 'email'=>$request->username_or_email_or_mobile, 'password'=>$request->password, 'active'=>1 ], $request->filled('remember')
         );   
     }
 
@@ -97,7 +97,7 @@ class LoginController extends Controller
      */
     private function username()
     {
-        return 'usernameOrEmailOrMobile';
+        return 'username_or_email_or_mobile';
     }
 
 }

@@ -38,9 +38,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				
 				Route::post('user-password', 'ProfileController@updateUserPassword')->name('user-passwords.update');
 				
-				Route::get('user-favourites/{customer_address_id}/{perPage?}', 'CustomerController@getUserFavourites')->name('user-favourites.index');
+				Route::get('user-favourites/{customer_address_id}/{per_page?}', 'CustomerController@getUserFavourites')->name('user-favourites.index');
 				Route::post('user-favourites', 'CustomerController@addUserFavourite')->name('user-favourites.create');
-				Route::delete('user-favourites/{customer_favourite_id}/{perPage?}', 'CustomerController@removeUserFavourite')->name('user-favourites.destroy');
+				Route::delete('user-favourites/{customer_favourite_id}/{per_page?}', 'CustomerController@removeUserFavourite')->name('user-favourites.destroy');
 				
 				Route::post('/restaurants', 'RestaurantController@getRestaurants')->name('restaurants.index');
 				Route::get('/restaurants/{restaurant}', 'RestaurantController@showRestaurantDetails')->name('restaurants.show');
@@ -50,13 +50,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::post('/promoted-menu-items', 'RestaurantController@getPromotedMenuItems')->name('promoted-menu-items.index');
 
 				Route::get('/orders/{order}', 'OrderController@getOrderDetails')->name('orders.show');
-				Route::get('/user-orders/{user}/{perPage?}', 'CustomerController@getUserOrders')->name('user-orders.index');
-				Route::get('/user-reservations/{user}/{perPage?}', 'CustomerController@getUserReservations')->name('user-reservations.index');
+				Route::get('/user-orders/{user}/{per_page?}', 'CustomerController@getUserOrders')->name('user-orders.index');
+				Route::get('/user-reservations/{user}/{per_page?}', 'CustomerController@getUserReservations')->name('user-reservations.index');
 				
 				Route::get('/ordered-restaurants/{order}', 'CustomerController@showOrderedRestaurants')->name('ordered-restaurants.show');
 				Route::post('/orders', 'OrderController@createNewOrder')->name('orders.create');
 
-				Route::get('/restaurant-reviews/{restaurant}/{perPage?}', 'RestaurantController@getRestaurantReview')->name('restaurant-reviews.show');
+				Route::get('/restaurant-reviews/{restaurant}/{per_page?}', 'RestaurantController@getRestaurantReview')->name('restaurant-reviews.show');
 				Route::post('/restaurant-reviews', 'RestaurantController@addRestaurantReview')->name('restaurant-reviews.create');
 				
 				Route::post('reservations', 'OrderController@createNewReservation')->name('reservations.create');

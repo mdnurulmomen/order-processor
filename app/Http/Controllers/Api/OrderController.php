@@ -59,9 +59,9 @@ class OrderController extends Controller
                 'restaurant_id' => $orderedRestaurant->restaurant_id,
             ]);
 
-            $request->menuItems = json_decode(json_encode($orderedRestaurant->menuItems));
+            $request->menu_items = json_decode(json_encode($orderedRestaurant->menu_items));
 
-            foreach ($request->menuItems as $menuItem) {
+            foreach ($request->menu_items as $menuItem) {
 
                 $orderedNewItem = $orderedNewRestaurant->items()->create([
                      'restaurant_menu_item_id' => $menuItem->id,
@@ -70,14 +70,14 @@ class OrderController extends Controller
 
                 $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
 
-                if ($addedMenuItem->has_variation && !empty($menuItem->itemVariation) && !empty($menuItem->itemVariation->id)) {
+                if ($addedMenuItem->has_variation && !empty($menuItem->item_variation) && !empty($menuItem->item_variation->id)) {
                     $orderedNewItem->selectedItemVariation()->create([
-                        'restaurant_menu_item_variation_id'=>$menuItem->itemVariation->id
+                        'restaurant_menu_item_variation_id'=>$menuItem->item_variation->id
                     ]);
                 }
 
-                if ($addedMenuItem->has_addon && !empty($menuItem->itemAddons)) {
-                    foreach ($menuItem->itemAddons as $itemAddon) {
+                if ($addedMenuItem->has_addon && !empty($menuItem->item_addons)) {
+                    foreach ($menuItem->item_addons as $itemAddon) {
                         $orderedNewItem->additionalOrderedAddons()->create([
                             'restaurant_menu_item_addon_id'=>$itemAddon->id,
                             'quantity'=>$itemAddon->quantity,
@@ -166,11 +166,11 @@ class OrderController extends Controller
 
         $reservationMsg = 'Reservation request has been accepted';
 
-        if ($newOrder->customer_confirmation==1 && ! empty($request->menuItems) && ! empty($request->payment->payment_id)) {
+        if ($newOrder->customer_confirmation==1 && ! empty($request->menu_items) && ! empty($request->payment->payment_id)) {
 
             $this->saveNewPayment($newOrder, $request->payment->payment_id);
             $this->makeRestaurantOrderRecord($newOrder, $request->reservation->restaurant_id);
-            $this->makeOrderItems($orderedRestaurant, $request->menuItems);
+            $this->makeOrderItems($orderedRestaurant, $request->menu_items);
             // $this->confirmReservation($newOrder, $orderedRestaurant, $request);
 
             $reservationMsg = 'Reservation request has been confirmed';
@@ -212,7 +212,7 @@ class OrderController extends Controller
         // $this->confirmTableReservation($expectedReservation);
         $this->saveNewPayment($expectedOrder, $request->payment->payment_id);
         $this->makeRestaurantOrderRecord($expectedOrder, $request->reservation->restaurant_id);
-        $this->makeOrderItems($expectedOrderedRestaurant, $request->menuItems);
+        $this->makeOrderItems($expectedOrderedRestaurant, $request->menu_items);
 
         // Broadcast for admin
         $this->notifyAdmin($expectedOrder);
@@ -311,13 +311,13 @@ class OrderController extends Controller
                 ]); 
     }
 
-    private function makeOrderItems(OrderedRestaurant $orderedNewRestaurant, $menuItems) 
+    private function makeOrderItems(OrderedRestaurant $orderedNewRestaurant, $menu_items) 
     {
         // foreach ($restaurants as $orderedRestaurant) {            
 
-            // $menuItems = json_decode(json_encode($menuItems));
+            // $menu_items = json_decode(json_encode($menu_items));
 
-            foreach ($menuItems as $menuItem) {
+            foreach ($menu_items as $menuItem) {
 
                 $orderedNewItem = $orderedNewRestaurant->items()->create([
                      'restaurant_menu_item_id' => $menuItem->id,
@@ -326,14 +326,14 @@ class OrderController extends Controller
 
                 $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
 
-                if ($addedMenuItem->has_variation && !empty($menuItem->itemVariation) && !empty($menuItem->itemVariation->id)) {
+                if ($addedMenuItem->has_variation && !empty($menuItem->item_variation) && !empty($menuItem->item_variation->id)) {
                     $orderedNewItem->selectedItemVariation()->create([
-                        'restaurant_menu_item_variation_id'=>$menuItem->itemVariation->id
+                        'restaurant_menu_item_variation_id'=>$menuItem->item_variation->id
                     ]);
                 }
 
-                if ($addedMenuItem->has_addon && !empty($menuItem->itemAddons)) {
-                    foreach ($menuItem->itemAddons as $itemAddon) {
+                if ($addedMenuItem->has_addon && !empty($menuItem->item_addons)) {
+                    foreach ($menuItem->item_addons as $itemAddon) {
                         $orderedNewItem->additionalOrderedAddons()->create([
                             'restaurant_menu_item_addon_id'=>$itemAddon->id,
                             'quantity'=>$itemAddon->quantity,

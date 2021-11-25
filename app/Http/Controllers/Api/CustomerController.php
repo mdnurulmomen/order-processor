@@ -18,11 +18,11 @@ use App\Http\Resources\Api\OrderedRestaurantResource;
 
 class CustomerController extends Controller
 {
-    public function getUserFavourites($customer_address_id, $perPage = false)
+    public function getUserFavourites($customer_address_id, $per_page = false)
     {	
-		if ($perPage) {
+		if ($per_page) {
             
-            return new UserFavouriteCollection(CustomerFavourite::where('customer_address_id', $customer_address_id)->paginate($perPage));
+            return new UserFavouriteCollection(CustomerFavourite::where('customer_address_id', $customer_address_id)->paginate($per_page));
 
         }
         else {
@@ -57,18 +57,18 @@ class CustomerController extends Controller
     	return $this->getUserFavourites($request->customer_address_id, $request->per_page);
     }
 
-    public function removeUserFavourite($customer_favourite_id, $perPage = false)
+    public function removeUserFavourite($customer_favourite_id, $per_page = false)
     {
         $existingFavourite = CustomerFavourite::findOrFail($customer_favourite_id);
         $customer_address_id = $existingFavourite->customer_address_id;    
         $existingFavourite->delete();
 
-        return $this->getUserFavourites($customer_address_id, $perPage);
+        return $this->getUserFavourites($customer_address_id, $per_page);
     }
 
-    public function getUserOrders($user, $perPage = false)
+    public function getUserOrders($user, $per_page = false)
     {
-        if ($perPage) {
+        if ($per_page) {
             
             return new UserOrderCollection(
                 Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery'])
@@ -82,7 +82,7 @@ class CustomerController extends Controller
                     ->orWhere('order_type', 'serve-on-table')
                     ->orWhere('order_type', 'take-away');
                 })
-                ->paginate($perPage)
+                ->paginate($per_page)
             );
 
         }
@@ -106,7 +106,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function getUserReservations($user, $perPage = false)
+    public function getUserReservations($user, $per_page = false)
     {
         $reservations = TableBookingDetail::with('order')
         ->whereHas('order', function ($query) use ($user) {
@@ -118,9 +118,9 @@ class CustomerController extends Controller
             );
         });
 
-        if ($perPage) {
+        if ($per_page) {
             
-            return new ReservationCollection($reservations->paginate($perPage));
+            return new ReservationCollection($reservations->paginate($per_page));
 
         }
         else {
@@ -138,6 +138,10 @@ class CustomerController extends Controller
 
     public function logout(Request $request)
     {
+        $request->validate([
+            'id'=>'required|exists:customers,id'
+        ]);
+
         return [
             "title" => "Thank You Title",
             "preview" => "uploads/application/thanks.jpg",

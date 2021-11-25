@@ -29,7 +29,7 @@ class RestaurantController extends Controller
       $request->validate([
         'latitude' => 'required|string',
         'longitude' => 'required|string',
-        'perPage' => 'nullable|numeric',
+        'per_page' => 'nullable|numeric',
         // 'preference' => 'nullable',
         'preference.type' => [ 'nullable', 'string', 'in:meals,cuisines,menus' ],
         'preference.ids' => 'nullable|array|required_unless:preference.type,',
@@ -86,8 +86,8 @@ class RestaurantController extends Controller
       }
 
       // pagination
-      if ($request->perPage) {
-        return new SearchedRestaurantCollection($restaurants->paginate($request->perPage));
+      if ($request->per_page) {
+        return new SearchedRestaurantCollection($restaurants->paginate($request->per_page));
       }
       else {
         // return new RestaurantCollection(); // aggregations, items
@@ -106,7 +106,7 @@ class RestaurantController extends Controller
       $request->validate([
         'latitude' => 'required|string',
         'longitude' => 'required|string',
-        'perPage' => 'nullable|numeric',
+        'per_page' => 'nullable|numeric',
         // 'preference' => 'nullable',
         /*
         'preference.type' => [ 'nullable', 'string', 'in:meals,cuisines,menus' ],
@@ -168,8 +168,8 @@ class RestaurantController extends Controller
       */
 
       // pagination
-      if ($request->perPage) {
-        return new SponsoredRestaurantCollection(/*$restaurants->paginate($request->perPage)*/ $restaurantsInArea->paginate($request->perPage));
+      if ($request->per_page) {
+        return new SponsoredRestaurantCollection(/*$restaurants->paginate($request->per_page)*/ $restaurantsInArea->paginate($request->per_page));
       }
       else {
         // return new RestaurantCollection(); // aggregations, items
@@ -183,7 +183,7 @@ class RestaurantController extends Controller
       $request->validate([
         'latitude' => 'required|string',
         'longitude' => 'required|string',
-        'perPage' => 'nullable|numeric'
+        'per_page' => 'nullable|numeric'
       ]);
 
       $restaurantsInArea = RestaurantMenuItem::where('promoted', 1)
@@ -194,8 +194,8 @@ class RestaurantController extends Controller
       });
 
       // pagination
-      if ($request->perPage) {
-        return new PromotedMenuItemCollection($restaurantsInArea->paginate($request->perPage));
+      if ($request->per_page) {
+        return new PromotedMenuItemCollection($restaurantsInArea->paginate($request->per_page));
       }
       else {
         // return new RestaurantCollection(); // aggregations, items
@@ -217,12 +217,12 @@ class RestaurantController extends Controller
     }
     */
 
-    public function getRestaurantReview($id, $perPage=false)
+    public function getRestaurantReview($id, $per_page=false)
     {
         $expectedRestaurant = Restaurant::findOrFail($id);
 
-        if ($perPage) {
-          return new RestaurantReviewCollection(RestaurantReview::where('restaurant_id', $id)->paginate($perPage));
+        if ($per_page) {
+          return new RestaurantReviewCollection(RestaurantReview::where('restaurant_id', $id)->paginate($per_page));
         }
 
         return RestaurantReviewResource::collection($expectedRestaurant->reviews);
