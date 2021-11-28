@@ -88,7 +88,9 @@ class OrderRequest extends FormRequest
             'order.delivery_new_address.address_name' => 'required_unless:order.delivery_new_address,|in:work,home,other|string',
 
             'order.delivery_address_id' => [
-                'exists:customer_addresses,id',
+                Rule::exists('customer_addresses', 'id')->where(function ($query) {
+                    return $query->where('customer_id', $this->input('order.orderer_id'));
+                }),
                 Rule::requiredIf(function () {
                     
                     return (($this->input('order.order_type')=='home-delivery') && ($this->missing('order.delivery_new_address')));

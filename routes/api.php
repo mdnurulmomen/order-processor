@@ -62,6 +62,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::post('reservations', 'OrderController@createNewReservation')->name('reservations.create');
 				Route::post('reservation-confirmations', 'OrderController@confirmReservation')->name('reservation-confirmations.create');
 
+				Route::get('/my-regulars/{user}/{per_page?}', 'CustomerController@getMyRegularItems')->name('my-regulars.index');
+				Route::put('/my-regulars/{regular}/{per_page?}', 'CustomerController@updateMyRegularItems')->name('my-regulars.update');
+				Route::post('/my-regulars', 'CustomerController@createMyRegularItems')->name('my-regulars.create');
+				Route::delete('/my-regulars/{regular}/{per_page?}', 'CustomerController@deleteMyRegularItems')->name('my-regulars.delete');
+
 				Route::post('/logout', 'CustomerController@logout')->name('logout');
 
 			});

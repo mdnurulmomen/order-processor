@@ -97,7 +97,7 @@ class OrderController extends Controller
             
         if ($request->order->order_type==='home-delivery') {
 
-            if ($request->order->delivery_new_address && empty($request->order->delivery_address_id)) {
+            if (isset($request->order->delivery_new_address) && empty($request->order->delivery_address_id)) {
 
                 $existingAddress = CustomerAddress::where('customer_id', $request->order->orderer_id)->where('address_name', $request->order->delivery_new_address->address_name)->first();
 

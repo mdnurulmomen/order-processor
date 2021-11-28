@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-// use App\Models\RestaurantMenuItemVariation;
 
-class SelectedItemVariation extends Model
+class MyRegularItemVariation extends Model
 {
-   	protected $guarded = [
+    protected $guarded = [
    		'id'
    	];
 
