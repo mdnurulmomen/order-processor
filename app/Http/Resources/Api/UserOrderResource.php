@@ -21,7 +21,7 @@ class UserOrderResource extends JsonResource
             'order_type' => $this->order_type,
             'asap' => /*$this->whenLoaded('asap')*/ $this->when($this->asap, $this->asap ? true : false),
             'scheduled' => /*$this->whenLoaded('scheduled')*/ $this->when($this->scheduled, $this->scheduled ? $this->scheduled->order_schedule : false),
-            'cutlery_added' => /*$this->whenLoaded('cutleryAdded')*/ $this->when($this->cutleryAdded, $this->cutleryAdded ? true : false),
+            'has_cutlery' => /*$this->whenLoaded('cutlery')*/ $this->when($this->cutlery, $this->cutlery ? true : false),
             'order_price' => $this->order_price,
             'vat' => $this->vat,
             'discount' => $this->discount,
@@ -32,7 +32,7 @@ class UserOrderResource extends JsonResource
             'delivery' => $this->when($this->delivery, $this->delivery ? $this->delivery->additional_info : false),
             // 'orderer' => $this->orderer,
             'confirmation' => $this->customer_confirmation,
-            'restaurants' => /*OrderedRestaurantResource::collection($this->restaurants)*/ route('api.v1.ordered-restaurants.show', ['order' => $this->id]),
+            'restaurants' => /*OrderedRestaurantResource::collection($this->restaurants)*/ route('api.v1.order-restaurants.show', ['order' => $this->id]),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

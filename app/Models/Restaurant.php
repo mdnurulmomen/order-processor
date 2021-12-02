@@ -2,18 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Meal;
-use App\Models\Waiter;
-use App\Models\Cuisine;
-use App\Models\Kitchen;
-use App\Models\MenuCategory;
-use App\Models\RestaurantMeal;
-use App\Models\RestaurantDeal;
-use App\Models\RestaurantAdmin;
-use App\Models\RestaurantCuisine;
-use App\Models\TableBookingDetail;
-use App\Models\RestaurantMenuCategory;
-use App\Models\RestaurantBookingStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -82,29 +70,19 @@ class Restaurant extends Model
         return $this->hasMany(Waiter::class, 'restaurant_id', 'id');
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(RestaurantReview::class, 'restaurant_id', 'id');
+    }
+
     public function deal()
     {
         return $this->hasOne(RestaurantDeal::class, 'restaurant_id', 'id');
     }
 
-    public function menuCategories()
-    {
-        return $this->hasMany(RestaurantMenuCategory::class, 'restaurant_id', 'id');
-    }
-
-    public function cuisines()
-    {
-        return $this->hasMany(RestaurantCuisine::class, 'restaurant_id', 'id');
-    }
-
-    public function meals()
-    {
-        return $this->hasMany(RestaurantMeal::class, 'restaurant_id', 'id');
-    }
-
     public function reservations()
     {
-        return $this->hasMany(TableBookingDetail::class, 'restaurant_id', 'id');
+        return $this->hasMany(Reservation::class, 'restaurant_id', 'id');
     }
 
     public function booking()
@@ -112,24 +90,34 @@ class Restaurant extends Model
         return $this->hasOne(RestaurantBookingStatus::class, 'restaurant_id', 'id');
     }
 
+    public function restaurantMenuCategories()
+    {
+        return $this->hasMany(RestaurantMenuCategory::class, 'restaurant_id', 'id');
+    }
+
     public function restaurantCuisines()
+    {
+        return $this->hasMany(RestaurantCuisine::class, 'restaurant_id', 'id');
+    }
+
+    public function restaurantMeals()
+    {
+        return $this->hasMany(RestaurantMeal::class, 'restaurant_id', 'id');
+    }
+
+    public function cuisines()
     {
         return $this->belongsToMany(Cuisine::class, 'restaurant_cuisines', 'restaurant_id', 'cuisine_id');
     }
 
-    public function restaurantMenuCategories()
+    public function menuCategories()
     {
         return $this->belongsToMany(MenuCategory::class, 'restaurant_menu_categories', 'restaurant_id', 'menu_category_id')->withPivot('id', 'serving_from', 'serving_to');
     }
 
-    public function restaurantMealCategories()
+    public function meals()
     {
         return $this->belongsToMany(Meal::class, 'restaurant_meals', 'restaurant_id', 'meal_id');
-    }
-
-    public function reviews()
-    {
-        return $this->hasMany(RestaurantReview::class, 'restaurant_id', 'id');
     }
 
 }

@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Addon;
-use App\Models\ItemVariation;
-use App\Models\RestaurantMenuCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -41,13 +38,13 @@ class RestaurantMenuItem extends Model
     }
 
     // pivot tables doesn't follow soft delete rules
-    public function restaurantMenuItemVariations()
+    public function variations()
     {
         return $this->belongsToMany(ItemVariation::class, 'restaurant_menu_item_variations', 'restaurant_menu_item_id', 'variation_id')->withPivot('price', 'deleted_at')->withTrashed();
     }
 
     // pivot tables doesn't follow soft delete rules
-    public function restaurantMenuItemAddons()
+    public function addons()
     {
         return $this->belongsToMany(Addon::class, 'restaurant_menu_item_addons', 'restaurant_menu_item_id', 'addon_id')->withPivot('price', 'deleted_at')->withTrashed();
     }

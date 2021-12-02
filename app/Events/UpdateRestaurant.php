@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\OrderedRestaurant;
+use App\Models\OrderRestaurant;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -18,16 +18,16 @@ class UpdateRestaurant implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $orderedRestaurant;
+    public $orderRestaurant;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(OrderedRestaurant $orderedRestaurant)
+    public function __construct(OrderRestaurant $orderRestaurant)
     {
-        $this->orderedRestaurant = $orderedRestaurant;
+        $this->orderRestaurant = $orderRestaurant;
     }
 
     /**
@@ -38,10 +38,10 @@ class UpdateRestaurant implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'order_id' => $this->orderedRestaurant->order_id,
-            'restaurant_id' => $this->orderedRestaurant->restaurant_id,
-            'order' => new RestaurantOrderResource($this->orderedRestaurant->order),
-            'items'=> OrderedRestaurantItemResource::collection($this->orderedRestaurant->items)
+            'order_id' => $this->orderRestaurant->order_id,
+            'restaurant_id' => $this->orderRestaurant->restaurant_id,
+            'order' => new RestaurantOrderResource($this->orderRestaurant->order),
+            'items'=> OrderedRestaurantItemResource::collection($this->orderRestaurant->items)
         ];
     }
 
@@ -62,6 +62,6 @@ class UpdateRestaurant implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('notifyRestaurant.'.$this->orderedRestaurant->restaurant_id);
+        return new PrivateChannel('notifyRestaurant.'.$this->orderRestaurant->restaurant_id);
     }
 }

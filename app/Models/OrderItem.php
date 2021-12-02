@@ -2,11 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\RestaurantMenuItem;
-use App\Models\SelectedItemVariation;
-use App\Models\AdditionalOrderedAddon;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\OrderedItemCustomization;
 
 class OrderItem extends Model
 {
@@ -16,19 +12,19 @@ class OrderItem extends Model
 
       public $timestamps = false;
 
-   	public function selectedItemVariation()
+   	public function variation()
    	{
-   		return $this->hasOne(SelectedItemVariation::class, 'order_item_id', 'id');
+   		return $this->hasOne(OrderItemVariation::class, 'order_item_id', 'id');
    	}
 
-   	public function additionalOrderedAddons()
+   	public function addons()
    	{
-   		return $this->hasMany(AdditionalOrderedAddon::class, 'order_item_id', 'id');
+   		return $this->hasMany(OrderItemAddon::class, 'order_item_id', 'id');
    	}
 
-   	public function orderedItemCustomization()
+   	public function customization()
    	{
-   		return $this->hasOne(OrderedItemCustomization::class, 'order_item_id', 'id');
+   		return $this->hasOne(OrderItemCustomization::class, 'order_item_id', 'id');
    	}
 
       public function restaurantMenuItem()

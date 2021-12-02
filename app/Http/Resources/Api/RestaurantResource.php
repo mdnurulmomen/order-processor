@@ -3,10 +3,6 @@
 namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-// use App\Http\Resources\Api\RestaurantMealResource;
-// use App\Http\Resources\Api\RestaurantCuisineResource;
-// use App\Http\Resources\Api\RestaurantMenuCategoryResource;
-
 
 class RestaurantResource extends JsonResource
 {
@@ -42,9 +38,9 @@ class RestaurantResource extends JsonResource
             // 'meals' => RestaurantMealResource::collection($this->restaurantMealCategories),
             // 'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
             // 'menu_categories' => RestaurantMenuCategoryResource::collection($this->restaurantMenuCategories),
-            'meals' => RestaurantMealResource::collection($this->meals),
-            'cuisines' => RestaurantCuisineResource::collection($this->cuisines),
-            'menu_categories' => RestaurantMenuCategoryDetailResource::collection($this->menuCategories),
+            'meals' => RestaurantMealResource::collection($this->restaurantMeals),
+            'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
+            'menu_categories' => RestaurantMenuCategoryDetailResource::collection($this->restaurantMenuCategories),
             'reviews' => /* RestaurantReviewResource::collection($this->reviews) */ route('api.v1.restaurant-reviews.show', [ 'restaurant'=>$this->id, 'perPage'=>10 ]),
 
         ];

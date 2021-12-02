@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 // use App\Http\Resources\Api\AdditionalOrderedAddonResource;
 
 
-class OrderedRestaurantMenuItemResource extends JsonResource
+class OrderRestaurantMenuItemResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

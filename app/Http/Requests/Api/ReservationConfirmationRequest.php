@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Reservation;
 use Illuminate\Validation\Rule;
-use App\Models\TableBookingDetail;
 use App\Models\RestaurantMenuItem;
 use App\Models\RestaurantMenuItemAddon;
 use App\Models\RestaurantMenuItemVariation;
@@ -35,10 +35,10 @@ class ReservationConfirmationRequest extends FormRequest
             'reservation.reservation_id' => [
                 'bail',
                 'required',
-                'exists:table_booking_details,id',
+                'exists:reservations,id',
                 function ($attribute, $value, $fail) {
-                    $expectedReservation = TableBookingDetail::findOrFail($value);
-                    if ($expectedReservation->booking_confirmation || $expectedReservation->order_id != $this->input('reservation.order_id') || $expectedReservation->restaurant_id != $this->input('reservation.restaurant_id')) {
+                    $expectedReservation = Reservation::findOrFail($value);
+                    if (/* $expectedReservation->booking_confirmation || */$expectedReservation->order_id != $this->input('reservation.order_id') || $expectedReservation->restaurant_id != $this->input('reservation.restaurant_id')) {
                         $fail($attribute.' is invalid.');
                     }
                 },

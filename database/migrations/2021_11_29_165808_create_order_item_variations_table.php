@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderedItemCustomizationsTable extends Migration
+class CreateOrderItemVariationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateOrderedItemCustomizationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ordered_item_customizations', function (Blueprint $table) {
+        Schema::create('order_item_variations', function (Blueprint $table) {
             $table->mediumIncrements('id');
-            $table->string('custom_instruction')->default('NA');
+            $table->unsignedSmallInteger('restaurant_menu_item_variation_id');
             $table->unsignedInteger('order_item_id');
         });
     }
@@ -27,6 +27,6 @@ class CreateOrderedItemCustomizationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ordered_item_customizations');
+        Schema::dropIfExists('order_item_variations');
     }
 }

@@ -17,7 +17,7 @@ class CreateOrderItemsTable extends Migration
             $table->mediumIncrements('id');
             $table->unsignedMediumInteger('restaurant_menu_item_id');
             $table->unsignedTinyInteger('quantity')->default(1);
-            $table->unsignedInteger('ordered_restaurant_id');
+            $table->unsignedInteger('order_restaurant_id');
         });
     }
 

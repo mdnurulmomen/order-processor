@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-// use App\Models\RestaurantMenuItemAddon;
 
-class AdditionalOrderedAddon extends Model
+class OrderItemAddon extends Model
 {
-   	protected $guarded = [
+    protected $guarded = [
    		'id'
    	];
 

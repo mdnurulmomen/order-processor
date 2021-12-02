@@ -18,7 +18,7 @@ use App\Http\Resources\Api\ReservationResource;
 use App\Http\Resources\Api\UserFavouriteResource;
 use App\Http\Resources\Api\ReservationCollection;
 use App\Http\Resources\Api\UserFavouriteCollection;
-use App\Http\Resources\Api\OrderedRestaurantResource;
+use App\Http\Resources\Api\OrderRestaurantResource;
 
 class CustomerController extends Controller
 {
@@ -134,10 +134,10 @@ class CustomerController extends Controller
         }
     }
 
-    public function showOrderedRestaurants($order)
+    public function showOrderRestaurants($order)
     {
         $expectedOrder = Order::findOrFail($order);
-        return OrderedRestaurantResource::collection($expectedOrder->restaurants);
+        return OrderRestaurantResource::collection($expectedOrder->restaurants);
     }
 
     public function getMyRegularItems($user, $per_page=false)
@@ -278,7 +278,7 @@ class CustomerController extends Controller
 
     public function deleteMyRegularItems($regular, $per_page = false)
     {
-        $myRegular = MyRegular::find($regular);
+        $myRegular = MyRegular::findOrFail($regular);
         
         $user = $myRegular->customer;
 
@@ -286,7 +286,7 @@ class CustomerController extends Controller
 
         $myRegular->delete(); 
 
-        $this->getMyRegularItems($user->id, $per_page);
+        return $this->getMyRegularItems($user->id, $per_page);
     }
 
     public function logout(Request $request)

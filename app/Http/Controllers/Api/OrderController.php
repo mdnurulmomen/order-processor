@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Models\Order;
 use App\Models\Restaurant;
 use App\Events\UpdateAdmin;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use App\Events\UpdateRestaurant;
-use App\Models\OrderedRestaurant;
-use App\Models\TableBookingDetail;
+use App\Models\OrderRestaurant;
 use App\Models\RestaurantMenuItem;
 // use App\Models\RiderDeliveryRecord;
 // use Illuminate\Support\Facades\Log;
@@ -71,14 +71,14 @@ class OrderController extends Controller
                 $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
 
                 if ($addedMenuItem->has_variation && !empty($menuItem->item_variation) && !empty($menuItem->item_variation->id)) {
-                    $orderedNewItem->selectedItemVariation()->create([
+                    $orderedNewItem->variation()->create([
                         'restaurant_menu_item_variation_id'=>$menuItem->item_variation->id
                     ]);
                 }
 
                 if ($addedMenuItem->has_addon && !empty($menuItem->item_addons)) {
                     foreach ($menuItem->item_addons as $itemAddon) {
-                        $orderedNewItem->additionalOrderedAddons()->create([
+                        $orderedNewItem->addons()->create([
                             'restaurant_menu_item_addon_id'=>$itemAddon->id,
                             'quantity'=>$itemAddon->quantity,
                         ]);
@@ -86,7 +86,7 @@ class OrderController extends Controller
                 }
 
                 if ($addedMenuItem->customizable && !empty($menuItem->customization)) {
-                    $orderedNewItem->orderedItemCustomization()->create([
+                    $orderedNewItem->customization()->create([
                         'custom_instruction'=>$menuItem->customization,
                     ]);
                 }
@@ -189,7 +189,7 @@ class OrderController extends Controller
 
     public function confirmReservation(ReservationConfirmationRequest $request)
     {
-        $expectedReservation = TableBookingDetail::find($request->reservation->reservation_id);
+        $expectedReservation = Reservation::find($request->reservation->reservation_id);
 
         if (/* ! $expectedReservation->booking_confirmation && */ $expectedReservation->max_payment_time->lessThan(now())) {
             return response()->json([
@@ -206,7 +206,7 @@ class OrderController extends Controller
         }
         
         $expectedOrderedRestaurant = $expectedOrder->restaurants->first();
-        // $expectedOrderedRestaurant = OrderedRestaurant::find($request->reservation->ordered_restaurant_id);
+        // $expectedOrderedRestaurant = OrderRestaurant::find($request->reservation->ordered_restaurant_id);
 
         $this->confirmOrder($expectedOrder);
         // $this->confirmTableReservation($expectedReservation);
@@ -226,11 +226,11 @@ class OrderController extends Controller
 
     public function getOrderDetails($order)
     {
-        return new OrderResource(Order::with(['asap', 'scheduled', 'cutleryAdded', 'delivery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])->findOrFail($order));
+        return new OrderResource(Order::with(['asap', 'scheduled', 'cutlery', 'payment', 'delivery', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'customerOrderCancelation', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])->findOrFail($order));
     }
 
     /*
-    private function confirmTableReservation(TableBookingDetail $table)
+    private function confirmTableReservation(Reservation $table)
     {
         $table->update([
             'booking_confirmation' => 1
@@ -275,7 +275,7 @@ class OrderController extends Controller
 
     private function addCutlery(Order $order)
     {
-        $order->cutleryAdded()->create([]);
+        $order->cutlery()->create([]);
     }
 
     private function createTableReservation(Restaurant $restaurant, Request $request, $orderId)
@@ -311,7 +311,7 @@ class OrderController extends Controller
                 ]); 
     }
 
-    private function makeOrderItems(OrderedRestaurant $orderedNewRestaurant, $menu_items) 
+    private function makeOrderItems(OrderRestaurant $orderedNewRestaurant, $menu_items) 
     {
         // foreach ($restaurants as $orderedRestaurant) {            
 
@@ -327,14 +327,14 @@ class OrderController extends Controller
                 $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
 
                 if ($addedMenuItem->has_variation && !empty($menuItem->item_variation) && !empty($menuItem->item_variation->id)) {
-                    $orderedNewItem->selectedItemVariation()->create([
+                    $orderedNewItem->variation()->create([
                         'restaurant_menu_item_variation_id'=>$menuItem->item_variation->id
                     ]);
                 }
 
                 if ($addedMenuItem->has_addon && !empty($menuItem->item_addons)) {
                     foreach ($menuItem->item_addons as $itemAddon) {
-                        $orderedNewItem->additionalOrderedAddons()->create([
+                        $orderedNewItem->addons()->create([
                             'restaurant_menu_item_addon_id'=>$itemAddon->id,
                             'quantity'=>$itemAddon->quantity,
                         ]);
@@ -342,7 +342,7 @@ class OrderController extends Controller
                 }
 
                 if ($addedMenuItem->customizable && !empty($menuItem->customization)) {
-                    $orderedNewItem->orderedItemCustomization()->create([
+                    $orderedNewItem->customization()->create([
                         'custom_instruction'=>$menuItem->customization,
                     ]);
                 }
@@ -379,7 +379,7 @@ class OrderController extends Controller
         }
     }
 
-    private function notifyRestaurant(OrderedRestaurant $orderedRestaurant)
+    private function notifyRestaurant(OrderRestaurant $orderedRestaurant)
     {
         // Log::info('UpdateRestaurant');
         event(new UpdateRestaurant($orderedRestaurant));

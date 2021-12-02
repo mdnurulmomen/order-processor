@@ -46,14 +46,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::get('/restaurants/{restaurant}', 'RestaurantController@showRestaurantDetails')->name('restaurants.show');
 				// Route::post('/restaurant-menu-items', 'RestaurantController@getRestaurantMenuItems')->name('restaurant-menu-items.show');
 
-				Route::post('/sponsored-restaurants', 'RestaurantController@getSponsoredRestaurants')->name('sponsored-restaurants.index');
-				Route::post('/promoted-menu-items', 'RestaurantController@getPromotedMenuItems')->name('promoted-menu-items.index');
+				Route::post('/sponsor-restaurants', 'RestaurantController@getSponsorRestaurants')->name('sponsor-restaurants.index');
+				Route::post('/promotional-menu-items', 'RestaurantController@getPromotionalMenuItems')->name('promotional-menu-items.index');
 
 				Route::get('/orders/{order}', 'OrderController@getOrderDetails')->name('orders.show');
 				Route::get('/user-orders/{user}/{per_page?}', 'CustomerController@getUserOrders')->name('user-orders.index');
 				Route::get('/user-reservations/{user}/{per_page?}', 'CustomerController@getUserReservations')->name('user-reservations.index');
 				
-				Route::get('/ordered-restaurants/{order}', 'CustomerController@showOrderedRestaurants')->name('ordered-restaurants.show');
+				Route::get('/order-restaurants/{order}', 'CustomerController@showOrderRestaurants')->name('order-restaurants.show');
 				Route::post('/orders', 'OrderController@createNewOrder')->name('orders.create');
 
 				Route::get('/restaurant-reviews/{restaurant}/{per_page?}', 'RestaurantController@getRestaurantReview')->name('restaurant-reviews.show');
@@ -63,8 +63,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::post('reservation-confirmations', 'OrderController@confirmReservation')->name('reservation-confirmations.create');
 
 				Route::get('/my-regulars/{user}/{per_page?}', 'CustomerController@getMyRegularItems')->name('my-regulars.index');
-				Route::put('/my-regulars/{regular}/{per_page?}', 'CustomerController@updateMyRegularItems')->name('my-regulars.update');
 				Route::post('/my-regulars', 'CustomerController@createMyRegularItems')->name('my-regulars.create');
+				Route::put('/my-regulars/{regular}/{per_page?}', 'CustomerController@updateMyRegularItems')->name('my-regulars.update');
 				Route::delete('/my-regulars/{regular}/{per_page?}', 'CustomerController@deleteMyRegularItems')->name('my-regulars.delete');
 
 				Route::post('/logout', 'CustomerController@logout')->name('logout');

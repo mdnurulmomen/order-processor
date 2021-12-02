@@ -13,14 +13,14 @@ use App\Http\Controllers\Controller;
 // use App\Models\RestaurantMenuCategory;
 use App\Http\Resources\Api\RestaurantResource;
 use App\Http\Resources\Api\RestaurantReviewResource;
-use App\Http\Resources\Api\SearchedRestaurantResource;
+use App\Http\Resources\Api\SearchRestaurantResource;
 use App\Http\Resources\Api\RestaurantReviewCollection;
 // use App\Http\Resources\Api\RestaurantMenuItemResource;
-use App\Http\Resources\Api\SearchedRestaurantCollection;
-use App\Http\Resources\Api\SponsoredRestaurantCollection;
-use App\Http\Resources\Api\SponsoredRestaurantResource;
-use App\Http\Resources\Api\PromotedMenuItemCollection;
-use App\Http\Resources\Api\PromotedMenuItemResource;
+use App\Http\Resources\Api\SponsorRestaurantResource;
+use App\Http\Resources\Api\SearchRestaurantCollection;
+use App\Http\Resources\Api\SponsorRestaurantCollection;
+use App\Http\Resources\Api\PromotionalMenuItemCollection;
+use App\Http\Resources\Api\RestaurantMenuItemDetailResource;
 
 class RestaurantController extends Controller
 {
@@ -87,21 +87,21 @@ class RestaurantController extends Controller
 
       // pagination
       if ($request->per_page) {
-        return new SearchedRestaurantCollection($restaurants->paginate($request->per_page));
+        return new SearchRestaurantCollection($restaurants->paginate($request->per_page));
       }
       else {
         // return new RestaurantCollection(); // aggregations, items
-        return SearchedRestaurantResource::collection($restaurants->get());
+        return SearchRestaurantResource::collection($restaurants->get());
       }
 
     }
 
     public function showRestaurantDetails($restaurant)
     {
-      return new RestaurantResource(Restaurant::with(['booking', 'meals', 'cuisines', 'menuCategories.restaurantMenuItems', 'reviews'])->findOrFail($restaurant));
+      return new RestaurantResource(Restaurant::with(['booking', 'restaurantMeals', 'restaurantCuisines', 'restaurantMenuCategories.menuItems', 'reviews'])->findOrFail($restaurant));
     }
 
-    public function getSponsoredRestaurants(Request $request)
+    public function getSponsorRestaurants(Request $request)
     {
       $request->validate([
         'latitude' => 'required|string',
@@ -169,16 +169,16 @@ class RestaurantController extends Controller
 
       // pagination
       if ($request->per_page) {
-        return new SponsoredRestaurantCollection(/*$restaurants->paginate($request->per_page)*/ $restaurantsInArea->paginate($request->per_page));
+        return new SponsorRestaurantCollection(/*$restaurants->paginate($request->per_page)*/ $restaurantsInArea->paginate($request->per_page));
       }
       else {
         // return new RestaurantCollection(); // aggregations, items
-        return SponsoredRestaurantResource::collection(/*$restaurants->get()*/ $restaurantsInArea->get());
+        return SponsorRestaurantResource::collection(/*$restaurants->get()*/ $restaurantsInArea->get());
       }     
 
     }
 
-    public function getPromotedMenuItems(Request $request)
+    public function getPromotionalMenuItems(Request $request)
     {
       $request->validate([
         'latitude' => 'required|string',
@@ -195,11 +195,11 @@ class RestaurantController extends Controller
 
       // pagination
       if ($request->per_page) {
-        return new PromotedMenuItemCollection($restaurantsInArea->paginate($request->per_page));
+        return new PromotionalMenuItemCollection($restaurantsInArea->paginate($request->per_page));
       }
       else {
         // return new RestaurantCollection(); // aggregations, items
-        return PromotedMenuItemResource::collection($restaurantsInArea->get());
+        return RestaurantMenuItemDetailResource::collection($restaurantsInArea->get());
       }     
 
     }

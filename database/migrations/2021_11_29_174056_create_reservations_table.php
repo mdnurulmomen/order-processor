@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableBookingDetailsTable extends Migration
+class CreateReservationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateTableBookingDetailsTable extends Migration
      */
     public function up()
     {
-        // table reservation (with food / without food)
-        Schema::create('table_booking_details', function (Blueprint $table) {
+        Schema::create('reservations', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->unsignedTinyInteger('guest_number')->default(1);
             // $table->timestamp('arriving_time')->useCurrent();
             $table->string('mobile', 13);
             // $table->boolean('booking_confirmation')->default(false);
-            $table->unsignedInteger('order_id')->nullable();
+            $table->unsignedInteger('order_id');
             $table->unsignedMediumInteger('restaurant_id');
             $table->timestamp('max_payment_time')->useCurrent();
         });
@@ -33,6 +32,6 @@ class CreateTableBookingDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_booking_details');
+        Schema::dropIfExists('reservations');
     }
 }

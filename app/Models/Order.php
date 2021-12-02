@@ -2,23 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\AsapOrder;
-use App\Models\OrderCutlery;
-use App\Models\ScheduledOrder;
-use App\Models\OrderedRestaurant;
-use App\Models\OrderDeliveryInfo;
-use App\Models\TableBookingDetail;
-use App\Models\OrderPaymentDetail;
-use App\Models\RiderDeliveryRecord;
-use App\Models\OrderServeProgression;
-use App\Models\RestaurantOrderRecord;
-use App\Models\OrderPickUpProgression;
-use App\Models\OrderReadyConfirmation;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\OrderDeliveryProgression;
-use App\Models\RiderOrderCancelationReason;
-use App\Models\CustomerOrderCancelationReason;
-use App\Models\RestaurantOrderCancelationReason;
 
 class Order extends Model
 {
@@ -50,24 +34,34 @@ class Order extends Model
          return $this->hasOne(ScheduledOrder::class, 'order_id', 'id');
       }
 
-      public function cutleryAdded()
+      public function cutlery()
       {
          return $this->hasOne(OrderCutlery::class, 'order_id', 'id');
       }
 
       public function payment()
    	{
-   		return $this->hasOne(OrderPaymentDetail::class, 'order_id', 'id');
+   		return $this->hasOne(OrderPayment::class, 'order_id', 'id');
    	}
-
-   	public function restaurants()
-      {
-         return $this->hasMany(OrderedRestaurant::class, 'order_id', 'id');
-      }
 
       public function delivery()
       {
          return $this->hasOne(OrderDeliveryInfo::class, 'order_id', 'id');
+      }
+
+      public function reservation()
+      {
+         return $this->hasOne(Reservation::class, 'order_id', 'id');
+      }
+
+      public function riderCall()
+      {
+         return $this->hasOne(RiderDeliveryRecord::class, 'order_id', 'id');
+      }
+
+      public function restaurants()
+      {
+         return $this->hasMany(OrderRestaurant::class, 'order_id', 'id');
       }
 
       public function restaurantAcceptances()
@@ -116,13 +110,4 @@ class Order extends Model
          return $this->hasMany(RiderOrderCancelationReason::class, 'order_id', 'id');
       }
 
-      public function reservation()
-      {
-         return $this->hasOne(TableBookingDetail::class, 'order_id', 'id');
-      }
-
-      public function riderCall()
-      {
-         return $this->hasOne(RiderDeliveryRecord::class, 'order_id', 'id');
-      }
 }

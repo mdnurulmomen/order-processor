@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAdditionalOrderedAddonsTable extends Migration
+class CreateOrderItemCustomizationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateAdditionalOrderedAddonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('additional_ordered_addons', function (Blueprint $table) {
+        Schema::create('order_item_customizations', function (Blueprint $table) {
             $table->mediumIncrements('id');
-            $table->unsignedSmallInteger('restaurant_menu_item_addon_id');
-            $table->unsignedTinyInteger('quantity')->default(1);
-            $table->unsignedMediumInteger('order_item_id');
+            $table->string('custom_instruction')->default('NA');
+            $table->unsignedInteger('order_item_id');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateAdditionalOrderedAddonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('additional_ordered_addons');
+        Schema::dropIfExists('order_item_customizations');
     }
 }
