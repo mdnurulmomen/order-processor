@@ -26,6 +26,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 				Route::get('/general-info', 'SettingController@getGeneralInfo')->name('general-info');
 
+				Route::post('otp', 'LoginController@sendMobileOTP')->name('otp');
 				Route::post('login', 'LoginController@userLogin')->name('login');
 				// Route::post('register', 'RegisterController@userRegistration')->name('register');
 				
