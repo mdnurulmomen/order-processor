@@ -27,7 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::get('/general-info', 'SettingController@getGeneralInfo')->name('general-info');
 
 				Route::post('login', 'LoginController@userLogin')->name('login');
-				Route::post('register', 'RegisterController@userRegistration')->name('register');
+				// Route::post('register', 'RegisterController@userRegistration')->name('register');
 				
 				Route::get('users/{user}', 'ProfileController@showUserDetail')->name('users.show');
 				Route::put('user-settings/{user}', 'ProfileController@updateUserSetting')->name('user-settings.update');
@@ -54,16 +54,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::get('/user-reservations/{user}/{per_page?}', 'CustomerController@getUserReservations')->name('user-reservations.index');
 				
 				Route::get('/order-restaurants/{order}', 'CustomerController@showOrderRestaurants')->name('order-restaurants.show');
-				Route::post('/orders', 'OrderController@createNewOrder')->name('orders.create');
+				Route::post('/orders', 'OrderController@makeNewOrder')->name('orders.create');
 
 				Route::get('/restaurant-reviews/{restaurant}/{per_page?}', 'RestaurantController@getRestaurantReview')->name('restaurant-reviews.show');
 				Route::post('/restaurant-reviews', 'RestaurantController@addRestaurantReview')->name('restaurant-reviews.create');
 				
-				Route::post('reservations', 'OrderController@createNewReservation')->name('reservations.create');
+				Route::post('reservations', 'OrderController@makeNewReservation')->name('reservations.create');
 				Route::post('reservation-confirmations', 'OrderController@confirmReservation')->name('reservation-confirmations.create');
 
 				Route::get('/my-regulars/{user}/{per_page?}', 'CustomerController@getMyRegularItems')->name('my-regulars.index');
-				Route::post('/my-regulars', 'CustomerController@createMyRegularItems')->name('my-regulars.create');
+				Route::post('/my-regulars', 'CustomerController@setMyRegularItems')->name('my-regulars.create');
 				Route::put('/my-regulars/{regular}/{per_page?}', 'CustomerController@updateMyRegularItems')->name('my-regulars.update');
 				Route::delete('/my-regulars/{regular}/{per_page?}', 'CustomerController@deleteMyRegularItems')->name('my-regulars.delete');
 

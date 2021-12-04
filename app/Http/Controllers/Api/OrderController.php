@@ -21,7 +21,7 @@ use App\Http\Requests\Api\ReservationConfirmationRequest;
 
 class OrderController extends Controller
 {
-    public function createNewOrder(OrderRequest $request)
+    public function makeNewOrder(OrderRequest $request)
     {        
         $newOrder = Order::create([
             'order_type' => $request->order->order_type,
@@ -149,7 +149,7 @@ class OrderController extends Controller
         ], 201);
     }
 
-    public function createNewReservation(ReservationRequest $request)
+    public function makeNewReservation(ReservationRequest $request)
     {   
         $expectedRestaurant = Restaurant::find($request->reservation->restaurant_id);
 

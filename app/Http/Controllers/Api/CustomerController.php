@@ -151,7 +151,7 @@ class CustomerController extends Controller
         return MyRegularResource::collection(MyRegular::where('customer_id', $user)->get());
     }
 
-    public function createMyRegularItems(MyRegularRequest $request)
+    public function setMyRegularItems(MyRegularRequest $request)
     {
         $myRegular = MyRegular::where('package', $request->package)->where('customer_id', $request->customer_id)->first();
 

@@ -10,6 +10,7 @@ use App\Http\Resources\Api\UserLoginResponseResource;
 
 class RegisterController extends Controller
 {
+    /*
     public function userRegistration(Request $request)
     {
         $request->validate([
@@ -30,17 +31,18 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        /*
-        event(new Registered($user = $this->create($request->all())));
+        
+        // event(new Registered($user = $this->create($request->all())));
 
-        $this->guard()->login($user);
+        // $this->guard()->login($user);
 
-        return $this->registered($request, $user)
-                        ?: redirect($this->redirectPath());
-        */
+        // return $this->registered($request, $user)
+        //                 ?: redirect($this->redirectPath());
+        
 
         return $this->sendUserLoginResponse($newCustomer);
     }
+    */
 
     /**
      * Send the response after the user was authenticated.
