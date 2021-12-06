@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateScheduledOrdersTable extends Migration
+class CreateScheduleOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateScheduledOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('scheduled_orders', function (Blueprint $table) {
+        Schema::create('schedule_orders', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('order_schedule');
             $table->unsignedInteger('order_id');
@@ -27,6 +27,6 @@ class CreateScheduledOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scheduled_orders');
+        Schema::dropIfExists('schedule_orders');
     }
 }

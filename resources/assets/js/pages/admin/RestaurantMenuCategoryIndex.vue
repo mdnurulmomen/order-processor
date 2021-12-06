@@ -94,15 +94,15 @@
 								    		<td>
 							    				<p 
 								    				class="small text-danger" 
-								    				v-show="restaurant.restaurant_menu_categories.length === 0"
+								    				v-show="restaurant.menu_categories.length === 0"
 							    				>
 							                		Menu-Category not available or trashed
 							                	</p>
 
 								    			<ul 
-								    				v-show="restaurant.restaurant_menu_categories.length"
+								    				v-show="restaurant.menu_categories.length"
 								    			>
-													<li v-for="menuCategory in restaurant.restaurant_menu_categories" 
+													<li v-for="menuCategory in restaurant.menu_categories" 
 														:key="menuCategory.id"
 													>
 													
@@ -534,7 +534,9 @@
 			showRestaurantMenuCategoryDetails(restaurant){
 				this.$router.push({
 			 		name: 'restaurant-menu-category-details', 
-			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
+			 		params: { 
+			 			restaurantId : restaurant.id, restaurantName : restaurant.name 
+			 		}, 
 				});
 			},
 			
@@ -603,11 +605,11 @@
 				);
 				
 				this.restaurantSingleMenuCategoryData.restaurantObject = restaurant;
-				this.restaurantSingleMenuCategoryData.menuCategoryObjects = restaurant.restaurant_menu_categories;
+				this.restaurantSingleMenuCategoryData.menuCategoryObjects = restaurant.menu_categories;
 
-				if (restaurant.restaurant_menu_categories.length) {
+				if (restaurant.menu_categories.length) {
 
-					this.restaurantSingleMenuCategoryData.restaurantMenuCategory = restaurant.restaurant_menu_categories[0].pivot;
+					this.restaurantSingleMenuCategoryData.restaurantMenuCategory = restaurant.menu_categories[0].pivot;
 				}
 
 				$("#modal-createOrEdit-restaurantMenuCategory").modal("show");
@@ -705,7 +707,9 @@
 			showRestaurantMenuList(restaurant) {
 				this.$router.push({
 			 		name: 'restaurant-menu-items', 
-			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
+			 		params: { 
+			 			restaurantId : restaurant.id, restaurantName : restaurant.name 
+			 		}, 
 				});
 			},
 

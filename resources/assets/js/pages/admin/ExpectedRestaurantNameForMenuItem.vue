@@ -148,9 +148,13 @@
 					this.errors.restaurant = 'Restaurant name is required';
 					return;
 				}
+
 				this.$router.push({
 			 		name: 'restaurant-menu-items', 
-			 		params: { restaurant : this.restaurant.id, restaurantName : this.restaurant.name }, 
+			 		params: { 
+			 			restaurantId : this.restaurant.id, 
+			 			restaurantName : this.restaurant.name 
+			 		}, 
 				});
 			},
 			validateFormInput () {

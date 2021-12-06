@@ -74,12 +74,12 @@
 								    			</span>
 								    		</td>
 								    		<td>
-							    				<p class="small text-danger" v-show="restaurant.restaurant_cuisines.length === 0">
+							    				<p class="small text-danger" v-show="restaurant.cuisines.length === 0">
 							                		Cuisine not available or trashed
 							                	</p>
 
 								    			<ul>
-													<li v-for="cuisine in restaurant.restaurant_cuisines" 
+													<li v-for="cuisine in restaurant.cuisines" 
 														:key="cuisine.id"
 													>
 													
@@ -564,7 +564,7 @@
 				);
 				
 				this.singleRestaurantCuisineData.restaurantObject = restaurant;
-				this.singleRestaurantCuisineData.cuisineObjects = restaurant.restaurant_cuisines;
+				this.singleRestaurantCuisineData.cuisineObjects = restaurant.cuisines;
 
 				$("#modal-createOrEdit-restaurantCuisine").modal("show");
 			},

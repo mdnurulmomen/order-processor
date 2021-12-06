@@ -16,9 +16,9 @@ class MyRegularItemResource extends JsonResource
     {
         return [
             'restaurant_menu_item'=>new RestaurantMenuItemResource($this->restaurantMenuItem),
-           'quantity'=>$this->quantity,
-           'variation'=>($this->restaurantMenuItem->has_variation & $this->variation()->exists()) ? new MyRegularItemVariationResource($this->variation) : false,
-           'addons'=>($this->restaurantMenuItem->has_addon & $this->addons()->exists()) ? MyRegularItemAddonResource::collection($this->addons) : false,
+            'quantity'=>$this->quantity,
+            'variation'=>($this->restaurantMenuItem->has_variation & $this->variation()->exists()) ? new MyRegularItemVariationResource($this->variation) : false,
+            'addons'=>($this->restaurantMenuItem->has_addon & $this->addons()->exists()) ? MyRegularItemAddonResource::collection($this->addons) : false,
         ];
     }
 }

@@ -26,8 +26,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 				Route::get('/general-info', 'SettingController@getGeneralInfo')->name('general-info');
 
-				Route::post('otp', 'LoginController@sendMobileOTP')->name('otp');
-				Route::post('login', 'LoginController@userLogin')->name('login');
+				// Route::post('send-mobile-otp', 'LoginController@sendMobileOTP')->name('otp');
+				Route::post('login', 'LoginController@login')->name('login');
 				// Route::post('register', 'RegisterController@userRegistration')->name('register');
 				
 				Route::get('users/{user}', 'ProfileController@showUserDetail')->name('users.show');
@@ -37,7 +37,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::post('user-addresses', 'ProfileController@addUserAddress')->name('user-addresses.create');
 				Route::put('users/{user}/addresses/{address}', 'ProfileController@updateUserAddress')->name('user-addresses.update');
 				
-				Route::post('user-password', 'ProfileController@updateUserPassword')->name('user-passwords.update');
+				// Route::post('user-password', 'ProfileController@updateUserPassword')->name('user-passwords.update');
 				
 				Route::get('user-favourites/{customer_address_id}/{per_page?}', 'CustomerController@getUserFavourites')->name('user-favourites.index');
 				Route::post('user-favourites', 'CustomerController@addUserFavourite')->name('user-favourites.create');

@@ -105,6 +105,7 @@ class Restaurant extends Model
         return $this->hasMany(RestaurantMeal::class, 'restaurant_id', 'id');
     }
 
+    // when pivot table doesnn't follow soft-deleted or not soft-deleted
     public function cuisines()
     {
         return $this->belongsToMany(Cuisine::class, 'restaurant_cuisines', 'restaurant_id', 'cuisine_id');

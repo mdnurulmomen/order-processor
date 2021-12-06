@@ -122,11 +122,20 @@
 								    					restaurant.deal.delivery_fee_addition ? 'Applicable' : 'Not-Applicable' 
 								    				}}
 								    			</span>
+
 								    			<span v-else class="badge-danger right badge">
 								    				No Deal
 								    			</span>
 								    		</td>
 								    		<td>
+										      	<button type="button" 
+										      			v-show="restaurant.deleted_at === null && restaurant.deal === null" 
+										      			@click="showDealCreateModal(restaurant)" 
+										      			class="btn btn-secondary btn-sm">
+										        	<i class="fa fa-plus-circle"></i>
+										        	Add
+										      	</button>
+
 										      	<button type="button" 
 										      			v-show="restaurant.deleted_at === null && restaurant.deal !== null" 
 										      			@click="showRestaurantDealEditModal(restaurant)" 
@@ -134,6 +143,7 @@
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
+
 										      	<p 	class="text-danger" 
 										      		v-show="restaurant.deleted_at !== null">
 										      		Trashed Restaurant
@@ -236,7 +246,6 @@
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
 					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantDeal.restaurant')"
 				                                  		>
 					                                	</multiselect>
 									                	<div 
@@ -265,7 +274,6 @@
 																step=".1" 
 																placeholder="Discount Rate" 
 																:class="!errors.restaurantDeal.net_discount  ? 'is-valid' : 'is-invalid'"
-																@keyup="validateFormInput('restaurantDeal.net_discount')"
 										                	>
 															<div class="input-group-append">
 																<span class="input-group-text">
@@ -296,7 +304,6 @@
 																step=".1" 
 																placeholder="Promotional Percentage" 
 																:class="!errors.restaurantDeal.restaurant_promotional_discount  ? 'is-valid' : 'is-invalid'"
-																@keyup="validateFormInput('restaurantDeal.restaurant_promotional_discount')"
 										                	>
 															<div class="input-group-append">
 																<span class="input-group-text">
@@ -327,7 +334,6 @@
 																step=".1" 
 																placeholder="Sale Percentage" 
 																:class="!errors.restaurantDeal.native_discount  ? 'is-valid' : 'is-invalid'"
-																@keyup="validateFormInput('restaurantDeal.native_discount')"
 										                	>
 															<div class="input-group-append">
 																<span class="input-group-text">
@@ -358,7 +364,6 @@
 																step=".1" 
 																placeholder="Sale Percentage" 
 																:class="!errors.restaurantDeal.sale_percentage  ? 'is-valid' : 'is-invalid'"
-																@keyup="validateFormInput('restaurantDeal.sale_percentage')"
 										                	>
 															<div class="input-group-append">
 																<span class="input-group-text">
@@ -588,7 +593,7 @@
 					this.searchData();
 				}
     		},
-			showDealCreateModal(){
+			showDealCreateModal(restaurant = {}){
 
 				this.editMode = false;
 				this.submitForm = true;
@@ -597,7 +602,7 @@
 
 				// this.singleRestaurantDealData = {};
 				this.singleRestaurantDealData.restaurantDeal = {};
-				this.singleRestaurantDealData.restaurantObject = {};
+				this.singleRestaurantDealData.restaurantObject = restaurant ?? {};
 
 				$('#modal-createOrEdit-deal').modal('show');
 			},

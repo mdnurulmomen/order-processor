@@ -20,6 +20,7 @@ use App\Models\RestaurantMenuItemVariation;
 
 class RestaurantController extends Controller
 {
+   	// Restaurants
    	public function showAllRestaurants($perPage = false)
    	{
    		if ($perPage) {
@@ -35,7 +36,7 @@ class RestaurantController extends Controller
          return response(Restaurant::latest()->get(), 200);
    	}
 
-   	public function createNewRestaurant(Request $request, $perPage)
+      public function createNewRestaurant(Request $request, $perPage)
    	{
    		$request->validate([
    			'restaurant_admins_id'=>'required',
@@ -167,11 +168,11 @@ class RestaurantController extends Controller
          
          if ($expectedRestaurant) {
 
-            $expectedRestaurant->meals()->delete();
+            $expectedRestaurant->restaurantMeals()->delete();
             $expectedRestaurant->kitchen()->delete();
             $expectedRestaurant->waiters()->delete();
-            $expectedRestaurant->cuisines()->delete();
-            $expectedRestaurant->menuCategories()->delete();
+            $expectedRestaurant->restaurantCuisines()->delete();
+            $expectedRestaurant->restaurantMenuCategories()->delete();
             
             $expectedRestaurant->delete();
             
@@ -186,11 +187,11 @@ class RestaurantController extends Controller
          
          if ($expectedRestaurant && $expectedRestaurant->admin()->exists()) {
 
-            $expectedRestaurant->meals()->restore();
+            $expectedRestaurant->restaurantMeals()->restore();
             $expectedRestaurant->kitchen()->restore();
             $expectedRestaurant->waiters()->restore();
-            $expectedRestaurant->cuisines()->restore();
-            $expectedRestaurant->menuCategories()->restore();
+            $expectedRestaurant->restaurantCuisines()->restore();
+            $expectedRestaurant->restaurantMenuCategories()->restore();
 
             $expectedRestaurant->restore();
 
@@ -215,8 +216,7 @@ class RestaurantController extends Controller
          ], 200);
       }
 
-
-
+      // All Restaurant-Admins
       public function showAllRestaurantAdmins($perPage = false)
       {
          if ($perPage) {
@@ -325,6 +325,7 @@ class RestaurantController extends Controller
          ], 200);
       }
 
+      // All Restaurant-Kitchens
       public function showAllRestaurantKitchens($perPage = false)
       {
          if ($perPage) {
@@ -435,8 +436,7 @@ class RestaurantController extends Controller
          ], 200);
       }
 
-
-
+      // All Restaurant-Waiters
       public function showAllRestaurantWaiters($perPage = false)
       {
          if ($perPage) {
@@ -555,8 +555,7 @@ class RestaurantController extends Controller
          ], 200);
       }
 
-
-
+      // All Restaurant-Deals
       public function showAllRestaurantDeals($perPage = false)
       {
          if ($perPage) {
@@ -640,15 +639,14 @@ class RestaurantController extends Controller
          ], 200);
       }
 
-
-
+      // All Restaurant-Meals
       public function showAllRestaurantMeals($perPage = false)
       {
          if ($perPage) {
-            return response(Restaurant::with('restaurantMealCategories')->paginate($perPage), 200);
+            return response(Restaurant::with('meals')->paginate($perPage), 200);
          }
 
-         return response(Restaurant::with('restaurantMealCategories')->get(), 200);
+         return response(Restaurant::with('meals')->get(), 200);
       }
 
       public function createRestaurantMeal(Request $request, $perPage = false)
@@ -662,9 +660,9 @@ class RestaurantController extends Controller
 
          foreach ($request->meal_id as $restaurantNewMeal) {
             
-            if (!$restaurant->restaurantMealCategories()->wherePivot('meal_id', $restaurantNewMeal)->count()) {
+            if (!$restaurant->meals()->wherePivot('meal_id', $restaurantNewMeal)->count()) {
                
-               $restaurant->restaurantMealCategories()->syncWithoutDetaching([$restaurantNewMeal]);
+               $restaurant->meals()->syncWithoutDetaching([$restaurantNewMeal]);
             }
 
          }
@@ -681,7 +679,7 @@ class RestaurantController extends Controller
             'restaurant_id'=>'required|numeric|exists:restaurants,id',
          ]);
 
-         $restaurantToUpdate->restaurantMealCategories()->sync($request->meal_id);       
+         $restaurantToUpdate->meals()->sync($request->meal_id);       
          return $this->showAllRestaurantMeals($perPage);
       }
 
@@ -691,7 +689,7 @@ class RestaurantController extends Controller
 
          if ($restaurantToDelete) {
             
-            $restaurantToDelete->restaurantMealCategories()->sync([]);  
+            $restaurantToDelete->meals()->sync([]);  
 
          }
 
@@ -700,9 +698,9 @@ class RestaurantController extends Controller
 
       public function searchAllRestaurantMeals($search, $perPage)
       {
-         $query = Restaurant::with('restaurantMealCategories')
+         $query = Restaurant::with('meals')
                             ->where('name', 'like', "%$search%")
-                            ->orWhereHas('restaurantMealCategories', function($q)use ($search){
+                            ->orWhereHas('meals', function($q)use ($search){
                               $q->where('name', 'like', "%$search%");
                             });
 
@@ -711,15 +709,14 @@ class RestaurantController extends Controller
          ], 200);
       }
 
-
-
+      // Restaurant-Cuisines
       public function showAllRestaurantCuisines($perPage = false)
       {
          if ($perPage) {
-            return response(Restaurant::with('restaurantCuisines')->paginate($perPage), 200);
+            return response(Restaurant::with('cuisines')->paginate($perPage), 200);
          }
 
-         return response(Restaurant::with('restaurantCuisines')->get(), 200);
+         return response(Restaurant::with('cuisines')->get(), 200);
       }
 
       public function createRestaurantCuisine(Request $request, $perPage = false)
@@ -733,9 +730,9 @@ class RestaurantController extends Controller
 
          foreach ($request->cuisine_id as $restaurantNewCuisine) {
             
-            if (!$restaurant->restaurantCuisines()->wherePivot('cuisine_id', $restaurantNewCuisine)->count()) {
+            if (! $restaurant->cuisines()->wherePivot('cuisine_id', $restaurantNewCuisine)->count()) {
                
-               $restaurant->restaurantCuisines()->syncWithoutDetaching([$restaurantNewCuisine]);
+               $restaurant->cuisines()->syncWithoutDetaching([$restaurantNewCuisine]);
             }
 
          }
@@ -748,11 +745,11 @@ class RestaurantController extends Controller
          $restaurantToUpdate = Restaurant::find($restaurant);
 
          $request->validate([
-            'cuisine_id.*'=>'required|numeric|exists:meals,id',
+            'cuisine_id.*'=>'required|numeric|exists:cuisines,id',
             'restaurant_id'=>'required|numeric|exists:restaurants,id',
          ]);
 
-         $restaurantToUpdate->restaurantCuisines()->sync($request->cuisine_id);       
+         $restaurantToUpdate->cuisines()->sync($request->cuisine_id);       
 
          return $this->showAllRestaurantCuisines($perPage);
       }
@@ -763,7 +760,7 @@ class RestaurantController extends Controller
 
          if ($restaurantToDelete) {
             
-            $restaurantToDelete->restaurantCuisines()->sync([]);  
+            $restaurantToDelete->cuisines()->sync([]);  
          
          }
 
@@ -772,9 +769,9 @@ class RestaurantController extends Controller
 
       public function searchAllRestaurantCuisines($search, $perPage)
       {
-         $query = Restaurant::with('restaurantCuisines')
+         $query = Restaurant::with('cuisines')
                             ->orWhere('name', 'like', "%$search%")
-                            ->orWhereHas('restaurantCuisines', function($q)use ($search){
+                            ->orWhereHas('cuisines', function($q)use ($search){
                               $q->where('name', 'like', "%$search%");
                             });
 
@@ -783,15 +780,14 @@ class RestaurantController extends Controller
          ], 200);
       }
 
-
-
+      // Restaurant Menu-Items
       public function showRestaurantAllMenuItems($restaurant, $perPage = false)
       {
          if ($perPage) {
-            return response(RestaurantMenuCategory::withTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems.restaurantMenuItemVariations', 'restaurantMenuItems.restaurantMenuItemAddons'])->paginate($perPage), 200);
+            return response(RestaurantMenuCategory::withTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems.variations', 'menuItems.addons'])->paginate($perPage), 200);
          }
 
-         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->get(), 200);
+         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems'])->get(), 200);
       }
 
       public function createRestaurantMenuItem(Request $request, $perPage = false)
@@ -823,7 +819,7 @@ class RestaurantController extends Controller
 
             for ($i=0; $i < count($request->variations_id); $i++) { 
                
-               $newMenuItem->restaurantMenuItemVariations()
+               $newMenuItem->variations()
                            ->syncWithoutDetaching([
                               $request->variations_id[$i] => [
                                  'price' => $request->price_item_variations[$i] ?? 0
@@ -843,7 +839,7 @@ class RestaurantController extends Controller
 
             for ($i=0; $i < count($request->addons_id); $i++) { 
                
-               $newMenuItem->restaurantMenuItemAddons()
+               $newMenuItem->addons()
                            ->syncWithoutDetaching([
                               $request->addons_id[$i] => [
                                  'price' => $request->price_addon_items[$i] ?? 0
@@ -904,7 +900,7 @@ class RestaurantController extends Controller
             for ($i=0; $i<count($request->variations_id); $i++) { 
                
                /*
-               $alreadyExist = $menuItemToUpdate->restaurantMenuItemVariations()
+               $alreadyExist = $menuItemToUpdate->variations()
                                                 ->wherePivot('variation_id', $request->variations_id[$i])
                                                 ->count();
                */
@@ -917,7 +913,7 @@ class RestaurantController extends Controller
                if ($existingVariation) {
                   
                /*
-                  $menuItemToUpdate->restaurantMenuItemVariations()
+                  $menuItemToUpdate->variations()
                                    ->wherePivot('variation_id', $request->variations_id[$i])
                                    ->update([
                                        'price' => $request->price_item_variations[$i],
@@ -934,7 +930,7 @@ class RestaurantController extends Controller
 
                else {
 
-                  $menuItemToUpdate->restaurantMenuItemVariations()
+                  $menuItemToUpdate->variations()
                                    ->attach($request->variations_id[$i], [
                                        'price' => $request->price_item_variations[$i] ?? 0
                                     ]
@@ -959,7 +955,7 @@ class RestaurantController extends Controller
             for ($i=0; $i<count($request->addons_id); $i++) { 
                
                /*
-               $alreadyExist = $menuItemToUpdate->restaurantMenuItemAddons()
+               $alreadyExist = $menuItemToUpdate->addons()
                                                 ->wherePivot('addon_id', $request->addons_id[$i])
                                                 ->count();
                */
@@ -972,7 +968,7 @@ class RestaurantController extends Controller
                if ($existingAddon) {
                   
                /*
-                  $menuItemToUpdate->restaurantMenuItemAddons()
+                  $menuItemToUpdate->addons()
                                    ->wherePivot('addon_id', $request->addons_id[$i])
                                    ->update([
                                        'price' => $request->price_addon_items[$i],
@@ -989,7 +985,7 @@ class RestaurantController extends Controller
 
                else {
 
-                  $menuItemToUpdate->restaurantMenuItemAddons()
+                  $menuItemToUpdate->addons()
                                    ->attach($request->addons_id[$i], [
                                        'price' => $request->price_addon_items[$i] ?? 0
                                     ]
@@ -1040,14 +1036,14 @@ class RestaurantController extends Controller
 
       public function searchRestaurantAllMenuItems($restaurant, $search, $perPage)
       {
-         $query = RestaurantMenuCategory::with(['restaurant', 'menuCategory', 'restaurantMenuItems.restaurantMenuItemVariations', 'restaurantMenuItems.restaurantMenuItemAddons']);
+         $query = RestaurantMenuCategory::with(['restaurant', 'menuCategory', 'menuItems.variations', 'menuItems.addons']);
 
          $query->where( function( $subquery )use ($search){
 
             $subquery->whereHas('menuCategory', function($q) use ($search){
                $q->where('name', 'like', "%$search%");
             });
-            $subquery->orWhereHas('restaurantMenuItems.restaurantMenuItemVariations', function($q) use ($search){
+            $subquery->orWhereHas('menuItems.variations', function($q) use ($search){
                $q->where("name", 'like', "%$search%");
                $q->orWhere("detail", 'like', "%$search%");
                $q->orWhere("price", 'like', "%$search%");
@@ -1084,21 +1080,21 @@ class RestaurantController extends Controller
       }
 
       
-
+      // All Restaurant-Menu-Catehgories
       public function showAllRestaurantMenuCategories($perPage = false)
       {
          if ($perPage) {
-            return response(Restaurant::with('restaurantMenuCategories')->paginate($perPage), 200);
+            return response(Restaurant::with('menuCategories')->paginate($perPage), 200);
          }
 
-         return response(Restaurant::with('restaurantMenuCategories')->get(), 200);
+         return response(Restaurant::with('menuCategories')->get(), 200);
       }
 
       public function searchAllRestaurantMenuCategories($search, $perPage)
       {
-         $query = Restaurant::with('restaurantMenuCategories')
+         $query = Restaurant::with('menuCategories')
                             ->where('name', 'like', "%$search%")
-                            ->orWhereHas('restaurantMenuCategories', function($q)use ($search){
+                            ->orWhereHas('menuCategories', function($q)use ($search){
                               $q->where('name', 'like', "%$search%");
                             });
 
@@ -1108,20 +1104,20 @@ class RestaurantController extends Controller
       }
 
 
-
+      // Restaurant All Menu-Categories
       public function showRestaurantAllMenuCategories($restaurant, $perPage = false)
       {
          if ($perPage) {
             return response()->json([
-               'current' => RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage),
-               'trashed' => RestaurantMenuCategory::onlyTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage),
+               'current' => RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems'])->paginate($perPage),
+               'trashed' => RestaurantMenuCategory::onlyTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems'])->paginate($perPage),
 
             ], 200);
 
-            // return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])->paginate($perPage), 200);
+            // return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems'])->paginate($perPage), 200);
          }
 
-         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'restaurantMenuItems'])->get(), 200);
+         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'menuItems'])->get(), 200);
       }
 
       public function createRestaurantMenuCategory(Request $request, $perPage = false)
@@ -1138,9 +1134,9 @@ class RestaurantController extends Controller
 
          foreach ($request->menu_category_id as $restaurantNewMenuCategory) {
             
-            if ($expectedRestaurant->menuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->count()) {
+            if ($expectedRestaurant->restaurantMenuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->count()) {
                
-               $expectedRestaurant->menuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->update([
+               $expectedRestaurant->restaurantMenuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->update([
                   'serving_from' => $request->serving_from,
                   'serving_to' => $request->serving_to,
                   'deleted_at' => NULL
@@ -1150,7 +1146,7 @@ class RestaurantController extends Controller
 
             else{
 
-               $expectedRestaurant->restaurantMenuCategories()->syncWithoutDetaching([
+               $expectedRestaurant->menuCategories()->syncWithoutDetaching([
                   $restaurantNewMenuCategory => [
                      'serving_from' => $request->serving_from,
                      'serving_to' => $request->serving_to
@@ -1200,16 +1196,22 @@ class RestaurantController extends Controller
 
       public function deleteRestaurantMenuCategory($menuCategory, $perPage)
       {
-         $restaurantMenuItemToDelete = RestaurantMenuCategory::find($menuCategory);
+         $restaurantMenuCategoryToDelete = RestaurantMenuCategory::findOrFail($menuCategory);
           
-         if ($restaurantMenuItemToDelete) {
+         if ($restaurantMenuCategoryToDelete->menuItems()->withTrashed()->count()) {
 
-            $restaurantMenuItemToDelete->restaurantMenuItems()->delete();
-            $restaurantMenuItemToDelete->delete();
+            $restaurantMenuCategoryToDelete->menuItems()->delete();
+            $restaurantMenuCategoryToDelete->delete();
          
          }
+         else {
 
-         return $this->showRestaurantAllMenuCategories($restaurantMenuItemToDelete->restaurant_id, $perPage);
+            $restaurantMenuCategoryToDelete->menuItems()->forceDelete();
+            $restaurantMenuCategoryToDelete->forceDelete();
+
+         }
+
+         return $this->showRestaurantAllMenuCategories($restaurantMenuCategoryToDelete->restaurant_id, $perPage);
       }
 
       public function restoreRestaurantMenuCategory($menuCategory, $perPage)
@@ -1228,7 +1230,7 @@ class RestaurantController extends Controller
       public function searchRestaurantAllMenuCategories($restaurant, $search, $perPage)
       {
          $query = RestaurantMenuCategory::withTrashed()
-                                          ->with(['restaurant', 'menuCategory', 'restaurantMenuItems'])
+                                          ->with(['restaurant', 'menuCategory', 'menuItems'])
                                           ->where("serving_from", 'like', "%$search%")
                                           ->orWhere("serving_to", 'like', "%$search%");
          

@@ -17,7 +17,7 @@ class OrderRestaurantResource extends JsonResource
         return [
             'id' => $this->restaurant->id,
             'name' => $this->restaurant->name,
-            'items' => OrderedRestaurantMenuItemResource::collection($this->items),
+            'menu_items' => OrderRestaurantMenuItemResource::collection($this->items),
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ScheduledOrder extends Model
+class ScheduleOrder extends Model
 {
     /**
      * The attributes that are mass assignable.

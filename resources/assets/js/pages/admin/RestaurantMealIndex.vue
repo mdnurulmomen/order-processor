@@ -73,12 +73,12 @@
 								    			</span>
 								    		</td>
 								    		<td>
-							    				<p class="small text-danger" v-show="restaurant.restaurant_meal_categories.length === 0">
+							    				<p class="small text-danger" v-show="restaurant.meals.length === 0">
 							                		Meal not available or trashed
 							                	</p>
 
-								    			<ul v-show="restaurant.restaurant_meal_categories.length">
-													<li v-for="meal in restaurant.restaurant_meal_categories" 
+								    			<ul v-show="restaurant.meals.length">
+													<li v-for="meal in restaurant.meals" 
 														:key="meal.id">
 													
 														{{ meal.name }}
@@ -568,7 +568,7 @@
 				);
 				
 				this.singleRestaurantMealData.restaurantObject = restaurant;
-				this.singleRestaurantMealData.mealObjects = restaurant.restaurant_meal_categories;
+				this.singleRestaurantMealData.mealObjects = restaurant.meals;
 
 				$("#modal-createOrEdit-restaurantMeal").modal("show");
 			},

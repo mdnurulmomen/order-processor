@@ -226,7 +226,7 @@
 								            <div class="card-body">
 								              	<div class="form-group row">	
 								              		<label for="inputKitchenName3" class="col-sm-4 col-form-label text-right">
-								              			Restaurant Name
+								              			Restaurant
 								              		</label>
 									                <div class="col-sm-8">
 									                  	<multiselect 
@@ -240,7 +240,6 @@
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
 					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('kitchen.restaurantObject')"
 				                                  		>
 					                                	</multiselect>
 									                	<div class="invalid-feedback">
@@ -254,7 +253,7 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputKitchenName3" class="col-sm-4 col-form-label text-right">
-								              			Kitchen Username
+								              			Username
 								              		</label>
 									                <div class="col-sm-8">
 									                  	<input 
@@ -264,7 +263,6 @@
 															placeholder="Kitchen Mobile" 
 															required="true"
 															:class="!errors.kitchen.user_name  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('kitchen.user_name')"
 									                	>
 									                	<div class="invalid-feedback">
 												        	{{ 
@@ -276,7 +274,7 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputKitchenName3" class="col-sm-4 col-form-label text-right">
-								              			Kitchen Mobile
+								              			Mobile
 								              		</label>
 									                <div class="col-sm-8">
 									                  	<input 
@@ -286,7 +284,6 @@
 															placeholder="Kitchen Mobile" 
 															required="true"
 															:class="!errors.kitchen.mobile  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('kitchen.mobile')"
 									                	>
 									                	<div class="invalid-feedback">
 												        	{{ errors.kitchen.mobile }}
@@ -306,7 +303,6 @@
 															placeholder="Kitchen Email" 
 															required="true"
 															:class="!errors.kitchen.email  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('kitchen.email')"
 									                	>
 									                	<div class="invalid-feedback">
 												        	{{ errors.kitchen.email }}
@@ -326,7 +322,6 @@
 															placeholder="Kitchen Email" 
 															:required="!editMode" 
 															:class="!errors.kitchen.password  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('kitchen.password')"
 									                	>
 									                	<div class="invalid-feedback">
 												        	{{ errors.kitchen.password }}
@@ -346,7 +341,6 @@
 															placeholder="Kitchen Email" 
 															:required="!editMode"
 															:class="!errors.kitchen.password_confirmation  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('kitchen.password_confirmation')"
 									                	>
 									                	<div class="invalid-feedback">
 												        	{{ 

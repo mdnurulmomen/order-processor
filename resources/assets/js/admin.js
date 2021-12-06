@@ -157,12 +157,12 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/restaurant-cuisine-list" */ './pages/admin/RestaurantCuisineIndex.vue')
 		},
 		{
-			path: '/restaurant-menu-items/:restaurant',
+			path: '/restaurant-menu-items/:restaurantId',
 		    name: 'restaurant-menu-items',
 		    component: () => import(/* webpackChunkName : "js/restaurant-menu-item-list" */ './pages/admin/RestaurantMenuItemIndex.vue'),
 		},
 		{
-			path: '/restaurant-menu-category-details/:restaurant',
+			path: '/restaurant-menu-category-details/:restaurantId',
 		    name: 'restaurant-menu-category-details',
 		    component: () => import(/* webpackChunkName : "js/restaurant-menu-category-detail-list" */ './pages/admin/RestaurantMenuCategoryDetailIndex.vue'),
 		},

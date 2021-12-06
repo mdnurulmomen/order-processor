@@ -105,11 +105,8 @@ class GeneralInfoResource extends JsonResource
 
             // "preferences" => RestaurantMenuCategoryResource::collection(MenuCategory::all()),
 
-
-
-
-            'delivery_charge' => $this->delivery_charge,
-            'multiple_delivery_charge_percentage' => $this->multiple_delivery_charge_percentage,
+            // 'delivery_charge' => $this->delivery_charge,
+            // 'multiple_delivery_charge_percentage' => $this->multiple_delivery_charge_percentage,
             'official_mail_address' => $this->official_mail_address,
             'official_contact_address' => $this->official_contact_address,
             'official_customer_care_number' => $this->official_customer_care_number,

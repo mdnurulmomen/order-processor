@@ -407,7 +407,7 @@
 				                                  			:height="30" 
 				                                  			:font-size="15" 
 				                                  			:color="{checked: 'green', unchecked: 'red'}" 
-				                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
+				                                  			:labels="{checked: 'Approved', unchecked: 'Not-Approved' }"
 			                                  			/>
 									                </div>	
 								              	</div>

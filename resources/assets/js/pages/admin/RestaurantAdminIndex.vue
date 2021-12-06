@@ -168,7 +168,7 @@
 
 			<!-- /.modal-createOrEdit-restaurantAdmin -->
 			<div class="modal fade" id="modal-createOrEdit-restaurantAdmin">
-				<div class="modal-dialog">
+				<div class="modal-dialog modal-lg">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
@@ -271,7 +271,7 @@
 															type="password" 
 															class="form-control" 
 															v-model="singleRestaurantAdminData.restaurantAdmin.password" 
-															placeholder="Admin Email" 
+															placeholder="Password" 
 															:required="!editMode" 
 															:class="!errors.restaurantAdmin.password  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('restaurantAdmin.password')"
@@ -291,7 +291,7 @@
 															type="password" 
 															class="form-control" 
 															v-model="singleRestaurantAdminData.restaurantAdmin.password_confirmation" 
-															placeholder="Admin Email" 
+															placeholder="Confirm Password" 
 															:required="!editMode"
 															:class="!errors.restaurantAdmin.password_confirmation  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('restaurantAdmin.password_confirmation')"

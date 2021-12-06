@@ -125,7 +125,7 @@
 								    		</td>
 								    		<td>
 								    			{{ 
-								    				restaurantMenuCategory.restaurant_menu_items.length 
+								    				restaurantMenuCategory.menu_items.length 
 								    			}}
 								    		</td>
 								    		<td>
@@ -509,7 +509,7 @@
 			serving_to : '22.00',
 			restaurant_id : null,
 			menu_category : {},
-			// restaurant_menu_items : [],
+			// menu_items : [],
     	}
     };
 
@@ -575,7 +575,7 @@
 		    // a computed getter
 		    restaurantsToShow: function () {  
 		      	this.restaurantSingleMenuCategoryData.restaurantObject = {
-					id : this.$route.params.restaurant,		
+					id : this.$route.params.restaurantId,		
 					name : this.restaurantNameFromData,
 				};
 
@@ -646,7 +646,7 @@
 			fetchRestaurantAllMenuCategories() {
 				this.loading = true;
 				axios
-					.get('/api/restaurant-menu-categories/' + this.$route.params.restaurant + '/' + this.perPage + "?page=" +
+					.get('/api/restaurant-menu-categories/' + this.$route.params.restaurantId + '/' + this.perPage + "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
@@ -872,7 +872,7 @@
 				
 				axios
 				.get(
-					"/api/restaurant-menu-categories/search/" + this.$route.params.restaurant + "/"  + this.query + "/" + this.perPage +
+					"/api/restaurant-menu-categories/search/" + this.$route.params.restaurantId + "/"  + this.query + "/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
@@ -941,7 +941,8 @@
 				this.$router.push({
 			 		name: 'restaurant-menu-items', 
 			 		params: { 
-			 			restaurant : this.restaurantSingleMenuCategoryData.restaurantObject.id, 
+			 			restaurantId : this.restaurantSingleMenuCategoryData.restaurantObject.id, 
+			 			restaurantName : this.restaurantSingleMenuCategoryData.restaurantObject.name, 
 			 		}, 
 				});
 			},

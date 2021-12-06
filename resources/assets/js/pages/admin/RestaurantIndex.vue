@@ -472,7 +472,6 @@
 								autocomplete="off" 
 								novalidate="true"
 							>
-
 								<input type="hidden" name="_token" :value="csrf">
 
 								<div v-show="! loading" class="row">
@@ -498,7 +497,6 @@
 								</div>
 
 								<transition-group name="fade">
-
 									<div 
 										class="row" 
 										v-bind:key="1" 
@@ -530,7 +528,6 @@
 									                          	<div class="col-sm-4 align-self-center">
 									                              	<div class="input-group">
 									                                	<div class="custom-file">
-
 									                                    	<input 
 										                                    	type="file" 
 										                                    	class="custom-file-input"
@@ -543,14 +540,13 @@
 										                                    >
 									                                    		Change Banner
 									                                    	</label>
-										                                    
 									                                	</div>
 									                              	</div>
 									                          	</div>
 									                        </div>
 
-									                        <div class="form-group row">
-									                        	<div class="col-sm-12 d-flex justify-content-between">
+									                        <div class="form-group row text-center">
+									                        	<div class="col-sm-4">
 									                        		<div class="form-group">
 																  		<label for="inputAdminApproval3">
 																  			Admin Approval
@@ -568,7 +564,9 @@
 								                                  			/>		
 																  		</div>
 									                        		</div>
+									                        	</div>
 
+									                        	<div class="col-sm-4">
 									                        		<div class="form-group">
 																  		<label for="inputAdminApproval3">
 																  			Taking Order
@@ -586,7 +584,9 @@
 								                                  			/>		
 																  		</div>
 									                        		</div>
+									                        	</div>
 
+									                        	<div class="col-sm-4">
 									                        		<div class="form-group">
 																  		<label for="inputAdminApproval3">
 																  			Sponsored
@@ -600,7 +600,7 @@
 									                                  			:height="30" 
 									                                  			:font-size="15" 
 									                                  			:color="{checked: 'red', unchecked: 'green'}" 
-									                                  			:labels="{checked: 'Sponsored', unchecked: 'Not-sponsored' }"
+									                                  			:labels="{checked: 'Sponsored', unchecked: 'Not-Sponsored' }"
 								                                  			/>		
 																  		</div>
 									                        		</div>
@@ -616,7 +616,6 @@
 									                              			Restaurant Admin
 									                              		</label>
 									                              		<div class="col-sm-6">
-									                                  		
 									                                  		<multiselect 
 									                                  			v-model="singleRestaurantData.restaurantAdminObject"
 									                                  			placeholder="Restaurant Owner" 
@@ -637,7 +636,6 @@
 											                                >
 																		        {{ errors.restaurant.restaurantAdminObject }}
 																		  	</div>
-
 									                              		</div>
 									                               
 										                              	<div class="col-sm-2 text-right">
@@ -646,12 +644,10 @@
 										                                    	Admin
 										                                	</button>
 										                              	</div> 
-									                            
 									                            	</div>
 									                          	</div>
 
 																<div class="col-6">
-
 																	<div class="row">
 									                              		<label for="inputName3" class="col-sm-4 col-form-label text-right">
 									                              			Restaurant Name
@@ -682,7 +678,6 @@
 										                              		Rest. Mobile
 										                              	</label>
 										                              	<div class="col-sm-8">
-										                              		
 									                                  		<input 
 										                                  		type="tel" 
 										                                  		class="form-control" 
@@ -696,7 +691,6 @@
 										                                  	>
 																		        {{ errors.restaurant.mobile }}
 																		  	</div>
-										                                  		
 										                              	</div>
 										                            </div>
 									                          	</div>
@@ -710,7 +704,6 @@
 										                                	(if any)
 										                              	</div>
 										                              	<div class="col-sm-8">
-										                              	
 										                                  	<input 
 											                                  	type="url" 
 											                                  	class="form-control" 

@@ -64,6 +64,7 @@ class ProfileController extends Controller
         ], 200);
     }
 
+    /*
     public function updateUserPassword(Request $request)
     {
         $request->validate([
@@ -89,6 +90,7 @@ class ProfileController extends Controller
             'warning' => "Password doesn't match"
          ], 401);
     }
+    */
 
     public function addUserAddress(Request $request)
     {

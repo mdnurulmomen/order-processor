@@ -14,9 +14,12 @@ class MyRegularItemVariationResource extends JsonResource
      */
     public function toArray($request)
     {
+        $restaurantMenuItemVariation = $this->restaurantMenuItemVariation()->withTrashed()->first();
+
         return [
             'restaurant_menu_item_variation_id' => $this->id,
-            'restaurant_menu_item_variation' => /* new RestaurantMenuItemVariationResource($this->restaurantMenuItemVariation()->withTrashed()->first()) */ $this->restaurantMenuItemVariation()->withTrashed()->first()->variation->name,
+            'restaurant_menu_item_variation' => /* new RestaurantMenuItemVariationResource($this->restaurantMenuItemVariation()->withTrashed()->first()) */ $restaurantMenuItemVariation->variation->name,
+            'price' => $restaurantMenuItemVariation->price,
         ];
     }
 }

@@ -26,90 +26,86 @@ class LoginController extends Controller
         */
     }
 
-    // Send Mobile OTP
-    public function sendMobileOTP(Request $request)
+    public function login(Request $request)
     {
         $request->validate([
-            'type' => 'required|string|in:phone',
-            'app_key' => 'required|string|max:255',
-            'username_or_email_or_mobile' => ['required', 'regex:/(^(\+8801|8801|01))[0-9]{9}$/'],
-            // 'password' => 'required|string',
+            'type' => 'required|string|in:phone,gmail,facebook',
+            'apk_key' => 'required|string|max:255',
+            'username_or_email_or_mobile' => 'required',
+            // 'otp_code' => 'required_if:type,phone|string|max:6',
         ]);
 
-        $mobileOriginalNumber = $request->username_or_email_or_mobile;
-
-        if (substr($mobileOriginalNumber, 0, 2) == '88') {
+        if ($request->type === 'phone' && preg_match("/(^(\+8801|8801|01))[0-9]{9}$/", $request->username_or_email_or_mobile)) {
             
-            $mobileFilteredNumber = substr($mobileOriginalNumber, 2);
+            $request['username_or_email_or_mobile'] = $this->getFilteredMobileNumber($request->username_or_email_or_mobile);
 
-        }
-        else if (substr($mobileOriginalNumber, 0, 3) == '+88') {
-            
-            $mobileFilteredNumber = substr($mobileOriginalNumber, 3);
+            $existingUser = Customer::whereMobile($request->username_or_email_or_mobile)->first();
 
-        }
-        else {
-
-            $mobileFilteredNumber = $mobileOriginalNumber;
-
-        }
-
-        $existingUser = Customer::where('mobile', $mobileFilteredNumber)->first();
-
-        if ($existingUser) {
-            
-            $existingUser->update([
-                'otp_code'=> random_int(100000, 999999)
-            ]);
-
-            return ['id'=>$existingUser->id, 'is_new_user'=>false, 'otp_code'=>$existingUser->otp_code];
-
-            // return $this->sendUserLoginResponse($existingUser);
-
-        }
-        else {
-
-            $newCustomer = Customer::create([
-                'mobile'=>$mobileFilteredNumber,
-                'otp_code'=> random_int(100000, 999999)
-            ]);
-
-            return ['id'=>$newCustomer->id, 'is_new_user'=>true, 'otp_code'=>$newCustomer->otp_code];
-
-            // return $this->sendUserLoginResponse($newCustomer);
+            // check otp-code
+            if ($request->otp_code && $existingUser && $existingUser->otp_code) {
+                return $this->sendMobileOTPResponse($request, $existingUser);
+            }
+            // send otp-code
+            else {
+                return $this->sendMobileOTP($request);
+            }
 
         }
 
-        /*
-        if ($this->attemptUserLoginWithMobile($request) || $this->attemptUserLoginWithUsername($request) || $this->attemptUserLoginWithEmail($request)) {
+        else if (($request->type === 'gmail' || $request->type === 'facebook') && filter_var($request->username_or_email_or_mobile, FILTER_VALIDATE_EMAIL)) {
 
-            return $this->sendUserLoginResponse(Customer::find(1));
-
-        }
-        */
-
-        // return $this->sendFailedLoginResponse($request);
-    }
-
-    // User / Customer Login
-    public function userLogin(Request $request)
-    {
-        $request->validate([
-            'type' => 'required|string|in:phone,facebook,gmail',
-            'app_key' => 'required|string|max:255',
-            'username_or_email_or_mobile' => 'required|string',
-            // 'password' => 'required|string',
-        ]);
-
-        /*
-        if ($this->attemptUserLoginWithMobile($request) || $this->attemptUserLoginWithUsername($request) || $this->attemptUserLoginWithEmail($request)) {
-
-            return $this->sendUserLoginResponse(Customer::find(1));
+            return $this->sendEmailLoginResponse($request);
 
         }
-        */
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    // check otp-code
+    private function sendMobileOTPResponse(Request $request, Customer $user)
+    {
+        if ($user->otp_code === $request->otp_code) {
+            
+            $user->update([ 'otp_code'=>NULL ]);
+
+            return $this->sendUserLoginResponse($user);
+
+        }
+
+        else {
+
+            return $this->sendFailedMobileOTPResponse($request);
+
+        }        
+    }
+
+    // Send Mobile OTP
+    private function sendMobileOTP(Request $request)
+    {
+        $user = Customer::updateOrCreate(
+            [ 'mobile' => $request->username_or_email_or_mobile ],
+            [ 'otp_code'=> random_int(100000, 999999) ]
+        );
+
+        return $this->sendNewUserMobileLoginResponse($user);
+
+        /*
+        if ($this->attemptUserLoginWithMobile($request) || $this->attemptUserLoginWithUsername($request) || $this->attemptUserLoginWithEmail($request)) {
+
+            return $this->sendUserLoginResponse(Customer::find(1));
+
+        }
+        // return $this->sendFailedLoginResponse($request);
+        */
+    }
+
+    private function sendEmailLoginResponse(Request $request)
+    {
+        $user = Customer::firstOrCreate([ 
+            'email' => $request->username_or_email_or_mobile 
+        ]);
+
+        return $user->wasRecentlyCreated ? $this->sendNewUserEmailLoginResponse($user) : $this->sendUserLoginResponse($user);
     }
 
     /*
@@ -135,6 +131,16 @@ class LoginController extends Controller
     }
     */
 
+    private function sendNewUserMobileLoginResponse(Customer $user)
+    {
+        return [ 'id'=>$user->id, 'is_new_user'=>$user->wasRecentlyCreated, 'otp_code'=>$user->otp_code ];
+    }
+
+    private function sendNewUserEmailLoginResponse(Customer $user)
+    {
+        return [ 'id'=>$user->id, 'is_new_user'=>$user->wasRecentlyCreated, 'email'=>$user->email ];
+    }
+
     /**
      * Send the response after the user was authenticated.
      *
@@ -156,8 +162,21 @@ class LoginController extends Controller
      */
     private function sendFailedLoginResponse(Request $request)
     {
+        /*
         throw ValidationException::withMessages([
             $this->username() => [trans('auth.failed')],
+        ]);
+        */
+       
+        throw ValidationException::withMessages([
+            'bad_request' => ['Wrong type or credentials'],
+        ]);
+    }
+
+    private function sendFailedMobileOTPResponse(Request $request)
+    {
+        throw ValidationException::withMessages([
+            'otp_code' => ['Wrong OTP code. Please try again'],
         ]);
     }
 
@@ -169,6 +188,25 @@ class LoginController extends Controller
     private function username()
     {
         return 'username_or_email_or_mobile';
+    }
+
+    private function getFilteredMobileNumber($mobile)
+    {
+        if (substr($mobile, 0, 2) == '88') {
+            
+            return substr($mobile, 2);
+
+        }
+        else if (substr($mobile, 0, 3) == '+88') {
+            
+            return substr($mobile, 3);
+
+        }
+        else {
+
+            return $mobile;
+
+        }
     }
 
 }

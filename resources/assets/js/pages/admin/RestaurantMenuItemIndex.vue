@@ -97,8 +97,8 @@
 														</tr>
 													</thead>
 										    		<tbody>
-												    	<tr v-show="restaurantMenuCategory.restaurant_menu_items.length" 
-													    	v-for="(menuItem, index) in restaurantMenuCategory.restaurant_menu_items" 
+												    	<tr v-show="restaurantMenuCategory.menu_items.length" 
+													    	v-for="(menuItem, index) in restaurantMenuCategory.menu_items" 
 													    	:key="menuItem.id"
 													  	>
 													    	<td scope="row">
@@ -241,7 +241,7 @@
 												    		</td>
 												    	</tr>
 
-												    	<tr v-show="!restaurantMenuCategory.restaurant_menu_items.length"
+												    	<tr v-show="!restaurantMenuCategory.menu_items.length"
 												    	>
 												    		<td colspan="8">
 													      		<div class="alert alert-danger" role="alert">
@@ -1273,7 +1273,7 @@
 			fetchRestaurantAllMenuItems(){
 				this.loading = true;
 				axios
-					.get('/api/restaurant-menu-items/' + this.$route.params.restaurant + '/' + this.perPage + "?page=" +
+					.get('/api/restaurant-menu-items/' + this.$route.params.restaurantId + '/' + this.perPage + "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
@@ -1313,7 +1313,8 @@
 				this.$router.push({
 			 		name: 'restaurant-menu-category-details', 
 			 		params: { 
-			 			restaurant : this.$route.params.restaurant,
+			 			restaurantId : this.$route.params.restaurantId,
+			 			restaurantName : this.$route.params.restaurantName
 			 		}, 
 				});
 			},
@@ -1325,7 +1326,7 @@
 				this.singleRestaurantMenuItemData.restaurantMenuCategoryObject = {};
 				
 				this.singleRestaurantMenuItemData.restaurantMenuItem = {};
-				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurant;
+				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurantId;
 
 				this.variationIndex = [0, 1];
 				this.variationObjects = [];
@@ -1395,7 +1396,7 @@
 				this.singleRestaurantMenuItemData.restaurantMenuCategoryObject = restaurantMenuCategoryObjects[0];
 				
 				this.singleRestaurantMenuItemData.restaurantMenuItem = menuItem;
-				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurant;
+				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurantId;
 
 				if (menuItem.has_variation && menuItem.restaurant_menu_item_variations.length) {
 
@@ -1500,7 +1501,7 @@
 				$("#modal-restaurantMenuItem-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/restaurant-menu-items/' + this.$route.params.restaurant + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
+					.delete('/restaurant-menu-items/' + this.$route.params.restaurantId + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1536,7 +1537,7 @@
 				$("#modal-restaurantMenuItem-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/restaurant-menu-items/' + this.$route.params.restaurant + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
+					.patch('/restaurant-menu-items/' + this.$route.params.restaurantId + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1567,7 +1568,7 @@
 				
 				axios
 				.get(
-					"/api/restaurant-menu-items/search/" + this.$route.params.restaurant +"/"  + this.query +"/" + this.perPage +
+					"/api/restaurant-menu-items/search/" + this.$route.params.restaurantId +"/"  + this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
@@ -1591,7 +1592,7 @@
 
 				this.singleRestaurantMenuItemData.restaurantObjectToAddMenuCategory = {
 		    		name : this.restaurantNameFromData, 
-					id : this.$route.params.restaurant 
+					id : this.$route.params.restaurantId 
 		    	};
 
 				var array = [];
