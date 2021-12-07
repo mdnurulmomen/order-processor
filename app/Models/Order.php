@@ -11,9 +11,10 @@ class Order extends Model
       ];
 
       protected $casts = [
-         'is_asap_order' => 'boolean',
-         'cutlery_addition' => 'boolean',
+         // 'is_asap_order' => 'boolean',
+         // 'cutlery_addition' => 'boolean',
          'call_confirmation' => 'boolean',
+         'in_progress' => 'boolean',
       ];
 
       /**

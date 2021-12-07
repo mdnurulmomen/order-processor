@@ -29,6 +29,9 @@ class CreateRestaurantsTable extends Migration
             $table->boolean('is_self_service')->default(true);
             $table->boolean('has_parking')->default(false);
             $table->boolean('sponsored')->default(false);
+            $table->unsignedTinyInteger('delivery_charge_per_kilometer');
+            $table->unsignedTinyInteger('min_delivery_charge');
+            $table->unsignedTinyInteger('max_delivery_charge');
             $table->json('service_schedule')->nullable(); // service hour for whole week
             $table->json('booking_break_schedule')->nullable(); // break hour for whole week
             $table->boolean('taking_order')->default(false);

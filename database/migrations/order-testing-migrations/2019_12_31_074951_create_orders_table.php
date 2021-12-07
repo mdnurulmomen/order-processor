@@ -28,6 +28,7 @@ class CreateOrdersTable extends Migration
             $table->string('orderer_type'); // Counter / Waiter / Customer
             $table->unsignedInteger('orderer_id');
             $table->tinyInteger('customer_confirmation')->default(-1);
+            $table->boolean('in_progress')->default(1);
             $table->timestamps();
         });
     }
