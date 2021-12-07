@@ -18,8 +18,8 @@ class MenuItemVariationResource extends JsonResource
 
         return [
 
-            'id' => $this->id,
-            'variation_name' => $this->variation_name,
+            'id' => $this->pivot->id,
+            'name' => $this->name,
             'price' => $this->pivot->price,
 
         ];

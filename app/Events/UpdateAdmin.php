@@ -52,6 +52,7 @@ class UpdateAdmin implements ShouldBroadcast
             // 'orderer_type' => $this->order->orderer_type,
             // 'orderer_id' => $this->order->orderer_id,
             'customer_confirmation' => $this->order->customer_confirmation ?? -1,
+            'in_progress' => $this->order->in_progress,
             // 'created_at' => $this->order->created_at,
             // 'updated_at' => $this->order->updated_at,
             /*'orderer' => $this->order->orderer,*/

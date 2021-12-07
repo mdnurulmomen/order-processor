@@ -18,7 +18,7 @@ class MenuItemAddonResource extends JsonResource
 
         return [
 
-            'id' => $this->id,
+            'id' => $this->pivot->id,
             'name' => $this->name,
             'price' => $this->pivot->price,
 

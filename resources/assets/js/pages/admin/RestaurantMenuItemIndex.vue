@@ -1,10 +1,7 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -126,7 +123,7 @@
 												    			<ul class="text-left" 
 												    				v-show="menuItem.has_variation"
 												    			>
-																  	<li v-for="itemVariation in menuItem.restaurant_menu_item_variations" 
+																  	<li v-for="itemVariation in menuItem.variations" 
 																  		:key="itemVariation.id"
 																  	>
 																    	
@@ -154,7 +151,7 @@
 												    			<ul class="text-left" 
 												    				v-show="menuItem.has_addon"
 												    			>
-																  	<li v-for="addonItem in menuItem.restaurant_menu_item_addons" 
+																  	<li v-for="addonItem in menuItem.addons" 
 																  		:key="addonItem.id"
 																  	>
 																    	
@@ -180,9 +177,9 @@
 												    		</td>
 												    		<td>
 												    			<ul class="text-left" 
-												    				v-show="menuItem.has_variation && menuItem.restaurant_menu_item_variations.length"
+												    				v-show="menuItem.has_variation && menuItem.variations.length"
 												    			>
-																  	<li v-for="itemVariation in menuItem.restaurant_menu_item_variations" 
+																  	<li v-for="itemVariation in menuItem.variations" 
 																  		:key="itemVariation.id"
 																  	>
 																    	
@@ -1398,13 +1395,13 @@
 				this.singleRestaurantMenuItemData.restaurantMenuItem = menuItem;
 				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurantId;
 
-				if (menuItem.has_variation && menuItem.restaurant_menu_item_variations.length) {
+				if (menuItem.has_variation && menuItem.variations.length) {
 
 					this.variationIndex = [];
 					this.variationObjects = [];
 					this.price_item_variations = [];
 
-					menuItem.restaurant_menu_item_variations.forEach(
+					menuItem.variations.forEach(
 						(value, index) => {
 
 							if (value.pivot.deleted_at===null) {
@@ -1419,13 +1416,13 @@
 
 				}
 
-				if (menuItem.has_addon && menuItem.restaurant_menu_item_addons.length) {
+				if (menuItem.has_addon && menuItem.addons.length) {
 
 					this.addonIndex = [];
 					this.addonObjects = [];
 					this.price_addon_items = [];
 
-					menuItem.restaurant_menu_item_addons.forEach(
+					menuItem.addons.forEach(
 						(value, index) => {
 
 							if (value.pivot.deleted_at===null) {

@@ -1,10 +1,7 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -2088,7 +2085,7 @@
 			showRestaurantMenuList(restaurant) {
 				this.$router.push({
 			 		name: 'restaurant-menu-items', 
-			 		params: { restaurant : restaurant.id, restaurantName : restaurant.name }, 
+			 		params: { restaurantId : restaurant.id, restaurantName : restaurant.name }, 
 				});
 			},
 			getAddressData(addressData, placeResultData, id) {

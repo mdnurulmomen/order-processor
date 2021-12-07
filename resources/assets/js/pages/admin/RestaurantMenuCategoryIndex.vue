@@ -1,10 +1,7 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"

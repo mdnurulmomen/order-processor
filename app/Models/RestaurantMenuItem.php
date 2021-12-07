@@ -30,6 +30,7 @@ class RestaurantMenuItem extends Model
         'has_addon' => 'boolean',
         'customizable' => 'boolean',
         'item_stock' => 'boolean',
+        'promoted' => 'boolean',
     ];
 
     public function restaurantMenuCategory()
@@ -40,12 +41,12 @@ class RestaurantMenuItem extends Model
     // pivot tables doesn't follow soft delete rules
     public function variations()
     {
-        return $this->belongsToMany(ItemVariation::class, 'restaurant_menu_item_variations', 'restaurant_menu_item_id', 'variation_id')->withPivot('price', 'deleted_at')->withTrashed();
+        return $this->belongsToMany(ItemVariation::class, 'restaurant_menu_item_variations', 'restaurant_menu_item_id', 'variation_id')->withPivot('id', 'price', 'deleted_at')->withTrashed();
     }
 
     // pivot tables doesn't follow soft delete rules
     public function addons()
     {
-        return $this->belongsToMany(Addon::class, 'restaurant_menu_item_addons', 'restaurant_menu_item_id', 'addon_id')->withPivot('price', 'deleted_at')->withTrashed();
+        return $this->belongsToMany(Addon::class, 'restaurant_menu_item_addons', 'restaurant_menu_item_id', 'addon_id')->withPivot('id', 'price', 'deleted_at')->withTrashed();
     }
 }

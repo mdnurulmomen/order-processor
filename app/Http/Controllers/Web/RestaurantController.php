@@ -1042,17 +1042,14 @@ class RestaurantController extends Controller
 
             $subquery->whereHas('menuCategory', function($q) use ($search){
                $q->where('name', 'like', "%$search%");
-            });
-            $subquery->orWhereHas('menuItems.variations', function($q) use ($search){
+            })->orWhereHas('menuItems', function($q) use ($search){
                $q->where("name", 'like', "%$search%");
                $q->orWhere("detail", 'like', "%$search%");
                $q->orWhere("price", 'like', "%$search%");
                $q->orWhere("name", 'like', "%$search%");
             });
          
-         });
-
-         $query->where('restaurant_id', $restaurant);
+         })->where('restaurant_id', $restaurant);
 
          return response()->json([
             'all' => $query->paginate($perPage),  
@@ -1220,6 +1217,7 @@ class RestaurantController extends Controller
           
          if ($restaurantMenuItemToRestore && $restaurantMenuItemToRestore->menuCategory()->exists()) {
 
+            $restaurantMenuItemToRestore->menuItems()->restore();
             $restaurantMenuItemToRestore->restore();
          
          }

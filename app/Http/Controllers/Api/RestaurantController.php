@@ -98,7 +98,7 @@ class RestaurantController extends Controller
 
     public function showRestaurantDetails($restaurant)
     {
-      return new RestaurantResource(Restaurant::with(['booking', 'restaurantMeals', 'restaurantCuisines', 'restaurantMenuCategories.menuItems', 'reviews'])->findOrFail($restaurant));
+      return new RestaurantResource(Restaurant::with(['booking', 'restaurantMeals', 'restaurantCuisines', 'restaurantMenuCategories.menuItems.variations', 'reviews'])->findOrFail($restaurant));
     }
 
     public function getSponsorRestaurants(Request $request)
