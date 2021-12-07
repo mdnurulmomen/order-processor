@@ -40,7 +40,7 @@ class OrderController extends Controller
             $this->createAsapOrder($newOrder);
         }
         else {
-            $this->createScheduledOrder($newOrder, $request->order->order_schedule);           
+            $this->createScheduleOrder($newOrder, $request->order->order_schedule);           
         }
 
         if ($request->order->cutlery_addition) {
@@ -159,7 +159,7 @@ class OrderController extends Controller
             $this->addCutlery($newOrder);
         }
 
-        $this->createScheduledOrder($newOrder, $request->reservation->arriving_time);
+        $this->createScheduleOrder($newOrder, $request->reservation->arriving_time);
         $this->createTableReservation($expectedRestaurant, $request, $newOrder->id);
         $this->updateRestaurantBookingStatus($expectedRestaurant, $request->reservation);
         $orderedRestaurant = $this->createOrderedRestaurant($newOrder, $request->reservation->restaurant_id);
@@ -226,7 +226,7 @@ class OrderController extends Controller
 
     public function getOrderDetails($order)
     {
-        return new OrderResource(Order::with(['asap', 'scheduled', 'cutlery', 'payment', 'delivery', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'customerOrderCancelation', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])->findOrFail($order));
+        return new OrderResource(Order::with(['asap', 'schedule', 'cutlery', 'payment', 'delivery', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'customerOrderCancelation', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])->findOrFail($order));
     }
 
     /*
@@ -266,9 +266,9 @@ class OrderController extends Controller
         $order->asap()->create([]);
     }
 
-    private function createScheduledOrder(Order $order, $schedule)
+    private function createScheduleOrder(Order $order, $schedule)
     {
-        $order->scheduled()->create([
+        $order->schedule()->create([
             'order_schedule' => $schedule
         ]);
     }

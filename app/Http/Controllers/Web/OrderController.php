@@ -27,7 +27,7 @@ class OrderController extends Controller
 	{
 		return response()->json([
 
-			'expectedOrder' => Order::with(['orderer', 'asap', 'scheduled', 'cutleryAdded', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order),
+			'expectedOrder' => Order::with(['orderer', 'asap', 'schedule', 'cutleryAdded', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order),
 		
 		], 200);
 	}
@@ -251,14 +251,14 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation.restaurantMenuItemVariation.variation', 'items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'order.orderer', 'order.asap', 'order.scheduled', 'order.cutleryAdded', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
+               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation.restaurantMenuItemVariation.variation', 'items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutleryAdded', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
 				               			->whereHas('order', function($q){
 						   					$q->where('customer_confirmation', 1)
 						   					  ->orWhere('order_type', 'reservation');
 										})
 				       					->latest()->paginate($perPage),
 
-               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation.restaurantMenuItemVariation.variation', 'items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'order.orderer', 'order.asap', 'order.scheduled', 'order.cutleryAdded', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
+               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation.restaurantMenuItemVariation.variation', 'items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutleryAdded', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
 										->whereHas('order.orderServeConfirmation', function($q){
 						   					$q->where('food_serve_confirmation', 1);
 										})
@@ -423,7 +423,7 @@ class OrderController extends Controller
 
             return response()->json([
 
-               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'order.asap', 'order.scheduled', 'order.cutleryAdded', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
+               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutleryAdded', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
             
             ], 200);
 
@@ -541,7 +541,7 @@ class OrderController extends Controller
 						    	$orderReadyConfirmation->where('restaurant_id', $restaurant);
 							}
 						])
-						->with(['orderServeProgression', 'order.orderer', 'order.asap', 'order.scheduled', 'order.cutleryAdded'])
+						->with(['orderServeProgression', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutleryAdded'])
 						->where('restaurant_id', $restaurant)
 						->where('food_order_acceptance', 1)
 						->whereHas('order', function($q) {

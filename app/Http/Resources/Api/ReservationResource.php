@@ -18,10 +18,10 @@ class ReservationResource extends JsonResource
             'id' => $this->id,
             'guest_number' => $this->guest_number,
             'mobile' => $this->mobile,
-            'order_id' => $this->order_id,
             'restaurant_id' => $this->restaurant_id,
             'max_payment_time' => $this->max_payment_time,
             'confirmation' => $this->order->customer_confirmation,
+            'order_id' => $this->order_id,
             // 'order' => new OrderResource($this->order),
         ];
     }

@@ -30,9 +30,9 @@ class Order extends Model
          return $this->hasOne(AsapOrder::class, 'order_id', 'id');
       }
 
-      public function scheduled()
+      public function schedule()
       {
-         return $this->hasOne(ScheduledOrder::class, 'order_id', 'id');
+         return $this->hasOne(ScheduleOrder::class, 'order_id', 'id');
       }
 
       public function cutlery()

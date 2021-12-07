@@ -20,7 +20,7 @@ class UserOrderResource extends JsonResource
             'id' => $this->id,
             'order_type' => $this->order_type,
             'asap' => /*$this->whenLoaded('asap')*/ $this->when($this->asap, $this->asap ? true : false),
-            'scheduled' => /*$this->whenLoaded('scheduled')*/ $this->when($this->scheduled, $this->scheduled ? $this->scheduled->order_schedule : false),
+            'schedule' => /*$this->whenLoaded('schedule')*/ $this->when($this->schedule, $this->schedule ? $this->schedule->order_schedule : false),
             'has_cutlery' => /*$this->whenLoaded('cutlery')*/ $this->when($this->cutlery, $this->cutlery ? true : false),
             'order_price' => $this->order_price,
             'vat' => $this->vat,

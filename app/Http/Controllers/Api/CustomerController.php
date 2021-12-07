@@ -75,7 +75,7 @@ class CustomerController extends Controller
         if ($per_page) {
             
             return new UserOrderCollection(
-                Order::with(['asap', 'scheduled', 'cutlery', 'delivery'])
+                Order::with(['asap', 'schedule', 'cutlery', 'delivery'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
@@ -93,7 +93,7 @@ class CustomerController extends Controller
         else {
 
             return UserOrderResource::collection(
-                Order::with(['asap', 'scheduled', 'cutlery', 'delivery'])
+                Order::with(['asap', 'schedule', 'cutlery', 'delivery'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);

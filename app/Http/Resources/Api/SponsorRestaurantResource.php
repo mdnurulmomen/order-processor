@@ -16,7 +16,7 @@ class SponsorRestaurantResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'preview' => $this->banner_preview,
+            'banner_preview' => $this->banner_preview,
             "url" => route('api.v1.restaurants.show', [ 'restaurant'=>$this->id ])
         ];
     }
