@@ -1118,6 +1118,19 @@
 			ckeditor: CKEditor.component,
 		},
 
+		props: {
+
+			restaurantId:{
+				type: Number,
+				required: true,
+			},
+			restaurantName:{
+				type: String,
+				required: true,
+			},
+
+		},
+
 	    data() {
 	        return restaurantMenuListData;
 		},
@@ -1136,8 +1149,8 @@
 		      if (this.restaurantAllMenuCategories.length) {
 	      		return this.restaurantAllMenuCategories[0].restaurant.name;
 		      }
-		      else if (this.$route.params.restaurantName) {
-		      	return this.$route.params.restaurantName;
+		      else if (this.restaurantName) {
+		      	return this.restaurantName;
 		      }
 
 		      return 'Current Restaurant';
@@ -1270,7 +1283,7 @@
 			fetchRestaurantAllMenuItems(){
 				this.loading = true;
 				axios
-					.get('/api/restaurant-menu-items/' + this.$route.params.restaurantId + '/' + this.perPage + "?page=" +
+					.get('/api/restaurant-menu-items/' + this.restaurantId + '/' + this.perPage + "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
@@ -1308,10 +1321,10 @@
     		},
     		showRestaurantAllMenuCategories(){
 				this.$router.push({
-			 		name: 'restaurant-menu-category-details', 
+			 		name: 'expected-restaurant-menu-categories', 
 			 		params: { 
-			 			restaurantId : this.$route.params.restaurantId,
-			 			restaurantName : this.$route.params.restaurantName
+			 			restaurantId : this.restaurantId,
+			 			restaurantName : this.restaurantName
 			 		}, 
 				});
 			},
@@ -1323,7 +1336,7 @@
 				this.singleRestaurantMenuItemData.restaurantMenuCategoryObject = {};
 				
 				this.singleRestaurantMenuItemData.restaurantMenuItem = {};
-				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurantId;
+				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.restaurantId;
 
 				this.variationIndex = [0, 1];
 				this.variationObjects = [];
@@ -1393,7 +1406,7 @@
 				this.singleRestaurantMenuItemData.restaurantMenuCategoryObject = restaurantMenuCategoryObjects[0];
 				
 				this.singleRestaurantMenuItemData.restaurantMenuItem = menuItem;
-				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.$route.params.restaurantId;
+				this.singleRestaurantMenuItemData.restaurantMenuItem.restaurant_id = this.restaurantId;
 
 				if (menuItem.has_variation && menuItem.variations.length) {
 
@@ -1498,7 +1511,7 @@
 				$("#modal-restaurantMenuItem-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/restaurant-menu-items/' + this.$route.params.restaurantId + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
+					.delete('/restaurant-menu-items/' + this.restaurantId + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1534,7 +1547,7 @@
 				$("#modal-restaurantMenuItem-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/restaurant-menu-items/' + this.$route.params.restaurantId + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
+					.patch('/restaurant-menu-items/' + this.restaurantId + '/' + this.singleRestaurantMenuItemData.restaurantMenuItem.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1565,7 +1578,7 @@
 				
 				axios
 				.get(
-					"/api/restaurant-menu-items/search/" + this.$route.params.restaurantId +"/"  + this.query +"/" + this.perPage +
+					"/api/restaurant-menu-items/search/" + this.restaurantId +"/"  + this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
@@ -1589,7 +1602,7 @@
 
 				this.singleRestaurantMenuItemData.restaurantObjectToAddMenuCategory = {
 		    		name : this.restaurantNameFromData, 
-					id : this.$route.params.restaurantId 
+					id : this.restaurantId 
 		    	};
 
 				var array = [];

@@ -115,7 +115,7 @@
 									    			class="btn btn-primary btn-sm"
 								    			>
 										        	<i class="fas fa-eye"></i>
-										        	Category Details
+										        	Categories
 										      	</button>
 
 										      	<button 
@@ -530,9 +530,10 @@
     		},
 			showRestaurantMenuCategoryDetails(restaurant){
 				this.$router.push({
-			 		name: 'restaurant-menu-category-details', 
+			 		name: 'expected-restaurant-menu-categories', 
 			 		params: { 
-			 			restaurantId : restaurant.id, restaurantName : restaurant.name 
+			 			restaurantId : restaurant.id, 
+			 			restaurantName : restaurant.name 
 			 		}, 
 				});
 			},
@@ -705,7 +706,8 @@
 				this.$router.push({
 			 		name: 'restaurant-menu-items', 
 			 		params: { 
-			 			restaurantId : restaurant.id, restaurantName : restaurant.name 
+			 			restaurantId : restaurant.id, 
+			 			restaurantName : restaurant.name 
 			 		}, 
 				});
 			},

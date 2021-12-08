@@ -546,6 +546,19 @@
 			Multiselect, // short form of Multiselect : Multiselect
 		},
 
+		props: {
+
+			restaurantId:{
+				type: Number,
+				required: true,
+			},
+			restaurantName:{
+				type: String,
+				required: true,
+			},
+
+		},
+
 	    data() {
 	        return menuCategoryListData;
 		},
@@ -562,8 +575,8 @@
 		      	if (this.restaurantMenuCategoriesToShow.length) {
 	      			return this.restaurantMenuCategoriesToShow[0].restaurant.name;
 		      	}
-		      	else if (this.$route.params.restaurantName) {
-					return this.$route.params.restaurantName;
+		      	else if (this.restaurantName) {
+					return this.restaurantName;
 				}
 
 		      	return 'Current Restaurant';
@@ -572,7 +585,7 @@
 		    // a computed getter
 		    restaurantsToShow: function () {  
 		      	this.restaurantSingleMenuCategoryData.restaurantObject = {
-					id : this.$route.params.restaurantId,		
+					id : this.restaurantId,		
 					name : this.restaurantNameFromData,
 				};
 
@@ -643,7 +656,7 @@
 			fetchRestaurantAllMenuCategories() {
 				this.loading = true;
 				axios
-					.get('/api/restaurant-menu-categories/' + this.$route.params.restaurantId + '/' + this.perPage + "?page=" +
+					.get('/api/restaurant-menu-categories/' + this.restaurantId + '/' + this.perPage + "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
@@ -869,7 +882,7 @@
 				
 				axios
 				.get(
-					"/api/restaurant-menu-categories/search/" + this.$route.params.restaurantId + "/"  + this.query + "/" + this.perPage +
+					"/api/restaurant-menu-categories/search/" + this.restaurantId + "/"  + this.query + "/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)

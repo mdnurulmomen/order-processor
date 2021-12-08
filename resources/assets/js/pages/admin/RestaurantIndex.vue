@@ -2085,7 +2085,10 @@
 			showRestaurantMenuList(restaurant) {
 				this.$router.push({
 			 		name: 'restaurant-menu-items', 
-			 		params: { restaurantId : restaurant.id, restaurantName : restaurant.name }, 
+			 		params: { 
+			 			restaurantId : restaurant.id, 
+			 			restaurantName : restaurant.name 
+			 		}, 
 				});
 			},
 			getAddressData(addressData, placeResultData, id) {

@@ -49,7 +49,7 @@ import App from './pages/AdminSideMenuBar.vue';
 // import RestaurantMenuCategoryIndexComponent from './pages/admin/RestaurantMenuCategoryIndex.vue';
 // import RestaurantCuisineIndexComponent from './pages/admin/RestaurantCuisineIndex.vue';
 // import RestaurantMenuItemIndexComponent from './pages/admin/RestaurantMenuItemIndex.vue';
-// import RestaurantMenuCategoryDetailIndexComponent from './pages/admin/RestaurantMenuCategoryDetailIndex.vue';
+// import RestaurantMenuCategoryDetailIndexComponent from './pages/admin/ExpectedRestaurantMenuCategoryIndex.vue';
 // import NotificationIndexComponent from './pages/admin/NotificationIndex.vue';
 // import CouponIndexComponent from './pages/admin/CouponIndex.vue';
 
@@ -147,24 +147,47 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/restaurant-meal-list" */ './pages/admin/RestaurantMealIndex.vue')
 		},
 		{
-			path: '/restaurant-menu-categories',
-            name: 'restaurant-menu-categories',
-            component: () => import(/* webpackChunkName : "js/restaurant-menu-category-list" */ './pages/admin/RestaurantMenuCategoryIndex.vue')
-		},
-		{
 			path: '/restaurant-cuisines',
             name: 'restaurant-cuisines',
             component: () => import(/* webpackChunkName : "js/restaurant-cuisine-list" */ './pages/admin/RestaurantCuisineIndex.vue')
 		},
 		{
+			path: '/restaurant-menu-categories',
+            name: 'restaurant-menu-categories',
+            component: () => import(/* webpackChunkName : "js/restaurant-menu-category-list" */ './pages/admin/RestaurantMenuCategoryIndex.vue')
+		},
+		{
+			path: '/restaurant-menu-categories/:restaurantId',
+		    name: 'expected-restaurant-menu-categories',
+		    component: () => import(/* webpackChunkName : "js/restaurant-menu-category-detail-list" */ './pages/admin/ExpectedRestaurantMenuCategoryIndex.vue'),
+			props: true,
+			beforeEnter: (to, from, next) => {
+                if (to.params.restaurantId && to.params.restaurantName) {
+                    next(); // <-- everything good, proceed
+                }
+                else {
+                    next('/restaurant-menu-categories');
+                }
+            }
+		},
+		{
+			path: '/restaurant-menu-items',
+		    name: 'expected-restaurant-menu-items',
+		    component: () => import(/* webpackChunkName : "js/expected-restaurant-name-for-menu-item-list" */ './pages/admin/ExpectedRestaurantNameForMenuItem.vue'),
+		},
+		{
 			path: '/restaurant-menu-items/:restaurantId',
 		    name: 'restaurant-menu-items',
 		    component: () => import(/* webpackChunkName : "js/restaurant-menu-item-list" */ './pages/admin/RestaurantMenuItemIndex.vue'),
-		},
-		{
-			path: '/restaurant-menu-category-details/:restaurantId',
-		    name: 'restaurant-menu-category-details',
-		    component: () => import(/* webpackChunkName : "js/restaurant-menu-category-detail-list" */ './pages/admin/RestaurantMenuCategoryDetailIndex.vue'),
+			props: true,
+			beforeEnter: (to, from, next) => {
+                if (to.params.restaurantId && to.params.restaurantName) {
+                    next(); // <-- everything good, proceed
+                }
+                else {
+                    next('/restaurant-menu-items');
+                }
+            }
 		},
 		{
 			path: '/delivery-men',
@@ -190,11 +213,6 @@ const router = new VueRouter({
 			path: '/api-list',
             name: 'api-list',
             component: () => import(/* webpackChunkName : "js/api-list" */ './pages/admin/ApiIndex.vue')
-		},
-		{
-			path: '/restaurant-menu-items',
-		    name: 'expected-restaurant-menu-items',
-		    component: () => import(/* webpackChunkName : "js/expected-restaurant-name-for-menu-item-list" */ './pages/admin/ExpectedRestaurantNameForMenuItem.vue'),
 		},
 		{
 			path: '/orders',
