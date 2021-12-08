@@ -12,7 +12,7 @@ class MyRegularRestaurant extends Model
 
       public $timestamps = false;
 
-   	public function items()
+   	public function menuItems()
    	{
       return $this->hasMany(MyRegularItem::class, 'my_regular_restaurant_id', 'id');
    	}

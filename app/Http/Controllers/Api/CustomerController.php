@@ -185,9 +185,9 @@ class CustomerController extends Controller
                 'restaurant_id' => $myRestaurant->restaurant_id,
             ]);
 
-            foreach ($myRestaurant->items as $myRestaurantItemKey => $myRestaurantItem) {
+            foreach ($myRestaurant->menu_items as $myRestaurantItemKey => $myRestaurantItem) {
                 
-                $myRegularItem = $myRegularRestaurant->items()->create([
+                $myRegularItem = $myRegularRestaurant->menuItems()->create([
                     'restaurant_menu_item_id'=> $myRestaurantItem->id,
                     'quantity'=> $myRestaurantItem->quantity,
                 ]);
@@ -241,9 +241,9 @@ class CustomerController extends Controller
                 'restaurant_id' => $myRestaurant->restaurant_id,
             ]);
 
-            foreach ($myRestaurant->items as $myRestaurantItemKey => $myRestaurantItem) {
+            foreach ($myRestaurant->menu_items as $myRestaurantItemKey => $myRestaurantItem) {
                 
-                $myRegularItem = $myRegularRestaurant->items()->create([
+                $myRegularItem = $myRegularRestaurant->menuItems()->create([
                     'restaurant_menu_item_id'=> $myRestaurantItem->id,
                     'quantity'=> $myRestaurantItem->quantity,
                 ]);
@@ -306,7 +306,7 @@ class CustomerController extends Controller
     {
         foreach ($myRegular->restaurants as $myRestaurantKey => $myRestaurant) {
             
-            foreach ($myRestaurant->items as $myRestaurantItemKey => $myRestaurantItem) {
+            foreach ($myRestaurant->menuItems as $myRestaurantItemKey => $myRestaurantItem) {
                 
                 $myRestaurantItem->addons()->delete();
                 $myRestaurantItem->variation()->delete();

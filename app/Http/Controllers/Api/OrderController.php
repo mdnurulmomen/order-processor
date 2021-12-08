@@ -34,6 +34,7 @@ class OrderController extends Controller
             'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
             'orderer_id' => $request->order->orderer_id,
             'customer_confirmation' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1, 
+            'in_progress' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? 0 : 1,
         ]);
 
         if ($request->order->is_asap_order) {
@@ -132,7 +133,7 @@ class OrderController extends Controller
         
             $newOrderAddress = $newOrder->delivery()->create([
                 'additional_info'=>$request->order->delivery_additional_info,
-                'delivery_address_id'=>$request->order->delivery_address_id ?? $customerNewAddress->id ?? $existingAddress->id,
+                'delivery_address_id'=>$request->order->delivery_address_id ?? $existingAddress->id ?? $customerNewAddress->id,
             ]);
         }
 
@@ -241,7 +242,8 @@ class OrderController extends Controller
     private function confirmOrder(Order $order)
     {
         $order->update([
-            'customer_confirmation' => 1
+            'customer_confirmation' => 1,
+            'in_progress' => 1
         ]);
     }
 
@@ -258,6 +260,7 @@ class OrderController extends Controller
             'orderer_type' => "App\Models\Customer",
             'orderer_id' => $request->order->orderer_id,
             'customer_confirmation' => ($request->payment->payment_method !== 'cash' && $request->payment->payment_id) ? 1 : -1, 
+            'in_progress' => 1,
         ]);
     }
 

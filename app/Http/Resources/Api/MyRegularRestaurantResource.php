@@ -17,7 +17,7 @@ class MyRegularRestaurantResource extends JsonResource
         return [
             'restaurant_id' => $this->restaurant_id,
             'restaurant_name' => $this->restaurant->name,
-            'items' => MyRegularItemResource::collection($this->items),
+            'menu_items' => MyRegularItemResource::collection($this->menuItems),
         ];
     }
 }
