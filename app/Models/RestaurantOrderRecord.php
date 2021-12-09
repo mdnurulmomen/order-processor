@@ -15,7 +15,7 @@ class RestaurantOrderRecord extends Model
 		'id'
 	];
 
-	public $timestamps = false;
+	// public $timestamps = false;
 
   public function order()
   {

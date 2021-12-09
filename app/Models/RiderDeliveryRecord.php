@@ -19,7 +19,7 @@ class RiderDeliveryRecord extends Model
 		'id'
 	];
 
-	public $timestamps = false;
+	// public $timestamps = false;
 
 	/**
      * The attributes that should be mutated to dates.

@@ -72,18 +72,10 @@
 											</li>
 											<li class="nav-item flex-fill">
 												<a 
-													:class="[{ 'active': currentTab==='deliveredOrServed' }, 'nav-link']" 
-													@click="showDeliveredOrServedOrders"
+													:class="[{ 'active': currentTab==='active' }, 'nav-link']" 
+													@click="showActiveOrders"
 												>
-													Delivered/Served
-												</a>
-											</li>
-											<li class="nav-item flex-fill">
-												<a 
-													:class="[{ 'active': currentTab==='cancelled' }, 'nav-link']" 
-													@click="showCancelledOrders"
-												>
-													Cancelled
+													Active
 												</a>
 											</li>
 											<li class="nav-item flex-fill">
@@ -100,6 +92,22 @@
 													@click="showPostPaidOrders"
 												>
 													Post-paid
+												</a>
+											</li>
+											<li class="nav-item flex-fill">
+												<a 
+													:class="[{ 'active': currentTab==='deliveredOrServed' }, 'nav-link']" 
+													@click="showDeliveredOrServedOrders"
+												>
+													Delivered/Served
+												</a>
+											</li>
+											<li class="nav-item flex-fill">
+												<a 
+													:class="[{ 'active': currentTab==='cancelled' }, 'nav-link']" 
+													@click="showCancelledOrders"
+												>
+													Cancelled
 												</a>
 											</li>
 										</ul>
@@ -318,7 +326,7 @@
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Orderer Name
+							              			Orderer Name:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ 
@@ -333,7 +341,7 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Phone
+							              			Phone:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ 
@@ -344,7 +352,7 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Email
+							              			Email:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ 
@@ -355,7 +363,7 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Joined on
+							              			Joined on:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ 
@@ -374,7 +382,7 @@
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Order id
+							              			Order id:
 							              		</label>
 								                <div class="col-sm-6" >
 								                  	{{ singleOrderData.order.id }}
@@ -383,7 +391,7 @@
 								            
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Type 
+							              			Type:
 							              		</label>
 
 								                <div class="col-sm-6">
@@ -393,7 +401,7 @@
 
 								            <div class="form-group row" v-if="singleOrderData.order.asap || singleOrderData.order.scheduled">		
 							              		<label class="col-sm-6 text-right">
-							              			ASAP/Scheduled
+							              			ASAP/Scheduled:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{
@@ -405,7 +413,7 @@
 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Price
+							              			Price:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.order_price }}
@@ -414,7 +422,7 @@
 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Vat
+							              			Vat:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.vat }}
@@ -423,7 +431,7 @@
 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Discount
+							              			Discount:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.discount }}
@@ -432,7 +440,7 @@
 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Delivery-fee
+							              			Delivery-fee:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.delivery_fee }}
@@ -441,7 +449,7 @@
 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Payable Price
+							              			Payable Price:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.net_payable }}
@@ -450,17 +458,19 @@
 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Payment type
+							              			Payment type:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.payment_method | capitalize }}
-								                  	(Payment id : {{ singleOrderData.order.payment ? singleOrderData.order.payment.payment_id : 'NA' }})
+								                  	<span v-show="singleOrderData.order.payment_method!='cash'">
+								                  		(Payment id : {{ singleOrderData.order.payment ? singleOrderData.order.payment.payment_id : 'NA' }})
+								                  	</span>
 								                </div>	
 								            </div>
 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Cutlery
+							              			Cutlery:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.cutlery_added ? 'Added' : 'None' }}
@@ -469,7 +479,7 @@
 								            
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Order Status
+							              			Order Status:
 							              		</label>
 								                <div class="col-sm-6">
 								                	<!-- <div v-show="order.payment_method==='cash'"> -->
@@ -570,7 +580,7 @@
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Order Items
+							              			Order Items:
 							              		</label>
 								                <div class="col-sm-6">
 								                	<ul v-show="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length">
@@ -629,7 +639,7 @@
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Delivery Address
+							              			Delivery Address:
 							              		</label>
 								                <div class="col-sm-6">
 
@@ -639,19 +649,19 @@
 															
 															<dd>-
 																{{
-																	singleOrderData.order.delivery.customer_address.house 
+																	singleOrderData.order.delivery.customer_address.house | capitalize 
 																}}
 										                  	</dd>
 															
 															<dd>-
 																{{ 
-										                  			singleOrderData.order.delivery.customer_address.road
+										                  			singleOrderData.order.delivery.customer_address.road | capitalize
 											                  	}}
 															</dd>
 															
 															<dd v-if="singleOrderData.order.delivery.customer_address.additional_hint"> 
 																({{ 
-										                  			singleOrderData.order.delivery.customer_address.additional_hint
+										                  			singleOrderData.order.delivery.customer_address.additional_hint | capitalize
 											                  	}})
 															</dd>
 
@@ -704,7 +714,7 @@
 									type="button" 
 									class="btn btn-danger dropdown-toggle" 
 									data-toggle="dropdown" 
-									v-if="! deliveredOrServedOrder(singleOrderData.order) && ! cancelledOrder(singleOrderData.order)" 
+									v-if="! deliveredOrServedOrder(singleOrderData.order) && ! cancelledOrder(singleOrderData.order) && ! disabledOrder(singleOrderData.order) /* && ! allRestaurantsCancelledOrder(singleOrderData.order) */" 
 								>
 									<i class="fas fa-times"></i>
 									Cancel
@@ -725,7 +735,7 @@
 								  		type="button" 
 								  		class="btn btn-outline-danger btn-sm dropdown-item" 
 								  		@click="showCustomerCancelationModal()" 
-								  		:disabled="Boolean(formSubmitionMode || cancelledOrder(singleOrderData.order) || orderConfirmed(singleOrderData.order))"  
+								  		:disabled="Boolean(formSubmitionMode || cancelledOrder(singleOrderData.order) /* || orderConfirmed(singleOrderData.order)*/)"  
 								  	>
 								  		<i class="fas fa-times text-danger"></i>
 								  		By Customer
@@ -736,7 +746,7 @@
 						      			type="button" 
 						      			class="btn btn-outline-danger btn-sm dropdown-item" 
 						      			@click="showRestaurantCancelationModal()" 
-						      			:disabled="Boolean(formSubmitionMode /*|| allRestaurantOrderPicked(singleOrderData.order)*/ || allRestaurantsCancelledOrder(singleOrderData.order))"
+						      			:disabled="Boolean(formSubmitionMode || allRestaurantOrderPicked(singleOrderData.order) || allRestaurantsCancelledOrder(singleOrderData.order))"
 					      			>
 					        			<i class="fas fa-times text-danger"></i>
 					        			By Restaurant
@@ -1038,38 +1048,44 @@
 
 		methods : {
 			showAllOrders(){
-				this.pagination.current_page = 1;
-				this.fetchAllOrders();
+				// this.pagination.current_page = 1;
+				// this.fetchAllOrders();
 				this.currentTab = 'all';
 				this.showListDataForSelectedTab();
 			},
 			showNewOrders(){
-				this.pagination.current_page = 1;
-				this.fetchAllOrders();
+				// this.pagination.current_page = 1;
+				// this.fetchAllOrders();
 				this.currentTab = 'new';
 				this.showListDataForSelectedTab();
 			},
+			showActiveOrders(){
+				// this.pagination.current_page = 1;
+				// this.fetchAllOrders();
+				this.currentTab = 'active';
+				this.showListDataForSelectedTab();
+			},
 			showDeliveredOrServedOrders(){
-				this.pagination.current_page = 1;
-				this.fetchAllOrders();
+				// this.pagination.current_page = 1;
+				// this.fetchAllOrders();
 				this.currentTab = 'deliveredOrServed';
 				this.showListDataForSelectedTab();
 			},
 			showCancelledOrders(){
-				this.pagination.current_page = 1;
-				this.fetchAllOrders();
+				// this.pagination.current_page = 1;
+				// this.fetchAllOrders();
 				this.currentTab = 'cancelled';
 				this.showListDataForSelectedTab();
 			},
 			showPrePaidOrders(){
-				this.pagination.current_page = 1;
-				this.fetchAllOrders();
+				// this.pagination.current_page = 1;
+				// this.fetchAllOrders();
 				this.currentTab = 'prepaid';
 				this.showListDataForSelectedTab();
 			},
 			showPostPaidOrders(){
-				this.pagination.current_page = 1;
-				this.fetchAllOrders();
+				// this.pagination.current_page = 1;
+				// this.fetchAllOrders();
 				this.currentTab = 'postpaid';
 				this.showListDataForSelectedTab();
 			},
@@ -1080,6 +1096,9 @@
 				}else if (this.currentTab=='new') {
 					this.ordersToShow = this.allOrders.new.data;
 					this.pagination = this.allOrders.new;
+				}else if (this.currentTab=='active') {
+					this.ordersToShow = this.allOrders.active.data;
+					this.pagination = this.allOrders.active;
 				}else if (this.currentTab=='deliveredOrServed') {
 					this.ordersToShow = this.allOrders.deliveredOrServed.data;
 					this.pagination = this.allOrders.deliveredOrServed;
@@ -1294,6 +1313,9 @@
 			cancelledOrder(order){
 				return order.customer_confirmation===0 ? true : false;
 			},
+			disabledOrder(order){
+				return order.in_progress==false ? true : false;
+			},
 			reservationOrder(order){
 				if (order.order_type=='reservation') {
 					return true;
@@ -1324,7 +1346,6 @@
 				}else
 					return false;
 			},
-			/*
 			allRestaurantOrderPicked(order){
 
 				if (Array.isArray(order.restaurant_acceptances)) {
@@ -1344,7 +1365,6 @@
 				return false;
 
 			},
-			*/
 			// secondary order class definer
 			orderProgressionClass(order, restaurant) {
 
@@ -1463,7 +1483,7 @@
 					return 'To Be Confirmed';
 				}
 				else if(this.cancelledOrder(order)) {
-					return 'Cancelled by Customer';
+					return 'Cancelled By Customer';
 				}
 				else
 					return false;

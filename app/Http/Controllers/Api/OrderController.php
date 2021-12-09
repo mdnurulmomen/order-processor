@@ -34,7 +34,7 @@ class OrderController extends Controller
             'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
             'orderer_id' => $request->order->orderer_id,
             'customer_confirmation' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1, 
-            'in_progress' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? 0 : 1,
+            'in_progress' => 1,
         ]);
 
         if ($request->order->is_asap_order) {
@@ -243,7 +243,7 @@ class OrderController extends Controller
     {
         $order->update([
             'customer_confirmation' => 1,
-            'in_progress' => 1
+            // 'in_progress' => 1
         ]);
     }
 
