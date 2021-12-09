@@ -1,8 +1,6 @@
 
 <template> 
-    
   <div>
-
     <!-- Navbar for back/forward button -->
     <nav 
       class="main-header navbar navbar-expand position-relative p-3" 

@@ -1,10 +1,7 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -591,21 +588,21 @@
 																	<span class="d-block"
 																		v-if="item.restaurant_menu_item.has_variation" 
 																	>
-																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.name | capitalize }} )
+																		(Selected Variation : {{ item.variation.restaurant_menu_item_variation.variation.name | capitalize }} )
 																	</span>
 
 																	(Quantity : {{ item.quantity }})
 
 																	<span 
 																		class="d-block font-weight-bold" 
-																		v-if="item.additional_ordered_addons.length"
+																		v-if="item.addons.length"
 																	>
 																		Addons
 																	</span>
 
-																	<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
+																	<ul v-if="item.restaurant_menu_item.has_addon && item.addons.length">
 
-																		<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
+																		<li v-for="(additionalOrderedAddon, index) in item.addons">
 																			{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name | capitalize }} ({{ additionalOrderedAddon.quantity }})
 																		</li>
 																	</ul>
@@ -707,7 +704,7 @@
 									type="button" 
 									class="btn btn-danger dropdown-toggle" 
 									data-toggle="dropdown" 
-									v-if="!deliveredOrServedOrder(singleOrderData.order) && !cancelledOrder(singleOrderData.order)" 
+									v-if="! deliveredOrServedOrder(singleOrderData.order) && ! cancelledOrder(singleOrderData.order)" 
 								>
 									<i class="fas fa-times"></i>
 									Cancel
@@ -718,7 +715,7 @@
 						      			type="button" 
 						      			class="btn btn-outline-danger btn-sm dropdown-item" 
 						      			@click="showRiderCancelationModal()" 
-						      			:disabled="Boolean(formSubmitionMode || !riderAssigned(singleOrderData.order) || riderPickedOrder(singleOrderData.order))"
+						      			:disabled="Boolean(formSubmitionMode || ! riderAssigned(singleOrderData.order) || riderPickedOrder(singleOrderData.order))"
 					      			>
 					        			<i class="fas fa-times text-danger"></i>
 					        			By Rider
@@ -739,7 +736,7 @@
 						      			type="button" 
 						      			class="btn btn-outline-danger btn-sm dropdown-item" 
 						      			@click="showRestaurantCancelationModal()" 
-						      			:disabled="Boolean(formSubmitionMode || allRestaurantOrderPicked(singleOrderData.order) || allRestaurantsCancelledOrder(singleOrderData.order))"
+						      			:disabled="Boolean(formSubmitionMode /*|| allRestaurantOrderPicked(singleOrderData.order)*/ || allRestaurantsCancelledOrder(singleOrderData.order))"
 					      			>
 					        			<i class="fas fa-times text-danger"></i>
 					        			By Restaurant
@@ -1327,6 +1324,7 @@
 				}else
 					return false;
 			},
+			/*
 			allRestaurantOrderPicked(order){
 
 				if (Array.isArray(order.restaurant_acceptances)) {
@@ -1346,6 +1344,7 @@
 				return false;
 
 			},
+			*/
 			// secondary order class definer
 			orderProgressionClass(order, restaurant) {
 

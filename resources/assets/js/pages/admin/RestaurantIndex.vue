@@ -406,6 +406,30 @@
 								                  	{{singleRestaurantData.restaurant.min_order}} tk
 								                </div>	
 								            </div>
+								            <div class="form-group row">		
+							              		<label class="col-sm-6 text-right">
+							              			Delivery Charge:
+							              		</label>
+								                <div class="col-sm-6">
+								                  	{{ singleRestaurantData.restaurant.delivery_charge_per_kilometer }} BDT/KM
+								                </div>	
+								            </div>
+								            <div class="form-group row">		
+							              		<label class="col-sm-6 text-right">
+							              			Min Delivery Charge:
+							              		</label>
+								                <div class="col-sm-6">
+								                  	{{ singleRestaurantData.restaurant.min_delivery_charge }} BDT
+								                </div>	
+								            </div>
+								            <div class="form-group row">		
+							              		<label class="col-sm-6 text-right">
+							              			Max Delivery Charge:
+							              		</label>
+								                <div class="col-sm-6">
+								                  	{{ singleRestaurantData.restaurant.max_delivery_charge }} BDT
+								                </div>	
+								            </div>
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Payment :
@@ -846,6 +870,102 @@
 									                                  	class="invalid-feedback" 
 									                                >
 																        {{ errors.restaurant.address }}
+																  	</div> 	
+									                          	</div>  
+									                        </div>
+
+									                        <div class="form-group row">
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          		Delivery Charge
+									                          	</label>
+									                          	<div class="col-sm-8">
+									                          		<div class="input-group mb-0">
+									                          			<input 
+									                                  		type="number" 
+									                                  		class="form-control" 
+									                                  		v-model.number="singleRestaurantData.restaurant.delivery_charge_per_kilometer" 
+									                                  		placeholder="Min Delivery Charge"
+									                                  		min="0" 
+									                                  		max="100" 
+									                                  		step="1" 
+									                                  		:class="!errors.restaurant.delivery_charge_per_kilometer  ? 'is-valid' : 'is-invalid'"
+									                                  		@keyup="validateFormInput('restaurant.delivery_charge_per_kilometer')"
+									                                  	>
+									                          			<div class="input-group-append">
+									                          				<span class="input-group-text">BDT/km</span>
+									                          			</div>
+									                          		</div>
+
+									                              	<div 
+									                                  	class="invalid-feedback" 
+									                                  	style="display: block;" 
+									                                  	v-show="errors.restaurant.delivery_charge_per_kilometer"
+									                                >
+																        {{ errors.restaurant.delivery_charge_per_kilometer }}
+																  	</div> 	
+									                          	</div> 
+									                        </div>
+
+									                        <div class="form-group row">
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          		Max Delivery Charge
+									                          	</label>
+									                          	<div class="col-sm-8">
+									                          		<div class="input-group mb-0">
+									                          			<input 
+									                                  		type="number" 
+									                                  		class="form-control" 
+									                                  		v-model.number="singleRestaurantData.restaurant.max_delivery_charge" 
+									                                  		placeholder="Max Delivery Charge"
+									                                  		min="0" 
+									                                  		max="100" 
+									                                  		step="1" 
+									                                  		:class="!errors.restaurant.max_delivery_charge  ? 'is-valid' : 'is-invalid'"
+									                                  		@keyup="validateFormInput('restaurant.max_delivery_charge')"
+									                                  	>
+									                          			<div class="input-group-append">
+									                          				<span class="input-group-text">BDT</span>
+									                          			</div>
+									                          		</div>
+
+									                              	<div 
+									                                  	class="invalid-feedback" 
+									                                  	style="display: block;" 
+									                                  	v-show="errors.restaurant.max_delivery_charge"
+									                                >
+																        {{ errors.restaurant.max_delivery_charge }}
+																  	</div> 	
+									                          	</div>  
+									                        </div>
+
+									                        <div class="form-group row">
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          		Min Delivery Charge
+									                          	</label>
+									                          	<div class="col-sm-8">
+									                          		<div class="input-group mb-0">
+									                          			<input 
+									                                  		type="number" 
+									                                  		class="form-control" 
+									                                  		v-model.number="singleRestaurantData.restaurant.min_delivery_charge" 
+									                                  		placeholder="Min Delivery Charge"
+									                                  		min="0" 
+									                                  		max="100" 
+									                                  		step="1" 
+									                                  		:class="!errors.restaurant.min_delivery_charge ? 'is-valid' : 'is-invalid'"
+									                                  		@keyup="validateFormInput('restaurant.min_delivery_charge')"
+									                                  	>
+									                          			<div class="input-group-append">
+									                          				<span class="input-group-text">BDT</span>
+									                          			</div>
+									                          		</div>
+
+									                              	<div 
+									                                  	class="invalid-feedback" 
+									                                  	style="display: block;" 
+									                                  	v-show="errors.restaurant.min_delivery_charge"
+									                                >
+																        {{ errors.restaurant.min_delivery_charge }}
 																  	</div> 	
 									                          	</div>  
 									                        </div>
@@ -2308,6 +2428,57 @@
 						else{
 							this.submitForm = true;
 							this.$delete(this.errors.restaurantNewAdmin, 'password_confirmation');
+						}
+
+						break;
+
+					case 'restaurant.delivery_charge_per_kilometer' :
+
+						if (!this.singleRestaurantData.restaurant.delivery_charge_per_kilometer) {
+							this.errors.restaurant.delivery_charge_per_kilometer = 'Delivery charge is required';
+						}
+						else if (this.singleRestaurantData.restaurant.delivery_charge_per_kilometer < 0) {
+							this.errors.restaurant.delivery_charge_per_kilometer = 'Value should be positive';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.restaurant, 'delivery_charge_per_kilometer');
+						}
+
+						break;
+
+					case 'restaurant.min_delivery_charge' :
+
+						if (!this.singleRestaurantData.restaurant.min_delivery_charge) {
+							this.errors.restaurant.min_delivery_charge = 'Delivery min charge is required';
+						}
+						else if (this.singleRestaurantData.restaurant.min_delivery_charge < 0) {
+							this.errors.restaurant.min_delivery_charge = 'Value should be positive';
+						}
+						else if (this.singleRestaurantData.restaurant.max_delivery_charge && this.singleRestaurantData.restaurant.max_delivery_charge < this.singleRestaurantData.restaurant.min_delivery_charge) {
+							this.errors.restaurant.min_delivery_charge = 'Value should be smaller than max value';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.restaurant, 'min_delivery_charge');
+						}
+
+						break;
+
+					case 'restaurant.max_delivery_charge' :
+
+						if (!this.singleRestaurantData.restaurant.max_delivery_charge) {
+							this.errors.restaurant.max_delivery_charge = 'Delivery max charge is required';
+						}
+						else if (this.singleRestaurantData.restaurant.max_delivery_charge < 0) {
+							this.errors.restaurant.max_delivery_charge = 'Value should be positive';
+						}
+						else if (this.singleRestaurantData.restaurant.min_delivery_charge && this.singleRestaurantData.restaurant.max_delivery_charge < this.singleRestaurantData.restaurant.min_delivery_charge) {
+							this.errors.restaurant.max_delivery_charge = 'Value should be greater than min value';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.restaurant, 'max_delivery_charge');
 						}
 
 						break;

@@ -48,7 +48,10 @@ class RestaurantController extends Controller
    			'address'=>'required|string|max:255',
    			// 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'min_order'=>'required|numeric|min:100|max:65535',
-   			'max_booking'=>'required|numeric|min:0|max:1000',
+            'max_booking'=>'required|numeric|min:0|max:1000',
+            'delivery_charge_per_kilometer'=>'required|numeric|min:0|max:1000',
+            'min_delivery_charge'=>'required|numeric|min:0|max:1000',
+   			'max_delivery_charge'=>'required|numeric|min:0|max:1000|gte:min_delivery_charge',
             'admin_approval'=>'nullable|boolean',
             'taking_order'=>'nullable|boolean',
             'sponsored'=>'nullable|boolean',
@@ -75,6 +78,9 @@ class RestaurantController extends Controller
          
          $newRestaurant->address = $request->address;
          $newRestaurant->min_order = $request->min_order;
+         $newRestaurant->delivery_charge_per_kilometer = $request->delivery_charge_per_kilometer;
+         $newRestaurant->min_delivery_charge = $request->min_delivery_charge;
+         $newRestaurant->max_delivery_charge = $request->max_delivery_charge;
          // $newRestaurant->max_booking = $request->max_booking;
          $newRestaurant->taking_order = $request->taking_order ?? 0;
          $newRestaurant->sponsored = $request->sponsored ?? 0;
@@ -110,6 +116,9 @@ class RestaurantController extends Controller
             'mobile'=>'required|max:13|unique:restaurants,mobile,'.$restaurantToUpdate->id,
             'min_order'=>'required|numeric|min:100|max:65535',
             'max_booking'=>'required|numeric|min:0|max:1000',
+            'delivery_charge_per_kilometer'=>'required|numeric|min:0|max:1000',
+            'min_delivery_charge'=>'required|numeric|min:0|max:1000',
+            'max_delivery_charge'=>'required|numeric|min:0|max:1000|gte:min_delivery_charge',
             'website'=>'nullable|url|max:255',
             // 'lat'=>'required|unique:menu_categories,name|max:50',
             // 'lng'=>'required|unique:menu_categories,name|max:50',
@@ -137,6 +146,9 @@ class RestaurantController extends Controller
          
          $restaurantToUpdate->address = $request->address;
          $restaurantToUpdate->min_order = $request->min_order;
+         $restaurantToUpdate->delivery_charge_per_kilometer = $request->delivery_charge_per_kilometer;
+         $restaurantToUpdate->min_delivery_charge = $request->min_delivery_charge;
+         $restaurantToUpdate->max_delivery_charge = $request->max_delivery_charge;
          // $restaurantToUpdate->max_booking = $request->max_booking;
          $restaurantToUpdate->taking_order = $request->taking_order ?? 0;
          $restaurantToUpdate->sponsored = $request->sponsored ?? 0;

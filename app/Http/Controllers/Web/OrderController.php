@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Events\UpdateWaiters;
 use App\Models\RiderEvaluation;
 use App\Events\UpdateRestaurant;
-use App\Models\OrderedRestaurant;
+use App\Models\OrderRestaurant;
 use App\Models\OrderDeliveryInfo;
 use App\Models\RiderDeliveryRecord;
 use App\Models\RestaurantEvaluation;
@@ -27,7 +27,7 @@ class OrderController extends Controller
 	{
 		return response()->json([
 
-			'expectedOrder' => Order::with(['orderer', 'asap', 'schedule', 'cutleryAdded', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order),
+			'expectedOrder' => Order::with(['orderer', 'asap', 'schedule', 'cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order),
 		
 		], 200);
 	}
@@ -139,8 +139,17 @@ class OrderController extends Controller
 			// evaluating restaurant
 			$this->updateRestaurantEvaluation($request->restaurant_id);
 
-			// Broadcast to restaruant for order cancelation with OrderedRestaurant Model
+			// Broadcast to restaruant for order cancelation with OrderRestaurant Model
 			$this->notifyRestaurant($orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->first());
+
+			// if all restauraant cancelled this order
+			if ($orderToCancel->restaurants->count() == $orderToCancel->restaurantOrderCancelations->count()) {
+				
+				$orderToCancel->update([
+					'in_progress' => 0
+				]);
+
+			}
 
 			// inform rider on restaurant-cancelation if any rider has been assigned
 			if ($orderToCancel->riderAssignment()->exists()) {
@@ -251,14 +260,14 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation.restaurantMenuItemVariation.variation', 'items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutleryAdded', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
+               'all' => OrderRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.variation.restaurantMenuItemVariation.variation', 'items.addons.restaurantMenuItemAddon.addon', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
 				               			->whereHas('order', function($q){
 						   					$q->where('customer_confirmation', 1)
 						   					  ->orWhere('order_type', 'reservation');
 										})
 				       					->latest()->paginate($perPage),
 
-               'served' => OrderedRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.selectedItemVariation.restaurantMenuItemVariation.variation', 'items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutleryAdded', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
+               'served' => OrderRestaurant::where('restaurant_id', $restaurant)->with(['items.restaurantMenuItem', 'items.variation.restaurantMenuItemVariation.variation', 'items.addons.restaurantMenuItemAddon.addon', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'order.restaurantAcceptances', 'order.orderReadyConfirmations', 'order.orderServeConfirmation', 'order.restaurantOrderCancelations'])
 										->whereHas('order.orderServeConfirmation', function($q){
 						   					$q->where('food_serve_confirmation', 1);
 										})
@@ -277,7 +286,7 @@ class OrderController extends Controller
 	 	$request->validate([
 			'restaurant_id' => ['required','exists:restaurants,id',
 			        function ($attribute, $value, $fail) use ($order) {
-			            $restaurantExist = OrderedRestaurant::where('restaurant_id', $value)
+			            $restaurantExist = OrderRestaurant::where('restaurant_id', $value)
 			            									->where('order_id', $order)
 			            									->exists();
 			            if (!$restaurantExist) {
@@ -366,7 +375,7 @@ class OrderController extends Controller
 			'reason_id' => 'required|exists:cancelation_reasons,id',
 			'restaurant_id' => ['required','exists:restaurants,id',
 					function ($attribute, $value, $fail) use ($order) {
-						$restaurantExist = OrderedRestaurant::where('restaurant_id', $value)
+						$restaurantExist = OrderRestaurant::where('restaurant_id', $value)
 															->where('order_id', $order)
 															->exists();
 			            if (!$restaurantExist) {
@@ -402,6 +411,17 @@ class OrderController extends Controller
 			// Broadcast to admin for restaurant order cancelation
 	 		$this->notifyAdmin($orderToCancel);
 
+	 		
+	 		// if all restauraant cancelled this order
+			if ($orderToCancel->restaurants->count() == $orderToCancel->restaurantOrderCancelations->count()) {
+				
+				$orderToCancel->update([
+					'in_progress' => 0
+				]);
+
+			}
+
+			// inform rider on restaurant-cancelation if any rider has been assigned
 	 		if ($orderToCancel->riderAssignment()->exists()) {
 	 			
 	 			$this->notifyRider($orderToCancel->riderAssignment);
@@ -412,7 +432,7 @@ class OrderController extends Controller
 		
 		// }
 
-		return response('Bad Request', 401);
+		// return response('Bad Request', 401);
 	}
 	
 
@@ -423,7 +443,7 @@ class OrderController extends Controller
 
             return response()->json([
 
-               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutleryAdded', 'restaurants.items.restaurantMenuItem', 'restaurants.items.selectedItemVariation.restaurantMenuItemVariation.variation', 'restaurants.items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
+               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
             
             ], 200);
 
@@ -528,7 +548,7 @@ class OrderController extends Controller
 
 				'all' => RestaurantOrderRecord::with([
 							'orderedRestaurants' => function($orderedRestaurant) use ($restaurant) {
-						    	$orderedRestaurant->where('restaurant_id', $restaurant)->with(['items.selectedItemVariation.restaurantMenuItemVariation.variation', 'items.additionalOrderedAddons.restaurantMenuItemAddon.addon', 'items.restaurantMenuItem']);
+						    	$orderedRestaurant->where('restaurant_id', $restaurant)->with(['items.variation.restaurantMenuItemVariation.variation', 'items.addons.restaurantMenuItemAddon.addon', 'items.restaurantMenuItem']);
 							}
 						])
 						->with([
@@ -541,7 +561,7 @@ class OrderController extends Controller
 						    	$orderReadyConfirmation->where('restaurant_id', $restaurant);
 							}
 						])
-						->with(['orderServeProgression', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutleryAdded'])
+						->with(['orderServeProgression', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutlery'])
 						->where('restaurant_id', $restaurant)
 						->where('food_order_acceptance', 1)
 						->whereHas('order', function($q) {
@@ -665,7 +685,7 @@ class OrderController extends Controller
 		event(new UpdateAdmin($order));
 	}
 
-	private function notifyRestaurant(OrderedRestaurant $orderedRestaurant)
+	private function notifyRestaurant(OrderRestaurant $orderedRestaurant)
 	{
 		event(new UpdateRestaurant($orderedRestaurant));
 	}
@@ -722,7 +742,8 @@ class OrderController extends Controller
 	{
 		// Cancelling customer order request
 		$orderToCancel->update([
-	 		'customer_confirmation' => 0
+	 		'customer_confirmation' => 0,
+	 		'in_progress' => 0
 	 	]);
 	}
 

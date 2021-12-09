@@ -1,10 +1,7 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -346,19 +343,19 @@
 															<span class="d-block"
 																v-if="item.restaurant_menu_item.has_variation" 
 															>
-																(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.name | capitalize }} )
+																(Selected Variation : {{ item.variation.restaurant_menu_item_variation.variation.name | capitalize }} )
 															</span>
 
 															(Quantity : {{ item.quantity }})
 
 															<span 
 																class="d-block font-weight-bold" 
-																v-if="item.additional_ordered_addons.length"
+																v-if="item.addons.length"
 															>
 																Addons
 															</span>
 
-															<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
+															<ul v-if="item.restaurant_menu_item.has_addon && item.addons.length">
 
 																<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
 																	{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name | capitalize }} ({{ additionalOrderedAddon.quantity }})
@@ -423,7 +420,6 @@
 				              			Cancelation Reason
 				              		</label>
 					                <div class="col-sm-8">
-					                  	
 					                  	<select 
 					                  		v-model="singleOrderData.orderCancelation.reason_id" 
 					                  		class="form-control" 
@@ -467,11 +463,8 @@
 				<!-- /.modal-dialog -->
 			</div>
 			<!-- /modal-order-cancelation -->
-
 	    </section>
-
 	</div>
-    
 </template>
 
 <script type="text/javascript">
