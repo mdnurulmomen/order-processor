@@ -20,16 +20,13 @@ use App\Models\RestaurantEvaluation;
 use App\Http\Controllers\Controller;
 use App\Models\RestaurantOrderRecord;
 use App\Http\Resources\Web\OrderCollection;
+use App\Http\Resources\Web\OrderDetailResource;
 
 class OrderController extends Controller
 {
 	public function showOrderDetail($order)
 	{
-		return response()->json([
-
-			'expectedOrder' => Order::with(['orderer', 'asap', 'schedule', 'cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order),
-		
-		], 200);
+		return new OrderDetailResource(Order::with(['orderer', 'asap', 'schedule', 'cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order));
 	}
 
 	public function showAllOrders($perPage = false)

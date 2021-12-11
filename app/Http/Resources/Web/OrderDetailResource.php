@@ -4,7 +4,7 @@ namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrderResource extends JsonResource
+class OrderDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,14 +24,15 @@ class OrderResource extends JsonResource
             'net_payable' => $this->net_payable,
             'payment_method' => $this->payment_method,
             'payment' => $this->when($this->payment_method != 'cash', $this->payment ? $this->payment : 'cash'),
-            // 'orderer' => $this->orderer,
+            'orderer' => $this->orderer,
             'asap' => /*$this->whenLoaded('asap')*/ $this->when($this->asap, $this->asap ? true : false),
             'schedule' => /*$this->whenLoaded('schedule')*/ $this->when($this->schedule, $this->schedule ? $this->schedule->order_schedule : false),
             'has_cutlery' => /*$this->whenLoaded('cutlery')*/ $this->when($this->cutlery, $this->cutlery ? true : false),
             'delivery' => $this->when($this->delivery, $this->delivery ? $this->delivery->additional_info : false),
+            // 'reservation' => $this->reservation,
             'customer_confirmation' => $this->customer_confirmation,
             'in_progress' => $this->in_progress,
-            // 'restaurants' => OrderedRestaurantResource::collection($this->restaurants) /*route('api.v1.ordered-restaurants.show', ['order' => $this->id])*/,
+            'restaurants' => OrderRestaurantResource::collection($this->restaurants) /*route('api.v1.ordered-restaurants.show', ['order' => $this->id])*/,
             'restaurant_acceptances' => OrderRestaurantAcceptanceResource::collection($this->restaurantAcceptances),
             'rider_assignment' => $this->riderAssignment,
             'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->orderReadyConfirmations),

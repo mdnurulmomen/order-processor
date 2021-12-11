@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Resources\Api;
+namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-// use App\Http\Resources\Api\RestaurantMenuItemAddonResource;
 
 class OrderItemAddonResource extends JsonResource
 {

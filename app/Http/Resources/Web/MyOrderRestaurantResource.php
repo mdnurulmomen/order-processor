@@ -5,7 +5,7 @@ namespace App\Http\Resources\Web;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Web\OrderedRestaurantItemResource;
 
-class MyOrderedRestaurantResource extends JsonResource
+class MyOrderRestaurantResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

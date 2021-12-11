@@ -15,11 +15,11 @@ class RestaurantAcceptanceResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            // 'id' => $this->id,
             'order_id' => $this->order_id,
-            'restaurant' => $this->restaurant,
-            'food_order_acceptance' => $this->food_order_acceptance,
             'restaurant_id' => $this->restaurant_id,
+            'restaurant_name' => $this->restaurant->name,
+            'food_order_acceptance' => $this->food_order_acceptance,
         ];
     }
 }

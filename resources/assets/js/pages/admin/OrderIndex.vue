@@ -515,7 +515,7 @@
 									    				v-for="restaurantReadyConfirmation in singleOrderData.order.order_ready_confirmations" 
 									    				:class="[restaurantReadyConfirmation.food_ready_confirmation==1 ? 'badge-success' : 'badge-primary', 'badge d-block']"
 									    			>
-									    				{{ restaurantReadyConfirmation.restaurant.name }}
+									    				{{ restaurantReadyConfirmation.restaurant_name }}
 
 									    				{{ 
 									    					restaurantReadyConfirmation.food_ready_confirmation==1 ? ' is ready' : ' aint ready yet'
@@ -528,7 +528,7 @@
 									    				v-show="cancelledLaterOrInitially(singleOrderData.order, restaurantOrderCancelation)" 
 									    				class="badge badge-secondary d-block"
 									    			>
-									    				{{restaurantOrderCancelation.restaurant.name + ' has cancelled'}} 
+									    				{{restaurantOrderCancelation.restaurant_name + ' has cancelled'}} 
 									    			</span>
 
 									    			<span 
@@ -584,13 +584,13 @@
 							              		</label>
 								                <div class="col-sm-6">
 								                	<ul v-show="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length">
-														<li v-for="(orderedRestaurant, index) in singleOrderData.order.restaurants" 
-															:key="orderedRestaurant.id"
+														<li v-for="(orderRestaurant, index) in singleOrderData.order.restaurants" 
+															:key="orderRestaurant.id"
 														>
-															{{ orderedRestaurant.restaurant.name | capitalize }}
+															{{ orderRestaurant.name | capitalize }}
 
-															<ol v-show="orderedRestaurant.items.length">
-																<li v-for="(item, index) in orderedRestaurant.items" 
+															<ol v-show="orderRestaurant.menu_items.length">
+																<li v-for="(item, index) in orderRestaurant.menu_items" 
 																	:key="item.id"
 																>	
 																	{{ item.restaurant_menu_item.name | capitalize }} 
@@ -598,30 +598,37 @@
 																	<span class="d-block"
 																		v-if="item.restaurant_menu_item.has_variation" 
 																	>
-																		(Selected Variation : {{ item.variation.restaurant_menu_item_variation.variation.name | capitalize }} )
+																		(Selected Variation : {{ item.item_variation.restaurant_menu_item_variation | capitalize }} )
 																	</span>
 
-																	(Quantity : {{ item.quantity }})
+																	<p class="d-block" v-if="item.item_addons.length">
+																		<span class="font-weight-bold">- Quantity : </span>
+																		{{ item.quantity }}
+																	</p>
 
 																	<span 
 																		class="d-block font-weight-bold" 
-																		v-if="item.addons.length"
+																		v-if="item.item_addons.length"
 																	>
 																		Addons
 																	</span>
 
-																	<ul v-if="item.restaurant_menu_item.has_addon && item.addons.length">
+																	<ul v-if="item.restaurant_menu_item.has_addon && item.item_addons.length">
 
-																		<li v-for="(additionalOrderedAddon, index) in item.addons">
-																			{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name | capitalize }} ({{ additionalOrderedAddon.quantity }})
+																		<li v-for="(additionalOrderedAddon, index) in item.item_addons">
+																			{{ additionalOrderedAddon.restaurant_menu_item_addon | capitalize }} ({{ additionalOrderedAddon.quantity }})
 																		</li>
 																	</ul>
 
+																	<p class="d-block" v-if="item.customization">
+																		<span class="font-weight-bold">- Customization : </span>
+																		{{ item.customization | capitalize }}
+																	</p>
 																</li>
 															</ol>
 
 															<p class="text-danger" 
-																v-show="! orderedRestaurant.items.length"
+																v-show="! orderRestaurant.menu_items.length"
 															>
 																No Items Found Yet
 															</p>
@@ -844,10 +851,10 @@
 											</option>
 											<option 
 												v-if="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length" 
-												v-for="orderedRestaurant in singleOrderData.order.restaurants" 
-												:value="orderedRestaurant.restaurant.id" 
+												v-for="orderRestaurant in singleOrderData.order.restaurants" 
+												:value="orderRestaurant.restaurant.id" 
 											>
-												{{ orderedRestaurant.restaurant.name | capitalize }}
+												{{ orderRestaurant.name | capitalize }}
 											</option>
 										</select>
 
@@ -1169,7 +1176,7 @@
 					.get('/orders/'+ order.id +'/show')
 					.then(response => {		
 						if (response.status == 200) {
-							this.singleOrderData.order = response.data.expectedOrder;
+							this.singleOrderData.order = response.data.data;
 							// console.log(this.singleOrderData.order);
 						}
 					})
@@ -1390,31 +1397,31 @@
 				// if current restaurant cancelled
 				if (order.hasOwnProperty('restaurant_order_cancelations') && order.restaurant_order_cancelations.length && typeof this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant) !== 'undefined') {
 
-					return this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant).restaurant.name + ' cancelled order';
+					return this.restaurantCancelledOrder(order.restaurant_order_cancelations, restaurant).restaurant_name + ' cancelled order';
 
 				}
 				// if current restaurant picked up
 				else if (order.rider_food_pick_confirmations.length && typeof this.riderPickedThisRestaurant(order.rider_food_pick_confirmations, restaurant) !== 'undefined') {
 
-					return 'Order picked-up from ' + this.riderPickedThisRestaurant(order.rider_food_pick_confirmations, restaurant).restaurant.name;
+					return 'Order picked-up from ' + this.riderPickedThisRestaurant(order.rider_food_pick_confirmations, restaurant).restaurant_name;
 
 				}
 				// if current restaurant order is ready
 				else if (order.order_ready_confirmations.length && typeof this.restaurantIsReady(order.order_ready_confirmations, restaurant) !== 'undefined') {
 
-					return this.restaurantIsReady(order.order_ready_confirmations, restaurant).restaurant.name + ' is ready';
+					return this.restaurantIsReady(order.order_ready_confirmations, restaurant).restaurant_name + ' is ready';
 
 				}
 				// if curent restaurant has accepted ?
 				else if (order.restaurant_acceptances.length && typeof this.restaurantHasAcceptedOrder(order.restaurant_acceptances, restaurant) !== 'undefined') {
 
-					return this.restaurantHasAcceptedOrder(order.restaurant_acceptances, restaurant).restaurant.name + ' has accepted';
+					return this.restaurantHasAcceptedOrder(order.restaurant_acceptances, restaurant).restaurant_name + ' has accepted';
 
 				}
 				// if current restaurant ringing ?
 				else if (order.restaurant_acceptances.length && typeof this.restaurantIsRinging(order.restaurant_acceptances, restaurant) !== 'undefined') {
 
-					return this.restaurantIsRinging(order.restaurant_acceptances, restaurant).restaurant.name + ' is ringing';
+					return this.restaurantIsRinging(order.restaurant_acceptances, restaurant).restaurant_name + ' is ringing';
 
 				}
 				else 
@@ -1424,26 +1431,26 @@
 
 				// this restaurant cancelled the order ?
 				if(order.restaurant_order_cancelations.length >= index && order.restaurant_order_cancelations[index].hasOwnProperty('reason_id')) {
-					return order.restaurant_order_cancelations[index].restaurant.name + ' cancelled order';
+					return order.restaurant_order_cancelations[index].restaurant_name + ' cancelled order';
 				}
 				// if picked up
 				else if (order.rider_food_pick_confirmations >= index && order.rider_food_pick_confirmations[index].rider_food_pick_confirmation==1) {
-					return 'Order picked-up from ' + order.rider_food_pick_confirmations[index].restaurant.name;	
+					return 'Order picked-up from ' + order.rider_food_pick_confirmations[index].restaurant_name;	
 				}
 				// ready ?
 				else if (order.order_ready_confirmations >= index && order.order_ready_confirmations[index].food_ready_confirmation==1) {
-					return order.order_ready_confirmations[index].restaurant.name + ' is ready';
+					return order.order_ready_confirmations[index].restaurant_name + ' is ready';
 				}
 				// restaurant ringing or accepted ?
 				else {
 					if (order.restaurant_acceptances[index].food_order_acceptance==1) {
-						return order.restaurant_acceptances[index].restaurant.name +' has accepted';
+						return order.restaurant_acceptances[index].restaurant_name +' has accepted';
 					}else if (order.restaurant_acceptances[index].food_order_acceptance==-1) {
-						return order.restaurant_acceptances[index].restaurant.name +' is ringing';
+						return order.restaurant_acceptances[index].restaurant_name +' is ringing';
 					}
 					else
 						return false;
-						// 	return order.restaurant_acceptances[index].restaurant.name +' has cancelled';
+						// 	return order.restaurant_acceptances[index].restaurant_name +' has cancelled';
 				}
 
 		*/
@@ -1549,11 +1556,11 @@
 			},
 			restaurantOrderAcceptanceStatus(restaurantOrderRecord) {
 				if (restaurantOrderRecord.food_order_acceptance==-1) {
-					return restaurantOrderRecord.restaurant.name + ' is ringing';
+					return restaurantOrderRecord.restaurant_name + ' is ringing';
 				}else if (restaurantOrderRecord.food_order_acceptance==1) {
-					return restaurantOrderRecord.restaurant.name + ' has accepted';
+					return restaurantOrderRecord.restaurant_name + ' has accepted';
 				}else 
-					return restaurantOrderRecord.restaurant.name + ' has cancelled';
+					return restaurantOrderRecord.restaurant_name + ' has cancelled';
 			},
 			cancelledLaterOrInitially(order, restaurantOrderCancelation) {
 				
@@ -1579,14 +1586,14 @@
 			riderFoodPickUpStatus(riderFoodPickUpConfirmation) {
 
 				if (riderFoodPickUpConfirmation.rider_food_pick_confirmation==0) {
-					return 'Rider cancelled ' + riderFoodPickUpConfirmation.restaurant.name;
-					// return riderFoodPickUpConfirmation.rider.user_name +' has cancelled order of '+riderFoodPickUpConfirmation.restaurant.name;
+					return 'Rider cancelled ' + riderFoodPickUpConfirmation.restaurant_name;
+					// return riderFoodPickUpConfirmation.rider.user_name +' has cancelled order of '+riderFoodPickUpConfirmation.restaurant_name;
 				}else if (riderFoodPickUpConfirmation.rider_food_pick_confirmation==1) {
-					return 'Picked-up from ' + riderFoodPickUpConfirmation.restaurant.name;
-					// return riderFoodPickUpConfirmation.rider.user_name +' picked-up from ' + riderFoodPickUpConfirmation.restaurant.name;
+					return 'Picked-up from ' + riderFoodPickUpConfirmation.restaurant_name;
+					// return riderFoodPickUpConfirmation.rider.user_name +' picked-up from ' + riderFoodPickUpConfirmation.restaurant_name;
 				}else {
 					return 'Not picked-up yet';
-					// return riderFoodPickUpConfirmation.rider.user_name +' not picked-up yet from '+riderFoodPickUpConfirmation.restaurant.name;
+					// return riderFoodPickUpConfirmation.rider.user_name +' not picked-up yet from '+riderFoodPickUpConfirmation.restaurant_name;
 				}
 					
 			},

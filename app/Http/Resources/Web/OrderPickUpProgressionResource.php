@@ -15,12 +15,12 @@ class OrderPickUpProgressionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'rider_food_pick_confirmation' => $this->rider_food_pick_confirmation,
+            // 'id' => $this->id,
             'order_id' => $this->order_id,
+            // 'rider_id' => $this->rider_id,
             'restaurant_id' => $this->restaurant_id,
-            'rider_id' => $this->rider_id,
-            'restaurant' => $this->restaurant,
+            'restaurant_name' => $this->restaurant->name,
+            'rider_food_pick_confirmation' => $this->rider_food_pick_confirmation,
         ];
     }
 }

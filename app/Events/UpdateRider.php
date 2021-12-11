@@ -10,10 +10,10 @@ use Illuminate\Broadcasting\PresenceChannel;
 use App\Http\Resources\Api\RiderOrderResource;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use App\Http\Resources\Api\OrderedRestaurantResource;
+use App\Http\Resources\Api\OrderRestaurantResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use App\Http\Resources\Api\OrderedRestaurantAcceptanceResource;
+use App\Http\Resources\Api\OrderRestaurantAcceptanceResource;
 
 class UpdateRider implements ShouldBroadcast
 {
@@ -50,8 +50,8 @@ class UpdateRider implements ShouldBroadcast
             'rider_delivery_confirmation' => $this->riderNewDeliveryRecord->riderDeliveryConfirmation,
             'rider_food_pick_confirmations' => $this->riderNewDeliveryRecord->riderFoodPickConfirmations,
             'restaurant_order_cancelations' => $this->riderNewDeliveryRecord->restaurantOrderCancelations,
-            'restaurants' => OrderedRestaurantResource::collection($this->riderNewDeliveryRecord->restaurants),
-            'restaurants_accepted' => OrderedRestaurantAcceptanceResource::collection($this->riderNewDeliveryRecord->restaurantsAccepted),
+            'restaurants' => OrderRestaurantResource::collection($this->riderNewDeliveryRecord->restaurants),
+            'restaurants_accepted' => OrderRestaurantAcceptanceResource::collection($this->riderNewDeliveryRecord->restaurantsAccepted),
 
         ];
     }

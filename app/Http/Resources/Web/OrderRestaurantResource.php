@@ -4,7 +4,7 @@ namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RestaurantCancelationResource extends JsonResource
+class OrderRestaurantResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,9 @@ class RestaurantCancelationResource extends JsonResource
     public function toArray($request)
     {
         return [
-           'reason_id'=>$this->reason_id,  
-           'restaurant_id'=>$this->restaurant_id, 
-           'restaurant_name'=>$this->restaurant->name, 
+            'id' => $this->restaurant->id,
+            'name' => $this->restaurant->name,
+            'menu_items' => OrderRestaurantMenuItemResource::collection($this->items),
         ];
     }
 }

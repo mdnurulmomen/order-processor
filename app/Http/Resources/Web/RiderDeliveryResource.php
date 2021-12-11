@@ -16,10 +16,10 @@ class RiderDeliveryResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
-            'id' => $this->id,
+            // 'id' => $this->id,
+            // 'rider_id' => $this->rider_id,
+            // 'order_id ' => $this->order_id,
             'rider_delivery_confirmation' => $this->rider_delivery_confirmation,
-            'rider_id' => $this->rider_id,
-            'order_id ' => $this->order_id,
         ];
     }
 }
