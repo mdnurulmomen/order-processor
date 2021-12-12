@@ -33,6 +33,11 @@ class RestaurantMenuItem extends Model
         'promoted' => 'boolean',
     ];
 
+    public function orders()
+    {
+        return $this->hasMany(OrderItem::class, 'restaurant_menu_item_id', 'id');
+    }
+
     public function restaurantMenuCategory()
     {
         return $this->belongsTo(RestaurantMenuCategory::class, 'restaurant_menu_category_id', 'id')->withTrashed();

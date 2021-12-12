@@ -17,8 +17,9 @@ class OrderRestaurantItemResource extends JsonResource
         return [
            'restaurant_menu_item'=>new RestaurantMenuItemResource($this->restaurantMenuItem),
            'quantity'=>$this->quantity,
-           'selected_item_variation'=>($this->restaurantMenuItem->has_variation & $this->selectedItemVariation()->exists()) ? new OrderItemVariationResource($this->selectedItemVariation) : false,
-           'additional_ordered_addons'=>($this->restaurantMenuItem->has_addon & $this->additionalOrderedAddons()->exists()) ? OrderItemAddonResource::collection($this->additionalOrderedAddons) : false,
+           'item_variation'=>($this->restaurantMenuItem->has_variation & $this->variation()->exists()) ? new OrderItemVariationResource($this->variation) : false,
+           'item_addons'=>($this->restaurantMenuItem->has_addon & $this->addons()->exists()) ? OrderItemAddonResource::collection($this->addons) : false,
+           'customization' => $this->when($this->customization, $this->customization ? $this->customization->custom_instruction : false),
         ];
     }
 }

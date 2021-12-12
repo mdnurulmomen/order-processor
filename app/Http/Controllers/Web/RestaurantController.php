@@ -905,9 +905,19 @@ class RestaurantController extends Controller
 
          if ($menuItemToUpdate->has_variation) {
 
-            // Deleting temporarily all related variations
-            RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)
-                                       ->delete();
+            // if this menu-item has orders
+            if ($menuItemToUpdate->orders->count()) {
+               
+               // Deleting temporarily all related variations
+               RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)
+                                          ->delete();
+
+            }
+            else {
+               // Deleting temporarily all related variations
+               RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)
+                                          ->forceDelete();
+            }
 
             for ($i=0; $i<count($request->variations_id); $i++) { 
                
@@ -960,9 +970,15 @@ class RestaurantController extends Controller
 
          if ($menuItemToUpdate->has_addon) {
 
-            // Deleting temporarily all related variations
-            RestaurantMenuItemAddon::where('restaurant_menu_item_id', $menuItem)
-                                       ->delete();
+            // checking for previous orders
+            if ($menuItemToUpdate->orders->count()) {
+               // Deleting temporarily all related variations
+               RestaurantMenuItemAddon::where('restaurant_menu_item_id', $menuItem)->delete();
+            }
+            else {
+               // Deleting permanently all related variations
+               RestaurantMenuItemAddon::where('restaurant_menu_item_id', $menuItem)->forceDelete();
+            }                          
 
             for ($i=0; $i<count($request->addons_id); $i++) { 
                
@@ -1022,11 +1038,18 @@ class RestaurantController extends Controller
       {
          $menuItemToDelete = RestaurantMenuItem::find($menuItem);
           
-         if ($menuItemToDelete ) {
+         if ($menuItemToDelete) {
 
-            // Variation deletion aint needed as not showing this menu-item anymore
-            // RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)->delete();
-            $menuItemToDelete->delete();
+            if ($menuItemToDelete->orders->count()) {
+               // Variation deletion aint needed as not showing this menu-item anymore
+               // RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)->delete();
+               $menuItemToDelete->delete();
+            }
+            else {
+               // Delete permanently as has no previous history
+               RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)->forceDelete();
+               $menuItemToDelete->forceDelete();
+            }
          
          }
 
@@ -1207,7 +1230,7 @@ class RestaurantController extends Controller
       {
          $restaurantMenuCategoryToDelete = RestaurantMenuCategory::findOrFail($menuCategory);
           
-         if ($restaurantMenuCategoryToDelete->menuItems()->withTrashed()->count()) {
+         if ($restaurantMenuCategoryToDelete->menuItems()->withTrashed()->count() && $restaurantMenuCategoryToDelete->menuItems()->withTrashed()->has('orders')->count()) {
 
             $restaurantMenuCategoryToDelete->menuItems()->delete();
             $restaurantMenuCategoryToDelete->delete();

@@ -20,6 +20,11 @@ class RestaurantMenuItemVariation extends Model
         'id'
     ];
 
+    public function orders()
+    {
+        return $this->hasMany(OrderItemVariation::class, 'restaurant_menu_item_variation_id', 'id');
+    }
+
 
    	public function variation()
     {
