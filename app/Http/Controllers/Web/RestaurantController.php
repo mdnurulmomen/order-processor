@@ -914,7 +914,7 @@ class RestaurantController extends Controller
 
             }
             else {
-               // Deleting temporarily all related variations
+               // Deleting permanently all related variations
                RestaurantMenuItemVariation::where('restaurant_menu_item_id', $menuItem)
                                           ->forceDelete();
             }

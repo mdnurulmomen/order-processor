@@ -1,8 +1,6 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
 			<div class="row justify-content-center vh-100" v-show="loading">
 				<div class="d-flex align-items-center">
@@ -15,9 +13,19 @@
 			</div>
 	
 		  	<!-- Nav tabs -->
-			<ul class="nav nav-pills nav-tabs nav-justified mb-4" v-show="!loading" >
+			<ul class="nav nav-pills nav-tabs nav-justified mb-2" v-show="!loading" >
 				<li class="nav-item">
-					<a class="nav-link active" data-toggle="tab" href="#payment">
+					<a class="nav-link active" data-toggle="tab" href="#application">
+						App
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#service">
+						Service
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#payment">
 						Payment
 					</a>
 				</li>
@@ -27,12 +35,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#delivery">
-						Delivery
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#others">
+					<a class="nav-link" data-toggle="tab" href="#system">
 						System
 					</a>
 				</li>
@@ -40,8 +43,511 @@
 
 			<!-- Tab panes -->
 			<div class="tab-content">
+				<div class="tab-pane fade show fade active" id="application">	
+					<div class="row">
+						<div  
+							v-show="!loading" 
+							class="col-sm-12"
+						>
+							<div class="card card-primary card-outline">
+								<!-- form start -->
+						      	<form 
+							      	class="form-horizontal" 
+							      	v-on:submit.prevent="updateAppSetting"
+						      	>	
+						      		<input 
+							      		type="hidden" 
+							      		name="_token" 
+							      		:value="csrf"
+						      		>
+						            
+					              	<div class="card-body box-profile">
+					              		<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			App Name
+						              		</label>
+							                <div class="col-sm-9">
+							                  	<input 
+							                  		type="text" 
+							                  		class="form-control" 
+							                  		v-model="applicationSettings.app_name" 
+							                  		placeholder="App Name" 
+							                  		required="true" 
+							                  		:class="!errors.applicationSettings.app_name  ? 'is-valid' : 'is-invalid'"
+													@keyup="validateFormInput('app_name')"
+							                  	>
+							                  	<div class="invalid-feedback">
+										        	{{ errors.applicationSettings.app_name }}
+										  		</div>
+							                </div>
+						              	</div>
 
-				<div class="tab-pane fade show active" id="payment">	
+						              	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			Searching Radius
+						              		</label>
+							                <div class="col-sm-9">
+							                  	<div class="input-group mb-3">
+													<input 
+														type="number" 
+														class="form-control" 
+														v-model="applicationSettings.searching_radius" 
+														min="1" 
+														max="100" 
+														step="1" 
+														placeholder="Radius for Restaurant & Rider" 
+														required="true"
+														:class="!errors.applicationSettings.searching_radius  ? 'is-valid' : 'is-invalid'"
+														@keyup="validateFormInput('searching_radius')"
+								                	>
+													<div class="input-group-append">
+														<span class="input-group-text">
+															meter
+														</span>
+													</div>
+												</div>
+
+							                  	<div class="invalid-feedback">
+										        	{{ errors.applicationSettings.searching_radius }}
+										  		</div>
+							                </div>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label for="inputLastName3" class="col-sm-3 col-form-label text-right">
+						              		 	Delivery Fee Percentage (for multiple)
+						              		</label>
+							                <div class="col-sm-9">
+							                	<div class="input-group mb-3">
+													<input 
+														type="number" 
+														class="form-control" 
+														v-model="applicationSettings.multiple_delivery_charge_percentage" 
+														min="1" 
+														max="100" 
+														step="1" 
+														placeholder="For Multiple Delivery" 
+														required="true"
+														:class="!errors.applicationSettings.multiple_delivery_charge_percentage  ? 'is-valid' : 'is-invalid'"
+														@keyup="validateFormInput('multiple_delivery_charge_percentage')"
+								                	>
+													<div class="input-group-append">
+														<span class="input-group-text">
+															%
+														</span>
+													</div>
+								                	<div class="invalid-feedback">
+											        	{{ errors.applicationSettings.multiple_delivery_charge_percentage }}
+											  		</div>
+												</div>
+							                </div>
+					                	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			Welcome Greetings
+						              		</label>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3"></label>
+
+						              		<div class="col-sm-9">
+						              			<div class="card" v-for="(welcomeGreeting, welcomeGreetingIndex) in applicationSettings.welcome_greetings">
+						              				<div class="card-header">
+						              					Greeting # {{ welcomeGreetingIndex }}
+						              				</div>
+
+								              		<div class="card-body">
+								              			<div class="form-group row">
+										              		<label class="col-sm-3 col-form-label text-right">
+										              			Title
+										              		</label>
+											                <div class="col-sm-9">
+											                  	<input 
+											                  		type="text" 
+											                  		class="form-control" 
+											                  		v-model="welcomeGreeting.title" 
+											                  		placeholder="Greeting Title" 
+											                  		required="true" 
+											                  		:class="!errors.applicationSettings.welcome_greetings[welcomeGreetingIndex].title  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('welcomeGreeting.title')"
+											                  	>
+											                  	<div class="invalid-feedback">
+														        	{{ errors.applicationSettings.welcome_greetings[welcomeGreetingIndex].title }}
+														  		</div>
+											                </div>
+										              	</div>
+
+										              	<div class="form-group row">
+										              		<label class="col-sm-3 col-form-label text-right">
+										              			Message
+										              		</label>
+											                <div class="col-sm-9">
+											                  	<input 
+											                  		type="text" 
+											                  		class="form-control" 
+											                  		v-model="welcomeGreeting.paragraph" 
+											                  		placeholder="App Name" 
+											                  		required="true" 
+											                  		:class="!errors.applicationSettings.welcome_greetings[welcomeGreetingIndex].paragraph  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('welcomeGreeting.paragraph')"
+											                  	>
+											                  	<div class="invalid-feedback">
+														        	{{ errors.applicationSettings.welcome_greetings[welcomeGreetingIndex].paragraph }}
+														  		</div>
+											                </div>
+										              	</div>
+
+										              	<div class="row d-flex align-items-center text-center mb-4">
+										              		<label for="inputMobile3" class="col-sm-3 col-form-label text-right">
+										              			Preview
+										              		</label>
+										              		<div class="col-sm-4">
+										                  		<img 
+											                  		class="profile-user-img img-fluid" 
+											                  		:src="welcomeGreeting.preview || 'uploads/application/welcome_preview.jpg'" 
+											                  		alt="Welcome Preview"
+										                  		>
+										                	</div>
+											                <div class="col-sm-5">
+											                  	<div class="input-group">
+												                    <div class="custom-file">
+												                        <input 
+												                        	type="file" 
+												                        	class="custom-file-input" 
+												                        	id="exampleInputFile" 
+												                        	v-on:change="onStartingPreviewChange(welcomeGreetingIndex)" 
+												                        	accept="image/*"
+												                        >
+												                        <label class="custom-file-label" for="exampleInputFile">
+												                        	Change Preview
+												                        </label>
+												                    </div>
+											                    </div>
+											                </div>
+										            	</div>
+								              		</div>
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1"></i>
+
+								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1"></i>
+								              	</div>
+						              		</div>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			Order Accomplishment Greeting
+						              		</label>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3"></label>
+
+						              		<div class="col-sm-9">
+						              			<div class="card">
+								              		<div class="card-body">
+								              			<div class="form-group row">
+										              		<label class="col-sm-3 col-form-label text-right">
+										              			Accomplishment Title
+										              		</label>
+											                <div class="col-sm-9">
+											                  	<input 
+											                  		type="text" 
+											                  		class="form-control" 
+											                  		v-model="applicationSettings.thanks_greeting.title" 
+											                  		placeholder="Accomplishment Title" 
+											                  		required="true" 
+											                  		:class="!errors.applicationSettings.thanks_greeting.title  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('thanks_greeting.title')"
+											                  	>
+											                  	<div class="invalid-feedback">
+														        	{{ errors.applicationSettings.thanks_greeting.title }}
+														  		</div>
+											                </div>
+										              	</div>
+
+										              	<div class="form-group row">
+										              		<label class="col-sm-3 col-form-label text-right">
+										              			Accomplishment Message
+										              		</label>
+											                <div class="col-sm-9">
+											                  	<input 
+											                  		type="text" 
+											                  		class="form-control" 
+											                  		v-model="applicationSettings.thanks_greeting.paragraph" 
+											                  		placeholder="Accomplishment Message" 
+											                  		required="true" 
+											                  		:class="!errors.applicationSettings.thanks_greeting.paragraph  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('thanks_greeting.paragraph')"
+											                  	>
+											                  	<div class="invalid-feedback">
+														        	{{ errors.applicationSettings.thanks_greeting.paragraph }}
+														  		</div>
+											                </div>
+										              	</div>
+
+										              	<div class="row d-flex align-items-center text-center mb-4">
+										              		<label for="inputMobile3" class="col-sm-3 col-form-label text-right">
+										              			Accomplishment Preview
+										              		</label>
+										              		<div class="col-sm-4">
+										                  		<img 
+											                  		class="profile-user-img img-fluid" 
+											                  		:src="applicationSettings.thanks_greeting.preview || 'uploads/application/accomplishment_logo.jpg'" 
+											                  		alt="Order Accomplishment Preview"
+										                  		>
+										                	</div>
+											                <div class="col-sm-5">
+											                  	<div class="input-group">
+												                    <div class="custom-file">
+												                        <input 
+												                        	type="file" 
+												                        	class="custom-file-input" 
+												                        	id="exampleInputFile" 
+												                        	v-on:change="onAccomplishmentPreviewChange" 
+												                        	accept="image/*"
+												                        >
+												                        <label class="custom-file-label" for="exampleInputFile">
+												                        	Change Preview
+												                        </label>
+												                    </div>
+											                    </div>
+											                </div>
+										            	</div>
+								              		</div>
+								              	</div>
+						              		</div>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			Promotional Sliders
+						              		</label>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3"></label>
+
+						              		<div class="col-sm-9" v-for="(promotionalSlider, promotionalSliderIndex) in applicationSettings.promotional_sliders">
+						              			<div class="card">
+								              		<div class="card-body">
+										              	<div class="row d-flex align-items-center text-center mb-4">
+										              		<label for="inputMobile3" class="col-sm-3 col-form-label text-right">
+										              			Promotional Preview
+										              		</label>
+										              		<div class="col-sm-4">
+										                  		<img 
+											                  		class="profile-user-img img-fluid" 
+											                  		:src="promotionalSlider || 'uploads/application/promotional_preview.jpg'" 
+											                  		alt="Promotional Preview"
+										                  		>
+										                	</div>
+											                <div class="col-sm-5">
+											                  	<div class="input-group">
+												                    <div class="custom-file">
+												                        <input 
+												                        	type="file" 
+												                        	class="custom-file-input" 
+												                        	id="exampleInputFile" 
+												                        	v-on:change="onPromotionalPreviewChange(promotionalSliderIndex)" 
+												                        	accept="image/*"
+												                        >
+												                        <label class="custom-file-label" for="exampleInputFile">
+												                        	Change Preview
+												                        </label>
+												                    </div>
+											                    </div>
+											                </div>
+										            	</div>
+								              		</div>
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" @click="addPromotionalPreview"></i>
+
+								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" @click="removePromotionalPreview"></i>
+								              	</div>
+						              		</div>
+						              	</div>
+					              	</div>
+					              	<!-- /.card-body -->
+						            
+						            <div class="card-footer text-center">
+						            	<div class="col-sm-12">
+											<span 
+												class="text-danger p-0 m-0 small" 
+												v-show="!submitForm"
+											>
+										  		Please input one file at least
+										  	</span>
+										</div>
+						              	<button 
+							              	type="submit" 
+							              	:disabled="loading || !submitForm" 
+							              	class="btn btn-primary"
+						              	>
+						              		Update Application Settings
+						              	</button>
+						            </div>
+						        	<!-- /.card-footer -->
+						      	</form>
+						    </div>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane fade show" id="service">	
+					<div class="row">
+						<div  
+							v-show="!loading" 
+							class="col-sm-12"
+						>
+							<div class="card card-primary card-outline">
+								<!-- form start -->
+						      	<form class="form-horizontal" v-on:submit.prevent="updateServiceSetting">
+						      		
+						      		<input 
+							      		type="hidden" 
+							      		name="_token" 
+							      		:value="csrf"
+						      		>
+						            
+						            <div class="card-body box-profile">
+						            	<div class="form-group row">
+						            		<label class="col-sm-3 col-form-label text-right">
+						              			Services
+						              		</label>
+						            	</div>
+						            	<div class="form-group row">
+						              		<label class="col-sm-3"></label>
+
+						              		<div class="col-sm-9">
+						              			<div class="card" v-for="(service, serviceIndex) in applicationSettings.services">
+								              		<div class="card-body">
+								              			<div class="form-group row">
+										              		<label class="col-sm-3 col-form-label text-right">
+										              			Name
+										              		</label>
+											                <div class="col-sm-9">
+											                  	<input 
+											                  		type="text" 
+											                  		class="form-control" 
+											                  		v-model="applicationSettings.services[serviceIndex].name" 
+											                  		placeholder="App Name" 
+											                  		required="true" 
+											                  		:class="! errors.applicationSettings.services[serviceIndex].name  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('service.name')"
+											                  	>
+											                  	<div class="invalid-feedback">
+														        	{{ errors.applicationSettings.services[serviceIndex].name }}
+														  		</div>
+											                </div>
+										              	</div>
+
+										              	<div class="form-group row">
+										              		<label class="col-sm-3 col-form-label text-right">
+										              			Code
+										              		</label>
+											                <div class="col-sm-9">
+											                  	<input 
+											                  		type="text" 
+											                  		class="form-control" 
+											                  		v-model="applicationSettings.services[serviceIndex].code" 
+											                  		placeholder="App Name" 
+											                  		required="true" 
+											                  		:class="!errors.applicationSettings[serviceIndex].code  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('service.code')"
+											                  	>
+											                  	<div class="invalid-feedback">
+														        	{{ errors.applicationSettings[serviceIndex].code }}
+														  		</div>
+											                </div>
+										              	</div>
+
+										              	<div class="row d-flex align-items-center text-center mb-4">
+										              		<label for="inputMobile3" class="col-sm-3 col-form-label text-right">
+										              			Logo
+										              		</label>
+										              		<div class="col-sm-4">
+										                  		<img 
+											                  		class="profile-user-img img-fluid" 
+											                  		:src="service.logo || 'uploads/application/logo.png'" 
+											                  		alt="Application logo"
+										                  		>
+										                	</div>
+											                <div class="col-sm-5">
+											                  	<div class="input-group">
+												                    <div class="custom-file">
+												                        <input 
+												                        	type="file" 
+												                        	class="custom-file-input" 
+												                        	id="exampleInputFile" 
+												                        	v-on:change="onServiceLogoChange" 
+												                        	accept="image/*"
+												                        >
+												                        <label class="custom-file-label" for="exampleInputFile">
+												                        	Change Logo
+												                        </label>
+												                    </div>
+											                    </div>
+											                </div>
+										            	</div>
+
+										            	<div class="form-group row">
+										              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">
+										              			Status
+										              		</label>
+											                <div class="col-sm-9">
+											                	<toggle-button 
+						                                    		value ="true" 
+						                                    		:sync="true" 
+						                                    		v-model="applicationSettings.services[serviceIndex].has_variation" 
+						                                    		:width="140"  
+						                                    		:height="30" 
+						                                    		:font-size="15" 
+						                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+						                                    		:labels="{checked: 'Available', unchecked: 'Not-Available' }"
+						                                    	/>
+											                </div>
+										              	</div>
+								              		</div>
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" @click="addMoreService"></i>
+
+								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" @click="removeService"></i>
+								              	</div>
+						              		</div>
+						              	</div>
+						            </div>
+						            <!-- /.card-body -->
+						            <div class="card-footer text-center">
+						            	<div class="col-sm-12">
+											<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+										  		Please input all required fields
+										  	</span>
+										</div>
+						              	<button 
+							              	type="submit" 
+							              	:disabled="loading || !submitForm" 
+							              	class="btn btn-primary"
+						              	>
+						              		Update Service Settings
+						              	</button>
+						            </div>
+						        	<!-- /.card-footer -->
+						      	</form>
+						    </div>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane fade show" id="payment">	
 					<div class="row">
 						<div  
 							v-show="!loading" 
@@ -58,7 +564,6 @@
 						      		>
 						            
 						            <div class="card-body box-profile">  
-
 						              	<div class="form-group row">
 						              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">
 						              			Vat Rate
@@ -88,8 +593,9 @@
 												</div>
 							                </div>
 						              	</div>
+
 						              	<div class="form-group row">
-						              		<label for="inputNewnumber3" class="col-sm-3 col-form-label text-right">
+						              		<label class="col-sm-3 col-form-label text-right">
 						              			Official Bank
 						              		</label>
 							                <div class="col-sm-9">
@@ -107,6 +613,7 @@
 										  		</div>
 							                </div>
 						              	</div>
+
 						              	<div class="form-group row">
 						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
 						              			Bank Account Number  
@@ -127,6 +634,7 @@
 										  		</div>
 							                </div>
 						              	</div>
+
 						              	<div class="form-group row">
 						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
 						              			Account Holder Name 
@@ -146,9 +654,10 @@
 										  		</div>
 							                </div>
 						              	</div>
+
 						              	<div class="form-group row">
 						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
-						              			Merchant Number 
+						              			Mobile Banking Number 
 						              		</label>
 							                <div class="col-sm-9">
 							                  	<input 
@@ -166,7 +675,78 @@
 							                </div>
 						              	</div>
 
+						              	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			Payment Methods
+						              		</label>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3"></label>
+
+						              		<div class="col-sm-9">
+						              			<div class="card">
+								              		<div class="card-body">
+								              			<div class="form-group row">
+										              		<label class="col-sm-3 col-form-label text-right">
+										              			Payment Name
+										              		</label>
+											                <div class="col-sm-9">
+											                  	<input 
+											                  		type="text" 
+											                  		class="form-control" 
+											                  		v-model="applicationSettings.paragraph" 
+											                  		placeholder="App Name" 
+											                  		required="true" 
+											                  		:class="!errors.applicationSettings.app_name  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('app_name')"
+											                  	>
+											                  	<div class="invalid-feedback">
+														        	{{ errors.applicationSettings.app_name }}
+														  		</div>
+											                </div>
+										              	</div>
+
+										              	<div class="row d-flex align-items-center text-center mb-4">
+										              		<label for="inputMobile3" class="col-sm-3 col-form-label text-right">
+										              			Payment Logo
+										              		</label>
+										              		<div class="col-sm-4">
+										                  		<img 
+											                  		class="profile-user-img img-fluid" 
+											                  		:src="applicationSettings.logo || 'uploads/application/logo.png'" 
+											                  		alt="Application logo"
+										                  		>
+										                	</div>
+											                <div class="col-sm-5">
+											                  	<div class="input-group">
+												                    <div class="custom-file">
+												                        <input 
+												                        	type="file" 
+												                        	class="custom-file-input" 
+												                        	id="exampleInputFile" 
+												                        	v-on:change="onLogoChange" 
+												                        	accept="image/*"
+												                        >
+												                        <label class="custom-file-label" for="exampleInputFile">
+												                        	Change Logo
+												                        </label>
+												                    </div>
+											                    </div>
+											                </div>
+										            	</div>
+								              		</div>
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1"></i>
+
+								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1"></i>
+								              	</div>
+						              		</div>
+						              	</div>
 						            </div>
+
 						            <!-- /.card-body -->
 						            <div class="card-footer text-center">
 						            	<div class="col-sm-12">
@@ -200,8 +780,7 @@
 						      	<form 
 							      	class="form-horizontal" 
 							      	v-on:submit.prevent="updateContactSetting"
-						      	>
-						      		
+						      	>	
 						      		<input 
 							      		type="hidden" 
 							      		name="_token" 
@@ -299,110 +878,8 @@
 					</div>
 				</div>
 
-				<div class="tab-pane fade show fade" id="delivery">	
+				<div class="tab-pane fade show fade" id="system">	
 					<div class="row">
-						<div  v-show="!loading" class="col-sm-12">
-							<div class="card card-primary card-outline">
-								<!-- form start -->
-						      	<form 
-							      	class="form-horizontal" 
-							      	v-on:submit.prevent="updateDeliverySetting"
-						      	>
-						      		
-						      		<input 
-							      		type="hidden" 
-							      		name="_token" 
-							      		:value="csrf"
-						      		>
-						            
-						            <div class="card-body box-profile">  
-
-						              	<div class="form-group row">
-							              	<div class="col-6">
-							              		<div class="row">
-								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">
-								              			Delivery Charge
-								              		</label>
-									                <div class="col-sm-8">
-									                  <input 
-									                  	type="number" 
-														class="form-control" 
-														v-model="applicationSettings.delivery_charge" 
-														min="0" 
-														step="1" 
-														required="true"
-														placeholder="Delivery Charge" 		
-														:class="!errors.applicationSettings.delivery_charge  ? 'is-valid' : 'is-invalid'"
-														@keyup="validateFormInput('delivery_charge')"
-									                  >
-									                  	<div class="invalid-feedback">
-												        	{{ errors.applicationSettings.delivery_charge }}
-												  		</div>
-									                </div>
-							              		</div>
-							              	</div>
-							                <div class="col-6">
-							                	<div class="row">
-								              		<label for="inputLastName3" class="col-sm-4 col-form-label text-right">
-								              		 	Delivery Fee Percentage (for multiple)
-								              		</label>
-									                <div class="col-sm-8">
-									                	<div class="input-group mb-3">
-															<input 
-																type="number" 
-																class="form-control" 
-																v-model="applicationSettings.multiple_delivery_charge_percentage" 
-																min="1" 
-																max="100" 
-																step="1" 
-																placeholder="For Multiple Delivery" 
-																required="true"
-																:class="!errors.applicationSettings.multiple_delivery_charge_percentage  ? 'is-valid' : 'is-invalid'"
-																@keyup="validateFormInput('multiple_delivery_charge_percentage')"
-										                	>
-															<div class="input-group-append">
-																<span class="input-group-text">
-																	%
-																</span>
-															</div>
-										                	<div class="invalid-feedback">
-													        	{{ errors.applicationSettings.multiple_delivery_charge_percentage }}
-													  		</div>
-														</div>
-									                </div>
-							                	</div>
-							              	</div>
-						              	</div>
-
-						            </div>
-						            <!-- /.card-body -->
-						            <div class="card-footer text-center">
-						            	<div class="col-sm-12">
-											<span 
-												class="text-danger p-0 m-0 small" 
-												v-show="!submitForm"
-											>
-										  		Please input all required fields
-										  	</span>
-										</div>
-						              	<button 
-							              	type="submit" 
-							              	:disabled="loading || !submitForm" 
-							              	class="btn btn-primary"
-						              	>
-						              		Update Delivery Setting
-						              	</button>
-						            </div>
-						        	<!-- /.card-footer -->
-						      	</form>
-						    </div>
-						</div>
-					</div>
-				</div>
-
-				<div class="tab-pane fade show fade" id="others">	
-					<div class="row">
-
 						<div  
 							v-show="!loading" 
 							class="col-sm-12"
@@ -411,7 +888,7 @@
 								<!-- form start -->
 						      	<form 
 							      	class="form-horizontal" 
-							      	v-on:submit.prevent="updateOtherSetting"
+							      	v-on:submit.prevent="updateSystemSetting"
 						      	>	
 						      		<input 
 							      		type="hidden" 
@@ -422,7 +899,7 @@
 					              	<div class="card-body box-profile">
 
 					              		<div class="row d-flex align-items-center text-center mb-4">
-						              		<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
+						              		<label for="inputMobile3" class="col-sm-3 col-form-label text-right">
 						              			App Logo
 						              		</label>
 						              		<div class="col-sm-4">
@@ -432,7 +909,7 @@
 							                  		alt="Application logo"
 						                  		>
 						                	</div>
-							                <div class="col-sm-4">
+							                <div class="col-sm-5">
 							                  	<div class="input-group">
 								                    <div class="custom-file">
 								                        <input 
@@ -451,7 +928,7 @@
 						            	</div>
 
 					                	<div class="row d-flex align-items-center text-center">
-						              		<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
+						              		<label for="inputMobile3" class="col-sm-3 col-form-label text-right">
 						              			Panel Favicon
 						              		</label>
 						              		<div class="col-sm-4">
@@ -461,7 +938,7 @@
 							                  		alt="Application favicon"
 						                  		>
 						                	</div>
-							                <div class="col-sm-4">
+							                <div class="col-sm-5">
 							                  	<div class="input-group">
 								                    <div class="custom-file">
 								                        <input 
@@ -505,9 +982,7 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
-
 		</section>
 
 	</div>
@@ -518,11 +993,13 @@
 
 	import axios from 'axios';
 	import CKEditor from '@ckeditor/ckeditor5-vue';
+	import { ToggleButton } from 'vue-js-toggle-button';
 	import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 	export default {
 
 	    components: { 
+	    	ToggleButton : ToggleButton, 
 			ckeditor: CKEditor.component,
 		},
 
@@ -531,6 +1008,7 @@
 	        	editor: ClassicEditor,
 
 	        	applicationSettings : {
+	        		// app_name : null,
 	        		// vat_rate : null,
 	        		// official_bank : null,
 	        		// official_bank_account_number : null,
@@ -541,12 +1019,20 @@
 	        		// official_mail_address : null,
 	        		// official_contact_address : null,
 
-	        		// delivery_charge : null,
-	        		// multiple_delivery_charge_percentage : null,
-
 	        		// favicon : null,
 	        		// logo : null,
+		        	
+		        	welcome_greetings : [
+		        		{
+
+		        		}
+		        	],
+
+		        	thanks_greeting : {},
+
+		        	promotional_sliders : [],
 	        	},
+
 
 	        	newLogo : null,
 	        	newFavicon : null,
@@ -554,7 +1040,19 @@
 	        	loading : false,
 
 	        	errors : {
-	        		applicationSettings : {},
+
+	        		applicationSettings : {
+		        		welcome_greetings : [
+		        			{
+
+		        			}
+		        		],
+
+		        		thanks_greeting : {},
+
+		        		promotional_sliders: []
+	        		},
+
 	        	},
 
 	        	submitForm : true,
@@ -571,7 +1069,7 @@
 					.get('/api/settings')
 					.then(response => {
 						this.loading = false;
-						this.applicationSettings = response.data || {};
+						this.applicationSettings = response.data.data || this.applicationSettings;
 					});
 			},
 			updatePaymentSetting() {
@@ -652,7 +1150,7 @@
 
 					});
 			},
-			updateOtherSetting() {
+			updateSystemSetting() {
 
 				if (!this.newLogo && !this.newFavicon) {
 					this.submitForm = false;
@@ -682,6 +1180,9 @@
 				      	}
 
 					});
+			},
+			onAccomplishmentPreviewChange(evnt){
+				
 			},
 			onLogoChange(evnt){
 				let files = evnt.target.files || evnt.dataTransfer.files;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use App\Models\ApplicationSetting;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Web\GeneralSettingResource;
 
 class SettingController extends Controller
 {
@@ -15,7 +16,57 @@ class SettingController extends Controller
      */
     public function showAllSettings()
     {
-        return response(ApplicationSetting::firstOrCreate(['id' => 1]), 200);
+        // return response(ApplicationSetting::firstOrCreate(['id' => 1]), 200);
+        return new GeneralSettingResource(ApplicationSetting::firstOrCreate(['id' => 1]));
+    }
+
+    /**
+     * Update Settings.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function updateApplicationSettings(Request $request)
+    {   
+        $request->validate([
+            'app_name'=>'required|string|max:255',
+            'searching_radius'=>'required|numeric',
+            'multiple_delivery_charge_percentage'=>'required|numeric|max:100',
+
+            'welcome_greetings'=>'required|array|min:1',
+            'welcome_greetings.*.title'=>'required|string|max:255',
+            'welcome_greetings.*.paragraph'=>'required|string|max:255',
+            'welcome_greetings.*.preview'=>'required|string|max:255',
+
+            'thanks_greetings'=>'required|array|min:1',
+            'thanks_greetings.*.title'=>'required|string|max:255',
+            'thanks_greetings.*.paragraph'=>'required|string|max:255',
+            'thanks_greetings.*.preview'=>'required|string|max:255',
+
+            'promotional_sliders'=>'required|array|min:1',
+            'promotional_sliders.*.preview'=>'required|string|max:255',
+        ]);
+        
+        $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
+
+        $settings->app_name = $request->app_name;
+        $settings->searching_radius = $request->searching_radius;
+        $settings->multiple_delivery_charge_percentage = $request->multiple_delivery_charge_percentage;
+        $settings->admin_id = \Auth::guard('admin')->user()->id;
+
+        $settings->save();
+
+        // welcome greeting
+        $settings->welcome_greetings = json_decode(json_encode($request['welcome_greetings']));
+
+        // thanks greeting
+        $settings->thanks_greetings = json_decode(json_encode($request['thanks_greetings']));
+
+        // thanks greeting
+        $settings->promotional_sliders = json_decode(json_encode($request['promotional_sliders']));
+
+        return response()->json([
+            'success' => "Application Settings has been updated"
+        ], 200);
     }
 
     /**
@@ -71,6 +122,7 @@ class SettingController extends Controller
         ], 200);
     }
 
+    /*
     public function updateDeliverySettings(Request $request)
     {   
         $request->validate([
@@ -90,6 +142,7 @@ class SettingController extends Controller
             'success' => "Delivery Settings has been updated"
         ], 200);
     }
+    */
 
     public function updateOtherSettings(Request $request)
     {   

@@ -15,12 +15,14 @@ class CreateApplicationSettingsTable extends Migration
     {
         Schema::create('application_settings', function (Blueprint $table) {
             $table->tinyIncrements('id');
-            $table->unsignedTinyInteger('delivery_charge')->default(0);
+            // $table->unsignedTinyInteger('delivery_charge')->default(0);
+            $table->string('app_name')->default('qupaid');
             $table->unsignedTinyInteger('multiple_delivery_charge_percentage')->default(0);
             $table->string('official_mail_address')->default('email@qupaid.com');
             $table->string('official_contact_address')->default('House : XX, Road : XX, Area : XXXX, Dhaka-XXX');
             $table->char('official_customer_care_number', 13)->default('880XXXXXXXXX');
             $table->unsignedTinyInteger('vat_rate')->default(0);
+            $table->unsignedTinyInteger('searching_radius')->default(0);
             $table->string('official_bank')->default('XXXXX Bank');
             $table->string('official_bank_account_holder_name')->default('Mr./Mrs. XXXX');
             $table->string('official_bank_account_number')->default('XXXXXXXXXXXX');
