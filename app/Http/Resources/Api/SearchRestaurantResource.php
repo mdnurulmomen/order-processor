@@ -14,6 +14,9 @@ class SearchRestaurantResource extends JsonResource
      */
     public function toArray($request)
     {
+        $reviews = $this->reviews;
+        $number_reviews = count($this->reviews);
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -26,7 +29,13 @@ class SearchRestaurantResource extends JsonResource
             // 'is_self_service' => $this->is_self_service,
             'banner_preview' => $this->banner_preview,
             'has_parking' => $this->has_parking,
-            'reviews' => RestaurantReviewResource::collection($this->reviews)
+            
+            // 'reviews' => RestaurantReviewResource::collection($this->reviews)
+            'number_reviews' => count($reviews),
+            'mean_reviews' => $number_reviews ? ($reviews->sum('rating') / $number_reviews) : 0,
+            'reviews' => route('api.v1.restaurant-reviews.show', $this->id),
+
+            "url" => route('api.v1.restaurants.show', [ 'restaurant'=>$this->id ])
         ];
     }
 }

@@ -34,6 +34,16 @@ class Rider extends Model
         'admin_approval' => 'boolean',
     ];
 
+    public function evaluation() 
+    {
+        return $this->hasOne(RiderEvaluation::class, 'rider_id', 'id');
+    }
+
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
     public function setProfilePictureAttribute($encodedImageFile)
     {
         if ($encodedImageFile) {
@@ -83,10 +93,5 @@ class Rider extends Model
 
             $this->attributes['nid_back_preview'] = $directory.$this->user_name.'_back_preview.jpg';
         }
-    }
-
-    public function evaluation() 
-    {
-        return $this->hasOne(RiderEvaluation::class, 'rider_id', 'id');
     }
 }

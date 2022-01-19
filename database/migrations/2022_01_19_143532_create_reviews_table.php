@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRestaurantReviewsTable extends Migration
+class CreateReviewsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateRestaurantReviewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('restaurant_reviews', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedTinyInteger('rating')->nullable()->default(3);
-            $table->unsignedMediumInteger('restaurant_id');
+            $table->string('reviewable_type', 50); // Restaurnat / Rider
+            $table->unsignedMediumInteger('reviewable_id'); // Restaurnat / Rider
+            $table->unsignedMediumInteger('order_id');
             $table->unsignedInteger('customer_id');
         });
     }
@@ -28,6 +30,6 @@ class CreateRestaurantReviewsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('restaurant_reviews');
+        Schema::dropIfExists('reviews');
     }
 }

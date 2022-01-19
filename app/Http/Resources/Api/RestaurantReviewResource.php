@@ -16,6 +16,7 @@ class RestaurantReviewResource extends JsonResource
     {
         return [
             'rating' => $this->rating,
+            'order_id' => $this->order_id,
             'customer_id' => $this->customer_id,
         ];
     }

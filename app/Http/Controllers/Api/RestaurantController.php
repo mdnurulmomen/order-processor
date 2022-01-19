@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Meal;
+use App\Models\Review;
 use App\Models\Cuisine;
 use App\Models\Restaurant;
 use App\Models\MenuCategory;
 use Illuminate\Http\Request;
-use App\Models\RestaurantReview;
 use App\Models\RestaurantMenuItem;
 use App\Http\Controllers\Controller;
 // use App\Models\RestaurantMenuCategory;
@@ -222,7 +222,7 @@ class RestaurantController extends Controller
         $expectedRestaurant = Restaurant::findOrFail($id);
 
         if ($per_page) {
-          return new RestaurantReviewCollection(RestaurantReview::where('restaurant_id', $id)->paginate($per_page));
+          return new RestaurantReviewCollection(Review::where('reviewable_type', 'App/Models/Restaurant')->where('reviewable_id', $id)->paginate($per_page));
         }
 
         return RestaurantReviewResource::collection($expectedRestaurant->reviews);
@@ -232,6 +232,7 @@ class RestaurantController extends Controller
     {
         $request->validate([
           'rating' => 'required|numeric',
+          'order_id' => 'required|numeric|exists:orders,id',
           'customer_id' => 'required|numeric|exists:customers,id',
           'restaurant_id' => 'required|numeric|exists:restaurants,id'
         ]);
@@ -239,7 +240,7 @@ class RestaurantController extends Controller
         $expectedRestaurant = Restaurant::findOrFail($request->restaurant_id);
 
         $expectedRestaurant->reviews()->updateOrCreate(
-          [ 'customer_id' => $request->customer_id ],
+          [ 'order_id' => $request->order_id, 'customer_id' => $request->customer_id ],
           [ 'rating' => $request->rating ]
         );
 

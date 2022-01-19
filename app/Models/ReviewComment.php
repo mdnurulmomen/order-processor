@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RestaurantReview extends Model
+class ReviewComment extends Model
 {
     public $timestamps = false;
     
@@ -17,8 +17,8 @@ class RestaurantReview extends Model
         'id'
     ];
 
-    public function customer()
+    public function review()
     {
-    	return $this->belongsTo(Customer::class, 'customer_id', 'id');
+        return $this->belongsTo(Review::class, 'review_id', 'id');
     }
 }
