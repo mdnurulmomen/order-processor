@@ -18,16 +18,16 @@ class Review extends Model
     ];
 
     /**
-     * Get the parent commentable model (post or video).
+     * Get the parent reviewable model (Restaurant or Rider).
      */
     public function reviewable()
     {
         return $this->morphTo();
     }
 
-    public function comments()
+    public function comment()
     {
-        return $this->hasMany(ReviewComment::class, 'review_id', 'id');
+        return $this->hasOne(ReviewComment::class, 'review_id', 'id');
     }
 
     public function order()

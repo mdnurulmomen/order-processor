@@ -17,7 +17,8 @@ class SponsorRestaurantResource extends JsonResource
         return [
             'id' => $this->id,
             'banner_preview' => $this->banner_preview,
-            "url" => route('api.v1.restaurants.show', [ 'restaurant'=>$this->id ])
+            'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
+            'url' => route('api.v1.restaurants.show', [ 'restaurant'=>$this->id ])
         ];
     }
 }

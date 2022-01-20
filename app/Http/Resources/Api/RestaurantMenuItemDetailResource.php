@@ -18,16 +18,19 @@ class RestaurantMenuItemDetailResource extends JsonResource
     {
         // return parent::toArray($request);
 
+        $discount = $this->restaurantMenuCategory->restaurant->deal->net_discount ?? 0;
+
         return [
 
             'id' => $this->id,
             'name' => $this->name,
             'detail' => $this->detail,
             'price' => $this->price,
+            'discount_price' => round($this->price - ($this->price * $discount/100)),
             'has_addon' => $this->has_addon,
             'has_variation' => $this->has_variation,
-            'addons' => $this->has_addon ? MenuItemAddonResource::collection($this->addons) : false,
-            'variations' => $this->has_variation ? MenuItemVariationResource::collection($this->variations) : false,
+            'addons' => $this->has_addon ? RestaurantMenuItemAddonResource::collection($this->restaurantMenuItemAddons) : [],
+            'variations' => $this->has_variation ? RestaurantMenuItemVariationResource::collection($this->restaurantMenuItemVariations) : [],
             'customizable' => $this->customizable,
             'item_stock' => $this->item_stock,
             'restaurant_id' => $this->when(strpos(Route::currentRouteName(), 'promotional-menu-items.index') != false, $this->restaurantMenuCategory->restaurant_id),

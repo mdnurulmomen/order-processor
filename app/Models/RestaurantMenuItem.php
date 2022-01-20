@@ -38,6 +38,16 @@ class RestaurantMenuItem extends Model
         return $this->hasMany(OrderItem::class, 'restaurant_menu_item_id', 'id');
     }
 
+    public function restaurantMenuItemVariations()
+    {
+        return $this->hasMany(RestaurantMenuItemVariation::class, 'restaurant_menu_item_id', 'id');
+    }
+
+    public function restaurantMenuItemAddons()
+    {
+        return $this->hasMany(RestaurantMenuItemAddon::class, 'restaurant_menu_item_id', 'id');
+    }
+
     public function restaurantMenuCategory()
     {
         return $this->belongsTo(RestaurantMenuCategory::class, 'restaurant_menu_category_id', 'id')->withTrashed();

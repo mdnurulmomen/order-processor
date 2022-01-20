@@ -20,20 +20,27 @@ class SearchRestaurantResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            // 'mobile' => $this->mobile,
-            // 'address' => $this->address,
-            // 'lat' => $this->lat,
-            // 'lng' => $this->lng,
-            // 'website' => $this->website,
-            // 'is_post_paid' => $this->is_post_paid,
-            // 'is_self_service' => $this->is_self_service,
             'banner_preview' => $this->banner_preview,
             'has_parking' => $this->has_parking,
             
-            // 'reviews' => RestaurantReviewResource::collection($this->reviews)
-            'number_reviews' => count($reviews),
-            'mean_reviews' => $number_reviews ? ($reviews->sum('rating') / $number_reviews) : 0,
-            'reviews' => route('api.v1.restaurant-reviews.show', $this->id),
+            // 'mobile' => $this->mobile,
+            // 'address' => $this->address,
+            // 'website' => $this->website,
+            // 'is_post_paid' => $this->is_post_paid,
+            // 'is_self_service' => $this->is_self_service,
+            
+            'lat' => $this->lat,
+            'lng' => $this->lng, 
+
+            'delivery_charge_per_kilometer' => $this->delivery_charge_per_kilometer,
+            'min_delivery_charge' => $this->min_delivery_charge,
+            'max_delivery_charge' => $this->max_delivery_charge,
+            
+            'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
+
+            'total_reviews' => count($reviews),
+            'mean_review' => $number_reviews ? ($reviews->sum('rating') / $number_reviews) : 0,
+            'reviews' => route('api.v1.restaurant-reviews.show', [ 'restaurant'=>$this->id, 'perPage'=>10 ]),
 
             "url" => route('api.v1.restaurants.show', [ 'restaurant'=>$this->id ])
         ];

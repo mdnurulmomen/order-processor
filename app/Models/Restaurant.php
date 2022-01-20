@@ -37,24 +37,6 @@ class Restaurant extends Model
         'sponsored' => 'boolean',
     ];
     
-   
-    public function setBannerPreviewAttribute($encodedImageFile)
-    {
-        if ($encodedImageFile) {
-
-            $directory = "uploads/restaurant/";
-
-            if (!file_exists($directory)) {
-                mkdir($directory, 0777, true);
-            }
-            
-            $imageObject = ImageIntervention::make($encodedImageFile);
-            $imageObject->save($directory.$this->id.'.jpg');
-
-            $this->attributes['banner_preview'] = $directory.$this->id.'.jpg';
-        }
-    }
-
     public function admin()
     {
         return $this->belongsTo(RestaurantAdmin::class, 'restaurant_admins_id', 'id');
@@ -119,6 +101,23 @@ class Restaurant extends Model
     public function meals()
     {
         return $this->belongsToMany(Meal::class, 'restaurant_meals', 'restaurant_id', 'meal_id');
+    }
+   
+    public function setBannerPreviewAttribute($encodedImageFile)
+    {
+        if ($encodedImageFile) {
+
+            $directory = "uploads/restaurant/";
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            
+            $imageObject = ImageIntervention::make($encodedImageFile);
+            $imageObject->save($directory.$this->id.'.jpg');
+
+            $this->attributes['banner_preview'] = $directory.$this->id.'.jpg';
+        }
     }
 
 }

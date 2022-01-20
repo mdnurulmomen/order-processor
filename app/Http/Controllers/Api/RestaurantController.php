@@ -217,7 +217,7 @@ class RestaurantController extends Controller
     }
     */
 
-    public function getRestaurantReview($id, $per_page=false)
+    public function getRestaurantReviews($id, $per_page=false)
     {
         $expectedRestaurant = Restaurant::findOrFail($id);
 
@@ -244,6 +244,6 @@ class RestaurantController extends Controller
           [ 'rating' => $request->rating ]
         );
 
-        return $this->getRestaurantReview($expectedRestaurant->id);
+        return $this->getRestaurantReviews($expectedRestaurant->id);
     }
 }

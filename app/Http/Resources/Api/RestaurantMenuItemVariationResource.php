@@ -14,8 +14,15 @@ class RestaurantMenuItemVariationResource extends JsonResource
      */
     public function toArray($request)
     {
+        $discount = $this->restaurantMenuItem->restaurantMenuCategory->restaurant->deal->net_discount ?? 0;
+
         return [
-            'variation' => $this->variation
+
+            'id' => $this->id,
+            'name' => $this->variation->name,
+            'price' => $this->price,
+            'discount_price' => round($this->price - ($this->price * $discount/100)),
+            // 'variation' => $this->variation,
         ];
     }
 }

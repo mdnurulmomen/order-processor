@@ -15,7 +15,10 @@ class RestaurantMenuItemAddonResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'addon' => $this->addon,
+            'id' => $this->id,
+            'name' => $this->addon->name,
+            'price' => $this->price,
+            // 'addon' => $this->addon,
         ];
     }
 }

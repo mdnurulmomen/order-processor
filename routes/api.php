@@ -57,7 +57,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::get('/order-restaurants/{order}', 'CustomerController@showOrderRestaurants')->name('order-restaurants.show');
 				Route::post('/orders', 'OrderController@makeNewOrder')->name('orders.create');
 
-				Route::get('/restaurant-reviews/{restaurant}/{per_page?}', 'RestaurantController@getRestaurantReview')->name('restaurant-reviews.show');
+				Route::get('/restaurant-reviews/{restaurant}/{per_page?}', 'RestaurantController@getRestaurantReviews')->name('restaurant-reviews.show');
 				Route::post('/restaurant-reviews', 'RestaurantController@addRestaurantReview')->name('restaurant-reviews.create');
 				
 				Route::post('reservations', 'OrderController@makeNewReservation')->name('reservations.create');

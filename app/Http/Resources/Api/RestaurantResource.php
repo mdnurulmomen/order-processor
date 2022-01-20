@@ -35,7 +35,7 @@ class RestaurantResource extends JsonResource
             'min_delivery_charge' => $this->min_delivery_charge,
             'max_delivery_charge' => $this->max_delivery_charge,
 
-            'discount' => $this->deal->net_discount,
+            'discount' => $this->deal->net_discount ?? 0,
             'service_schedule' => json_decode($this->service_schedule),
             'booking_break_schedule' => json_decode($this->booking_break_schedule),
             
