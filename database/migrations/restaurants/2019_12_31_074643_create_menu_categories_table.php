@@ -16,6 +16,7 @@ class CreateMenuCategoriesTable extends Migration
         Schema::create('menu_categories', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->string('name', 50);
+            $table->boolean('search_preference')->default(true);
             $table->softDeletes();
         });
     }

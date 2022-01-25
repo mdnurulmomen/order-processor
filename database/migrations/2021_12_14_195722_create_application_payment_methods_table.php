@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateThanksGreetingsTable extends Migration
+class CreateApplicationPaymentMethodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateThanksGreetingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('thanks_greetings', function (Blueprint $table) {
+        Schema::create('application_payment_methods', function (Blueprint $table) {
             $table->tinyIncrements('id');
-            // $table->string('name'); // starting, accomplishment
-            $table->string('title');
-            $table->string('preview');
-            $table->string('paragraph');
-            $table->boolean('publish')->default(false);
+            $table->string('name');
+            $table->string('logo')->default('logo.png');
+            $table->boolean('status')->default(false);
         });
     }
 
@@ -30,6 +28,6 @@ class CreateThanksGreetingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('thanks_greetings');
+        Schema::dropIfExists('application_payment_methods');
     }
 }

@@ -16,7 +16,7 @@ class CreatePromotionalSlidersTable extends Migration
         Schema::create('promotional_sliders', function (Blueprint $table) {
             $table->tinyIncrements('id');
             $table->string('preview');
-            $table->boolean('publish')->default(false);
+            $table->boolean('status')->default(false);
             // $table->unsignedTinyInteger('application_setting_id');
         });
     }

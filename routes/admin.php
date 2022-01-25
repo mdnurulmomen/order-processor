@@ -39,7 +39,8 @@ Route::name('admin.')->group(function () {
 		    Route::get('/api/settings', 'SettingController@showAllSettings');
 		    Route::post('/payment-settings', 'SettingController@updatePaymentSettings');
 		    Route::post('/contact-settings', 'SettingController@updateContactSettings');
-		    Route::post('/delivery-settings', 'SettingController@updateDeliverySettings');
+		    Route::post('/application-settings', 'SettingController@updateApplicationSettings');
+		    Route::post('/service-settings', 'SettingController@updateServiceSettings');
 		    Route::post('/other-settings', 'SettingController@updateOtherSettings');
 
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWelcomeGreetingsTable extends Migration
+class CreateThanksGreetingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateWelcomeGreetingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('welcome_greetings', function (Blueprint $table) {
+        Schema::create('thanks_greetings', function (Blueprint $table) {
             $table->tinyIncrements('id');
             // $table->string('name'); // starting, accomplishment
             $table->string('title');
             $table->string('preview');
             $table->string('paragraph');
-            $table->boolean('publish')->default(false);
+            // $table->boolean('status')->default(false);
         });
     }
 
@@ -30,6 +30,6 @@ class CreateWelcomeGreetingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('welcome_greetings');
+        Schema::dropIfExists('thanks_greetings');
     }
 }

@@ -18,6 +18,7 @@ class ThanksGreetingResource extends JsonResource
             'title' => $this->title,
             'preview' => $this->preview,
             'paragraph' => $this->paragraph,
+            // 'status' => $this->status,
         ];
     }
 }

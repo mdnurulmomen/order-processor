@@ -4,7 +4,7 @@ namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WelcomeGreetingResource extends JsonResource
+class ServiceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,9 @@ class WelcomeGreetingResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'title' => $this->title,
-            'preview' => $this->preview,
-            'paragraph' => $this->paragraph,
+            'name' => $this->name,
+            'code' => $this->code,
+            'logo' => $this->logo,
             'status' => $this->status,
         ];
     }

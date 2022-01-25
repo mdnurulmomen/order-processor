@@ -18,6 +18,6 @@ class ThanksGreeting extends Model
     public $timestamps = false;
 
     protected $casts = [
-		'publish' => 'boolean',
+		'status' => 'boolean',
 	];
 }

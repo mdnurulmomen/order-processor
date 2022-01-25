@@ -16,6 +16,7 @@ class CreateMealsTable extends Migration
         Schema::create('meals', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name', 50)->unique();
+            $table->boolean('search_preference')->default(true);
             $table->softDeletes();
         });
     }

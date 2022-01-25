@@ -1,4 +1,3 @@
-
 <template>
 	<div class="container-fluid">
 		<section>
@@ -71,13 +70,12 @@
 							                  		type="text" 
 							                  		class="form-control" 
 							                  		v-model="applicationSettings.app_name" 
-							                  		placeholder="App Name" 
-							                  		required="true" 
-							                  		:class="!errors.applicationSettings.app_name  ? 'is-valid' : 'is-invalid'"
+							                  		placeholder="App Name"  
+							                  		:class="!errors.app_name  ? 'is-valid' : 'is-invalid'"
 													@keyup="validateFormInput('app_name')"
 							                  	>
 							                  	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.app_name }}
+										        	{{ errors.app_name }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -87,28 +85,31 @@
 						              			Searching Radius
 						              		</label>
 							                <div class="col-sm-9">
-							                  	<div class="input-group mb-3">
+							                  	<div class="input-group mb-0">
 													<input 
 														type="number" 
 														class="form-control" 
 														v-model="applicationSettings.searching_radius" 
 														min="1" 
 														max="100" 
-														step="1" 
+														step=".1" 
 														placeholder="Radius for Restaurant & Rider" 
-														required="true"
-														:class="!errors.applicationSettings.searching_radius  ? 'is-valid' : 'is-invalid'"
+														:class="! errors.searching_radius  ? 'is-valid' : 'is-invalid'"
 														@keyup="validateFormInput('searching_radius')"
 								                	>
 													<div class="input-group-append">
 														<span class="input-group-text">
-															meter
+															Meter
 														</span>
 													</div>
 												</div>
 
-							                  	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.searching_radius }}
+							                  	<div 
+							                  		class="invalid-feedback"
+							                  		style="display: block;"
+							                  		v-show="errors.searching_radius" 
+							                  	>
+										        	{{ errors.searching_radius }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -118,17 +119,16 @@
 						              		 	Delivery Fee Percentage (for multiple)
 						              		</label>
 							                <div class="col-sm-9">
-							                	<div class="input-group mb-3">
+							                	<div class="input-group mb-0">
 													<input 
 														type="number" 
 														class="form-control" 
 														v-model="applicationSettings.multiple_delivery_charge_percentage" 
 														min="1" 
 														max="100" 
-														step="1" 
+														step=".1" 
 														placeholder="For Multiple Delivery" 
-														required="true"
-														:class="!errors.applicationSettings.multiple_delivery_charge_percentage  ? 'is-valid' : 'is-invalid'"
+														:class="!errors.multiple_delivery_charge_percentage  ? 'is-valid' : 'is-invalid'"
 														@keyup="validateFormInput('multiple_delivery_charge_percentage')"
 								                	>
 													<div class="input-group-append">
@@ -137,7 +137,7 @@
 														</span>
 													</div>
 								                	<div class="invalid-feedback">
-											        	{{ errors.applicationSettings.multiple_delivery_charge_percentage }}
+											        	{{ errors.multiple_delivery_charge_percentage }}
 											  		</div>
 												</div>
 							                </div>
@@ -152,10 +152,13 @@
 						              	<div class="form-group row">
 						              		<label class="col-sm-3"></label>
 
-						              		<div class="col-sm-9">
+						              		<div 
+						              			class="col-sm-9" 
+						              			v-if="applicationSettings.welcome_greetings.length==errors.welcome_greetings.length"
+						              		>
 						              			<div class="card" v-for="(welcomeGreeting, welcomeGreetingIndex) in applicationSettings.welcome_greetings">
 						              				<div class="card-header">
-						              					Greeting # {{ welcomeGreetingIndex }}
+						              					Greeting # {{ welcomeGreetingIndex + 1 }}
 						              				</div>
 
 								              		<div class="card-body">
@@ -169,12 +172,11 @@
 											                  		class="form-control" 
 											                  		v-model="welcomeGreeting.title" 
 											                  		placeholder="Greeting Title" 
-											                  		required="true" 
-											                  		:class="!errors.applicationSettings.welcome_greetings[welcomeGreetingIndex].title  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('welcomeGreeting.title')"
+											                  		:class="!errors.welcome_greetings[welcomeGreetingIndex].title  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('welcome_greeting.title')"
 											                  	>
 											                  	<div class="invalid-feedback">
-														        	{{ errors.applicationSettings.welcome_greetings[welcomeGreetingIndex].title }}
+														        	{{ errors.welcome_greetings[welcomeGreetingIndex].title }}
 														  		</div>
 											                </div>
 										              	</div>
@@ -188,13 +190,12 @@
 											                  		type="text" 
 											                  		class="form-control" 
 											                  		v-model="welcomeGreeting.paragraph" 
-											                  		placeholder="App Name" 
-											                  		required="true" 
-											                  		:class="!errors.applicationSettings.welcome_greetings[welcomeGreetingIndex].paragraph  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('welcomeGreeting.paragraph')"
+											                  		placeholder="Welcome Message" 
+											                  		:class="!errors.welcome_greetings[welcomeGreetingIndex].paragraph  ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('welcome_greeting.paragraph')"
 											                  	>
 											                  	<div class="invalid-feedback">
-														        	{{ errors.applicationSettings.welcome_greetings[welcomeGreetingIndex].paragraph }}
+														        	{{ errors.welcome_greetings[welcomeGreetingIndex].paragraph }}
 														  		</div>
 											                </div>
 										              	</div>
@@ -209,6 +210,13 @@
 											                  		:src="welcomeGreeting.preview || 'uploads/application/welcome_preview.jpg'" 
 											                  		alt="Welcome Preview"
 										                  		>
+										                  		<div 
+										                  			class="invalid-feedback"
+										                  			style="display: block;" 
+										                  			v-show="errors.welcome_greetings[welcomeGreetingIndex].preview" 
+										                  		>
+														        	{{ errors.welcome_greetings[welcomeGreetingIndex].preview }}
+														  		</div>
 										                	</div>
 											                <div class="col-sm-5">
 											                  	<div class="input-group">
@@ -217,7 +225,7 @@
 												                        	type="file" 
 												                        	class="custom-file-input" 
 												                        	id="exampleInputFile" 
-												                        	v-on:change="onStartingPreviewChange(welcomeGreetingIndex)" 
+												                        	v-on:change="onStartingPreviewChange($event, welcomeGreetingIndex)" 
 												                        	accept="image/*"
 												                        >
 												                        <label class="custom-file-label" for="exampleInputFile">
@@ -227,13 +235,31 @@
 											                    </div>
 											                </div>
 										            	</div>
+
+										            	<div class="form-group row">
+										              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">
+										              			Status
+										              		</label>
+											                <div class="col-sm-9">
+											                	<toggle-button 
+						                                    		value ="true" 
+						                                    		:sync="true" 
+						                                    		v-model="welcomeGreeting.status" 
+						                                    		:width="140"  
+						                                    		:height="30" 
+						                                    		:font-size="15" 
+						                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+						                                    		:labels="{checked: 'Published', unchecked: 'UnPublished' }"
+						                                    	/>
+											                </div>
+										              	</div>
 								              		</div>
 								              	</div>
 
 								              	<div class="form-group row">
-								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1"></i>
+								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" @click="removeWelcomeGreeting()" :disabled="applicationSettings.welcome_greetings.length < 2"></i>
 
-								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1"></i>
+								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" @click="addWelcomeGreeting()"></i>
 								              	</div>
 						              		</div>
 						              	</div>
@@ -247,7 +273,7 @@
 						              	<div class="form-group row">
 						              		<label class="col-sm-3"></label>
 
-						              		<div class="col-sm-9">
+						              		<div class="col-sm-9" v-if="applicationSettings.thanks_greeting">
 						              			<div class="card">
 								              		<div class="card-body">
 								              			<div class="form-group row">
@@ -260,12 +286,11 @@
 											                  		class="form-control" 
 											                  		v-model="applicationSettings.thanks_greeting.title" 
 											                  		placeholder="Accomplishment Title" 
-											                  		required="true" 
-											                  		:class="!errors.applicationSettings.thanks_greeting.title  ? 'is-valid' : 'is-invalid'"
+											                  		:class="!errors.thanks_greeting.title  ? 'is-valid' : 'is-invalid'"
 																	@keyup="validateFormInput('thanks_greeting.title')"
 											                  	>
 											                  	<div class="invalid-feedback">
-														        	{{ errors.applicationSettings.thanks_greeting.title }}
+														        	{{ errors.thanks_greeting.title }}
 														  		</div>
 											                </div>
 										              	</div>
@@ -280,12 +305,11 @@
 											                  		class="form-control" 
 											                  		v-model="applicationSettings.thanks_greeting.paragraph" 
 											                  		placeholder="Accomplishment Message" 
-											                  		required="true" 
-											                  		:class="!errors.applicationSettings.thanks_greeting.paragraph  ? 'is-valid' : 'is-invalid'"
+											                  		:class="!errors.thanks_greeting.paragraph  ? 'is-valid' : 'is-invalid'"
 																	@keyup="validateFormInput('thanks_greeting.paragraph')"
 											                  	>
 											                  	<div class="invalid-feedback">
-														        	{{ errors.applicationSettings.thanks_greeting.paragraph }}
+														        	{{ errors.thanks_greeting.paragraph }}
 														  		</div>
 											                </div>
 										              	</div>
@@ -300,6 +324,14 @@
 											                  		:src="applicationSettings.thanks_greeting.preview || 'uploads/application/accomplishment_logo.jpg'" 
 											                  		alt="Order Accomplishment Preview"
 										                  		>
+
+										                  		<div 
+										                  			class="invalid-feedback"
+										                  			style="display: block;" 
+										                  			v-show="errors.thanks_greeting.preview" 
+										                  		>
+														        	{{ errors.thanks_greeting.preview }}
+														  		</div>
 										                	</div>
 											                <div class="col-sm-5">
 											                  	<div class="input-group">
@@ -318,6 +350,26 @@
 											                    </div>
 											                </div>
 										            	</div>
+
+										            	<!-- 
+										            	<div class="form-group row">
+										              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">
+										              			Status
+										              		</label>
+											                <div class="col-sm-9">
+											                	<toggle-button 
+						                                    		value ="true" 
+						                                    		:sync="true" 
+						                                    		v-model="applicationSettings.thanks_greeting.status" 
+						                                    		:width="140"  
+						                                    		:height="30" 
+						                                    		:font-size="15" 
+						                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+						                                    		:labels="{checked: 'Published', unchecked: 'UnPublished' }"
+						                                    	/>
+											                </div>
+										              	</div> 
+										              	-->
 								              		</div>
 								              	</div>
 						              		</div>
@@ -332,8 +384,8 @@
 						              	<div class="form-group row">
 						              		<label class="col-sm-3"></label>
 
-						              		<div class="col-sm-9" v-for="(promotionalSlider, promotionalSliderIndex) in applicationSettings.promotional_sliders">
-						              			<div class="card">
+						              		<div class="col-sm-9" v-if="applicationSettings.promotional_sliders.length==errors.promotional_sliders.length">
+						              			<div class="card" v-for="(promotionalSlider, promotionalSliderIndex) in applicationSettings.promotional_sliders">
 								              		<div class="card-body">
 										              	<div class="row d-flex align-items-center text-center mb-4">
 										              		<label for="inputMobile3" class="col-sm-3 col-form-label text-right">
@@ -342,9 +394,17 @@
 										              		<div class="col-sm-4">
 										                  		<img 
 											                  		class="profile-user-img img-fluid" 
-											                  		:src="promotionalSlider || 'uploads/application/promotional_preview.jpg'" 
+											                  		:src="promotionalSlider.preview || 'uploads/application/promotional_preview.jpg'" 
 											                  		alt="Promotional Preview"
 										                  		>
+
+										                  		<div 
+										                  			class="invalid-feedback"
+										                  			style="display: block;" 
+										                  			v-show="errors.promotional_sliders[promotionalSliderIndex]" 	
+										                  		>
+														        	{{ errors.promotional_sliders[promotionalSliderIndex] }}
+														  		</div>
 										                	</div>
 											                <div class="col-sm-5">
 											                  	<div class="input-group">
@@ -353,7 +413,7 @@
 												                        	type="file" 
 												                        	class="custom-file-input" 
 												                        	id="exampleInputFile" 
-												                        	v-on:change="onPromotionalPreviewChange(promotionalSliderIndex)" 
+												                        	v-on:change="onPromotionalPreviewChange($event,promotionalSliderIndex)" 
 												                        	accept="image/*"
 												                        >
 												                        <label class="custom-file-label" for="exampleInputFile">
@@ -363,13 +423,31 @@
 											                    </div>
 											                </div>
 										            	</div>
+
+										            	<div class="form-group row">
+										              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">
+										              			Status
+										              		</label>
+											                <div class="col-sm-9">
+											                	<toggle-button 
+						                                    		value ="true" 
+						                                    		:sync="true" 
+						                                    		v-model="promotionalSlider.status" 
+						                                    		:width="140"  
+						                                    		:height="30" 
+						                                    		:font-size="15" 
+						                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+						                                    		:labels="{checked: 'Published', unchecked: 'UnPublished' }"
+						                                    	/>
+											                </div>
+										              	</div>
 								              		</div>
 								              	</div>
 
 								              	<div class="form-group row">
-								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" @click="addPromotionalPreview"></i>
+								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" @click="removePromotionalPreview()" :disabled="applicationSettings.promotional_sliders.length < 2"></i>
 
-								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" @click="removePromotionalPreview"></i>
+								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" @click="addPromotionalPreview()"></i>
 								              	</div>
 						              		</div>
 						              	</div>
@@ -387,7 +465,7 @@
 										</div>
 						              	<button 
 							              	type="submit" 
-							              	:disabled="loading || !submitForm" 
+							              	:disabled="loading || ! submitForm || formSubmitted" 
 							              	class="btn btn-primary"
 						              	>
 						              		Update Application Settings
@@ -425,7 +503,7 @@
 						            	<div class="form-group row">
 						              		<label class="col-sm-3"></label>
 
-						              		<div class="col-sm-9">
+						              		<div class="col-sm-9" v-if="applicationSettings.services.length==errors.services.length">
 						              			<div class="card" v-for="(service, serviceIndex) in applicationSettings.services">
 								              		<div class="card-body">
 								              			<div class="form-group row">
@@ -436,14 +514,13 @@
 											                  	<input 
 											                  		type="text" 
 											                  		class="form-control" 
-											                  		v-model="applicationSettings.services[serviceIndex].name" 
-											                  		placeholder="App Name" 
-											                  		required="true" 
-											                  		:class="! errors.applicationSettings.services[serviceIndex].name  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('service.name')"
+											                  		v-model="service.name" 
+											                  		placeholder="Service Name"  
+											                  		:class="! errors.services[serviceIndex].name ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('service_name')"
 											                  	>
 											                  	<div class="invalid-feedback">
-														        	{{ errors.applicationSettings.services[serviceIndex].name }}
+														        	{{ errors.services[serviceIndex].name }}
 														  		</div>
 											                </div>
 										              	</div>
@@ -456,14 +533,13 @@
 											                  	<input 
 											                  		type="text" 
 											                  		class="form-control" 
-											                  		v-model="applicationSettings.services[serviceIndex].code" 
-											                  		placeholder="App Name" 
-											                  		required="true" 
-											                  		:class="!errors.applicationSettings[serviceIndex].code  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('service.code')"
+											                  		v-model="service.code" 
+											                  		placeholder="Service Code" 
+											                  		:class="! errors.services[serviceIndex].code ? 'is-valid' : 'is-invalid'"
+											                  		@keyup="validateFormInput('service_code')"
 											                  	>
 											                  	<div class="invalid-feedback">
-														        	{{ errors.applicationSettings[serviceIndex].code }}
+														        	{{ errors.services[serviceIndex].code }}
 														  		</div>
 											                </div>
 										              	</div>
@@ -475,9 +551,16 @@
 										              		<div class="col-sm-4">
 										                  		<img 
 											                  		class="profile-user-img img-fluid" 
-											                  		:src="service.logo || 'uploads/application/logo.png'" 
-											                  		alt="Application logo"
+											                  		:src="service.logo" 
+											                  		alt="Service Logo"
 										                  		>
+										                  		<div 
+										                  			class="invalid-feedback" 
+										                  			style="display: block;" 
+										                  			v-show="errors.services[serviceIndex].logo" 
+										                  		>
+														        	{{ errors.services[serviceIndex].logo }}
+														  		</div>
 										                	</div>
 											                <div class="col-sm-5">
 											                  	<div class="input-group">
@@ -486,7 +569,7 @@
 												                        	type="file" 
 												                        	class="custom-file-input" 
 												                        	id="exampleInputFile" 
-												                        	v-on:change="onServiceLogoChange" 
+												                        	v-on:change="onServiceLogoChange($event, serviceIndex)" 
 												                        	accept="image/*"
 												                        >
 												                        <label class="custom-file-label" for="exampleInputFile">
@@ -505,7 +588,7 @@
 											                	<toggle-button 
 						                                    		value ="true" 
 						                                    		:sync="true" 
-						                                    		v-model="applicationSettings.services[serviceIndex].has_variation" 
+						                                    		v-model="service.status" 
 						                                    		:width="140"  
 						                                    		:height="30" 
 						                                    		:font-size="15" 
@@ -518,9 +601,21 @@
 								              	</div>
 
 								              	<div class="form-group row">
-								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" @click="addMoreService"></i>
+								              		<i 
+								              			aria-hidden="true" 
+								              			class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" 
+								              			@click="removeService" 	
+									              		:disabled="applicationSettings.services.length <= 4"
+									              	>
+									              			
+									              	</i>
 
-								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" @click="removeService"></i>
+								              		<i 
+									              		aria-hidden="true" 
+									              		class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
+									              		@click="addMoreService()"
+								              		>	
+								              		</i>
 								              	</div>
 						              		</div>
 						              	</div>
@@ -534,7 +629,7 @@
 										</div>
 						              	<button 
 							              	type="submit" 
-							              	:disabled="loading || !submitForm" 
+							              	:disabled="loading || ! submitForm || formSubmitted" 
 							              	class="btn btn-primary"
 						              	>
 						              		Update Service Settings
@@ -569,7 +664,7 @@
 						              			Vat Rate
 						              		</label>
 							                <div class="col-sm-9">
-							                	<div class="input-group mb-3">
+							                	<div class="input-group mb-0">
 													<input 
 														type="number" 
 														class="form-control" 
@@ -578,8 +673,7 @@
 														max="100" 
 														step=".1" 
 														placeholder="Vat Rate" 
-														required="true"
-														:class="!errors.applicationSettings.vat_rate  ? 'is-valid' : 'is-invalid'"
+														:class="!errors.vat_rate  ? 'is-valid' : 'is-invalid'"
 														@keyup="validateFormInput('vat_rate')"
 								                	>
 													<div class="input-group-append">
@@ -588,7 +682,7 @@
 														</span>
 													</div>
 								                	<div class="invalid-feedback">
-											        	{{ errors.applicationSettings.vat_rate }}
+											        	{{ errors.vat_rate }}
 											  		</div>
 												</div>
 							                </div>
@@ -604,12 +698,11 @@
 							                  		class="form-control" 
 							                  		v-model="applicationSettings.official_bank" 
 							                  		placeholder="Bank Name" 
-							                  		required="true" 
-							                  		:class="!errors.applicationSettings.official_bank  ? 'is-valid' : 'is-invalid'"
+							                  		:class="!errors.official_bank  ? 'is-valid' : 'is-invalid'"
 													@keyup="validateFormInput('official_bank')"
 							                  	>
 							                  	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.official_bank }}
+										        	{{ errors.official_bank }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -624,13 +717,12 @@
 							                  		class="form-control" 
 							                  		v-model="applicationSettings.official_bank_account_number" 
 							                  		placeholder="Bank Account Number" 
-							                  		required="true" 
-							                  		:class="!errors.applicationSettings.official_bank_account_number  ? 'is-valid' : 'is-invalid'"
+							                  		:class="!errors.official_bank_account_number  ? 'is-valid' : 'is-invalid'"
 													@keyup="validateFormInput('official_bank_account_number')"
 							                  	>
 
 							                  	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.official_bank_account_number }}
+										        	{{ errors.official_bank_account_number }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -645,12 +737,11 @@
 							                  		class="form-control" 
 							                  		v-model="applicationSettings.official_bank_account_holder_name" 
 							                  		placeholder="Account Holder Number" 
-							                  		required="true" 
-							                  		:class="!errors.applicationSettings.official_bank_account_holder_name  ? 'is-valid' : 'is-invalid'"
+							                  		:class="!errors.official_bank_account_holder_name  ? 'is-valid' : 'is-invalid'"
 													@keyup="validateFormInput('official_bank_account_holder_name')"
 							                  	>
 							                  	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.official_bank_account_holder_name }}
+										        	{{ errors.official_bank_account_holder_name }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -665,12 +756,11 @@
 							                  		class="form-control" 
 							                  		v-model="applicationSettings.merchant_number" 
 							                  		placeholder="Common Merchant Number" 
-							                  		required="true" 
-							                  		:class="!errors.applicationSettings.merchant_number  ? 'is-valid' : 'is-invalid'"
+							                  		:class="!errors.merchant_number  ? 'is-valid' : 'is-invalid'"
 													@keyup="validateFormInput('merchant_number')"
 							                  	>
 							                  	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.merchant_number }}
+										        	{{ errors.merchant_number }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -684,8 +774,11 @@
 						              	<div class="form-group row">
 						              		<label class="col-sm-3"></label>
 
-						              		<div class="col-sm-9">
-						              			<div class="card">
+						              		<div 
+							              		class="col-sm-9" 
+							              		v-if="applicationSettings.payment_methods.length==errors.payment_methods.length"
+						              		>
+						              			<div class="card" v-for="(paymentMethod, paymentMethodIndex) in applicationSettings.payment_methods">
 								              		<div class="card-body">
 								              			<div class="form-group row">
 										              		<label class="col-sm-3 col-form-label text-right">
@@ -695,14 +788,13 @@
 											                  	<input 
 											                  		type="text" 
 											                  		class="form-control" 
-											                  		v-model="applicationSettings.paragraph" 
-											                  		placeholder="App Name" 
-											                  		required="true" 
-											                  		:class="!errors.applicationSettings.app_name  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('app_name')"
+											                  		v-model="paymentMethod.name" 
+											                  		placeholder="Payment Name" 
+											                  		:class="! errors.payment_methods[paymentMethodIndex].name ? 'is-valid' : 'is-invalid'"
+																	@keyup="validateFormInput('payment_name')"
 											                  	>
 											                  	<div class="invalid-feedback">
-														        	{{ errors.applicationSettings.app_name }}
+														        	{{ errors.payment_methods[paymentMethodIndex].name }}
 														  		</div>
 											                </div>
 										              	</div>
@@ -714,9 +806,16 @@
 										              		<div class="col-sm-4">
 										                  		<img 
 											                  		class="profile-user-img img-fluid" 
-											                  		:src="applicationSettings.logo || 'uploads/application/logo.png'" 
-											                  		alt="Application logo"
+											                  		:src="paymentMethod.logo || 'uploads/application/logo.png'" 
+											                  		alt="Payment Logo"
 										                  		>
+										                  		<div 
+										                  			class="invalid-feedback"
+										                  			style="display: block;" 
+										                  			v-show="errors.payment_methods[paymentMethodIndex].logo" 
+										                  		>
+														        	{{ errors.payment_methods[paymentMethodIndex].logo }}
+														  		</div>
 										                	</div>
 											                <div class="col-sm-5">
 											                  	<div class="input-group">
@@ -725,7 +824,7 @@
 												                        	type="file" 
 												                        	class="custom-file-input" 
 												                        	id="exampleInputFile" 
-												                        	v-on:change="onLogoChange" 
+												                        	v-on:change="onPaymentLogoChange($event, paymentMethodIndex)" 
 												                        	accept="image/*"
 												                        >
 												                        <label class="custom-file-label" for="exampleInputFile">
@@ -735,13 +834,43 @@
 											                    </div>
 											                </div>
 										            	</div>
+
+										            	<div class="form-group row">
+										              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">
+										              			Status
+										              		</label>
+											                <div class="col-sm-9">
+											                	<toggle-button 
+						                                    		value ="true" 
+						                                    		:sync="true" 
+						                                    		v-model="paymentMethod.status" 
+						                                    		:width="140"  
+						                                    		:height="30" 
+						                                    		:font-size="15" 
+						                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+						                                    		:labels="{checked: 'Available', unchecked: 'Not-Available' }"
+						                                    	/>
+											                </div>
+										              	</div>
 								              		</div>
 								              	</div>
 
 								              	<div class="form-group row">
-								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1"></i>
+								              		<i 
+								              			aria-hidden="true" 
+								              			class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" 
+								              			@click="removePaymentMethod" 	
+									              		:disabled="applicationSettings.payment_methods.length <= 1"
+									              	>
+									              			
+									              	</i>
 
-								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1"></i>
+								              		<i 
+									              		aria-hidden="true" 
+									              		class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" 
+									              		@click="addMorePaymentMethod"
+								              		>	
+								              		</i>
 								              	</div>
 						              		</div>
 						              	</div>
@@ -750,13 +879,16 @@
 						            <!-- /.card-body -->
 						            <div class="card-footer text-center">
 						            	<div class="col-sm-12">
-											<span class="text-danger p-0 m-0 small" v-show="!submitForm">
+											<span 
+												class="text-danger p-0 m-0 small" 
+												v-show="! submitForm"
+											>
 										  		Please input all required fields
 										  	</span>
 										</div>
 						              	<button 
 							              	type="submit" 
-							              	:disabled="loading || !submitForm" 
+							              	:disabled="loading || ! submitForm || formSubmitted" 
 							              	class="btn btn-primary"
 						              	>
 						              		Update Payment Settings
@@ -801,12 +933,11 @@
 									                  	class="form-control" 
 									                  	v-model="applicationSettings.official_customer_care_number" 
 									                  	placeholder="Official Customer Care Number" 
-									                  	required="true"  
-									                  	:class="!errors.applicationSettings.official_customer_care_number  ? 'is-valid' : 'is-invalid'"
+									                  	:class="!errors.official_customer_care_number  ? 'is-valid' : 'is-invalid'"
 														@keyup="validateFormInput('official_customer_care_number')"
 									                  >
 									                  <div class="invalid-feedback">
-											        	{{ errors.applicationSettings.official_customer_care_number }}
+											        	{{ errors.official_customer_care_number }}
 												  	  </div>
 									                </div>
 							              		</div>
@@ -822,12 +953,11 @@
 									                  	class="form-control" 
 									                  	v-model="applicationSettings.official_mail_address" 
 									                  	placeholder="Mail Address" 
-									                  	required="true"  
-									                  	:class="!errors.applicationSettings.official_mail_address  ? 'is-valid' : 'is-invalid'"
+									                  	:class="!errors.official_mail_address  ? 'is-valid' : 'is-invalid'"
 														@keyup="validateFormInput('official_mail_address')"
 									                  >
 									                  	<div class="invalid-feedback">
-												        	{{ errors.applicationSettings.official_mail_address }}
+												        	{{ errors.official_mail_address }}
 												  		</div>
 									                </div>
 							              		</div>
@@ -840,7 +970,7 @@
 							                <div class="col-sm-10">
 							                  	<ckeditor 
 					                              	class="form-control" 
-					                              	:class="!errors.applicationSettings.official_contact_address  ? 'is-valid' : 'is-invalid'"
+					                              	:class="!errors.official_contact_address  ? 'is-valid' : 'is-invalid'"
 					                              	:editor="editor" 
 					                              	v-model="applicationSettings.official_contact_address" 
 					                              	placeholder="Contact Address" 
@@ -848,7 +978,7 @@
 					                            >
 				                              	</ckeditor>
 				                              	<div class="invalid-feedback">
-										        	{{ errors.applicationSettings.official_contact_address }}
+										        	{{ errors.official_contact_address }}
 										  		</div>
 							                </div>
 						              	</div>
@@ -865,7 +995,7 @@
 										</div>
 						              	<button 
 							              	type="submit" 
-							              	:disabled="loading || !submitForm" 
+							              	:disabled="loading || ! submitForm || formSubmitted" 
 							              	class="btn btn-primary"
 						              	>
 						              		Update Contact Setting
@@ -908,6 +1038,13 @@
 							                  		:src="applicationSettings.logo || 'uploads/application/logo.png'" 
 							                  		alt="Application logo"
 						                  		>
+						                  		<div 
+						                  			class="invalid-feedback"
+						                  			style="display: block;" 
+						                  			v-show="errors.application_logo" 	
+						                  		>
+										        	{{ errors.application_logo }}
+										  		</div>
 						                	</div>
 							                <div class="col-sm-5">
 							                  	<div class="input-group">
@@ -935,8 +1072,15 @@
 						                  		<img 
 							                  		class="profile-user-img img-fluid" 
 							                  		:src="applicationSettings.favicon || 'uploads/application/favicon.png'" 
-							                  		alt="Application favicon"
+							                  		alt="Panel Favicon"
 						                  		>
+						                  		<div 
+						                  			class="invalid-feedback"
+						                  			style="display: block;" 
+						                  			v-show="errors.panel_favicon" 	
+						                  		>
+										        	{{ errors.panel_favicon }}
+										  		</div>
 						                	</div>
 							                <div class="col-sm-5">
 							                  	<div class="input-group">
@@ -963,14 +1107,14 @@
 						            	<div class="col-sm-12">
 											<span 
 												class="text-danger p-0 m-0 small" 
-												v-show="!submitForm"
+												v-show="! submitForm"
 											>
 										  		Please input one file at least
 										  	</span>
 										</div>
 						              	<button 
 							              	type="submit" 
-							              	:disabled="loading || !submitForm" 
+							              	:disabled="loading || ! submitForm || formSubmitted" 
 							              	class="btn btn-primary"
 						              	>
 						              		Update Media Settings
@@ -984,9 +1128,7 @@
 				</div>
 			</div>
 		</section>
-
 	</div>
-
 </template>
 
 <script type="text/javascript">
@@ -1005,6 +1147,7 @@
 
 	    data() {
 	        return {
+
 	        	editor: ClassicEditor,
 
 	        	applicationSettings : {
@@ -1022,15 +1165,30 @@
 	        		// favicon : null,
 	        		// logo : null,
 		        	
+		        	thanks_greeting : {},
+
+		        	promotional_sliders : [
+		        		// {}
+		        	],
+
 		        	welcome_greetings : [
 		        		{
-
+		        			title : null,
+		        			preview : null,
+		        			paragraph : null,
 		        		}
 		        	],
 
-		        	thanks_greeting : {},
+		        	payment_methods : [
+		        		// {}
+		        	],
 
-		        	promotional_sliders : [],
+		        	services : [
+		        		// {}
+		        	],
+
+		        	// search_preferences : [{}]
+
 	        	},
 
 
@@ -1040,23 +1198,40 @@
 	        	loading : false,
 
 	        	errors : {
+	        		
+	        		thanks_greeting : {},
 
-	        		applicationSettings : {
-		        		welcome_greetings : [
-		        			{
+		        	promotional_sliders : [
+		        		// {}
+		        	],
 
-		        			}
-		        		],
+	        		welcome_greetings : [
+		        		/*
+		        		{
+		        			title : null,
+		        			preview : null,
+		        			paragraph : null,
+		        		}
+		        		*/
+		        	],
 
-		        		thanks_greeting : {},
+		        	payment_methods : [
+		        		// {}
+		        	],
 
-		        		promotional_sliders: []
-	        		},
+		        	services : [
+		        		// {}
+		        	],
 
+		        	// search_preferences : [{}]
+	        		
 	        	},
 
 	        	submitForm : true,
-	            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+	        	formSubmitted : false,
+
+	            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
 	        }
 		},
 		created(){
@@ -1065,20 +1240,77 @@
 		methods : {
 			fetchSettingData() {
 				this.loading = true;
+				this.formSubmitted = true;
+
 				axios
 					.get('/api/settings')
 					.then(response => {
-						this.loading = false;
 						this.applicationSettings = response.data.data || this.applicationSettings;
+						this.updateErrorObject();
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					})
+					.finally(()=> {
+						this.loading = false;
+					   	this.formSubmitted = false;
 					});
 			},
+			updateErrorObject(){
+
+				if (this.applicationSettings.promotional_sliders.length) {
+					this.applicationSettings.promotional_sliders.forEach(
+						(promotionSlider, promotionSliderIndex) => {
+							// this.errors.promotional_sliders.push({});
+							this.errors.promotional_sliders[promotionSliderIndex] = null;
+						}
+					);
+				}
+
+				if (this.applicationSettings.welcome_greetings.length) {
+					this.applicationSettings.welcome_greetings.forEach(
+						(welcomeGreeting) => {
+							this.errors.welcome_greetings.push({});
+						}
+					);
+				}
+
+				if (this.applicationSettings.payment_methods.length) {
+					this.applicationSettings.payment_methods.forEach(
+						(paymentMethod) => {
+							this.errors.payment_methods.push({});
+						}
+					);
+				}
+
+				if (this.applicationSettings.services.length) {
+					this.applicationSettings.services.forEach(
+						(service) => {
+							this.errors.services.push({});
+						}
+					);
+				}
+
+			},
 			updatePaymentSetting() {
+
+				this.validateFormInput('payment_name');
+				this.validateFormInput('payment_logo');
 
 				if (!this.applicationSettings.vat_rate || !this.applicationSettings.official_bank || !this.applicationSettings.official_bank_account_number || !this.applicationSettings.official_bank_account_holder_name || !this.applicationSettings.merchant_number) {
 
 					this.submitForm = false;
 					return;
 				}
+
+				this.formSubmitted = true;
 
 				axios
 					.post('/payment-settings', this.applicationSettings)
@@ -1096,6 +1328,9 @@
 							}
 				      	}
 
+					})
+					.finally(()=> {
+					   this.formSubmitted = false;
 					});
 			},
 			updateContactSetting() {
@@ -1105,6 +1340,8 @@
 					this.submitForm = false;
 					return false;
 				}
+
+				this.formSubmitted = true;
 
 				axios
 					.post('/contact-settings', this.applicationSettings)
@@ -1122,40 +1359,19 @@
 							}
 				      	}
 
-					});
-			},
-			updateDeliverySetting() {
-
-				if (!this.applicationSettings.delivery_charge || !this.applicationSettings.multiple_delivery_charge_percentage) {
-
-					this.submitForm = false;
-					return false;
-				}
-
-				axios
-					.post('/delivery-settings', this.applicationSettings)
-					.then(response => {
-						if (response.status == 200) {
-							toastr.success(response.data.success, "Success");
-						}
 					})
-					.catch(error => {
-
-						if (error.response.status == 422) {
-
-							for (var x in error.response.data.errors) {
-								toastr.warning(error.response.data.errors[x], "Warning");
-							}
-				      	}
-
+					.finally(()=> {
+					   this.formSubmitted = false;
 					});
 			},
 			updateSystemSetting() {
 
-				if (!this.newLogo && !this.newFavicon) {
+				if (! this.newLogo && ! this.newFavicon) {
 					this.submitForm = false;
 					return;
 				}
+
+				this.formSubmitted = true;
 
 				this.applicationSettings.logo = this.newLogo;
 				this.applicationSettings.favicon = this.newFavicon;
@@ -1179,10 +1395,298 @@
 							}
 				      	}
 
+					})
+					.finally(()=> {
+					   this.formSubmitted = false;
 					});
 			},
+			updateAppSetting() {
+
+				this.validateFormInput('app_name');
+				this.validateFormInput('searching_radius');
+				this.validateFormInput('multiple_delivery_charge_percentage');
+				
+				this.validateFormInput('welcome_greeting.title');
+				this.validateFormInput('welcome_greeting.paragraph');
+				this.validateFormInput('welcome_greeting.preview');
+
+				this.validateFormInput('thanks_greeting.title');
+				this.validateFormInput('thanks_greeting.paragraph');
+				this.validateFormInput('thanks_greeting.preview');
+
+				this.validateFormInput('promotional_sliders');
+
+				if (this.errors.app_name || this.errors.searching_radius || this.errors.multiple_delivery_charge_percentage || this.errorInWelcomegreetings() || this.errorInThanksGreeting() || this.errorInPromotionalSliders()) {
+
+					this.submitForm = false;
+					return false;
+				}
+
+				this.formSubmitted = true;
+
+				axios
+					.post('/application-settings', this.applicationSettings)
+					.then(response => {
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					})
+					.finally(()=> {
+					   this.formSubmitted = false;
+					});
+			},
+			updateServiceSetting() {
+				
+				this.validateFormInput('service_name');
+				this.validateFormInput('service_code');
+				this.validateFormInput('service_logo');
+
+				if (this.errorInServices()) {
+
+					this.submitForm = false;
+					return false;
+				}
+
+				this.formSubmitted = true;
+
+				axios
+					.post('/service-settings', this.applicationSettings)
+					.then(response => {
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					})
+					.finally(()=> {
+					   this.formSubmitted = false;
+					});
+			},
+            addWelcomeGreeting(){
+            	
+            	this.validateFormInput('welcome_greeting.title');
+            	this.validateFormInput('welcome_greeting.preview');
+            	this.validateFormInput('welcome_greeting.paragraph');
+
+            	if (! this.errorInWelcomegreetings()) {
+
+	            	this.errors.welcome_greetings.push({});
+
+	            	this.$set(this.applicationSettings.welcome_greetings, this.applicationSettings.welcome_greetings.length, 
+
+	            		{
+		        			title : null,
+		        			preview : null,
+		        			paragraph : null,
+		        		}
+
+	            	);
+
+            	}
+
+            },
+            removeWelcomeGreeting(){
+
+            	if (this.applicationSettings.welcome_greetings.length > 1 && this.errors.welcome_greetings.length > 1 && this.applicationSettings.welcome_greetings.length==this.errors.welcome_greetings.length) {
+
+	            	this.errors.welcome_greetings.pop();
+	            	this.applicationSettings.welcome_greetings.pop();
+
+            	}
+
+            },
+            addPromotionalPreview(){
+
+            	this.validateFormInput('promotional_sliders');
+
+            	if (! this.errorInPromotionalSliders()) {
+
+	            	this.errors.promotional_sliders.push(null);
+
+	            	this.$set(this.applicationSettings.promotional_sliders, this.applicationSettings.promotional_sliders.length, 
+
+	            		{
+		        			preview : '',
+	            			status : false,
+		        		}
+
+	            	);
+
+            	}
+
+            },
+            removePromotionalPreview(){
+
+            	if (this.applicationSettings.promotional_sliders.length > 1 && this.errors.promotional_sliders.length > 1 && this.applicationSettings.promotional_sliders.length==this.errors.promotional_sliders.length) {
+
+	            	this.errors.promotional_sliders.pop();
+	            	this.applicationSettings.promotional_sliders.pop();
+
+            	}
+
+            },
+            addMoreService(){
+
+            	this.validateFormInput('service_name');
+            	this.validateFormInput('service_code');
+            	this.validateFormInput('service_logo');
+
+            	if (! this.errorInServices()) {
+
+	            	this.errors.services.push({});
+
+	            	this.$set(this.applicationSettings.services, this.applicationSettings.services.length, 
+
+	            		{
+		            		name : null,
+		            		code : null,
+		            		logo : null,
+		            		status : false,
+		            	}
+
+	            	);
+
+            	}
+
+            },
+            removeService(){
+				
+            	if (this.applicationSettings.services.length > 4 && this.errors.services.length > 4 && this.applicationSettings.services.length==this.errors.services.length) {
+
+	            	this.errors.services.pop();
+	            	this.applicationSettings.services.pop();
+
+            	}
+
+			},
+			addMorePaymentMethod(){
+
+            	this.validateFormInput('payment_name');
+            	this.validateFormInput('payment_logo');
+
+            	if (! this.errorInPaymentMethods()) {
+
+	            	this.errors.payment_methods.push({});
+
+	            	this.$set(this.applicationSettings.payment_methods, this.applicationSettings.payment_methods.length, 
+
+	            		{
+		        			name : null,
+		        			logo : '',
+	            			status : false,
+		        		}
+
+	            	);
+
+            	}
+
+            },
+            removePaymentMethod(){
+
+            	if (this.applicationSettings.payment_methods.length > 1 && this.errors.payment_methods.length > 1 && this.applicationSettings.payment_methods.length==this.errors.payment_methods.length) {
+
+	            	this.errors.payment_methods.pop();
+	            	this.applicationSettings.payment_methods.pop();
+
+            	}
+
+            },
+			onPromotionalPreviewChange(evnt, index){
+            	let files = evnt.target.files || evnt.dataTransfer.files;
+
+                // Only process image files.
+		      	if (files.length && files[0].type.match('image.*')) {
+		      		this.submitForm = true;
+                	this.createImage(files[0], 'promotional', index);
+                	this.errors.promotional_sliders[index] = null;
+                	// this.$delete(this.errors.promotional_sliders[index], 'preview');
+		      	}
+		      	else {
+
+                	this.errors.promotional_sliders[index] = 'Preview is required';
+
+                }
+
+		      	evnt.target.value = '';
+
+		      	return;
+            },
+			onStartingPreviewChange(evnt, index){
+				let files = evnt.target.files || evnt.dataTransfer.files;
+
+                // Only process image files.
+                if (files.length && files[0].type.match('image.*')) {
+                	this.submitForm = true;
+                	this.createImage(files[0], 'starting', index);
+                	this.$delete(this.errors.welcome_greetings[index], 'preview');
+                }
+                else {
+
+                	this.errors.welcome_greetings[index].preview = 'Preview is required';
+
+                }
+
+                evnt.target.value = '';
+
+                return;
+            },
 			onAccomplishmentPreviewChange(evnt){
 				
+				let files = evnt.target.files || evnt.dataTransfer.files;
+
+                // Only process image files.
+		      	if (files.length && files[0].type.match('image.*')) {
+		      		this.submitForm = true;
+                	this.createImage(files[0], 'accomplishment');
+                	this.$delete(this.errors.thanks_greeting, 'preview');
+		      	}
+		      	else {
+
+                	this.errors.thanks_greeting.preview = 'Preview is required';
+
+                }
+
+		      	evnt.target.value = '';
+
+		      	return;
+
+			},
+			onServiceLogoChange(evnt, index){
+				let files = evnt.target.files || evnt.dataTransfer.files;
+
+                // Only process image files.
+		      	if (files.length && files[0].type.match('image.*')) {
+		      		this.submitForm = true;
+                	this.createImage(files[0], 'services', index);
+                	this.$delete(this.errors.services[index], 'logo');
+		      	}
+		      	else {
+
+                	this.errors.services[index].logo = 'Logo is required';
+
+                }
+
+		      	evnt.target.value = '';
+
+		      	return;
 			},
 			onLogoChange(evnt){
 				let files = evnt.target.files || evnt.dataTransfer.files;
@@ -1191,7 +1695,13 @@
 		      	if (files.length && files[0].type.match('image.*')) {
 		      		this.submitForm = true;
                 	this.createImage(files[0], 'logo');
+                	this.$delete(this.errors, 'application_logo');
 		      	}
+		      	else {
+
+                	this.errors.application_logo = 'Logo should be image';
+
+                }
 
 		      	evnt.target.value = '';
 
@@ -1204,26 +1714,107 @@
 		      	if (files.length && files[0].type.match('image.*')) {
 		      		this.submitForm = true;
                 	this.createImage(files[0], 'favicon');
+                	this.$delete(this.errors, 'panel_favicon');
 		      	}
+		      	else {
+
+                	this.errors.panel_favicon = 'Favicon should be image';
+
+                }
 
 		      	evnt.target.value = '';
 
 		      	return;
 			},
-			createImage(file, filename) {
+			onPaymentLogoChange(evnt, index) {
+				let files = evnt.target.files || evnt.dataTransfer.files;
+
+                // Only process image files.
+		      	if (files.length && files[0].type.match('image.*')) {
+		      		this.submitForm = true;
+                	this.createImage(files[0], 'payment', index);
+                	this.$delete(this.errors.payment_methods[index], 'logo');
+		      	}
+		      	else {
+
+                	this.errors.payment_methods[index].logo = 'Payment logo is required';
+
+                }
+
+		      	evnt.target.value = '';
+
+		      	return;
+			},
+			createImage(file, filename, index = false) {
                 let reader = new FileReader();
 
                 if (filename=='favicon') {
 	                reader.onload = (evnt) => {
 	                    this.newFavicon = this.applicationSettings.favicon = evnt.target.result;
 	                };
-                }else{
+                }
+                else if (filename=='logo') {
                 	reader.onload = (evnt) => {
 	                    this.newLogo = this.applicationSettings.logo = evnt.target.result;
 	                };
                 }
+                else if (filename=='accomplishment') {
+                	reader.onload = (evnt) => {
+	                    this.applicationSettings.thanks_greeting.preview = evnt.target.result;
+	                };
+                }
+                else if (filename=='promotional' && this.applicationSettings.promotional_sliders.length > index) {
+                	reader.onload = (evnt) => {
+	                    this.applicationSettings.promotional_sliders[index].preview = evnt.target.result;
+	                    // this.applicationSettings.promotional_sliders.length ? this.applicationSettings.promotional_sliders[index].preview = evnt.target.result : this.applicationSettings.promotional_sliders.push({ preview : evnt.target.result, status : false });
+	                };
+                }
+                else if (filename=='starting' && this.applicationSettings.welcome_greetings.length > index) {
+                	reader.onload = (evnt) => {
+	                    this.applicationSettings.welcome_greetings[index].preview = evnt.target.result;
+	                };
+                }
+                else if (filename=='services' && this.applicationSettings.services.length > index) {
+                	reader.onload = (evnt) => {
+	                    this.applicationSettings.services[index].logo = evnt.target.result;
+	                };
+                }
+                else if (filename=='payment' && this.applicationSettings.payment_methods.length > index) {
+                	reader.onload = (evnt) => {
+	                    this.applicationSettings.payment_methods[index].logo = evnt.target.result;
+	                };
+                }
 
                 reader.readAsDataURL(file);
+            },
+            errorInWelcomegreetings() {
+
+            	return this.errors.welcome_greetings.some(
+            		welcomeError => Object.keys(welcomeError).length > 0
+            	);
+
+            },
+            errorInThanksGreeting() {
+
+            	return Object.keys(this.errors.thanks_greeting).length > 0;
+
+            },
+            errorInPromotionalSliders() {
+
+            	return this.errors.promotional_sliders.some( 
+            		promotionalSliderError => promotionalSliderError != null
+            	);
+
+            },
+            errorInServices() {
+
+            	return this.errors.services.some(serviceError => Object.keys(serviceError).length > 0);
+
+            },
+            errorInPaymentMethods() {
+
+            	return this.errors.payment_methods.some(paymentMethodError => Object.keys(paymentMethodError).length > 0);
+
             },
             validateFormInput (formInputName) {
 				
@@ -1231,17 +1822,300 @@
 
 				switch(formInputName) {
 
+					case 'app_name' :
+
+						if (! this.applicationSettings.app_name) {
+							this.errors.app_name = 'App name is required';
+						}
+						else if (! this.applicationSettings.app_name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+							this.errors.app_name = 'No special characters';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors, 'app_name');
+						}
+
+						break;
+
+					case 'searching_radius' :
+
+						if (! this.applicationSettings.searching_radius || this.applicationSettings.searching_radius <= 0) {
+							this.errors.searching_radius = 'Searching radius is required';
+						}
+						else if (! (/^[+-]?\d+(\.\d+)?$/g).test(this.applicationSettings.searching_radius)) {
+							this.errors.searching_radius = 'Should be numbers only';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors, 'searching_radius');
+						}
+
+						break;
+
+					case 'multiple_delivery_charge_percentage' :
+
+						if (! this.applicationSettings.multiple_delivery_charge_percentage || this.applicationSettings.multiple_delivery_charge_percentage <= 0) {
+							this.errors.multiple_delivery_charge_percentage = 'Searching radius is required';
+						}
+						else if (! (/^[+-]?\d+(\.\d+)?$/g).test(this.applicationSettings.multiple_delivery_charge_percentage)) {
+							this.errors.multiple_delivery_charge_percentage = 'Only numbers';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors, 'multiple_delivery_charge_percentage');
+						}
+
+						break;
+
+					case 'welcome_greeting.title' :
+
+						if (this.applicationSettings.welcome_greetings.length) {
+							
+							this.applicationSettings.welcome_greetings.forEach((welcomeGreeting, welcomeGreetingIndex) => {
+
+								if (! welcomeGreeting.title) {
+									this.errors.welcome_greetings[welcomeGreetingIndex].title = 'Welcome title is required';
+								}
+								else if (! welcomeGreeting.title.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+									this.errors.welcome_greetings[welcomeGreetingIndex].title = 'No special characters';
+								}
+								else {
+									this.submitForm = true;
+									this.$delete(this.errors.welcome_greetings[welcomeGreetingIndex], 'title');
+								}
+
+							});
+
+						}
+
+						break;
+
+					case 'welcome_greeting.paragraph' :
+
+						if (this.applicationSettings.welcome_greetings.length) {
+
+							this.applicationSettings.welcome_greetings.forEach((welcomeGreeting, welcomeGreetingIndex) => {
+
+								if (! welcomeGreeting.paragraph) {
+									this.errors.welcome_greetings[welcomeGreetingIndex].paragraph = 'Payment paragraph is required';
+								}
+								else if (! welcomeGreeting.paragraph.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+									this.errors.welcome_greetings[welcomeGreetingIndex].paragraph = 'No special characters';
+								}
+								else {
+									this.submitForm = true;
+									this.$delete(this.errors.welcome_greetings[welcomeGreetingIndex], 'paragraph');
+								}
+
+							});
+
+						}
+
+						break;
+
+					case 'welcome_greeting.preview' :
+
+						if (this.applicationSettings.welcome_greetings.length) {
+
+							this.applicationSettings.welcome_greetings.forEach((welcomeGreeting, welcomeGreetingIndex) => {
+
+								if (! welcomeGreeting.preview) {
+									this.errors.welcome_greetings[welcomeGreetingIndex].preview = 'Welcome preview is required';
+								}
+								else {
+									this.submitForm = true;
+									this.$delete(this.errors.welcome_greetings[welcomeGreetingIndex], 'preview');
+								}
+
+							});
+
+						}
+
+						break;
+
+					case 'thanks_greeting.title' :
+
+						if (! this.applicationSettings.thanks_greeting.title) {
+							this.errors.thanks_greeting.title = 'Welcome title is required';
+						}
+						else if (!this.applicationSettings.thanks_greeting.title.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+							this.errors.thanks_greeting.title = 'No special characters';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.thanks_greeting, 'title');
+						}
+
+						break;
+
+					case 'thanks_greeting.paragraph' :
+
+						if (! this.applicationSettings.thanks_greeting.paragraph) {
+							this.errors.thanks_greeting.paragraph = 'Payment paragraph is required';
+						}
+						else if (!this.applicationSettings.thanks_greeting.paragraph.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+							this.errors.thanks_greeting.paragraph = 'No special characters';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.thanks_greeting, 'paragraph');
+						}
+
+						break;
+
+					case 'thanks_greeting.preview' :
+
+						if (! this.applicationSettings.thanks_greeting.preview) {
+							this.errors.thanks_greeting.preview = 'Welcome preview is required';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.thanks_greeting, 'preview');
+						}
+
+						break;
+
+					case 'promotional_sliders' :
+
+						if (this.applicationSettings.promotional_sliders.length) {
+
+							this.applicationSettings.promotional_sliders.forEach((promotionalSlider, promotionalSliderIndex) => {
+
+								if (! promotionalSlider || ! promotionalSlider.preview) {
+									this.errors.promotional_sliders[promotionalSliderIndex] = 'Promotional preview is required';
+								}
+								else {
+									this.submitForm = true;
+									this.errors.promotional_sliders[promotionalSliderIndex] = null;
+									// this.$delete(this.errors.promotional_sliders[promotionalSliderIndex], 'preview');
+								}
+
+							});
+
+						}
+
+						break;
+
+					case 'service_name' :
+
+						if (this.applicationSettings.services.length) {
+							
+							this.applicationSettings.services.forEach((service, serviceIndex) => {
+
+								if (! service.name) {
+									this.errors.services[serviceIndex].name = 'Service name is required';
+								}
+								else if (! service.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+									this.errors.services[serviceIndex].name = 'No special characters';
+								}
+								else {
+									this.submitForm = true;
+									this.$delete(this.errors.services[serviceIndex], 'name');
+								}
+
+							});
+
+						}
+
+						break;
+
+					case 'service_code' :
+
+						if (this.applicationSettings.services.length) {
+							
+							this.applicationSettings.services.forEach((service, serviceIndex) => {
+
+								if (! service.code) {
+									this.errors.services[serviceIndex].code = 'Service code is required';
+								}
+								else if (! service.code.match(/^[a-zA-Z0-9-_]+$/g)) {
+									this.errors.services[serviceIndex].code = 'No space or special characters';
+								}
+								else {
+									this.submitForm = true;
+									this.$delete(this.errors.services[serviceIndex], 'code');
+								}
+
+							});
+
+						}
+
+						break;
+
+					case 'service_logo' :
+
+						if (this.applicationSettings.services.length) {
+							
+							this.applicationSettings.services.forEach((service, serviceIndex) => {
+
+								if (! service.logo) {
+									this.errors.services[serviceIndex].logo = 'Service logo is required';
+								}
+								else {
+									this.submitForm = true;
+									this.$delete(this.errors.services[serviceIndex], 'logo');
+								}
+
+							});
+
+						}
+
+						break;
+
+					case 'payment_name' :
+
+						if (this.applicationSettings.payment_methods.length) {
+							
+							this.applicationSettings.payment_methods.forEach((paymentMethod, paymentMethodIndex) => {
+
+								if (! paymentMethod.name) {
+									this.errors.payment_methods[paymentMethodIndex].name = 'Payment name is required';
+								}
+								else if (! paymentMethod.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+									this.errors.payment_methods[paymentMethodIndex].name = 'No special characters';
+								}
+								else {
+									this.submitForm = true;
+									this.$delete(this.errors.payment_methods[paymentMethodIndex], 'name');
+								}
+
+							});
+
+						}
+
+						break;
+
+					case 'payment_logo' :
+
+						if (this.applicationSettings.payment_methods.length) {
+							
+							this.applicationSettings.payment_methods.forEach((paymentMethod, paymentMethodIndex) => {
+
+								if (! paymentMethod.logo) {
+									this.errors.payment_methods[paymentMethodIndex].logo = 'Payment logo is required';
+								}
+								else {
+									this.submitForm = true;
+									this.$delete(this.errors.payment_methods[paymentMethodIndex], 'logo');
+								}
+
+							});
+
+						}
+
+						break;
+
 					case 'vat_rate' :
 
-						if (!this.applicationSettings.vat_rate) {
-							this.errors.applicationSettings.vat_rate = 'Vat rate is required';
+						if (! this.applicationSettings.vat_rate) {
+							this.errors.vat_rate = 'Vat rate is required';
 						}
 						else if (this.applicationSettings.vat_rate < 0 || this.applicationSettings.vat_rate > 100 ) {
-							this.errors.applicationSettings.vat_rate = 'Value should be between 1 and 100';
+							this.errors.vat_rate = 'Value should be between 1 and 100';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'vat_rate');
+							this.$delete(this.errors, 'vat_rate');
 						}
 
 						break;
@@ -1249,14 +2123,14 @@
 					case 'official_bank' :
 
 						if (!this.applicationSettings.official_bank) {
-							this.errors.applicationSettings.official_bank = 'Bank name is required';
+							this.errors.official_bank = 'Bank name is required';
 						}
 						else if (!this.applicationSettings.official_bank.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-							this.errors.applicationSettings.official_bank = 'No special character';
+							this.errors.official_bank = 'No special character';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'official_bank');
+							this.$delete(this.errors, 'official_bank');
 						}
 
 						break;
@@ -1264,14 +2138,14 @@
 					case 'official_bank_account_number' :
 
 						if (!this.applicationSettings.official_bank_account_number) {
-							this.errors.applicationSettings.official_bank_account_number = 'Account number is required';
+							this.errors.official_bank_account_number = 'Account number is required';
 						}
 						else if (!this.applicationSettings.official_bank_account_number.match(/^[_A-z0-9]*((-|_|\s)*[_A-z0-9])*$/g)) {
-							this.errors.applicationSettings.official_bank_account_number = 'No special character';
+							this.errors.official_bank_account_number = 'No special character';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'official_bank_account_number');
+							this.$delete(this.errors, 'official_bank_account_number');
 						}
 
 						break;
@@ -1279,14 +2153,14 @@
 					case 'official_bank_account_holder_name' :
 
 						if (!this.applicationSettings.official_bank_account_holder_name) {
-							this.errors.applicationSettings.official_bank_account_holder_name = 'Account holder name is required';
+							this.errors.official_bank_account_holder_name = 'Account holder name is required';
 						}
 						else if (!this.applicationSettings.official_bank_account_holder_name.match(/^[_A-z0-9]*((-|_|\s)*[_A-z0-9])*$/g)) {
-							this.errors.applicationSettings.official_bank_account_holder_name = 'No special character';
+							this.errors.official_bank_account_holder_name = 'No special character';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'official_bank_account_holder_name');
+							this.$delete(this.errors, 'official_bank_account_holder_name');
 						}
 
 						break;
@@ -1294,29 +2168,64 @@
 					case 'merchant_number' :
 
 						if (!this.applicationSettings.merchant_number) {
-							this.errors.applicationSettings.merchant_number = 'Mobile is required';
+							this.errors.merchant_number = 'Mobile is required';
 						}
 						else if (!this.applicationSettings.merchant_number.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
-							this.errors.applicationSettings.merchant_number = 'Invalid mobile number';
+							this.errors.merchant_number = 'Invalid mobile number';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'merchant_number');
+							this.$delete(this.errors, 'merchant_number');
 						}
+
+						break;
+
+					case 'payment_method.name' :
+
+						this.applicationSettings.payment_methods.forEach((paymentMethod, paymentMethodIndex) => {
+
+							if (! this.paymentMethod.name) {
+								this.errors.payment_methods[paymentMethodIndex].name = 'Payment name is required';
+							}
+							else if (!this.this.paymentMethod.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+								this.errors.payment_methods[paymentMethodIndex].name = 'No special characters';
+							}
+							else {
+								this.submitForm = true;
+								this.$delete(this.errors.payment_methods[paymentMethodIndex], 'name');
+							}
+
+						});
+
+						break;
+
+					case 'payment_method.logo' :
+
+						this.applicationSettings.payment_methods.forEach((paymentMethod, paymentMethodIndex) => {
+
+							if (! this.paymentMethod.logo) {
+								this.errors.payment_methods[paymentMethodIndex].logo = 'Payment logo is required';
+							}
+							else {
+								this.submitForm = true;
+								this.$delete(this.errors.payment_methods[paymentMethodIndex], 'logo');
+							}
+
+						});	
 
 						break;
 
 					case 'official_customer_care_number' :
 
 						if (!this.applicationSettings.official_customer_care_number) {
-							this.errors.applicationSettings.official_customer_care_number = 'Customer care number is required';
+							this.errors.official_customer_care_number = 'Customer care number is required';
 						}
 						else if (!this.applicationSettings.official_customer_care_number.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
-							this.errors.applicationSettings.official_customer_care_number = 'Invalid customer care number';
+							this.errors.official_customer_care_number = 'Invalid customer care number';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'official_customer_care_number');
+							this.$delete(this.errors, 'official_customer_care_number');
 						}
 
 						break;
@@ -1324,14 +2233,14 @@
 					case 'official_mail_address' :
 
 						if (!this.applicationSettings.official_mail_address) {
-							this.errors.applicationSettings.official_mail_address = 'Official mail is required';
+							this.errors.official_mail_address = 'Official mail is required';
 						}
 						else if (!this.applicationSettings.official_mail_address.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
-							this.errors.applicationSettings.official_mail_address = 'Invalid email';
+							this.errors.official_mail_address = 'Invalid email';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'official_mail_address');
+							this.$delete(this.errors, 'official_mail_address');
 						}
 
 						break;
@@ -1339,41 +2248,58 @@
 					case 'official_contact_address' :
 
 						if (!this.applicationSettings.official_contact_address) {
-							this.errors.applicationSettings.official_contact_address = 'Official address is required';
+							this.errors.official_contact_address = 'Official address is required';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'official_contact_address');
+							this.$delete(this.errors, 'official_contact_address');
 						}
 
 						break;
 
+					/*
 					case 'delivery_charge' :
 
 						if (!this.applicationSettings.delivery_charge) {
-							this.errors.applicationSettings.delivery_charge = 'Delivery charge is required';
+							this.errors.delivery_charge = 'Delivery charge is required';
 						}
 						else if (this.applicationSettings.delivery_charge < 0 ) {
-							this.errors.applicationSettings.delivery_charge = 'Value should be positive number';
+							this.errors.delivery_charge = 'Value should be positive number';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'delivery_charge');
+							this.$delete(this.errors, 'delivery_charge');
 						}
 
 						break;
+					*/
 
 					case 'multiple_delivery_charge_percentage' :
 
 						if (!this.applicationSettings.multiple_delivery_charge_percentage) {
-							this.errors.applicationSettings.multiple_delivery_charge_percentage = 'Percentage is required';
+							this.errors.multiple_delivery_charge_percentage = 'Percentage is required';
 						}
 						else if (this.applicationSettings.multiple_delivery_charge_percentage < 0 ) {
-							this.errors.applicationSettings.multiple_delivery_charge_percentage = 'Value should be positive number';
+							this.errors.multiple_delivery_charge_percentage = 'Value should be positive number';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.applicationSettings, 'multiple_delivery_charge_percentage');
+							this.$delete(this.errors, 'multiple_delivery_charge_percentage');
+						}
+
+						break;
+
+					case 'welcome_greetings' :
+
+						if (!this.applicationSettings.multiple_delivery_charge_percentage) {
+							this.errors.multiple_delivery_charge_percentage = 'Percentage is required';
+						}
+						else if (this.applicationSettings.multiple_delivery_charge_percentage < 0 ) {
+							this.errors.multiple_delivery_charge_percentage = 'Value should be positive number';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors, 'multiple_delivery_charge_percentage');
 						}
 
 						break;
