@@ -62,6 +62,7 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Name</th>
+											<th scope="col">Show On App</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -72,6 +73,11 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ menuCategory.name}}</td>
+								    		<td>
+								    			<span class="badge" :class="menuCategory.search_preference ? 'badge-success' : 'badge-info'">
+								    				{{ menuCategory.search_preference ? 'Published' : 'UnPublished' }}
+								    			</span>
+								    		</td>
 								    		<td>
 										      	<button type="button" v-show="menuCategory.deleted_at === null" @click="showMenuCategoryEditModal(menuCategory)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
@@ -167,24 +173,40 @@
 									<div class="col-sm-12">
 										<div class="card card-outline">
 								            <div class="card-body">
-								              	<div class="form-group row">
-									              		
+								              	<div class="form-group row">	
 								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Category Name</label>
 									                <div class="col-sm-8">
 									                  	<input 
 															type="text" 
 															class="form-control" 
-															v-model="singleMenuCategoryData.menuCategory.name" 
+															v-model="singleMenuCategoryData.name" 
 															placeholder="Appetizer / Burger / Pizza" 
 															required="true"
-															:class="!errors.menuCategory.name  ? 'is-valid' : 'is-invalid'"
+															:class="!errors.name  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('menuCategory.name')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.menuCategory.name }}
+												        	{{ errors.name }}
 												  		</div>
 									                </div>	
-									              	
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<label for="inputnumber3" class="col-sm-4 col-form-label text-right">
+								              			Publish On App
+								              		</label>
+									                <div class="col-sm-8">
+									                	<toggle-button 
+				                                    		value ="true" 
+				                                    		:sync="true" 
+				                                    		v-model="singleMenuCategoryData.search_preference" 
+				                                    		:width="140"  
+				                                    		:height="30" 
+				                                    		:font-size="15" 
+				                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+				                                    		:labels="{checked: 'Published', unchecked: 'UnPublished' }"
+				                                    	/>
+									                </div>
 								              	</div>
 								            </div>
 								            <!-- /.card-body -->
@@ -316,13 +338,15 @@
 <script type="text/javascript">
 
 	import axios from 'axios';
+	import { ToggleButton } from 'vue-js-toggle-button';
 
 	var singleMenuCategoryData = {
-    	menuCategory : {
-			// id : null,
-			// name : null,
-			// deleted_at : null,
-    	},
+    	
+		// id : null,
+		// name : null,
+		// search_preference : false,
+		// deleted_at : null,
+    	
     };
 
 	var menuCategoryListData = {
@@ -342,7 +366,7 @@
       	},
 
     	errors : {
-    		menuCategory : {},
+
     	},
 
         singleMenuCategoryData : singleMenuCategoryData,
@@ -351,6 +375,10 @@
     };
 
 	export default {
+
+	    components: { 
+	    	ToggleButton : ToggleButton, 
+		},
 
 	    data() {
 	        return menuCategoryListData;
@@ -425,10 +453,10 @@
 			showMenuCategoryCreateModal(){
 
 				this.editMode = false;
-				this.errors.menuCategory = {};
+				this.errors = {};
 				this.submitForm = true;
 
-				this.singleMenuCategoryData.menuCategory = {};
+				this.singleMenuCategoryData = {};
 
 				$('#modal-createOrEdit-menuCategory').modal('show');
 			},
@@ -437,11 +465,11 @@
 				$('#modal-createOrEdit-menuCategory').modal('hide');
 				
 				axios
-					.post('/menu-categories/'+ this.perPage, this.singleMenuCategoryData.menuCategory)
+					.post('/menu-categories/'+ this.perPage, this.singleMenuCategoryData)
 					.then(response => {
 
 						if (response.status == 200) {
-							this.singleMenuCategoryData.menuCategory = {};
+							this.singleMenuCategoryData = {};
 
 							this.allMenuCategories = response.data;
 
@@ -463,8 +491,8 @@
 			showMenuCategoryEditModal(menuCategory) {
 				this.editMode = true;
 				this.submitForm = true;
-				this.errors.menuCategory = {};
-				this.singleMenuCategoryData.menuCategory = menuCategory;
+				this.errors = {};
+				this.singleMenuCategoryData = menuCategory;
 				$("#modal-createOrEdit-menuCategory").modal("show");
 			},
 			updateMenuCategory(){
@@ -472,12 +500,12 @@
 				$('#modal-createOrEdit-menuCategory').modal('hide');
 				
 				axios
-					.put('/menu-categories/' + this.singleMenuCategoryData.menuCategory.id + '/' + this.perPage, this.singleMenuCategoryData.menuCategory)
+					.put('/menu-categories/' + this.singleMenuCategoryData.id + '/' + this.perPage, this.singleMenuCategoryData)
 					.then(response => {
 
 						if (response.status == 200) {
 
-							this.singleMenuCategoryData.menuCategory = {};
+							this.singleMenuCategoryData = {};
 
 							if (this.query === '') {
 								this.allMenuCategories = response.data;
@@ -500,7 +528,7 @@
 					});
 			},
 			showMenuCategoryDeletionModal(menuCategory) {
-				this.singleMenuCategoryData.menuCategory = menuCategory;
+				this.singleMenuCategoryData = menuCategory;
 				$("#modal-menuCategory-delete-confirmation").modal("show");
 			},
 			destroyMenuCategory(){
@@ -508,11 +536,11 @@
 				$("#modal-menuCategory-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/menu-categories/'+this.singleMenuCategoryData.menuCategory.id+'/'+this.perPage)
+					.delete('/menu-categories/'+this.singleMenuCategoryData.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleMenuCategoryData.menuCategory = {};
+							this.singleMenuCategoryData = {};
 
 							if (this.query === '') {
 								this.allMenuCategories = response.data;
@@ -536,7 +564,7 @@
 					});
 			},
 			showMenuCategoryRestoreModal(menuCategory) {
-				this.singleMenuCategoryData.menuCategory = menuCategory;
+				this.singleMenuCategoryData = menuCategory;
 				$("#modal-menuCategory-restore-confirmation").modal("show");
 			},
 			restoreMenuCategory(){
@@ -544,11 +572,11 @@
 				$("#modal-menuCategory-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/menu-categories/'+this.singleMenuCategoryData.menuCategory.id+'/'+this.perPage)
+					.patch('/menu-categories/'+this.singleMenuCategoryData.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleMenuCategoryData.menuCategory = {};
+							this.singleMenuCategoryData = {};
 
 							if (this.query === '') {
 								this.allMenuCategories = response.data;
@@ -592,15 +620,15 @@
 				
 				this.submitForm = false;
 
-				if (!this.singleMenuCategoryData.menuCategory.name) {
-					this.errors.menuCategory.name = 'Menu Category name is required';
+				if (!this.singleMenuCategoryData.name) {
+					this.errors.name = 'Menu Category name is required';
 				}
-				else if (!this.singleMenuCategoryData.menuCategory.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-					this.errors.menuCategory.name = 'No special characters';
+				else if (!this.singleMenuCategoryData.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+					this.errors.name = 'No special characters';
 				}
 				else{
 					this.submitForm = true;
-					this.$delete(this.errors.menuCategory, 'name');
+					this.$delete(this.errors, 'name');
 				}
 	 
 			},

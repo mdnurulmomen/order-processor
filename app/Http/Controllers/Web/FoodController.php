@@ -28,10 +28,14 @@ class FoodController extends Controller
 	public function createNewMeal(Request $request, $perPage = false)
 	{
 	 	$request->validate([
-	    	'name'=>'required|unique:meals,name|max:50'
+	    	'name'=>'required|unique:meals,name|max:50',
+	    	'search_preference' => 'nullable|boolean'
 	 	]);
 
-	 	$newCuisine = Meal::create(['name' => $request->name]);
+	 	$newCuisine = Meal::create([
+	 		'name' => $request->name,
+	 		'search_preference' => $request->search_preference ?? false,
+	 	]);
 
 	 	return $this->showAllMeals($perPage);
 	}
@@ -42,10 +46,12 @@ class FoodController extends Controller
 
 	 	$request->validate([
 	    	'name'=>'required|max:50|unique:meals,name,'.$mealToUpdate->id,
+	    	'search_preference' => 'nullable|boolean'
 	 	]);
 
 	 	$mealUpdated = $mealToUpdate->update([
-	 		'name' => $request->name
+	 		'name' => $request->name,
+	 		'search_preference' => $request->search_preference ?? false,
 	 	]);
 
 	 	return $this->showAllMeals($perPage);
@@ -102,10 +108,14 @@ class FoodController extends Controller
 	public function createNewMenuCategory(Request $request, $perPage = false)
 	{
 	 	$request->validate([
-	    	'name'=>'required|unique:menu_categories,name|max:50'
+	    	'name'=>'required|unique:menu_categories,name|max:50',
+	    	'search_preference' => 'nullable|boolean'
 	 	]);
 
-	 	$newMenuCategory = MenuCategory::create(['name' => $request->name]);
+	 	$newMenuCategory = MenuCategory::create([
+	 		'name' => $request->name,
+	 		'search_preference' => $request->search_preference ?? false,
+	 	]);
 
 	 	return $this->showAllMenuCategories($perPage);
 	}
@@ -116,10 +126,12 @@ class FoodController extends Controller
 
 	 	$request->validate([
 	    	'name'=>'required|max:50|unique:menu_categories,name,'.$menuCategoryToUpdate->id,
+	    	'search_preference' => 'nullable|boolean'
 	 	]);
 
 	 	$menuCategoryUpdated = $menuCategoryToUpdate->update([
-	 		'name' => $request->name
+	 		'name' => $request->name,
+	 		'search_preference' => $request->search_preference ?? false,
 	 	]);
 
 	 	return $this->showAllMenuCategories($perPage);
@@ -179,10 +191,14 @@ class FoodController extends Controller
 	public function createNewCuisine(Request $request, $perPage = false)
 	{
 	 	$request->validate([
-	    	'name'=>'required|unique:cuisines,name|max:50'
+	    	'name'=>'required|unique:cuisines,name|max:50',
+	    	'search_preference' => 'nullable|boolean'
 	 	]);
 
-	 	$newCuisine = Cuisine::create(['name' => $request->name]);
+	 	$newCuisine = Cuisine::create([
+	 		'name' => $request->name,
+	 		'search_preference' => $request->search_preference ?? false,
+	 	]);
 
 	 	return $this->showAllCuisines($perPage);
 	}
@@ -193,10 +209,12 @@ class FoodController extends Controller
 
 	 	$request->validate([
 	    	'name'=>'required|max:50|unique:cuisines,name,'.$cuisineToUpdate->id,
+	    	'search_preference' => 'nullable|boolean'
 	 	]);
 
 	 	$cuisineUpdated = $cuisineToUpdate->update([
-	 		'name' => $request->name
+	 		'name' => $request->name,
+	 		'search_preference' => $request->search_preference ?? false,
 	 	]);
 
 	 	return $this->showAllCuisines($perPage);

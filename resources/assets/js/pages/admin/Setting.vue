@@ -173,7 +173,7 @@
 											                  		v-model="welcomeGreeting.title" 
 											                  		placeholder="Greeting Title" 
 											                  		:class="!errors.welcome_greetings[welcomeGreetingIndex].title  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('welcome_greeting.title')"
+																	@keyup="validateFormInput('welcome_title')"
 											                  	>
 											                  	<div class="invalid-feedback">
 														        	{{ errors.welcome_greetings[welcomeGreetingIndex].title }}
@@ -192,7 +192,7 @@
 											                  		v-model="welcomeGreeting.paragraph" 
 											                  		placeholder="Welcome Message" 
 											                  		:class="!errors.welcome_greetings[welcomeGreetingIndex].paragraph  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('welcome_greeting.paragraph')"
+																	@keyup="validateFormInput('welcome_paragraph')"
 											                  	>
 											                  	<div class="invalid-feedback">
 														        	{{ errors.welcome_greetings[welcomeGreetingIndex].paragraph }}
@@ -287,7 +287,7 @@
 											                  		v-model="applicationSettings.thanks_greeting.title" 
 											                  		placeholder="Accomplishment Title" 
 											                  		:class="!errors.thanks_greeting.title  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('thanks_greeting.title')"
+																	@keyup="validateFormInput('thanks_title')"
 											                  	>
 											                  	<div class="invalid-feedback">
 														        	{{ errors.thanks_greeting.title }}
@@ -306,7 +306,7 @@
 											                  		v-model="applicationSettings.thanks_greeting.paragraph" 
 											                  		placeholder="Accomplishment Message" 
 											                  		:class="!errors.thanks_greeting.paragraph  ? 'is-valid' : 'is-invalid'"
-																	@keyup="validateFormInput('thanks_greeting.paragraph')"
+																	@keyup="validateFormInput('thanks_paragraph')"
 											                  	>
 											                  	<div class="invalid-feedback">
 														        	{{ errors.thanks_greeting.paragraph }}
@@ -448,6 +448,96 @@
 								              		<i aria-hidden="true" class="fas fa-minus-circle fa-2x  rounded-circle bg-danger ml-auto mr-1" @click="removePromotionalPreview()" :disabled="applicationSettings.promotional_sliders.length < 2"></i>
 
 								              		<i aria-hidden="true" class="fas fa-plus-circle fa-2x  rounded-circle bg-primary mr-1" @click="addPromotionalPreview()"></i>
+								              	</div>
+						              		</div>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			Search Preferences
+						              		</label>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right"></label>
+
+						              		<div class="col-sm-9">
+						              			<div class="card">
+								              		<div class="card-body">
+								              			<div 
+								              				class="form-group row"
+								              				v-if="applicationSettings.hasOwnProperty('search_preferences') && applicationSettings.search_preferences.hasOwnProperty('cuisines') && applicationSettings.search_preferences.cuisines.length"	
+								              			>
+										              		<label class="col-sm-3 text-right">
+										              			<span class="col-form-label">
+										              				Cuisines 
+										              			</span>
+																<router-link :to="{ name: 'cuisines' }">
+																	<i class="fa fa-link" aria-hidden="true"></i>
+																</router-link>
+										              		</label>
+											                <div class="col-sm-9">
+																<ul id="example-1">
+																	<li 
+																		v-for="cuisine in applicationSettings.search_preferences.cuisines" 
+																		:key="'cuisine-search-preferences-' + cuisine.id"
+																	>
+																		{{ cuisine.name }}
+																	</li>
+																</ul>
+											                </div>
+										              	</div>
+
+										              	<div 
+										              		class="form-group row"
+										              		v-if="applicationSettings.hasOwnProperty('search_preferences') && applicationSettings.search_preferences.hasOwnProperty('meals') && applicationSettings.search_preferences.meals.length"
+										              	>
+										              		<label class="col-sm-3 text-right">
+										              			<span class="col-form-label">
+										              				Meals 
+										              			</span>
+																<router-link :to="{ name: 'meals' }">
+																	<i class="fa fa-link" aria-hidden="true"></i>
+																</router-link>
+										              		</label>
+
+											                <div class="col-sm-9">
+																<ul id="example-1">
+																	<li 
+																		v-for="meal in applicationSettings.search_preferences.meals" 
+																		:key="'meal-search-preferences-' + meal.id"
+																	>
+																		{{ meal.name }}
+																	</li>
+																</ul>
+											                </div>
+										              	</div>
+
+										              	<div 
+										              		class="form-group row"
+										              		v-if="applicationSettings.hasOwnProperty('search_preferences') && applicationSettings.search_preferences.hasOwnProperty('menus') && applicationSettings.search_preferences.menus.length"
+										              	>
+										              		<label class="col-sm-3 text-right">
+										              			<span class="col-form-label">
+										              				Menu Category 
+										              			</span>
+																<router-link :to="{ name: 'menu-categories' }">
+																	<i class="fa fa-link" aria-hidden="true"></i>
+																</router-link>
+										              		</label>
+
+											                <div class="col-sm-9">
+																<ul id="example-1">
+																	<li 
+																		v-for="menu in applicationSettings.search_preferences.menus" 
+																		:key="'menu-search-preferences-' + menu.id"
+																	>
+																		{{ menu.name }}
+																	</li>
+																</ul>
+											                </div>
+										              	</div>
+								              		</div>
 								              	</div>
 						              		</div>
 						              	</div>
@@ -1299,6 +1389,86 @@
 				}
 
 			},
+			updateAppSetting() {
+
+				this.validateFormInput('app_name');
+				this.validateFormInput('searching_radius');
+				this.validateFormInput('multiple_delivery_charge_percentage');
+				
+				this.validateFormInput('welcome_title');
+				this.validateFormInput('welcome_paragraph');
+				this.validateFormInput('welcome_preview');
+
+				this.validateFormInput('thanks_title');
+				this.validateFormInput('thanks_paragraph');
+				this.validateFormInput('thanks_preview');
+
+				this.validateFormInput('promotional_sliders');
+
+				if (this.errors.app_name || this.errors.searching_radius || this.errors.multiple_delivery_charge_percentage || this.errorInWelcomegreetings() || this.errorInThanksGreeting() || this.errorInPromotionalSliders()) {
+
+					this.submitForm = false;
+					return false;
+				}
+
+				this.formSubmitted = true;
+
+				axios
+					.post('/application-settings', this.applicationSettings)
+					.then(response => {
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					})
+					.finally(()=> {
+					   this.formSubmitted = false;
+					});
+			},
+			updateServiceSetting() {
+				
+				this.validateFormInput('service_name');
+				this.validateFormInput('service_code');
+				this.validateFormInput('service_logo');
+
+				if (this.errorInServices()) {
+
+					this.submitForm = false;
+					return false;
+				}
+
+				this.formSubmitted = true;
+
+				axios
+					.post('/service-settings', this.applicationSettings)
+					.then(response => {
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					})
+					.finally(()=> {
+					   this.formSubmitted = false;
+					});
+			},
 			updatePaymentSetting() {
 
 				this.validateFormInput('payment_name');
@@ -1400,91 +1570,11 @@
 					   this.formSubmitted = false;
 					});
 			},
-			updateAppSetting() {
-
-				this.validateFormInput('app_name');
-				this.validateFormInput('searching_radius');
-				this.validateFormInput('multiple_delivery_charge_percentage');
-				
-				this.validateFormInput('welcome_greeting.title');
-				this.validateFormInput('welcome_greeting.paragraph');
-				this.validateFormInput('welcome_greeting.preview');
-
-				this.validateFormInput('thanks_greeting.title');
-				this.validateFormInput('thanks_greeting.paragraph');
-				this.validateFormInput('thanks_greeting.preview');
-
-				this.validateFormInput('promotional_sliders');
-
-				if (this.errors.app_name || this.errors.searching_radius || this.errors.multiple_delivery_charge_percentage || this.errorInWelcomegreetings() || this.errorInThanksGreeting() || this.errorInPromotionalSliders()) {
-
-					this.submitForm = false;
-					return false;
-				}
-
-				this.formSubmitted = true;
-
-				axios
-					.post('/application-settings', this.applicationSettings)
-					.then(response => {
-						if (response.status == 200) {
-							toastr.success(response.data.success, "Success");
-						}
-					})
-					.catch(error => {
-
-						if (error.response.status == 422) {
-
-							for (var x in error.response.data.errors) {
-								toastr.warning(error.response.data.errors[x], "Warning");
-							}
-				      	}
-
-					})
-					.finally(()=> {
-					   this.formSubmitted = false;
-					});
-			},
-			updateServiceSetting() {
-				
-				this.validateFormInput('service_name');
-				this.validateFormInput('service_code');
-				this.validateFormInput('service_logo');
-
-				if (this.errorInServices()) {
-
-					this.submitForm = false;
-					return false;
-				}
-
-				this.formSubmitted = true;
-
-				axios
-					.post('/service-settings', this.applicationSettings)
-					.then(response => {
-						if (response.status == 200) {
-							toastr.success(response.data.success, "Success");
-						}
-					})
-					.catch(error => {
-
-						if (error.response.status == 422) {
-
-							for (var x in error.response.data.errors) {
-								toastr.warning(error.response.data.errors[x], "Warning");
-							}
-				      	}
-
-					})
-					.finally(()=> {
-					   this.formSubmitted = false;
-					});
-			},
             addWelcomeGreeting(){
             	
-            	this.validateFormInput('welcome_greeting.title');
-            	this.validateFormInput('welcome_greeting.preview');
-            	this.validateFormInput('welcome_greeting.paragraph');
+            	this.validateFormInput('welcome_title');
+            	this.validateFormInput('welcome_preview');
+            	this.validateFormInput('welcome_paragraph');
 
             	if (! this.errorInWelcomegreetings()) {
 
@@ -1867,7 +1957,7 @@
 
 						break;
 
-					case 'welcome_greeting.title' :
+					case 'welcome_title' :
 
 						if (this.applicationSettings.welcome_greetings.length) {
 							
@@ -1888,9 +1978,15 @@
 
 						}
 
+						if (! this.errorInWelcomegreetings()) {
+
+							this.submitForm = true;
+
+						}
+
 						break;
 
-					case 'welcome_greeting.paragraph' :
+					case 'welcome_paragraph' :
 
 						if (this.applicationSettings.welcome_greetings.length) {
 
@@ -1911,9 +2007,15 @@
 
 						}
 
+						if (! this.errorInWelcomegreetings()) {
+
+							this.submitForm = true;
+
+						}
+
 						break;
 
-					case 'welcome_greeting.preview' :
+					case 'welcome_preview' :
 
 						if (this.applicationSettings.welcome_greetings.length) {
 
@@ -1931,9 +2033,15 @@
 
 						}
 
+						if (! this.errorInWelcomegreetings()) {
+
+							this.submitForm = true;
+
+						}
+
 						break;
 
-					case 'thanks_greeting.title' :
+					case 'thanks_title' :
 
 						if (! this.applicationSettings.thanks_greeting.title) {
 							this.errors.thanks_greeting.title = 'Welcome title is required';
@@ -1946,9 +2054,15 @@
 							this.$delete(this.errors.thanks_greeting, 'title');
 						}
 
+						if (! this.errorInThanksGreeting()) {
+
+							this.submitForm = true;
+
+						}
+
 						break;
 
-					case 'thanks_greeting.paragraph' :
+					case 'thanks_paragraph' :
 
 						if (! this.applicationSettings.thanks_greeting.paragraph) {
 							this.errors.thanks_greeting.paragraph = 'Payment paragraph is required';
@@ -1961,9 +2075,15 @@
 							this.$delete(this.errors.thanks_greeting, 'paragraph');
 						}
 
+						if (! this.errorInThanksGreeting()) {
+
+							this.submitForm = true;
+
+						}
+
 						break;
 
-					case 'thanks_greeting.preview' :
+					case 'thanks_preview' :
 
 						if (! this.applicationSettings.thanks_greeting.preview) {
 							this.errors.thanks_greeting.preview = 'Welcome preview is required';
@@ -1971,6 +2091,12 @@
 						else {
 							this.submitForm = true;
 							this.$delete(this.errors.thanks_greeting, 'preview');
+						}
+
+						if (! this.errorInThanksGreeting()) {
+
+							this.submitForm = true;
+
 						}
 
 						break;
@@ -1991,6 +2117,12 @@
 								}
 
 							});
+
+						}
+
+						if (! this.errorInPromotionalSliders()) {
+
+							this.submitForm = true;
 
 						}
 
@@ -2017,6 +2149,12 @@
 
 						}
 
+						if (! this.errorInServices()) {
+
+							this.submitForm = true;
+
+						}
+
 						break;
 
 					case 'service_code' :
@@ -2040,6 +2178,12 @@
 
 						}
 
+						if (! this.errorInServices()) {
+
+							this.submitForm = true;
+
+						}
+
 						break;
 
 					case 'service_logo' :
@@ -2057,6 +2201,12 @@
 								}
 
 							});
+
+						}
+
+						if (! this.errorInServices()) {
+
+							this.submitForm = true;
 
 						}
 
@@ -2083,6 +2233,12 @@
 
 						}
 
+						if (! this.errorInPaymentMethods()) {
+
+							this.submitForm = true;
+
+						}
+
 						break;
 
 					case 'payment_logo' :
@@ -2100,6 +2256,12 @@
 								}
 
 							});
+
+						}
+
+						if (! this.errorInPaymentMethods()) {
+
+							this.submitForm = true;
 
 						}
 

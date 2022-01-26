@@ -1,8 +1,6 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
 
 			<div class="row justify-content-center vh-100" v-show="loading">
@@ -62,6 +60,7 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Name</th>
+											<th scope="col">Show On App</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -72,6 +71,11 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ meal.name}}</td>
+								    		<td>
+								    			<span class="badge" :class="meal.search_preference ? 'badge-success' : 'badge-info'">
+								    				{{ meal.search_preference ? 'Published' : 'UnPublished' }}
+								    			</span>
+								    		</td>
 								    		<td>
 										      	<button type="button" v-show="meal.deleted_at === null" @click="showMealEditModal(meal)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
@@ -98,7 +102,7 @@
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!mealsToShow.length">
-								    		<td colspan="6">
+								    		<td colspan="4">
 									      		<div class="alert alert-danger" role="alert">Sorry, No meal found.</div>
 									    	</td>
 									  	</tr>
@@ -167,24 +171,40 @@
 									<div class="col-sm-12">
 										<div class="card card-outline">
 								            <div class="card-body">
-								              	<div class="form-group row">
-									              		
+								              	<div class="form-group row">	
 								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">Meal Name</label>
 									                <div class="col-sm-8">
 									                  	<input 
 															type="text" 
 															class="form-control" 
-															v-model="singleMealData.meal.name" 
+															v-model="singleMealData.name" 
 															placeholder="Menu Name" 
 															required="true"
-															:class="!errors.meal.name  ? 'is-valid' : 'is-invalid'"
+															:class="!errors.name  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('meal.name')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.meal.name }}
+												        	{{ errors.name }}
 												  		</div>
 									                </div>	
-									              	
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<label for="inputnumber3" class="col-sm-4 col-form-label text-right">
+								              			Publish On App
+								              		</label>
+									                <div class="col-sm-8">
+									                	<toggle-button 
+				                                    		value ="true" 
+				                                    		:sync="true" 
+				                                    		v-model="singleMealData.search_preference" 
+				                                    		:width="140"  
+				                                    		:height="30" 
+				                                    		:font-size="15" 
+				                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+				                                    		:labels="{checked: 'Published', unchecked: 'UnPublished' }"
+				                                    	/>
+									                </div>
 								              	</div>
 								            </div>
 								            <!-- /.card-body -->
@@ -306,23 +326,22 @@
 				<!-- /.modal-dialog -->
 			</div>
 			<!-- /.modal-meal-restore-confirmation -->
-
 	    </section>
-
 	</div>
-    
 </template>
 
 <script type="text/javascript">
 
 	import axios from 'axios';
+	import { ToggleButton } from 'vue-js-toggle-button';
 
 	var singleMealData = {
-    	meal : {
-			// id : null,
-			// name : null,
-			// deleted_at : null,
-    	},
+    	
+		// id : null,
+		// name : null,
+		// search_preference : false,
+		// deleted_at : null,
+    	
     };
 
 	var mealListData = {
@@ -342,7 +361,7 @@
       	},
 
     	errors : {
-    		meal : {},
+
     	},
 
         singleMealData : singleMealData,
@@ -351,6 +370,10 @@
     };
 
 	export default {
+
+	    components: { 
+	    	ToggleButton : ToggleButton, 
+		},
 
 	    data() {
 	        return mealListData;
@@ -424,10 +447,10 @@
 			showMealCreateModal(){
 
 				this.editMode = false;
-				this.errors.meal = {};
+				this.errors = {};
 				this.submitForm = true;
 
-				this.singleMealData.meal = {};
+				this.singleMealData = {};
 
 				$('#modal-createOrEdit-meal').modal('show');
 			},
@@ -436,11 +459,11 @@
 				$('#modal-createOrEdit-meal').modal('hide');
 				
 				axios
-					.post('/meals/'+ this.perPage, this.singleMealData.meal)
+					.post('/meals/'+ this.perPage, this.singleMealData)
 					.then(response => {
 
 						if (response.status == 200) {
-							this.singleMealData.meal = {};
+							this.singleMealData = {};
 
 							this.allMeals = response.data;
 
@@ -462,8 +485,8 @@
 			showMealEditModal(meal) {
 				this.editMode = true;
 				this.submitForm = true;
-				this.errors.meal = {};
-				this.singleMealData.meal = meal;
+				this.errors = {};
+				this.singleMealData = meal;
 				$("#modal-createOrEdit-meal").modal("show");
 			},
 			updateMeal(){
@@ -471,12 +494,12 @@
 				$('#modal-createOrEdit-meal').modal('hide');
 				
 				axios
-					.put('/meals/' + this.singleMealData.meal.id + '/' + this.perPage, this.singleMealData.meal)
+					.put('/meals/' + this.singleMealData.id + '/' + this.perPage, this.singleMealData)
 					.then(response => {
 
 						if (response.status == 200) {
 
-							this.singleMealData.meal = {};
+							this.singleMealData = {};
 
 							if (this.query === '') {
 								this.allMeals = response.data;
@@ -499,7 +522,7 @@
 					});
 			},
 			showMealDeletionModal(meal) {
-				this.singleMealData.meal = meal;
+				this.singleMealData = meal;
 				$("#modal-meal-delete-confirmation").modal("show");
 			},
 			destroyMeal(){
@@ -507,11 +530,11 @@
 				$("#modal-meal-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/meals/'+this.singleMealData.meal.id+'/'+this.perPage)
+					.delete('/meals/'+this.singleMealData.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleMealData.meal = {};
+							this.singleMealData = {};
 
 							if (this.query === '') {
 								this.allMeals = response.data;
@@ -535,7 +558,7 @@
 					});
 			},
 			showMealRestoreModal(meal) {
-				this.singleMealData.meal = meal;
+				this.singleMealData = meal;
 				$("#modal-meal-restore-confirmation").modal("show");
 			},
 			restoreMeal(){
@@ -543,11 +566,11 @@
 				$("#modal-meal-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/meals/'+this.singleMealData.meal.id+'/'+this.perPage)
+					.patch('/meals/'+this.singleMealData.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleMealData.meal = {};
+							this.singleMealData = {};
 
 							if (this.query === '') {
 								this.allMeals = response.data;
@@ -591,15 +614,15 @@
 				
 				this.submitForm = false;
 
-				if (!this.singleMealData.meal.name) {
-					this.errors.meal.name = 'Meal name is required';
+				if (!this.singleMealData.name) {
+					this.errors.name = 'Meal name is required';
 				}
-				else if (!this.singleMealData.meal.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-					this.errors.meal.name = 'No special characters';
+				else if (!this.singleMealData.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+					this.errors.name = 'No special characters';
 				}
 				else{
 					this.submitForm = true;
-					this.$delete(this.errors.meal, 'name');
+					this.$delete(this.errors, 'name');
 				}
 	 
 			},

@@ -14,6 +14,10 @@ class MenuCategory extends Model
    	public $timestamps = false;
    	protected $guarded = ['id'];
 
+    protected $casts = [
+      'search_preference' => 'boolean',
+    ];
+
    	public function restaurantMenuCategories()
    	{
    		return $this->hasMany(RestaurantMenuCategory::class, 'menu_category_id', 'id');

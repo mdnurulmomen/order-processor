@@ -5,6 +5,11 @@ namespace App\Http\Resources\Api;
 use App\Models\Meal;
 use App\Models\Cuisine;
 use App\Models\MenuCategory;
+use App\Models\ThanksGreeting;
+use App\Models\WelcomeGreeting;
+use App\Models\PromotionalSlider;
+use App\Models\ApplicationService;
+use App\Models\ApplicationPaymentMethod;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GeneralInfoResource extends JsonResource
@@ -22,6 +27,7 @@ class GeneralInfoResource extends JsonResource
         return [
             'app_name' => $this->app_name ?? 'Qupaid',
             
+            /*
             'starting_greetings' => [
                 [
                     "title" => "Starting Title 1",
@@ -40,20 +46,43 @@ class GeneralInfoResource extends JsonResource
                     "preview" => "uploads/application/greeting3.jpg",
                     "paragraph" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.",
                 ],
-            ], 
+            ],
+            */
+            
+            'welcome_greetings' => WelcomeGreetingResource::collection(WelcomeGreeting::where('status', true)->get()),
 
+
+            /*
             "accomplishment_message" => [
                 "title" => "Accomplishment Title",
                 "preview" => "uploads/application/thanks.jpg",
                 "paragraph" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.",
             ],
+            */
+           
+            'accomplishment_message' => new OrderAccomplishmentGreetingResource(
+                ThanksGreeting::firstOr(function () {
+                    return ThanksGreeting::create([
+                        'title' => 'Thanksgiving Title',
+                        'preview' => 'Thanksgiving preview',
+                        'paragraph' => 'Thanksgiving paragraph',
+                        // 'status' => true,
+                    ]);
+                })
+            ),
 
+
+            /*
             "promotional_sliders" => [
                 "uploads/application/promotional-1.jpg", 
                 "uploads/application/promotional-2.jpg",
                 "uploads/application/promotional-3.jpg"
             ],
+            */
+           
+            "promotional_sliders" => PromotionalSlider::where('status', true)->get()->pluck('preview'),
 
+            /*
             "payment_methods" => [
                 [
                     "name" => "Credit or Debit Card",
@@ -70,7 +99,11 @@ class GeneralInfoResource extends JsonResource
                     "logo" => "uploads/application/nagad.png",
                 ],
             ],
+            */
+           
+            "payment_methods" => PaymentMethodResource::collection(ApplicationPaymentMethod::where('status', true)->get()),
 
+            /*
             "order_types" => [
                 [
                     "name" => "Home Delivery",
@@ -96,11 +129,16 @@ class GeneralInfoResource extends JsonResource
                     "logo" => "uploads/application/reservation.png",
                 ]
             ],
+            */
+           
+            'services' => ServiceResource::collection(ApplicationService::get()),
 
             "search_preferences" => [
-                "cuisines" => AssetResource::collection(Cuisine::all()),    
-                "meals" => AssetResource::collection(Meal::all()),    
-                "menus" => AssetResource::collection(MenuCategory::all())
+                "cuisines" => $this->when(Cuisine::where('search_preference', true)->count(), AssetResource::collection(Cuisine::where('search_preference', true)->get())),  
+
+                "meals" => $this->when(Meal::where('search_preference', true)->count(), AssetResource::collection(Meal::where('search_preference', true)->get())), 
+                   
+                "menus" => $this->when(MenuCategory::where('search_preference', true)->count(), AssetResource::collection(MenuCategory::where('search_preference', true)->get()))
             ],
 
             // "preferences" => RestaurantMenuCategoryResource::collection(MenuCategory::all()),

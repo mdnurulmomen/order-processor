@@ -62,6 +62,7 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Name</th>
+											<th scope="col">Show On App</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -72,6 +73,11 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ cuisine.name}}</td>
+								    		<td>
+								    			<span class="badge" :class="cuisine.search_preference ? 'badge-success' : 'badge-info'">
+								    				{{ cuisine.search_preference ? 'Published' : 'UnPublished' }}
+								    			</span>
+								    		</td>
 								    		<td>
 										      	<button type="button" v-show="cuisine.deleted_at === null" @click="showCuisineEditModal(cuisine)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
@@ -98,7 +104,7 @@
 								    		</td>
 									  	</tr>
 									  	<tr v-show="!cuisinesToShow.length">
-								    		<td colspan="6">
+								    		<td colspan="4">
 									      		<div class="alert alert-danger" role="alert">Sorry, No cuisine found.</div>
 									    	</td>
 									  	</tr>
@@ -167,24 +173,40 @@
 									<div class="col-sm-12">
 										<div class="card card-outline">
 								            <div class="card-body">
-								              	<div class="form-group row">
-									              		
+								              	<div class="form-group row">	
 								              		<label for="inputCuisineName" class="col-sm-4 col-form-label text-right">Cuisine Name</label>
 									                <div class="col-sm-8">
 									                  	<input 
 															type="text" 
 															class="form-control" 
-															v-model="singleCuisineData.cuisine.name" 
+															v-model="singleCuisineData.name" 
 															placeholder="Cuisine Name" 
 															required="true"
-															:class="!errors.cuisine.name  ? 'is-valid' : 'is-invalid'"
+															:class="!errors.name  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('cuisine.name')"
 									                	>
 									                	<div class="invalid-feedback">
-												        	{{ errors.cuisine.name }}
+												        	{{ errors.name }}
 												  		</div>
 									                </div>	
-									              	
+								              	</div>
+
+								              	<div class="form-group row">
+								              		<label for="inputnumber3" class="col-sm-4 col-form-label text-right">
+								              			Publish On App
+								              		</label>
+									                <div class="col-sm-8">
+									                	<toggle-button 
+				                                    		value ="true" 
+				                                    		:sync="true" 
+				                                    		v-model="singleCuisineData.search_preference" 
+				                                    		:width="140"  
+				                                    		:height="30" 
+				                                    		:font-size="15" 
+				                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+				                                    		:labels="{checked: 'Published', unchecked: 'UnPublished' }"
+				                                    	/>
+									                </div>
 								              	</div>
 								            </div>
 								            <!-- /.card-body -->
@@ -316,13 +338,15 @@
 <script type="text/javascript">
 
 	import axios from 'axios';
+	import { ToggleButton } from 'vue-js-toggle-button';
 
 	var singleCuisineData = {
-    	cuisine : {
-			// id : null,
-			// name : null,
-			// deleted_at : null,
-    	},
+    	
+		// id : null,
+		// name : null,
+		// search_preference : false,
+		// deleted_at : null,
+    	
     };
 
 	var cuisineListData = {
@@ -342,7 +366,7 @@
       	},
 
     	errors : {
-    		cuisine : {},
+    		
     	},
 
         singleCuisineData : singleCuisineData,
@@ -351,6 +375,10 @@
     };
 
 	export default {
+
+	    components: { 
+	    	ToggleButton : ToggleButton, 
+		},
 
 	    data() {
 	        return cuisineListData;
@@ -425,10 +453,10 @@
 			showCuisineCreateModal(){
 
 				this.editMode = false;
-				this.errors.cuisine = {};
+				this.errors = {};
 				this.submitForm = true;
 
-				this.singleCuisineData.cuisine = {};
+				this.singleCuisineData = {};
 
 				$('#modal-createOrEdit-cuisine').modal('show');
 			},
@@ -437,11 +465,11 @@
 				$('#modal-createOrEdit-cuisine').modal('hide');
 				
 				axios
-					.post('/cuisines/'+ this.perPage, this.singleCuisineData.cuisine)
+					.post('/cuisines/'+ this.perPage, this.singleCuisineData)
 					.then(response => {
 
 						if (response.status == 200) {
-							this.singleCuisineData.cuisine = {};
+							this.singleCuisineData = {};
 
 							this.allCuisines = response.data;
 
@@ -463,8 +491,8 @@
 			showCuisineEditModal(cuisine) {
 				this.editMode = true;
 				this.submitForm = true;
-				this.errors.cuisine = {};
-				this.singleCuisineData.cuisine = cuisine;
+				this.errors = {};
+				this.singleCuisineData = cuisine;
 				$("#modal-createOrEdit-cuisine").modal("show");
 			},
 			updateCuisine(){
@@ -472,12 +500,12 @@
 				$('#modal-createOrEdit-cuisine').modal('hide');
 				
 				axios
-					.put('/cuisines/' + this.singleCuisineData.cuisine.id + '/' + this.perPage, this.singleCuisineData.cuisine)
+					.put('/cuisines/' + this.singleCuisineData.id + '/' + this.perPage, this.singleCuisineData)
 					.then(response => {
 
 						if (response.status == 200) {
 
-							this.singleCuisineData.cuisine = {};
+							this.singleCuisineData = {};
 
 							if (this.query === '') {
 								this.allCuisines = response.data;
@@ -500,7 +528,7 @@
 					});
 			},
 			showCuisineDeletionModal(cuisine) {
-				this.singleCuisineData.cuisine = cuisine;
+				this.singleCuisineData = cuisine;
 				$("#modal-cuisine-delete-confirmation").modal("show");
 			},
 			destroyCuisine(){
@@ -508,11 +536,11 @@
 				$("#modal-cuisine-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/cuisines/'+this.singleCuisineData.cuisine.id+'/'+this.perPage)
+					.delete('/cuisines/'+this.singleCuisineData.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleCuisineData.cuisine = {};
+							this.singleCuisineData = {};
 
 							if (this.query === '') {
 								this.allCuisines = response.data;
@@ -536,7 +564,7 @@
 					});
 			},
 			showCuisineRestoreModal(cuisine) {
-				this.singleCuisineData.cuisine = cuisine;
+				this.singleCuisineData = cuisine;
 				$("#modal-cuisine-restore-confirmation").modal("show");
 			},
 			restoreCuisine(){
@@ -544,11 +572,11 @@
 				$("#modal-cuisine-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/cuisines/'+this.singleCuisineData.cuisine.id+'/'+this.perPage)
+					.patch('/cuisines/'+this.singleCuisineData.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleCuisineData.cuisine = {};
+							this.singleCuisineData = {};
 
 							if (this.query === '') {
 								this.allCuisines = response.data;
@@ -590,15 +618,15 @@
 				
 				this.submitForm = false;
 
-				if (!this.singleCuisineData.cuisine.name) {
-					this.errors.cuisine.name = 'Cuisine name is required';
+				if (!this.singleCuisineData.name) {
+					this.errors.name = 'Cuisine name is required';
 				}
-				else if (!this.singleCuisineData.cuisine.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-					this.errors.cuisine.name = 'No special characters';
+				else if (!this.singleCuisineData.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+					this.errors.name = 'No special characters';
 				}
 				else{
 					this.submitForm = true;
-					this.$delete(this.errors.cuisine, 'name');
+					this.$delete(this.errors, 'name');
 				}
 	 
 			},

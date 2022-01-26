@@ -11,4 +11,8 @@ class Meal extends Model
    	
    	public $timestamps = false;
    	protected $guarded = ['id'];
+
+   	protected $casts = [
+		'search_preference' => 'boolean',
+	];
 }
