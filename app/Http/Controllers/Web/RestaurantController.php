@@ -796,10 +796,10 @@ class RestaurantController extends Controller
       public function showRestaurantAllMenuItems($restaurant, $perPage = false)
       {
          if ($perPage) {
-            return response(RestaurantMenuCategory::withTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems.variations', 'menuItems.addons'])->paginate($perPage), 200);
+            return response(RestaurantMenuCategory::withTrashed()->where('restaurant_id', $restaurant)->with(['menuCategory', 'menuItems.variations', 'menuItems.addons'])->paginate($perPage), 200);
          }
 
-         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems'])->get(), 200);
+         return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'menuItems'])->get(), 200);
       }
 
       public function createRestaurantMenuItem(Request $request, $perPage = false)
@@ -1141,8 +1141,8 @@ class RestaurantController extends Controller
       {
          if ($perPage) {
             return response()->json([
-               'current' => RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems'])->paginate($perPage),
-               'trashed' => RestaurantMenuCategory::onlyTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems'])->paginate($perPage),
+               'current' => RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'menuItems'])->paginate($perPage),
+               'trashed' => RestaurantMenuCategory::onlyTrashed()->where('restaurant_id', $restaurant)->with(['menuCategory', 'menuItems'])->paginate($perPage),
 
             ], 200);
 

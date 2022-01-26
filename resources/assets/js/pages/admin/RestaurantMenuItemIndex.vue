@@ -22,7 +22,7 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">
 								{{ 
-									restaurantNameFromData 
+									restaurantName 
 								}}
 
 								Menu-Items
@@ -308,7 +308,7 @@
 						  			editMode ? 'Edit' : 'Create' 
 						  		}} 
 						  		{{ 
-						  			restaurantNameFromData 
+						  			restaurantName 
 						  		}}
 
 						  		Menu-Item
@@ -348,7 +348,7 @@
 									                  	<multiselect 
 				                                  			v-model="singleRestaurantMenuItemData.restaurantMenuCategoryObject"
 				                                  			placeholder="Category Name" 
-					                                  		:options="restaurantShowableMenuCategories" 
+					                                  		:options="restaurantCurrentMenuCategories" 
 					                                  		:custom-label="menuCategoryName" 
 					                                  		track-by="id" 
 					                                  		:required="true"
@@ -1144,6 +1144,7 @@
 
 		computed: {
 		    // a computed getter
+		    /*
 		    restaurantNameFromData: function () {
 		      // `this` points to the vm instance
 		      if (this.restaurantAllMenuCategories.length) {
@@ -1155,13 +1156,14 @@
 
 		      return 'Current Restaurant';
 		    },
+		    */
 		    // a computed getter
-		    restaurantShowableMenuCategories: function () {
+		    restaurantCurrentMenuCategories: function () {
 		    	var array = [];
 		      	// `this` points to the vm instance
 		      	if (this.restaurantAllMenuCategories.length) {
 		      		array = this.restaurantAllMenuCategories.filter(restaurantMenuCategory=>{
-						return restaurantMenuCategory.deleted_at === null;
+						return restaurantMenuCategory.menu_category && restaurantMenuCategory.deleted_at === null;
 					});
 		      	}
 
@@ -1298,7 +1300,7 @@
 					});
 			},
 			menuCategoryName({ menu_category = { name: 'Menu Category' } }) {
-				return `${ menu_category.name }`;
+				return menu_category && menu_category.hasOwnProperty('name') ? `${ menu_category.name }` : false;
 		    },
 			changeNumberContents() {
 
@@ -1601,7 +1603,7 @@
 				this.singleRestaurantMenuItemData.restaurantNewMenuCategoryObjects = [];
 
 				this.singleRestaurantMenuItemData.restaurantObjectToAddMenuCategory = {
-		    		name : this.restaurantNameFromData, 
+		    		name : this.restaurantName, 
 					id : this.restaurantId 
 		    	};
 

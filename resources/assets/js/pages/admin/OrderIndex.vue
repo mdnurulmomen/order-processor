@@ -64,10 +64,10 @@
 											</li>
 											<li class="nav-item flex-fill">
 												<a 
-													:class="[{ 'active': currentTab==='new' }, 'nav-link']" 
+													:class="[{ 'active': currentTab==='unconfirmed' }, 'nav-link']" 
 													@click="showNewOrders"
 												>
-													New
+													Unconfirmed
 												</a>
 											</li>
 											<li class="nav-item flex-fill">
@@ -1063,7 +1063,7 @@
 			showNewOrders(){
 				// this.pagination.current_page = 1;
 				// this.fetchAllOrders();
-				this.currentTab = 'new';
+				this.currentTab = 'unconfirmed';
 				this.showListDataForSelectedTab();
 			},
 			showActiveOrders(){
@@ -1100,9 +1100,9 @@
 				if (this.currentTab=='all') {
 					this.ordersToShow = this.allOrders.all.data;
 					this.pagination = this.allOrders.all;
-				}else if (this.currentTab=='new') {
-					this.ordersToShow = this.allOrders.new.data;
-					this.pagination = this.allOrders.new;
+				}else if (this.currentTab=='unconfirmed') {
+					this.ordersToShow = this.allOrders.unconfirmed.data;
+					this.pagination = this.allOrders.unconfirmed;
 				}else if (this.currentTab=='active') {
 					this.ordersToShow = this.allOrders.active.data;
 					this.pagination = this.allOrders.active;

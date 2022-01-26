@@ -1,8 +1,6 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
 
 			<div 

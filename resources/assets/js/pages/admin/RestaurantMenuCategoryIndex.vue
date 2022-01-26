@@ -104,7 +104,15 @@
 													>
 													
 														{{ menuCategory.name }}
-													
+
+														<span 
+															v-show="menuCategory.pivot.deleted_at"
+															:class="[menuCategory.pivot.deleted_at ? 'badge-danger' : '', 'right badge ml-1']"
+										    			>
+										    				{{ 
+										    					menuCategory.pivot.deleted_at ? 'Trashed' : '' 
+										    				}}
+										    			</span>
 													</li>
 												</ul>
 								    		</td>

@@ -105,18 +105,6 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/cuisine-list" */ './pages/admin/CuisineIndex.vue')
 		},
 		{
-			path: '/restaurant-admins',
-            name: 'restaurant-admins',
-            component: () => import(/* webpackChunkName : "js/restaurant-admin-list" */ './pages/admin/RestaurantAdminIndex.vue')
-		},
-		
-		// {
-			// path: '/discounts',
-            // name: 'discounts',
-            // component: () => import(/* webpackChunkName : "js/discount-list" */ './pages/admin/DiscountIndex.vue')
-		// },
-
-		{
 			path: '/addons',
             name: 'addons',
             component: () => import(/* webpackChunkName : "js/addon-list" */ './pages/admin/AddonIndex.vue')
@@ -135,6 +123,18 @@ const router = new VueRouter({
 			path: '/waiters',
             name: 'waiters',
             component: () => import(/* webpackChunkName : "js/waiter-list" */ './pages/admin/WaiterIndex.vue')
+		},
+		
+		// {
+			// path: '/discounts',
+            // name: 'discounts',
+            // component: () => import(/* webpackChunkName : "js/discount-list" */ './pages/admin/DiscountIndex.vue')
+		// },
+		
+		{
+			path: '/restaurant-admins',
+            name: 'restaurant-admins',
+            component: () => import(/* webpackChunkName : "js/restaurant-admin-list" */ './pages/admin/RestaurantAdminIndex.vue')
 		},
 		{
 			path: '/restaurant-deals',

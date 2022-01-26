@@ -25,7 +25,7 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">
 								{{ 
-									restaurantNameFromData
+									restaurantName
 								}}
 								 
 								Menu Categories
@@ -145,7 +145,7 @@
 
 										      	<button 
 										      		type="button" 
-										      		v-show="restaurantMenuCategory.deleted_at !== null && restaurantMenuCategory.menu_category.deleted_at === null"
+										      		v-show="restaurantMenuCategory.deleted_at !== null && restaurantMenuCategory.menu_category && restaurantMenuCategory.menu_category.deleted_at === null"
 										      		@click="showRestaurantMenuCategoryRestoreModal(restaurantMenuCategory)" class="btn btn-danger btn-sm"
 										      	>
 										        	<i class="fas fa-undo"></i>
@@ -154,7 +154,7 @@
 
 										      	<p 
 										      		class="text-danger" 
-										      		v-show="restaurantMenuCategory.deleted_at !== null && restaurantMenuCategory.menu_category.deleted_at !== null"
+										      		v-show="restaurantMenuCategory.deleted_at !== null && restaurantMenuCategory.menu_category && restaurantMenuCategory.menu_category.deleted_at !== null"
 										      	>
 										      		Trashed Menu-Category
 										      	</p>
@@ -213,7 +213,7 @@
 						<div class="modal-header">
 						  	<h4 class="modal-title">
 						  		{{ editMode ? 'Edit' : 'Create' }} 
-						  		{{ restaurantNameFromData }} Menu-Category
+						  		{{ restaurantName }} Menu-Category
 						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
@@ -570,6 +570,7 @@
 
 		computed: {
 		    // a computed getter
+		    /*
 		    restaurantNameFromData: function () {
 		      	// `this` points to the vm instance
 		      	if (this.restaurantMenuCategoriesToShow.length) {
@@ -581,12 +582,13 @@
 
 		      	return 'Current Restaurant';
 		    },
+		    */
 
 		    // a computed getter
 		    restaurantsToShow: function () {  
 		      	this.restaurantSingleMenuCategoryData.restaurantObject = {
 					id : this.restaurantId,		
-					name : this.restaurantNameFromData,
+					name : this.restaurantName,
 				};
 
 				var array = [];

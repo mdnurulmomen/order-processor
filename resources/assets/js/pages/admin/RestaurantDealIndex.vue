@@ -608,7 +608,7 @@
 			},
     		storeRestaurantDeal(){
 
-				if (Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0) {
+				if (typeof this.singleRestaurantDealData.restaurantObject === 'object' || Object.keys(this.singleRestaurantDealData.restaurantObject).length === 0) {
 					
 					this.errors.restaurantDeal.restaurant = 'Restaurant name is required';
 					this.submitForm = false;

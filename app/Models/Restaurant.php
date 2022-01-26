@@ -95,7 +95,7 @@ class Restaurant extends Model
 
     public function menuCategories()
     {
-        return $this->belongsToMany(MenuCategory::class, 'restaurant_menu_categories', 'restaurant_id', 'menu_category_id')->withPivot('id', 'serving_from', 'serving_to');
+        return $this->belongsToMany(MenuCategory::class, 'restaurant_menu_categories', 'restaurant_id', 'menu_category_id')->withPivot('id', 'deleted_at', 'serving_from', 'serving_to');
     }
 
     public function meals()
