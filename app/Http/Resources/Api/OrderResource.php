@@ -30,7 +30,7 @@ class OrderResource extends JsonResource
             'delivery' => $this->when($this->delivery, $this->delivery ? $this->delivery->additional_info : false),
             // 'orderer' => $this->orderer,
             'customer_confirmation' => $this->customer_confirmation,
-            'in_progress' => $this->in_progress,
+            'in_progress' => $this->in_progress,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
             'restaurants' => OrderRestaurantResource::collection($this->restaurants) /*route('api.v1.ordered-restaurants.show', ['order' => $this->id])*/,
             'restaurant_acceptances' => OrderRestaurantAcceptanceResource::collection($this->restaurantAcceptances),
             'rider_assignment' => $this->riderAssignment ? $this->riderAssignment : false,

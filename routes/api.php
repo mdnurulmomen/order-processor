@@ -34,7 +34,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::put('user-settings/{user}', 'ProfileController@updateUserSetting')->name('user-settings.update');
 				Route::put('user-profiles/{user}', 'ProfileController@updateUserProfile')->name('user-profiles.update');
 				
-				Route::post('user-addresses', 'ProfileController@addUserAddress')->name('user-addresses.create');
+				Route::post('addresses', 'ProfileController@addUserAddress')->name('user-addresses.create');
 				Route::put('users/{user}/addresses/{address}', 'ProfileController@updateUserAddress')->name('user-addresses.update');
 				
 				// Route::post('user-password', 'ProfileController@updateUserPassword')->name('user-passwords.update');

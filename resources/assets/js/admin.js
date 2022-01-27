@@ -185,7 +185,7 @@ const router = new VueRouter({
                     next(); // <-- everything good, proceed
                 }
                 else {
-                    next('/restaurant-menu-items');
+                    next('/restaurant-menu-items'); // name: 'expected-restaurant-menu-items',
                 }
             }
 		},

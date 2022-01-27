@@ -148,7 +148,8 @@ class OrderController extends Controller
 			if ($orderToCancel->restaurants->count() == $orderToCancel->restaurantOrderCancelations->count()) {
 				
 				$orderToCancel->update([
-					'in_progress' => 0
+					'in_progress' => 0,
+					'complete_order' => 0
 				]);
 
 			}
@@ -418,7 +419,8 @@ class OrderController extends Controller
 			if ($orderToCancel->restaurants->count() == $orderToCancel->restaurantOrderCancelations->count()) {
 				
 				$orderToCancel->update([
-					'in_progress' => 0
+					'in_progress' => 0,
+					'complete_order' => 0
 				]);
 
 			}
@@ -500,11 +502,12 @@ class OrderController extends Controller
             $this->makeRestaurantFoodPickStatus($orderToConfirm->riderAssignment);
 
         }
-
+        // confirming pick-up
         else if ($request->orderPicked && $deliveryToConfirm->delivery_order_acceptance==1) {
             
             $restaurantToPick = $deliveryToConfirm->riderFoodPickConfirmations()->where('rider_id', $request->rider_id)->where('restaurant_id', $request->restaurant_id)->first();
 
+            // if already not picked
             if ($restaurantToPick && $restaurantToPick->rider_food_pick_confirmation==-1) {
                 
                 $restaurantPicked = $restaurantToPick->update([
@@ -524,7 +527,7 @@ class OrderController extends Controller
             }
 
         }
-
+        // confirming delivery
         else if ($request->orderDropped && $this->allOrderPicked($deliveryToConfirm) && $deliveryToConfirm->delivery_order_acceptance==1) {
                 
             $deliveryToConfirm->riderDeliveryConfirmation()->update([
@@ -548,7 +551,13 @@ class OrderController extends Controller
 
             return response()->json([
 
-				'all' => RestaurantOrderRecord::with([
+				'all' => RestaurantOrderRecord::whereHas('order', function($q) {
+	   						$q->where('order_type', 'serve-on-table')
+	   						  ->orWhere('order_type', 'reservation');
+						})
+						->where('food_order_acceptance', 1)
+						->where('restaurant_id', $restaurant)
+						->with([
 							'orderedRestaurants' => function($orderedRestaurant) use ($restaurant) {
 						    	$orderedRestaurant->where('restaurant_id', $restaurant)->with(['items.variation.restaurantMenuItemVariation.variation', 'items.addons.restaurantMenuItemAddon.addon', 'items.restaurantMenuItem']);
 							}
@@ -564,12 +573,6 @@ class OrderController extends Controller
 							}
 						])
 						->with(['orderServeProgression', 'order.orderer', 'order.asap', 'order.schedule', 'order.cutlery'])
-						->where('restaurant_id', $restaurant)
-						->where('food_order_acceptance', 1)
-						->whereHas('order', function($q) {
-	   						$q->where('order_type', 'serve-on-table')
-	   						  ->orWhere('order_type', 'reservation');
-						})
 						->latest()
 						->paginate($perPage),
             
@@ -612,6 +615,8 @@ class OrderController extends Controller
 
             $this->makeRestaurantOrderServed($orderToServe, 'App\Models\Waiter', $request->waiter_id);
 
+            $this->updateOrderAccomplishmentStatus($orderToServe);
+
 	        // Broadcast to admin for restaurant order ready confirmation
 	        $this->notifyAdmin($orderToServe);
 
@@ -634,7 +639,15 @@ class OrderController extends Controller
     	$netRestaurantInOrder = $order->restaurants->count();
     	$numberCancelledRestaurants = $order->restaurantOrderCancelations->count();
 
-    	return $netRestaurantInOrder==$numberCancelledRestaurants ? true : false;
+    	return $netRestaurantInOrder==$numberCancelledRestaurants || $order->in_progress===0 || $order->customer_confirmation===0 ? true : false;
+    }
+
+    private function updateOrderAccomplishmentStatus(Order $order)
+    {
+    	$order->update([
+    		'in_progress' => 0,
+    		'complete_order' => 1,
+    	]);
     }
 
     private function servedOrder(Order $order)
@@ -735,9 +748,10 @@ class OrderController extends Controller
 	{
 		// Confirming customer order request
 		$orderToConfirm->update([
-	 		'customer_confirmation' => 1
+	 		'customer_confirmation' => 1,
+	 		'in_progress' => 1,
+	 		'complete_order' => -1
 	 	]);
-
 	}
 
 	private function cancelCustomerOrderRequest(Order $orderToCancel)
@@ -745,7 +759,8 @@ class OrderController extends Controller
 		// Cancelling customer order request
 		$orderToCancel->update([
 	 		'customer_confirmation' => 0,
-	 		'in_progress' => 0
+	 		'in_progress' => 0,
+	 		'complete_order' => 0
 	 	]);
 	}
 

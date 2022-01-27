@@ -1155,8 +1155,8 @@ class RestaurantController extends Controller
       public function createRestaurantMenuCategory(Request $request, $perPage = false)
       {
          $request->validate([
-            'menu_category_id'=>'required|array|min:1',
-            'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
+            'menu_category_ids'=>'required|array|min:1',
+            'menu_category_ids.*'  => "required|numeric|exists:menu_categories,id",
             'serving_from'=>'nullable|string|max:20',
             'serving_to'=>'nullable|string|max:20',
             'restaurant_id'=>'required|numeric|exists:restaurants,id',
@@ -1164,7 +1164,7 @@ class RestaurantController extends Controller
 
          $expectedRestaurant = Restaurant::find($request->restaurant_id);
 
-         foreach ($request->menu_category_id as $restaurantNewMenuCategory) {
+         foreach ($request->menu_category_ids as $restaurantNewMenuCategory) {
             
             if ($expectedRestaurant->restaurantMenuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->count()) {
                

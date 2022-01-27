@@ -243,7 +243,7 @@ class OrderController extends Controller
     {
         $order->update([
             'customer_confirmation' => 1,
-            // 'in_progress' => 1
+            'in_progress' => 1
         ]);
     }
 

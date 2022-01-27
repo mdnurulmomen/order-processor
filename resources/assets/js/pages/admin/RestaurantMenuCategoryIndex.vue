@@ -107,7 +107,7 @@
 
 														<span 
 															v-show="menuCategory.pivot.deleted_at"
-															:class="[menuCategory.pivot.deleted_at ? 'badge-danger' : '', 'right badge ml-1']"
+															:class="[menuCategory.pivot.deleted_at ? 'badge-warning' : '', 'right badge ml-1']"
 										    			>
 										    				{{ 
 										    					menuCategory.pivot.deleted_at ? 'Trashed' : '' 
@@ -236,11 +236,11 @@
 									                <div class="col-sm-8">
 
 									                  	<multiselect 
-				                                  			v-model="restaurantSingleMenuCategoryData.restaurantObject"
+				                                  			v-model="singleRestaurantMenuCategoryData.restaurant"
 				                                  			placeholder="Restaurant Name" 
 					                                  		label="name" 
 					                                  		track-by="id" 
-					                                  		:options="expectedRestaurants" 
+					                                  		:options="allRestaurants" 
 					                                  		:required="true"
 					                                  		:class="!errors.restaurantMenuCategory.restaurant  ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
@@ -269,7 +269,7 @@
 									                <div class="col-sm-8">
 									                  	
 									                  	<multiselect 
-				                                  			v-model="restaurantSingleMenuCategoryData.menuCategoryObjects"
+				                                  			v-model="singleRestaurantMenuCategoryData.menuCategories"
 				                                  			placeholder="MenuCategory Names" 
 					                                  		label="name" 
 					                                  		track-by="id" 
@@ -301,7 +301,7 @@
 								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
-				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_from"
+				                                  			v-model="singleRestaurantMenuCategoryData.restaurantMenuCategory.serving_from"
 				                                  			placeholder="Start Time" 
 					                                  		:options="restaurantScheduleHours" 
 					                                  		selectLabel = "Click to select"
@@ -319,7 +319,7 @@
 								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
-				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_to"
+				                                  			v-model="singleRestaurantMenuCategoryData.restaurantMenuCategory.serving_to"
 				                                  			placeholder="End Time" 
 					                                  		:options="restaurantScheduleHours" 
 					                                  		selectLabel = "Click to select"
@@ -380,16 +380,16 @@
 	import axios from 'axios';
 	import Multiselect from 'vue-multiselect';
 
-	var restaurantSingleMenuCategoryData = {
+	var singleRestaurantMenuCategoryData = {
 		
-    	restaurantObject : {
+    	restaurant : {
 			
     	},
 
-    	menuCategoryObjects : [],
+    	menuCategories : [],
 
     	restaurantMenuCategory : {
-			menu_category_id : [],
+			menu_category_ids : [],
 			serving_from : '10.00',
 			serving_to : '22.00',
 			restaurant_id : null,
@@ -407,7 +407,7 @@
     	
     	allMenuCategories : [],
     	allRestaurants : [],
-    	expectedRestaurants : [],
+    	// expectedRestaurants : [],
 
     	allRestaurantMenuCategories : [],
 
@@ -421,7 +421,7 @@
     		restaurantMenuCategory : {},
     	},
 
-        restaurantSingleMenuCategoryData : restaurantSingleMenuCategoryData,
+        singleRestaurantMenuCategoryData : singleRestaurantMenuCategoryData,
 
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     };
@@ -452,21 +452,21 @@
 					this.searchData();
 				}
 			},
-			'restaurantSingleMenuCategoryData.menuCategoryObjects' : function(menuCategoryObjects){
+			'singleRestaurantMenuCategoryData.menuCategories' : function(menuCategoryObjects){
 
 				let array = [];
 				$.each(menuCategoryObjects, function(key, value) {
 			     	array.push(value.id);
 			   	});
-		     	this.restaurantSingleMenuCategoryData.restaurantMenuCategory.menu_category_id = array;
+		     	this.singleRestaurantMenuCategoryData.restaurantMenuCategory.menu_category_ids = array;
 			},
-			'restaurantSingleMenuCategoryData.restaurantObject' : function(restaurantObject){
+			'singleRestaurantMenuCategoryData.restaurant' : function(restaurantObject){
 				
 				if (restaurantObject) {
-					this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id = restaurantObject.id;
+					this.singleRestaurantMenuCategoryData.restaurantMenuCategory.restaurant_id = restaurantObject.id;
 				}
 				else
-					this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id = null;
+					this.singleRestaurantMenuCategoryData.restaurantMenuCategory.restaurant_id = null;
 
 			},
 		},
@@ -495,7 +495,7 @@
 						if (response.status == 200) {
 							this.loading = false;
 							this.allRestaurants = response.data;
-							this.expectedRestaurants = this.allRestaurants;
+							// this.expectedRestaurants = this.allRestaurants;
 						}
 					})
 					.catch(error => {
@@ -551,18 +551,18 @@
 				this.submitForm = true;
 				this.errors.restaurantMenuCategory = {};
 
-				this.expectedRestaurants = this.allRestaurants;
+				// this.expectedRestaurants = this.allRestaurants;
 
-				this.restaurantSingleMenuCategoryData.restaurantObject = {};
-				this.restaurantSingleMenuCategoryData.menuCategoryObjects = [];
-				this.restaurantSingleMenuCategoryData.restaurantMenuCategory = {};
-				this.restaurantSingleMenuCategoryData.restaurantMenuCategory.from_menu_category_index = true;
+				this.singleRestaurantMenuCategoryData.restaurant = {};
+				this.singleRestaurantMenuCategoryData.menuCategories = [];
+				this.singleRestaurantMenuCategoryData.restaurantMenuCategory = {};
+				this.singleRestaurantMenuCategoryData.restaurantMenuCategory.from_menu_category_index = true;
 
 				$('#modal-createOrEdit-restaurantMenuCategory').modal('show');
 			},
     		storeRestaurantMenuCategory(){
 
-    			if (!this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id || this.restaurantSingleMenuCategoryData.restaurantMenuCategory.menu_category_id.length === 0) {
+    			if (!this.singleRestaurantMenuCategoryData.restaurantMenuCategory.restaurant_id || this.singleRestaurantMenuCategoryData.restaurantMenuCategory.menu_category_ids.length === 0) {
 					
 					this.submitForm = false;
 					return;
@@ -571,14 +571,14 @@
 				$('#modal-createOrEdit-restaurantMenuCategory').modal('hide');
 				
 				axios
-					.post('/restaurant-menu-categories/'+ this.perPage, this.restaurantSingleMenuCategoryData.restaurantMenuCategory)
+					.post('/restaurant-menu-categories/'+ this.perPage, this.singleRestaurantMenuCategoryData.restaurantMenuCategory)
 					.then(response => {
 
 						if (response.status == 200) {
 							
-							this.restaurantSingleMenuCategoryData.restaurantObject = {};
-							this.restaurantSingleMenuCategoryData.menuCategoryObjects = [];
-							this.restaurantSingleMenuCategoryData.restaurantMenuCategory = {};
+							this.singleRestaurantMenuCategoryData.restaurant = {};
+							this.singleRestaurantMenuCategoryData.menuCategories = [];
+							this.singleRestaurantMenuCategoryData.restaurantMenuCategory = {};
 
 							this.query = '';
 							this.allRestaurantMenuCategories = response.data.data;
@@ -610,19 +610,19 @@
 					}
 				);
 				
-				this.restaurantSingleMenuCategoryData.restaurantObject = restaurant;
-				this.restaurantSingleMenuCategoryData.menuCategoryObjects = restaurant.menu_categories;
+				this.singleRestaurantMenuCategoryData.restaurant = restaurant;
+				this.singleRestaurantMenuCategoryData.menuCategories = restaurant.menu_categories;
 
 				if (restaurant.menu_categories.length) {
 
-					this.restaurantSingleMenuCategoryData.restaurantMenuCategory = restaurant.menu_categories[0].pivot;
+					this.singleRestaurantMenuCategoryData.restaurantMenuCategory = restaurant.menu_categories[0].pivot;
 				}
 
 				$("#modal-createOrEdit-restaurantMenuCategory").modal("show");
 			},
 			updateRestaurantMenuCategory(){
 
-				if (!this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id || this.restaurantSingleMenuCategoryData.restaurantMenuCategory.menu_category_id.length === 0) {
+				if (!this.singleRestaurantMenuCategoryData.restaurantMenuCategory.restaurant_id || this.singleRestaurantMenuCategoryData.restaurantMenuCategory.menu_category_ids.length === 0) {
 					
 					this.submitForm = false;
 					return;
@@ -631,14 +631,14 @@
 				$('#modal-createOrEdit-restaurantMenuCategory').modal('hide');
 				
 				axios
-					.put('/restaurant-menu-categories/' + this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id + '/' + this.perPage, this.restaurantSingleMenuCategoryData.restaurantMenuCategory)
+					.put('/restaurant-menu-categories/' + this.singleRestaurantMenuCategoryData.restaurantMenuCategory.restaurant_id + '/' + this.perPage, this.singleRestaurantMenuCategoryData.restaurantMenuCategory)
 					.then(response => {
 
 						if (response.status == 200) {
 
-							this.restaurantSingleMenuCategoryData.restaurantObject = {};
-							this.restaurantSingleMenuCategoryData.menuCategoryObjects = [];
-							this.restaurantSingleMenuCategoryData.restaurantMenuCategory = {};
+							this.singleRestaurantMenuCategoryData.restaurant = {};
+							this.singleRestaurantMenuCategoryData.menuCategories = [];
+							this.singleRestaurantMenuCategoryData.restaurantMenuCategory = {};
 
 							if (this.query === '') {
 								this.allRestaurantMenuCategories = response.data.data;
@@ -686,7 +686,7 @@
 
 					case 'restaurantMenuCategory.restaurant' :
 
-						if (Object.keys(this.restaurantSingleMenuCategoryData.restaurantObject).length === 0) {
+						if (Object.keys(this.singleRestaurantMenuCategoryData.restaurant).length === 0) {
 							this.errors.restaurantMenuCategory.restaurant = 'Restaurant name is required';
 						}
 						else {
@@ -698,7 +698,7 @@
 
 					case 'restaurantMenuCategory.menuCategory' :
 
-						if (this.restaurantSingleMenuCategoryData.menuCategoryObjects.length === 0) {
+						if (this.singleRestaurantMenuCategoryData.menuCategories.length === 0) {
 							this.errors.restaurantMenuCategory.menuCategory = 'Menu Category name is required';
 						}
 						else {
