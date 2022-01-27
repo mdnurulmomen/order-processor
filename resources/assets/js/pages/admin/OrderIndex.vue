@@ -601,7 +601,7 @@
 																		(Selected Variation : {{ item.item_variation.restaurant_menu_item_variation | capitalize }} )
 																	</span>
 
-																	<p class="d-block" v-if="item.item_addons.length">
+																	<p class="d-block">
 																		<span class="font-weight-bold">- Quantity : </span>
 																		{{ item.quantity }}
 																	</p>

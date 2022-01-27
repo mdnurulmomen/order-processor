@@ -121,7 +121,7 @@
                     <a class="btn btn-default btn-flat" href="{{ route('admin.logout') }}"
                        onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
-                        {{ __('logout') }}
+                        {{ __('Logout') }}
                     </a>
                     <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                         @csrf
