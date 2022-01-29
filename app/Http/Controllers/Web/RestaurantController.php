@@ -1164,11 +1164,24 @@ class RestaurantController extends Controller
 
          $expectedRestaurant = Restaurant::find($request->restaurant_id);
 
-         foreach ($request->menu_category_ids as $restaurantNewMenuCategory) {
+         // initially
+         $expectedRestaurant->restaurantMenuCategories()->delete();
+
+         foreach ($request->menu_category_ids as $newMenuCategory) {
             
-            if ($expectedRestaurant->restaurantMenuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->count()) {
+            $expectedRestaurant->restaurantMenuCategories()->withTrashed()->updateOrCreate(
+               [ 'menu_category_id' => $newMenuCategory ],
+               [
+                  'serving_from' => $request->serving_from,
+                  'serving_to' => $request->serving_to,
+                  'deleted_at' => NULL
+               ]
+            );
+
+            /*
+            if ($expectedRestaurant->restaurantMenuCategories()->withTrashed()->where('menu_category_id', $newMenuCategory)->count()) {
                
-               $expectedRestaurant->restaurantMenuCategories()->withTrashed()->where('menu_category_id', $restaurantNewMenuCategory)->update([
+               $expectedRestaurant->restaurantMenuCategories()->withTrashed()->where('menu_category_id', $newMenuCategory)->update([
                   'serving_from' => $request->serving_from,
                   'serving_to' => $request->serving_to,
                   'deleted_at' => NULL
@@ -1179,13 +1192,14 @@ class RestaurantController extends Controller
             else{
 
                $expectedRestaurant->menuCategories()->syncWithoutDetaching([
-                  $restaurantNewMenuCategory => [
+                  $newMenuCategory => [
                      'serving_from' => $request->serving_from,
                      'serving_to' => $request->serving_to
                   ]
                ]);
 
             }
+            */
 
          }
 
@@ -1204,9 +1218,9 @@ class RestaurantController extends Controller
          $restaurantMenuCategoryToUpdate = RestaurantMenuCategory::find($menuCategory);
 
          $request->validate([
-            'menu_category_id'=>'required|array|min:1',
-            'menu_category_id.*'  => "required|numeric|exists:menu_categories,id",
-            'menu_category_id.0'  => Rule::unique('restaurant_menu_categories', 'menu_category_id')
+            'menu_category_ids'=>'required|array|min:1',
+            'menu_category_ids.*'  => "required|numeric|exists:menu_categories,id",
+            'menu_category_ids.0'  => Rule::unique('restaurant_menu_categories', 'menu_category_id')
                                      ->where(function($query) use ($request) {
                                        $query->where('restaurant_id', $request->restaurant_id);
                                      })
@@ -1217,7 +1231,7 @@ class RestaurantController extends Controller
          ]);
 
          // As editing single restaurantMenuCategroy from request
-         $restaurantMenuCategoryToUpdate->menu_category_id = $request->menu_category_id[0];
+         $restaurantMenuCategoryToUpdate->menu_category_id = $request->menu_category_ids[0];
          $restaurantMenuCategoryToUpdate->serving_from = $request->serving_from;
          $restaurantMenuCategoryToUpdate->serving_to = $request->serving_to;
 
@@ -1248,14 +1262,14 @@ class RestaurantController extends Controller
 
       public function restoreRestaurantMenuCategory($menuCategory, $perPage)
       {
-         $restaurantMenuItemToRestore = RestaurantMenuCategory::onlyTrashed()->find($menuCategory);
+         $restaurantMenuItemToRestore = RestaurantMenuCategory::onlyTrashed()->findOrFail($menuCategory);
           
-         if ($restaurantMenuItemToRestore && $restaurantMenuItemToRestore->menuCategory()->exists()) {
+         // if ($restaurantMenuItemToRestore && $restaurantMenuItemToRestore->menuCategory()->exists()) {
 
             $restaurantMenuItemToRestore->menuItems()->restore();
             $restaurantMenuItemToRestore->restore();
          
-         }
+         // }
 
          return $this->showRestaurantAllMenuCategories($restaurantMenuItemToRestore->restaurant_id, $perPage);
       }

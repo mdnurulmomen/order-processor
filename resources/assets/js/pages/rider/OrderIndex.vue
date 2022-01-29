@@ -50,7 +50,7 @@
 									  	<tr v-show="deliveriesToShow.length"
 									    	v-for="(riderDeliveryRecord, index) in deliveriesToShow"
 									    	:key="riderDeliveryRecord.id" 
-									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' :  deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-warning' : timeOutDeliveryOrder(riderDeliveryRecord) ? 'bg-secondary' : 'bg-danger']" 
+									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' : returnedOrder(riderDeliveryRecord) ? 'bg-dark' : deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-warning' : timeOutDeliveryOrder(riderDeliveryRecord) ? 'bg-secondary' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ riderDeliveryRecord.order_id }}</td>
@@ -64,22 +64,36 @@
 								        			Details
 								      			</button>
 								      			<!-- disabled if rider / restaurant already cancelled -->
+								      			
+								      			<!-- return button -->
+								      			<button 
+									      			type="button" 
+									      			class="btn btn-danger btn-sm" 
+									      			v-if="! cancelledOrder(riderDeliveryRecord) && allRestaurantPickedUp(riderDeliveryRecord) && ! returnedOrder(riderDeliveryRecord) && ! deliveredOrder(riderDeliveryRecord)" 
+									      			:disabled="formSubmitionMode" 
+									      			@click="orderReturnConfirmation(riderDeliveryRecord)" 
+								      			>
+								        			<i class="fas fa-bell"></i>
+								        			Return
+								      			</button>
+
 								      			<!-- drop button -->
 								      			<button 
 									      			type="button" 
-									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && allRestaurantPickedUp(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord)" 
+									      			class="btn btn-success btn-sm" 
+									      			v-if="! cancelledOrder(riderDeliveryRecord) && allRestaurantPickedUp(riderDeliveryRecord) && ! returnedOrder(riderDeliveryRecord) && ! deliveredOrder(riderDeliveryRecord)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="orderDroppingConfirmation(riderDeliveryRecord)" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 								        			Drop
 								      			</button>
+								      			
 								      			<!-- pick up buttons -->
 								      			<button
 								      				type="button" 
-									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && !allRestaurantPickedUp(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && acceptedDeliveryOrder(riderDeliveryRecord)" 
+									      			class="btn btn-warning btn-sm" 
+									      			v-if="!cancelledOrder(riderDeliveryRecord) && !allRestaurantPickedUp(riderDeliveryRecord) && !returnedOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && acceptedDeliveryOrder(riderDeliveryRecord)" 
 									      			v-for="restaurantOrderRecord in riderDeliveryRecord.restaurants_accepted" 
 									      			:disabled="Boolean(formSubmitionMode || pickedUp(riderDeliveryRecord, restaurantOrderRecord.restaurant.id))" 
 									      			:key="restaurantOrderRecord.id" 
@@ -87,11 +101,12 @@
 								      			>
 								      				{{ 'Pick Up from ' + restaurantOrderRecord.restaurant.name }}
 								      			</button>
+
 								      			<!-- accept button -->
 								      			<button
 								      				type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && !timeOutDeliveryOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)"
+									      			v-if="!cancelledOrder(riderDeliveryRecord) && !timeOutDeliveryOrder(riderDeliveryRecord) && !returnedOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)"
 									      			:disabled="formSubmitionMode"  
 									      			@click="orderAcceptanceConfirmation(riderDeliveryRecord)" 
 								      			>
@@ -268,48 +283,63 @@
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Order Items
+							              			Order Items:
 							              		</label>
 								                <div class="col-sm-6">
-								                	<ul v-show="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length">
-														<li v-for="(orderedRestaurant, index) in singleOrderData.order.restaurants" 
-															:key="orderedRestaurant.id"
+								                	<ul v-show="singleOrderData.restaurants && singleOrderData.restaurants.length">
+														<li v-for="(orderRestaurant, index) in singleOrderData.restaurants" 
+															:key="orderRestaurant.id"
 														>
-															{{ orderedRestaurant.restaurant.name }}
+															{{ orderRestaurant.name | capitalize }}
 
-															<ol v-show="orderedRestaurant.items.length">
-																<li v-for="(item, index) in orderedRestaurant.items" 
+															<ol v-show="orderRestaurant.menu_items.length">
+																<li v-for="(item, index) in orderRestaurant.menu_items" 
 																	:key="item.id"
 																>	
-																	{{ item.restaurant_menu_item.name }}
+																	{{ item.restaurant_menu_item.name | capitalize }} 
 
 																	<span class="d-block"
 																		v-if="item.restaurant_menu_item.has_variation" 
 																	>
-																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.name }})
+																		(Selected Variation : {{ item.item_variation.restaurant_menu_item_variation | capitalize }} )
 																	</span>
 
-																	(quantity : {{ item.quantity }})
+																	<p class="d-block">
+																		<span class="font-weight-bold">- Quantity : </span>
+																		{{ item.quantity }}
+																	</p>
 
 																	<span 
 																		class="d-block font-weight-bold" 
-																		v-if="item.additional_ordered_addons.length"
+																		v-if="item.item_addons.length"
 																	>
-																		Extra Addons
+																		Addons
 																	</span>
 
-																	<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
+																	<ul v-if="item.restaurant_menu_item.has_addon && item.item_addons.length">
 
-																		<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
-																			{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name }}
+																		<li v-for="(additionalOrderedAddon, index) in item.item_addons">
+																			{{ additionalOrderedAddon.restaurant_menu_item_addon | capitalize }} ({{ additionalOrderedAddon.quantity }})
 																		</li>
 																	</ul>
+
+																	<p class="d-block" v-if="item.customization">
+																		<span class="font-weight-bold">- Customization : </span>
+																		{{ item.customization | capitalize }}
+																	</p>
 																</li>
 															</ol>
+
+															<p class="text-danger" 
+																v-show="! orderRestaurant.menu_items.length"
+															>
+																No Items Found Yet
+															</p>
+
 														</li>
 													</ul>
 								                </div>	
-								            </div> 
+								            </div>  
 					            		</div>
 					            	</div>
 								</div>
@@ -468,7 +498,7 @@
     		},
     		showOrderDetailModal(riderDeliveryRecord) {
 
-				this.singleOrderData.order = riderDeliveryRecord.order;
+				this.singleOrderData.order = riderDeliveryRecord;
 
 				// if order request is accepted
 				if (this.acceptedDeliveryOrder(riderDeliveryRecord)) {
@@ -485,20 +515,16 @@
 				$("#modal-show-order").modal("show");
 
 			},
-			orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord){
-
-				// console.log(riderDeliveryRecord);
-				// console.log(restaurantOrderRecord);
+			orderReturnConfirmation(riderDeliveryRecord) {
 
 				this.formSubmitionMode = true;
 				this.singleOrderData.rider = {};
 
-				this.singleOrderData.rider.orderPicked = true;
+				this.singleOrderData.rider.orderReturned = true;
+				this.singleOrderData.rider.orderPicked = false;
 				this.singleOrderData.rider.orderDropped = false;
 				this.singleOrderData.rider.orderAccepted = false;
 				this.singleOrderData.rider.rider_id = this.rider_id;
-
-				this.singleOrderData.rider.restaurant_id = restaurantOrderRecord.restaurant.id;
 
 				this.singleOrderData.order = riderDeliveryRecord.order;
 				this.submitConfirmation();
@@ -513,6 +539,25 @@
 				this.singleOrderData.rider.orderDropped = true;
 				this.singleOrderData.rider.orderAccepted = false;
 				this.singleOrderData.rider.rider_id = this.rider_id;
+
+				this.singleOrderData.order = riderDeliveryRecord.order;
+				this.submitConfirmation();
+
+			},
+			orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord){
+
+				// console.log(riderDeliveryRecord);
+				// console.log(restaurantOrderRecord);
+
+				this.formSubmitionMode = true;
+				this.singleOrderData.rider = {};
+
+				this.singleOrderData.rider.orderPicked = true;
+				this.singleOrderData.rider.orderDropped = false;
+				this.singleOrderData.rider.orderAccepted = false;
+				this.singleOrderData.rider.rider_id = this.rider_id;
+
+				this.singleOrderData.rider.restaurant_id = restaurantOrderRecord.restaurant.id;
 
 				this.singleOrderData.order = riderDeliveryRecord.order;
 				this.submitConfirmation();
@@ -600,6 +645,15 @@
 			deliveredOrder(riderDeliveryRecord){
 				
 				if (riderDeliveryRecord.rider_delivery_confirmation!=null && riderDeliveryRecord.rider_delivery_confirmation.rider_delivery_confirmation==1) {
+					return true;
+				}
+
+				return false;
+					
+			},
+			returnedOrder(riderDeliveryRecord){
+				
+				if (riderDeliveryRecord.rider_delivery_return!=null && riderDeliveryRecord.rider_delivery_return.rider_return_confirmation==1) {
 					return true;
 				}
 

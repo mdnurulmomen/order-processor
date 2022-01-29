@@ -447,7 +447,7 @@ class OrderController extends Controller
 
             return response()->json([
 
-               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
+               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
             
             ], 200);
 
@@ -460,6 +460,7 @@ class OrderController extends Controller
     {
         // validation
         $request->validate([
+        	'orderReturned' => 'boolean',
             'orderDropped' => 'boolean',
             'orderPicked' => 'boolean',
             'orderAccepted' => 'boolean',
@@ -487,7 +488,7 @@ class OrderController extends Controller
         }
 
         // if already not accepted
-        if ($request->orderAccepted && $deliveryToConfirm->delivery_order_acceptance==0 && !$this->timeOutDeliveryOrder($deliveryToConfirm)) {
+        if ($request->orderAccepted && $deliveryToConfirm->delivery_order_acceptance==0 && ! $this->timeOutDeliveryOrder($deliveryToConfirm)) {
                 
             // accepting rider-delivery-order
             $deliveryToConfirm->update([
@@ -528,10 +529,23 @@ class OrderController extends Controller
 
         }
         // confirming delivery
-        else if ($request->orderDropped && $this->allOrderPicked($deliveryToConfirm) && $deliveryToConfirm->delivery_order_acceptance==1) {
+        else if ($request->orderDropped && $this->allOrderPicked($deliveryToConfirm) && $deliveryToConfirm->delivery_order_acceptance==1 && $deliveryToConfirm->riderDeliveryConfirmation()->exists()) {
                 
             $deliveryToConfirm->riderDeliveryConfirmation()->update([
                 'rider_delivery_confirmation' => 1,
+            ]);
+
+        }
+        // food returning
+        // if delivery record was created
+        else if ($request->orderReturned && $this->allOrderPicked($deliveryToConfirm) && $deliveryToConfirm->delivery_order_acceptance==1 && $deliveryToConfirm->riderDeliveryConfirmation()->exists()) {
+
+            // deleting delivery record as not deliverd
+            $deliveryToConfirm->riderDeliveryConfirmation()->delete();
+                
+            $deliveryToConfirm->riderDeliveryReturn()->create([
+                'rider_return_confirmation' => 1,
+                'rider_id' => $deliveryToConfirm->rider_id,
             ]);
 
         }
@@ -865,7 +879,7 @@ class OrderController extends Controller
 			
 			NotifyRiders::dispatch($order, $rider)->delay(now()->addSeconds($delay));
 
-			$delay += 120;
+			$delay += 30;	// 30 seconds
 
 		}
 

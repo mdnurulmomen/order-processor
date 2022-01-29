@@ -20,7 +20,7 @@ class RestaurantCuisineResource extends JsonResource
 
             'id' => $this->id,
             'cuisine_id' => $this->cuisine_id,
-            'name' => $this->cuisine->name,
+            'name' => $this->cuisine->name ?? '',
 
         ];
         

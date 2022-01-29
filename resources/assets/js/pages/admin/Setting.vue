@@ -625,6 +625,7 @@
 											                  		class="form-control" 
 											                  		v-model="service.code" 
 											                  		placeholder="Service Code" 
+											                  		disabled="true" 
 											                  		:class="! errors.services[serviceIndex].code ? 'is-valid' : 'is-invalid'"
 											                  		@keyup="validateFormInput('service_code')"
 											                  	>
@@ -690,6 +691,7 @@
 								              		</div>
 								              	</div>
 
+								              	<!-- 
 								              	<div class="form-group row">
 								              		<i 
 								              			aria-hidden="true" 
@@ -706,7 +708,8 @@
 									              		@click="addMoreService()"
 								              		>	
 								              		</i>
-								              	</div>
+								              	</div> 
+								              	-->
 						              		</div>
 						              	</div>
 						            </div>
@@ -1633,6 +1636,7 @@
             	}
 
             },
+            /*
             addMoreService(){
 
             	this.validateFormInput('service_name');
@@ -1667,6 +1671,7 @@
             	}
 
 			},
+			*/
 			addMorePaymentMethod(){
 
             	this.validateFormInput('payment_name');

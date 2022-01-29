@@ -91,7 +91,7 @@ class SettingController extends Controller
             $newService = new ApplicationService();
 
             $newService->name = $service->name;
-            $newService->code = $service->code;
+            // $newService->code = $service->code;
             $newService->status = $service->status ?? false;
 
             $newService->save();

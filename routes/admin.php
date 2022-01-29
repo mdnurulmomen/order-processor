@@ -70,11 +70,11 @@ Route::name('admin.')->group(function () {
 
 
 		    Route::get('/api/restaurant-menu-categories/{perPage?}', 'RestaurantController@showAllRestaurantMenuCategories');
-		    Route::get('/api/restaurant-menu-categories/search/{search}/{perPage}', 'RestaurantController@searchAllRestaurantMenuCategories');
+		    Route::get('/api/search-restaurant-menu-categories/{search}/{perPage}', 'RestaurantController@searchAllRestaurantMenuCategories');
 		    
 
 		    Route::get('/api/restaurant-menu-categories/{restaurant}/{perPage?}', 'RestaurantController@showRestaurantAllMenuCategories');
-		    Route::get('/api/restaurant-menu-categories/search/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMenuCategories');
+		    Route::get('/api/search-restaurant-menu-categories/{restaurant}/{search}/{perPage}', 'RestaurantController@searchRestaurantAllMenuCategories');
 		    Route::post('/restaurant-menu-categories/{perPage?}', 'RestaurantController@createRestaurantMenuCategory');
 		    Route::put('/restaurant-menu-categories/{menuCategory}/{perPage}', 'RestaurantController@updateRestaurantMenuCategory');
 		    Route::delete('/restaurant-menu-categories/{menuCategory}/{perPage}', 'RestaurantController@deleteRestaurantMenuCategory');

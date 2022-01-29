@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Order;
 use App\Models\Rider;
 use App\Models\OrderDeliveryInfo;
-use App\Models\OrderedRestaurant;
+use App\Models\OrderRestaurant;
 use App\Models\RestaurantOrderRecord;
 use App\Models\OrderPickUpProgression;
 use Illuminate\Database\Eloquent\Model;
@@ -42,7 +42,7 @@ class RiderDeliveryRecord extends Model
 
 	public function restaurants()
 	{
-		return $this->hasMany(OrderedRestaurant::class, 'order_id', 'order_id');
+		return $this->hasMany(OrderRestaurant::class, 'order_id', 'order_id');
 	}
 
 	public function restaurantsAccepted()

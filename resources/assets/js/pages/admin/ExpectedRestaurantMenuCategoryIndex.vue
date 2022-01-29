@@ -46,7 +46,7 @@
 	                        	class="btn btn-default btn-sm float-right"
                         	>
 			        			<i class="fas fa-eye"></i>
-			        			Menu-Items
+			        			All Menu-Items
 			      			</button>
 						</div>
 
@@ -249,27 +249,15 @@
 									                <div class="col-sm-8">
 									                  	
 									                  	<multiselect 
-				                                  			v-model="restaurantSingleMenuCategoryData.restaurantObject"
+				                                  			v-model="restaurant"
 				                                  			placeholder="Restaurant Name" 
 					                                  		label="name" 
 					                                  		track-by="id" 
-					                                  		:options="restaurantsToShow" 
-					                                  		:required="true"
-					                                  		:class="!errors.restaurantMenuCategory.restaurant  ? 'is-valid' : 'is-invalid'"
-					                                  		:allow-empty="false"
-					                                  		selectLabel = "Press/Click"
-					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantMenuCategory.restaurant')"
+					                                  		:options="[]" 
+					                                  		:disabled="true"
 				                                  		>
 					                                	</multiselect>
-
-									                	<div class="invalid-feedback">
-												        	{{ 
-												        		errors.restaurantMenuCategory.restaurant 
-												        	}}
-												  		</div>
 									                </div>	
-									              	
 								              	</div>
 
 								              	<div class="form-group row">
@@ -284,25 +272,26 @@
 									                <div class="col-sm-8">
 									                  	
 									                  	<multiselect 
-				                                  			v-model="restaurantSingleMenuCategoryData.menuCategoryObjects"
-				                                  			placeholder="MenuCategory Names" 
+				                                  			v-model="singleRestaurantMenuCategoryData.menuCategoryObjects"
+				                                  			placeholder="Menu Categories" 
 					                                  		label="name" 
 					                                  		track-by="id" 
 					                                  		:options="allMenuCategories" 
 					                                  		:required="true" 
 					                                  		:multiple="!editMode" 
 					                                  		:close-on-select="false"
-					                                  		:class="!errors.restaurantMenuCategory.menuCategory ? 'is-valid' : 'is-invalid'"
+					                                  		:class="!errors.menuCategory ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
-					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantMenuCategory.menuCategory')"
+					                                  		deselect-label="Can't remove single value" 
+					                                  		@input="setMenuCategoryIdCollection()"
+					                                  		@close="validateFormInput('restaurantMenuCategory.menuCategory')" 
 				                                  		>
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
 												        	{{
-												        		errors.restaurantMenuCategory.menuCategory 
+												        		errors.menuCategory 
 												        	}}
 												  		</div>
 									                </div>	
@@ -316,7 +305,7 @@
 								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
-				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_from"
+				                                  			v-model="singleRestaurantMenuCategoryData.serving_from"
 				                                  			placeholder="Category Name" 
 					                                  		:options="restaurantScheduleHours" 
 					                                  		:show-labels="false"  
@@ -325,17 +314,15 @@
 				                                  		>
 					                                	</multiselect>
 									                </div>
-									              	
 								              	</div>
 
-								              	<div class="form-group row">
-									              		
+								              	<div class="form-group row">	
 								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
 								              			Serving To
 								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
-				                                  			v-model="restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_to"
+				                                  			v-model="singleRestaurantMenuCategoryData.serving_to"
 				                                  			placeholder="Category Name" 
 					                                  		:options="restaurantScheduleHours" 
 					                                  		:show-labels="false"  
@@ -344,7 +331,6 @@
 				                                  		>
 					                                	</multiselect>
 									                </div>
-									              	
 								              	</div>
 								            </div>
 								            <!-- /.card-body -->
@@ -492,32 +478,31 @@
 	import axios from 'axios';
 	import Multiselect from 'vue-multiselect';
 
-	var restaurantSingleMenuCategoryData = {
-		
-    	restaurantObject : {
-			
-    	},
+	var singleRestaurantMenuCategoryData = {
 
-    	menuCategoryObjects : [],
+		menu_category_ids : [],	// for create mode
+    	menuCategoryObjects : [], 
 
-    	restaurantMenuCategory : {
-			menu_category_id : [],
-			serving_from : '10.00',
-			serving_to : '22.00',
-			restaurant_id : null,
-			menu_category : {},
-			// menu_items : [],
-    	}
+		serving_from : '10.00',
+		serving_to : '22.00',
+		restaurant_id : null,
+		menu_category : {},
+		menu_items : [],
+    	
     };
 
 	var menuCategoryListData = {
       	query : '',
     	perPage : 10,
-    	loading : false,
-    	submitForm : true,
     	currentTab : 'current',
 
+    	loading : false,
     	editMode : false,
+    	submitForm : true,
+
+    	restaurant : {
+			
+    	},
     	
     	allMenuCategories : [],
     	
@@ -531,10 +516,10 @@
       	},
 
     	errors : {
-    		restaurantMenuCategory : {},
+    		
     	},
 
-        restaurantSingleMenuCategoryData : restaurantSingleMenuCategoryData,
+        singleRestaurantMenuCategoryData : singleRestaurantMenuCategoryData,
 
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     };
@@ -566,35 +551,7 @@
 		created(){
 			this.fetchAllMenuCategories();
 			this.fetchRestaurantAllMenuCategories();
-		},
-
-		computed: {
-		    // a computed getter
-		    /*
-		    restaurantNameFromData: function () {
-		      	// `this` points to the vm instance
-		      	if (this.restaurantMenuCategoriesToShow.length) {
-	      			return this.restaurantMenuCategoriesToShow[0].restaurant.name;
-		      	}
-		      	else if (this.restaurantName) {
-					return this.restaurantName;
-				}
-
-		      	return 'Current Restaurant';
-		    },
-		    */
-
-		    // a computed getter
-		    restaurantsToShow: function () {  
-		      	this.restaurantSingleMenuCategoryData.restaurantObject = {
-					id : this.restaurantId,		
-					name : this.restaurantName,
-				};
-
-				var array = [];
-				array.push(this.restaurantSingleMenuCategoryData.restaurantObject);
-				return array;
-		    },
+			this.setCurrentRestaurant();
 		},
 
 		watch : {
@@ -606,36 +563,6 @@
 					this.pagination.current_page = 1;
 					this.searchData();
 				}
-			},
-			'restaurantSingleMenuCategoryData.menuCategoryObjects' : function(menuCategoryObjects){
-
-				if (Array.isArray(menuCategoryObjects)) {
-
-					let array = [];
-					$.each(menuCategoryObjects, function(key, value) {
-				     	array.push(value.id);
-				   	});
-			     	this.restaurantSingleMenuCategoryData.restaurantMenuCategory.menu_category_id = array;
-
-				}
-				else{
-
-					if (menuCategoryObjects) {
-						this.restaurantSingleMenuCategoryData.restaurantMenuCategory.menu_category_id[0] = menuCategoryObjects.id;
-					}
-					else
-						this.restaurantSingleMenuCategoryData.restaurantMenuCategory.menu_category_id[0] = null;
-				}
-
-			},
-			'restaurantSingleMenuCategoryData.restaurantObject' : function(restaurantObject){
-				
-				if (restaurantObject) {
-					this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id = restaurantObject.id;
-				}
-				else
-					this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id = null;
-
 			},
 		},
 
@@ -672,6 +599,18 @@
 						console.log(error);
 					});
 			},
+			setCurrentRestaurant() {
+
+				this.restaurant = {
+
+					id : this.restaurantId,
+					name : this.restaurantName,
+
+				}
+
+				this.singleRestaurantMenuCategoryData.restaurant_id = this.restaurant.id;
+
+			},
 			changeNumberContents() {
 				this.pagination.current_page = 1;
 				if (this.query === '') {
@@ -692,17 +631,37 @@
 			showRestaurantMenuCategoryCreateModal(){
 				this.editMode = false;
 				this.submitForm = true;
-				this.errors.restaurantMenuCategory = {};
+				this.errors = {};
 				
-				this.restaurantSingleMenuCategoryData.menuCategoryObjects = [];
+				this.singleRestaurantMenuCategoryData.menuCategoryObjects = [];
 				
-				this.restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_from = this.restaurantSingleMenuCategoryData.restaurantMenuCategory.serving_to = null;
+				this.singleRestaurantMenuCategoryData.serving_from = this.singleRestaurantMenuCategoryData.serving_to = null;
 
 				$('#modal-createOrEdit-restaurantMenuCategory').modal('show');
 			},
+			showRestaurantMenuCategoryEditModal(restaurantMenuCategory) {
+
+				this.editMode = true;
+				this.submitForm = true;
+				this.errors = {};
+				
+				this.singleRestaurantMenuCategoryData = restaurantMenuCategory;
+
+				var array = [];
+				
+				if (restaurantMenuCategory.menu_category) {
+					array.push(restaurantMenuCategory.menu_category);
+				}
+
+				this.singleRestaurantMenuCategoryData.menuCategoryObjects = array;
+
+				this.setMenuCategoryIdCollection();
+
+				$("#modal-createOrEdit-restaurantMenuCategory").modal("show");
+			},
     		storeRestaurantMenuCategory(){
 
-    			if (!this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id || this.restaurantSingleMenuCategoryData.restaurantMenuCategory.menu_category_id.length === 0) {
+    			if (! this.singleRestaurantMenuCategoryData.menu_category_ids || this.singleRestaurantMenuCategoryData.menu_category_ids.length === 0) {
 					
 					this.submitForm = false;
 					return;
@@ -711,12 +670,12 @@
 				$('#modal-createOrEdit-restaurantMenuCategory').modal('hide');
 				
 				axios
-					.post('/restaurant-menu-categories/' + this.perPage, this.restaurantSingleMenuCategoryData.restaurantMenuCategory)
+					.post('/restaurant-menu-categories/' + this.perPage, this.singleRestaurantMenuCategoryData)
 					.then(response => {
 
 						if (response.status == 200) {
 							
-							this.restaurantSingleMenuCategoryData.menuCategoryObjects = [];
+							this.singleRestaurantMenuCategoryData.menuCategoryObjects = [];
 
 							this.restaurantAllMenuCategories = response.data;
 
@@ -738,27 +697,9 @@
 				      	}
 					});
 			},
-			showRestaurantMenuCategoryEditModal(restaurantMenuCategory) {
-
-				this.editMode = true;
-				this.submitForm = true;
-				this.errors.restaurantMenuCategory = {};
-				
-				this.restaurantSingleMenuCategoryData.restaurantMenuCategory = restaurantMenuCategory;
-
-				var array = [];
-				
-				if (restaurantMenuCategory.menu_category) {
-					array.push(restaurantMenuCategory.menu_category);
-				}
-
-				this.restaurantSingleMenuCategoryData.menuCategoryObjects = array;
-
-				$("#modal-createOrEdit-restaurantMenuCategory").modal("show");
-			},
 			updateRestaurantMenuCategory(){
 
-				if (!this.restaurantSingleMenuCategoryData.restaurantMenuCategory.restaurant_id || this.restaurantSingleMenuCategoryData.restaurantMenuCategory.menu_category_id.length === 0) {
+				if (! this.singleRestaurantMenuCategoryData.menu_category_ids || this.singleRestaurantMenuCategoryData.menu_category_ids.length === 0) {
 					
 					this.submitForm = false;
 					return;
@@ -767,12 +708,12 @@
 				$('#modal-createOrEdit-restaurantMenuCategory').modal('hide');
 				
 				axios
-					.put('/restaurant-menu-categories/' + this.restaurantSingleMenuCategoryData.restaurantMenuCategory.id + '/' + this.perPage, this.restaurantSingleMenuCategoryData.restaurantMenuCategory)
+					.put('/restaurant-menu-categories/' + this.singleRestaurantMenuCategoryData.id + '/' + this.perPage, this.singleRestaurantMenuCategoryData)
 					.then(response => {
 
 						if (response.status == 200) {
 
-							this.restaurantSingleMenuCategoryData.menuCategoryObjects = [];
+							this.singleRestaurantMenuCategoryData.menuCategoryObjects = [];
 
 							if (this.query === '') {
 								this.restaurantAllMenuCategories = response.data;
@@ -798,7 +739,7 @@
 			},
 			showRestaurantMenuCategoryDeleteModal(restaurantMenuCategory){
 				
-				this.restaurantSingleMenuCategoryData.restaurantMenuCategory = restaurantMenuCategory;
+				this.singleRestaurantMenuCategoryData = restaurantMenuCategory;
 
 				$("#modal-restaurantMenuCategory-delete-confirmation").modal("show");
 
@@ -808,7 +749,7 @@
 				$('#modal-restaurantMenuCategory-delete-confirmation').modal('hide');
 				
 				axios
-					.delete('/restaurant-menu-categories/' + this.restaurantSingleMenuCategoryData.restaurantMenuCategory.id + '/' + this.perPage +
+					.delete('/restaurant-menu-categories/' + this.singleRestaurantMenuCategoryData.id + '/' + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
@@ -840,7 +781,7 @@
 			},
 			showRestaurantMenuCategoryRestoreModal(restaurantMenuCategory){
 				
-				this.restaurantSingleMenuCategoryData.restaurantMenuCategory = restaurantMenuCategory;
+				this.singleRestaurantMenuCategoryData = restaurantMenuCategory;
 
 				$("#modal-restaurantMenuCategory-restore-confirmation").modal("show");
 
@@ -850,7 +791,7 @@
 				$('#modal-restaurantMenuCategory-restore-confirmation').modal('hide');
 				
 				axios
-					.patch('/restaurant-menu-categories/' + this.restaurantSingleMenuCategoryData.restaurantMenuCategory.id + '/' + this.perPage +
+					.patch('/restaurant-menu-categories/' + this.singleRestaurantMenuCategoryData.id + '/' + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
@@ -884,7 +825,7 @@
 				
 				axios
 				.get(
-					"/api/restaurant-menu-categories/search/" + this.restaurantId + "/"  + this.query + "/" + this.perPage +
+					"/api/search-restaurant-menu-categories/" + this.restaurantId + "/"  + this.query + "/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
@@ -906,26 +847,28 @@
 
 				switch(formInputName) {
 
+					/*
 					case 'restaurantMenuCategory.restaurant' :
 
-						if (Object.keys(this.restaurantSingleMenuCategoryData.restaurantObject).length === 0) {
-							this.errors.restaurantMenuCategory.restaurant = 'Restaurant name is required';
+						if (Object.keys(this.singleRestaurantMenuCategoryData.restaurant).length === 0) {
+							this.errors.restaurant = 'Restaurant name is required';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantMenuCategory, 'restaurant');
+							this.$delete(this.errors, 'restaurant');
 						}
 
 						break;
+					*/
 
 					case 'restaurantMenuCategory.menuCategory' :
 
-						if (this.restaurantSingleMenuCategoryData.menuCategoryObjects.length === 0) {
-							this.errors.restaurantMenuCategory.menuCategory = 'Menu Category name is required';
+						if (this.singleRestaurantMenuCategoryData.menuCategoryObjects.length === 0) {
+							this.errors.menuCategory = 'Menu Category name is required';
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantMenuCategory, 'menuCategory');
+							this.$delete(this.errors, 'menuCategory');
 						}
 
 						break;
@@ -953,11 +896,36 @@
 				this.$router.push({
 			 		name: 'restaurant-menu-items', 
 			 		params: { 
-			 			restaurantId : this.restaurantSingleMenuCategoryData.restaurantObject.id, 
-			 			restaurantName : this.restaurantSingleMenuCategoryData.restaurantObject.name, 
+			 			restaurantId : this.restaurantId, 
+			 			restaurantName : this.restaurantName, 
 			 		}, 
 				});
 			},
+			setMenuCategoryIdCollection() {
+
+				if (Array.isArray(this.singleRestaurantMenuCategoryData.menuCategoryObjects) && this.singleRestaurantMenuCategoryData.menuCategoryObjects.length) {
+
+					let array = [];
+
+					$.each(this.singleRestaurantMenuCategoryData.menuCategoryObjects, function(key, value) {
+				     	array.push(value.id);
+				   	});
+
+			     	this.singleRestaurantMenuCategoryData.menu_category_ids = array;
+
+				}
+				/*
+				else{
+
+					if (this.singleRestaurantMenuCategoryData.menuCategoryObjects) {
+						this.singleRestaurantMenuCategoryData.menu_category_ids[0] = this.singleRestaurantMenuCategoryData.menuCategoryObjects.id;
+					}
+					else
+						this.singleRestaurantMenuCategoryData.menu_category_ids = [];
+				}
+				*/
+
+			}
 
 		}
   	}

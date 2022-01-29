@@ -105,7 +105,7 @@
 											<th scope="col">Name</th>
 											<!-- <th scope="col">Email</th> -->
 											<th scope="col">Phone</th>
-											<th scope="col">Website</th>
+											<th scope="col">Sponsored</th>
 											<th scope="col">Status</th>
 											<th scope="col">Action</th>
 										</tr>
@@ -119,9 +119,12 @@
 								    		<td>{{ restaurant.name}}</td>
 								    		<td>{{ restaurant.mobile }}</td>
 								    		<td>
-								    			{{ 
-								    				restaurant.website || 'No Website' 
-								    			}}
+								    			<span :class="[restaurant.sponsored ? 'badge-danger' : 'badge-default', 'right badge']"
+								    			>
+								    				{{ 
+								    					restaurant.sponsored ? 'Sponsored' : 'Not-Sponsored' 
+								    				}}
+								    			</span>	
 								    		</td>
 								    		<td>
 								    			<span :class="[restaurant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"

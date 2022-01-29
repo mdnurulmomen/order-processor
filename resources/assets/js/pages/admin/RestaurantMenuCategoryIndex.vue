@@ -20,7 +20,6 @@
 				v-show="!loading"
 			>
 				<div class="col-sm-12">
-
 					<div class="card">
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">
@@ -35,7 +34,6 @@
 					        	<i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 Menu Categories
 					      	</button>
-				      	 	
 						</div>
 
 						<div class="card-body">
@@ -241,17 +239,18 @@
 					                                  		label="name" 
 					                                  		track-by="id" 
 					                                  		:options="allRestaurants" 
-					                                  		:required="true"
-					                                  		:class="!errors.restaurantMenuCategory.restaurant  ? 'is-valid' : 'is-invalid'"
+					                                  		:required="true" 
+					                                  		class="form-control p-0"
+					                                  		:class="!errors.restaurant ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
 					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantMenuCategory.restaurant')"
+					                                  		@close="validateFormInput('restaurant')"
 				                                  		>
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
-												        	{{ errors.restaurantMenuCategory.restaurant }}
+												        	{{ errors.restaurant }}
 												  		</div>
 									                </div>	
 									              	
@@ -263,46 +262,48 @@
 								              			for="inputMenuName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Menu-Category Name 
+								              			Menu Category Names 
 								              		</label>
 
 									                <div class="col-sm-8">
 									                  	
 									                  	<multiselect 
 				                                  			v-model="singleRestaurantMenuCategoryData.menuCategories"
-				                                  			placeholder="MenuCategory Names" 
+				                                  			placeholder="Menu Categories" 
 					                                  		label="name" 
 					                                  		track-by="id" 
 					                                  		:options="allMenuCategories" 
 					                                  		:required="true" 
 					                                  		:multiple="true" 
 					                                  		:close-on-select="false" 
-					                                  		:class="!errors.restaurantMenuCategory.menuCategory ? 'is-valid' : 'is-invalid'"
+					                                  		class="form-control p-0"
+					                                  		:class="!errors.menuCategory ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
 					                                  		deselect-label="Can't remove single value"
-					                                  		@close="validateFormInput('restaurantMenuCategory.menuCategory')"
+					                                  		@close="validateFormInput('menuCategory')"
 				                                  		>
 					                                	</multiselect>
 
 									                	<div class="invalid-feedback">
 												        	{{
-												        		errors.restaurantMenuCategory.menuCategory
+												        		errors.menuCategory
 												        	}}
 												  		</div>
 									                </div>	
 									              	
 								              	</div>
 
-								              	<div class="form-group row">
-									              		
+								              	<div class="form-group row">	
 								              		<label for="inputMenuName3" class="col-sm-4 col-form-label text-right">
 								              			Serving From
 								              		</label>
+
 									                <div class="col-sm-8">
 									                	<multiselect 
-				                                  			v-model="singleRestaurantMenuCategoryData.restaurantMenuCategory.serving_from"
+				                                  			v-model="singleRestaurantMenuCategoryData.serving_from"
 				                                  			placeholder="Start Time" 
+				                                  			class="form-control p-0 is-valid"
 					                                  		:options="restaurantScheduleHours" 
 					                                  		selectLabel = "Click to select"
 					                                  		deselect-label="Click to remove"
@@ -319,8 +320,9 @@
 								              		</label>
 									                <div class="col-sm-8">
 									                	<multiselect 
-				                                  			v-model="singleRestaurantMenuCategoryData.restaurantMenuCategory.serving_to"
+				                                  			v-model="singleRestaurantMenuCategoryData.serving_to"
 				                                  			placeholder="End Time" 
+				                                  			class="form-control p-0 is-valid"
 					                                  		:options="restaurantScheduleHours" 
 					                                  		selectLabel = "Click to select"
 					                                  		deselect-label="Click to remove"
@@ -338,7 +340,7 @@
 							<div class="modal-footer flex-column">
 								<div class="col-sm-12 text-right">
 									<span 
-										class="text-white small" 
+										class="text-danger small" 
 										v-show="!submitForm"
 									>
 								  		Please input all required fields
@@ -382,28 +384,28 @@
 
 	var singleRestaurantMenuCategoryData = {
 		
-    	restaurant : {
+		restaurant : {
 			
     	},
 
     	menuCategories : [],
+		menu_category_ids : [],
+    	
+		serving_from : '10.00',
+		serving_to : '22.00',
+		restaurant_id : null,
 
-    	restaurantMenuCategory : {
-			menu_category_ids : [],
-			serving_from : '10.00',
-			serving_to : '22.00',
-			restaurant_id : null,
-			from_menu_category_index : true,
-    	}
+		from_menu_category_index : true,
+    	
     };
 
 	var menuCategoryListData = {
       	query : '',
     	perPage : 10,
+    	
     	loading : false,
-    	submitForm : true,
-
     	editMode : false,
+    	submitForm : true,
     	
     	allMenuCategories : [],
     	allRestaurants : [],
@@ -418,7 +420,7 @@
       	},
 
     	errors : {
-    		restaurantMenuCategory : {},
+    		
     	},
 
         singleRestaurantMenuCategoryData : singleRestaurantMenuCategoryData,
@@ -455,18 +457,21 @@
 			'singleRestaurantMenuCategoryData.menuCategories' : function(menuCategoryObjects){
 
 				let array = [];
+
 				$.each(menuCategoryObjects, function(key, value) {
 			     	array.push(value.id);
 			   	});
-		     	this.singleRestaurantMenuCategoryData.restaurantMenuCategory.menu_category_ids = array;
+
+		     	this.singleRestaurantMenuCategoryData.menu_category_ids = array;
+		     	
 			},
 			'singleRestaurantMenuCategoryData.restaurant' : function(restaurantObject){
 				
 				if (restaurantObject) {
-					this.singleRestaurantMenuCategoryData.restaurantMenuCategory.restaurant_id = restaurantObject.id;
+					this.singleRestaurantMenuCategoryData.restaurant_id = restaurantObject.id;
 				}
 				else
-					this.singleRestaurantMenuCategoryData.restaurantMenuCategory.restaurant_id = null;
+					this.singleRestaurantMenuCategoryData.restaurant_id = null;
 
 			},
 		},
@@ -545,24 +550,26 @@
 			 		}, 
 				});
 			},
-			
 			showRestaurantMenuCategoryCreateModal(){
 				this.editMode = false;
 				this.submitForm = true;
-				this.errors.restaurantMenuCategory = {};
+				this.errors = {};
 
 				// this.expectedRestaurants = this.allRestaurants;
 
-				this.singleRestaurantMenuCategoryData.restaurant = {};
-				this.singleRestaurantMenuCategoryData.menuCategories = [];
-				this.singleRestaurantMenuCategoryData.restaurantMenuCategory = {};
-				this.singleRestaurantMenuCategoryData.restaurantMenuCategory.from_menu_category_index = true;
+				this.singleRestaurantMenuCategoryData = {
+
+					restaurant : {},
+					menuCategories : [],
+					from_menu_category_index : true
+
+				};
 
 				$('#modal-createOrEdit-restaurantMenuCategory').modal('show');
 			},
     		storeRestaurantMenuCategory(){
 
-    			if (!this.singleRestaurantMenuCategoryData.restaurantMenuCategory.restaurant_id || this.singleRestaurantMenuCategoryData.restaurantMenuCategory.menu_category_ids.length === 0) {
+    			if (!this.singleRestaurantMenuCategoryData.restaurant_id || this.singleRestaurantMenuCategoryData.menu_category_ids.length === 0) {
 					
 					this.submitForm = false;
 					return;
@@ -571,14 +578,18 @@
 				$('#modal-createOrEdit-restaurantMenuCategory').modal('hide');
 				
 				axios
-					.post('/restaurant-menu-categories/'+ this.perPage, this.singleRestaurantMenuCategoryData.restaurantMenuCategory)
+					.post('/restaurant-menu-categories/'+ this.perPage, this.singleRestaurantMenuCategoryData)
 					.then(response => {
 
 						if (response.status == 200) {
 							
-							this.singleRestaurantMenuCategoryData.restaurant = {};
-							this.singleRestaurantMenuCategoryData.menuCategories = [];
-							this.singleRestaurantMenuCategoryData.restaurantMenuCategory = {};
+							this.singleRestaurantMenuCategoryData = {
+
+								restaurant : {},
+								menuCategories : [],
+								from_menu_category_index : true
+
+							};
 
 							this.query = '';
 							this.allRestaurantMenuCategories = response.data.data;
@@ -602,7 +613,7 @@
 
 				this.editMode = true;
 				this.submitForm = true;
-				this.errors.restaurantMenuCategory = {};
+				this.errors = {};
 
 				this.expectedRestaurants = this.allRestaurants.filter(
 					object => {
@@ -666,7 +677,7 @@
 				
 				axios
 				.get(
-					"/api/restaurant-menu-categories/search/"+ this.query +"/" + this.perPage +
+					"/api/search-restaurant-menu-categories/"+ this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
@@ -684,26 +695,28 @@
 
 				switch(formInputName) {
 
-					case 'restaurantMenuCategory.restaurant' :
+					case 'restaurant' :
 
 						if (Object.keys(this.singleRestaurantMenuCategoryData.restaurant).length === 0) {
-							this.errors.restaurantMenuCategory.restaurant = 'Restaurant name is required';
+							// this.errors.restaurant = 'Restaurant name is required';
+							this.$set(this.errors, 'restaurant', 'Restaurant name is required');
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantMenuCategory, 'restaurant');
+							this.$delete(this.errors, 'restaurant');
 						}
 
 						break;
 
-					case 'restaurantMenuCategory.menuCategory' :
+					case 'menuCategory' :
 
 						if (this.singleRestaurantMenuCategoryData.menuCategories.length === 0) {
-							this.errors.restaurantMenuCategory.menuCategory = 'Menu Category name is required';
+							// this.errors.menuCategory = 'Menu Category name is required';
+							this.$set(this.errors, 'menuCategory', 'Menu Category name is required')
 						}
 						else {
 							this.submitForm = true;
-							this.$delete(this.errors.restaurantMenuCategory, 'menuCategory');
+							this.$delete(this.errors, 'menuCategory');
 						}
 
 						break;
