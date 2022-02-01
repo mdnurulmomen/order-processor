@@ -1,10 +1,7 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -23,7 +20,6 @@
 				v-show="!loading"
 			>
 				<div class="col-sm-12">
-
 					<div class="card">
 						<div class="card-header">
 							<div class="row">
@@ -33,7 +29,6 @@
 									</h2>
 								</div>
 							</div>
-
 						</div>
 
 						<div class="card-body">
@@ -46,18 +41,22 @@
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
+
 									<tbody>
 									  	<tr v-show="deliveriesToShow.length"
 									    	v-for="(riderDeliveryRecord, index) in deliveriesToShow"
 									    	:key="riderDeliveryRecord.id" 
-									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' : returnedOrder(riderDeliveryRecord) ? 'bg-dark' : deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-warning' : timeOutDeliveryOrder(riderDeliveryRecord) ? 'bg-secondary' : 'bg-danger']" 
+									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' : returnedOrder(riderDeliveryRecord) ? 'bg-primary' : deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-info' : timeOutDeliveryOrder(riderDeliveryRecord) ? 'bg-secondary' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
+
 								    		<td>{{ riderDeliveryRecord.order_id }}</td>
+								    		
 								    		<td>
 								      			<button 
 									      			type="button" 
-									      			class="btn btn-info btn-sm"
+									      			class="btn btn-primary btn-sm" 
+									      			v-show="riderDeliveryRecord.delivery_order_acceptance==1"
 									      			@click="showOrderDetailModal(riderDeliveryRecord)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
@@ -68,7 +67,7 @@
 								      			<!-- return button -->
 								      			<button 
 									      			type="button" 
-									      			class="btn btn-danger btn-sm" 
+									      			class="btn btn-info btn-sm" 
 									      			v-if="! cancelledOrder(riderDeliveryRecord) && allRestaurantPickedUp(riderDeliveryRecord) && ! returnedOrder(riderDeliveryRecord) && ! deliveredOrder(riderDeliveryRecord)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="orderReturnConfirmation(riderDeliveryRecord)" 
@@ -169,14 +168,17 @@
 			<div class="modal fade" id="modal-show-order">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
-						<div class="modal-header bg-info">
+						<div class="modal-header">
 						  	<h4 class="modal-title">
 						  		Order Details
 						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    <span aria-hidden="true">&times;</span></button>
 						</div>
-						<div class="modal-body">
+						<div 
+							class="modal-body"
+							v-if="singleOrderData.order"
+						>
 							<ul class="nav nav-tabs justify-content-center mb-4" role="tablist">
 								<li class="nav-item">
 									<a class="nav-link active" data-toggle="tab" href="#show-order-details">
@@ -202,34 +204,34 @@
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Order id
+							              			Order id:
 							              		</label>
 								                <div class="col-sm-6" >
 								                  	{{ singleOrderData.order.id }}
 								                </div>
 								            </div>
-								            <div class="form-group row" v-if="singleOrderData.order.asap || singleOrderData.order.scheduled">		
+								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			ASAP/Scheduled
+							              			ASAP/Scheduled:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{
 								                  		singleOrderData.order.asap ?
-								                  		'ASAP' : singleOrderData.order.scheduled.order_schedule
+								                  		'ASAP' : singleOrderData.order.scheduled ? singleOrderData.order.scheduled.order_schedule : 'NA'
 								                  	}}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Cutlery
+							              			Cutlery:
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.cutlery_added ? 'Added' : 'None' }}
+								                  	{{ singleOrderData.order.cutlery ? 'Added' : 'None' }}
 								                </div>	
 								            </div> 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Price
+							              			Price:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.order_price }}
@@ -237,7 +239,7 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Vat
+							              			Vat:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.vat }}
@@ -245,15 +247,15 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Discount
+							              			Discount:
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.discount }}
+								                  	{{ singleOrderData.order.discount }} %
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Payable Price
+							              			Payable Price:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.net_payable }}
@@ -261,7 +263,7 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Payment
+							              			Payment:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.payment_method }}
@@ -269,7 +271,7 @@
 								            </div>
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Order Created
+							              			Order Created:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.created_at }}
@@ -286,14 +288,14 @@
 							              			Order Items:
 							              		</label>
 								                <div class="col-sm-6">
-								                	<ul v-show="singleOrderData.restaurants && singleOrderData.restaurants.length">
-														<li v-for="(orderRestaurant, index) in singleOrderData.restaurants" 
+								                	<ul v-show="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length && singleOrderData.delivery_order_acceptance==1">
+														<li v-for="(orderRestaurant, index) in singleOrderData.order.restaurants" 
 															:key="orderRestaurant.id"
 														>
-															{{ orderRestaurant.name | capitalize }}
+															{{ orderRestaurant.restaurant ? orderRestaurant.restaurant.name : 'NA' | capitalize }}
 
-															<ol v-show="orderRestaurant.menu_items.length">
-																<li v-for="(item, index) in orderRestaurant.menu_items" 
+															<ol v-show="orderRestaurant.items.length">
+																<li v-for="(item, index) in orderRestaurant.items" 
 																	:key="item.id"
 																>	
 																	{{ item.restaurant_menu_item.name | capitalize }} 
@@ -301,41 +303,40 @@
 																	<span class="d-block"
 																		v-if="item.restaurant_menu_item.has_variation" 
 																	>
-																		(Selected Variation : {{ item.item_variation.restaurant_menu_item_variation | capitalize }} )
+																		(Selected Variation : {{ item.variation.restaurant_menu_item_variation.variation.name | capitalize }} )
 																	</span>
 
 																	<p class="d-block">
-																		<span class="font-weight-bold">- Quantity : </span>
+																		<span class="font-weight-bold">- Quantity: </span>
 																		{{ item.quantity }}
 																	</p>
 
 																	<span 
 																		class="d-block font-weight-bold" 
-																		v-if="item.item_addons.length"
+																		v-if="item.addons.length"
 																	>
-																		Addons
+																		Addons:
 																	</span>
 
-																	<ul v-if="item.restaurant_menu_item.has_addon && item.item_addons.length">
+																	<ul v-if="item.restaurant_menu_item.has_addon && item.addons.length">
 
-																		<li v-for="(additionalOrderedAddon, index) in item.item_addons">
-																			{{ additionalOrderedAddon.restaurant_menu_item_addon | capitalize }} ({{ additionalOrderedAddon.quantity }})
+																		<li v-for="(additionalOrderedAddon, index) in item.addons">
+																			{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name | capitalize }} ({{ additionalOrderedAddon.quantity }})
 																		</li>
 																	</ul>
 
 																	<p class="d-block" v-if="item.customization">
-																		<span class="font-weight-bold">- Customization : </span>
+																		<span class="font-weight-bold">- Customization: </span>
 																		{{ item.customization | capitalize }}
 																	</p>
 																</li>
 															</ol>
 
 															<p class="text-danger" 
-																v-show="! orderRestaurant.menu_items.length"
+																v-show="! orderRestaurant.items.length"
 															>
 																No Items Found Yet
 															</p>
-
 														</li>
 													</ul>
 								                </div>	
@@ -349,12 +350,12 @@
 					            			<div class="form-group row">		
 								                		
 							              		<label class="col-sm-6 text-right">
-							              			Ordered By
+							              			Orderer:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ 
 								                  		singleOrderData.order.orderer ? 
-								                  		singleOrderData.order.orderer.user_name : 'NA'  
+								                  		singleOrderData.order.orderer.user_name : 'NA' | capitalize  
 													}}
 													({{
 														singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
@@ -468,6 +469,16 @@
 
 		},
 
+
+		filters: {
+			capitalize: function (value) {
+				if (!value) return ''
+					value = value.toString()
+				
+				return value.charAt(0).toUpperCase() + value.slice(1)
+			}
+		},
+
 		methods : {
 			fetchAllDeliveryOrders(){
 				this.loading = true;
@@ -498,7 +509,7 @@
     		},
     		showOrderDetailModal(riderDeliveryRecord) {
 
-				this.singleOrderData.order = riderDeliveryRecord;
+				this.singleOrderData = riderDeliveryRecord;
 
 				// if order request is accepted
 				if (this.acceptedDeliveryOrder(riderDeliveryRecord)) {
@@ -619,7 +630,7 @@
 			    // console.log(Date.now() - new Date(riderDeliveryRecord.created_at) > 1000 * 60);
 
 			    // one (1) minute ago
-			    return Date.now() - new Date(riderDeliveryRecord.created_at) > 1000 * 60 ; 	/* ms */
+			    return Date.now() - new Date(riderDeliveryRecord.created_at) > 1000 * 30 ; 	/* ms */
 
 			},
 			riderCancelledSameOrder(riderDeliveryRecord){

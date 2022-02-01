@@ -38,6 +38,7 @@ class OrderDetailResource extends JsonResource
             'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->orderReadyConfirmations),
             'rider_food_pick_confirmations' => OrderPickUpProgressionResource::collection($this->riderFoodPickConfirmations),
             'rider_delivery_confirmation' => $this->riderDeliveryConfirmation ? new RiderDeliveryResource($this->riderDeliveryConfirmation) : null,
+            'rider_delivery_return' => $this->riderDeliveryReturn ? new RiderReturnResource($this->riderDeliveryReturn) : null,
             'order_serve_confirmation' => $this->when($this->orderServeConfirmation, $this->orderServeConfirmation),
             'customer_order_cancelation' => $this->when($this->customer_confirmation==0, $this->customerOrderCancelation),
             'restaurant_order_cancelations' => $this->when($this->restaurantOrderCancelations->count(), RestaurantCancelationResource::collection($this->restaurantOrderCancelations)),

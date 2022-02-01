@@ -93,7 +93,7 @@ Route::name('admin.')->group(function () {
 
 
 		    Route::get('/api/waiter-orders/{restaurant}/{perPage?}', 'OrderController@showWaiterAllOrders');
-		    Route::post('/order-serve-confirmations/{order}/{perPage?}', 'OrderController@confirmOrderPresentation');
+		    Route::post('/order-serve-confirmations/{order}/{perPage?}', 'OrderController@confirmWaiterOrder');
 
 
 		    Route::get('/api/cancelation-reasons/{perPage?}', 'CancelationController@showAllReasons');

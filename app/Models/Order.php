@@ -91,6 +91,11 @@ class Order extends Model
          return $this->hasOne(OrderDeliveryProgression::class, 'order_id', 'id');
       }
 
+      public function riderDeliveryReturn()
+      {
+         return $this->hasOne(RiderDeliveryReturn::class, 'order_id', 'id');
+      }
+
       public function orderServeConfirmation()
       {
          return $this->hasOne(OrderServeProgression::class, 'order_id', 'id');

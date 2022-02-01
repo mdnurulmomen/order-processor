@@ -533,7 +533,7 @@
 			Echo.private(`notifyRestaurant.` + this.restaurant_id)
 			.listen('.updation-for-restaurant', (orderedRestaurant) => {
 
-			    console.log(orderedRestaurant);
+			    // console.log(orderedRestaurant);
 
 			    // due to pagination, checking if this broadcasted one already exists 
 			    const orderExist = (currentOrder) => currentOrder.order_id==orderedRestaurant.order_id;
