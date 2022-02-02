@@ -138,21 +138,17 @@
 								    				v-if="returnedOrder(order)" 
 								    				class="badge badge-primary d-block"
 								    			>	
-								    				{{ 
-								    					returnedOrder(order)
-								    				}}
+								    				{{ returnedOrder(order) }}
 								    			</span>
 
 												<!-- 
 													no option should be shown without picking/cancelling every restaurant orders 
 												-->
 								    			<span 
-								    				v-else-if="deliveredOrServedOrder(order)" 
+								    				v-if="deliveredOrServedOrder(order)" 
 								    				class="badge badge-success d-block"
 								    			>	
-								    				{{ 
-								    					deliveredOrServedOrder(order)
-								    				}}
+								    				{{ deliveredOrServedOrder(order)}}
 								    			</span>
 
 								    			<!-- 
@@ -160,16 +156,16 @@
 								    				// for each restaurants in order
 								    				// after call confirmation
 								    			-->
-								    			<span v-else>	
+							    				<span 
+							    					v-if="! initialOrder(order)"
+							    				>
 								    				<span
 								    					v-for="restaurantOrderRecord in order.restaurant_acceptances" 
-								    					:class="[orderProgressionClass(order, restaurantOrderRecord.restaurant_id), 'badge d-block']"
+								    					:class="[secondaryOrderClass(order, restaurantOrderRecord.restaurant_id), 'badge d-block']"
 								    				>
-									    				{{ 
-									    					secondaryOrder(order, restaurantOrderRecord.restaurant_id)
-									    				}}
+									    				{{ secondaryOrder(order, restaurantOrderRecord.restaurant_id) }}
 								    				</span>
-								    			</span>
+							    				</span>	
 
 							    				<!-- 
 							    					new order before call confirmation
@@ -266,10 +262,10 @@
 			    				<div 
 									class="progress-bar progress-bar-striped progress-bar-animated" 
 									style="width:25%" 
-									v-if="initialOrderStatus(singleOrderData.order)" 
+									v-if="initialOrder(singleOrderData.order)" 
 				    				:class="[initialOrderClass(singleOrderData.order)]"
 								>
-									{{ initialOrderStatus(singleOrderData.order) }}
+									{{ initialOrder(singleOrderData.order) }}
 								</div>
 								
 				    			<!-- 
@@ -282,7 +278,7 @@
 				    				class="progress-bar progress-bar-striped progress-bar-animated" 
 				    				v-if="singleOrderData.order.restaurant_acceptances.length" 
 				    				v-for="restaurantOrderRecord in singleOrderData.order.restaurant_acceptances" 
-				    				:class="[orderProgressionClass(singleOrderData.order, restaurantOrderRecord.restaurant_id)]" 
+				    				:class="[secondaryOrderClass(singleOrderData.order, restaurantOrderRecord.restaurant_id)]" 
 									:style="{ width: (60/singleOrderData.order.restaurant_acceptances.length) + '%' }"
 								>
 									{{ 
@@ -298,9 +294,7 @@
 									style="width:15%"
 									v-if="deliveredOrServedOrder(singleOrderData.order)" 
 								>
-									{{ 
-				    					deliveredOrServedOrder(singleOrderData.order)
-				    				}}
+									{{ deliveredOrServedOrder(singleOrderData.order) }}
 								</div>
 
 								<div 
@@ -308,9 +302,7 @@
 									style="width:15%"
 									v-else-if="returnedOrder(singleOrderData.order)" 
 								>
-									{{ 
-				    					returnedOrder(singleOrderData.order)
-				    				}}
+									{{ returnedOrder(singleOrderData.order) }}
 								</div>
 							</div>
 
@@ -1404,19 +1396,21 @@
 
 			},
 			// secondary order class definer
-			orderProgressionClass(order, restaurant) {
+			secondaryOrderClass(order, restaurant) {
 
 				// console.log('Secondary value is : ' + this.secondaryOrder(order, restaurant));
 
-				if (this.secondaryOrder(order, restaurant).includes("cancelled")) {
+				let secondaryOrder = this.secondaryOrder(order, restaurant);
+
+				if (secondaryOrder.includes("cancelled")) {
 					return 'badge-secondary bg-secondary';
-				}else if (this.secondaryOrder(order, restaurant).includes("picked-up")) {
+				}else if (secondaryOrder.includes("Picked-up")) {
 					return 'badge-warning bg-warning';
-				}else if (this.secondaryOrder(order, restaurant).includes("ready")) {
+				}else if (secondaryOrder.includes("ready")) {
 					return 'badge-success bg-success';
-				}else if (this.secondaryOrder(order, restaurant).includes("accepted")) {
+				}else if (secondaryOrder.includes("accepted")) {
 					return 'badge-info bg-info';
-				}else if (this.secondaryOrder(order, restaurant).includes("ringing")) {
+				}else if (secondaryOrder.includes("ringing")) {
 					return 'badge-danger bg-danger';
 				}
 
@@ -1459,8 +1453,7 @@
 				else 
 					return false;
 
-		/*
-
+			/*
 				// this restaurant cancelled the order ?
 				if(order.restaurant_order_cancelations.length >= index && order.restaurant_order_cancelations[index].hasOwnProperty('reason_id')) {
 					return order.restaurant_order_cancelations[index].restaurant_name + ' cancelled order';
@@ -1484,8 +1477,7 @@
 						return false;
 						// 	return order.restaurant_acceptances[index].restaurant_name +' has cancelled';
 				}
-
-		*/
+			*/
 
 			},
 			// initial class for every order
@@ -1523,21 +1515,14 @@
 				else if(this.cancelledOrder(order)) {
 					return 'Cancelled By Customer';
 				}
-				else
-					return false;
-
-			},
-			// initial status for every order
-			initialOrderStatus(order) {
-
-				if (this.initialOrder(order)) {
-					return this.initialOrder(order);
-				}
+				/*
 				else if (this.orderConfirmed(order)) {
 					return 'Confirmed';
 				}
-				return false;
-				
+				*/
+				else
+					return false;
+
 			},
 			orderCallConfirmationClass(order) {
 				
@@ -1671,7 +1656,7 @@
 			riderPickedRestaurant(riderPickUpConfirmations, restaurant) {
 				
 				return riderPickUpConfirmations.find(
-					pickedUp => (pickedUp.restaurant_id === restaurant && pickedUp.rider_food_pick_confirmation==1)
+					pickedUp => (pickedUp.restaurant_id == restaurant && pickedUp.rider_food_pick_confirmation==1)
 				);
 
 			},

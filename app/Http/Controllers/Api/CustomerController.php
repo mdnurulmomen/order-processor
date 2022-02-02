@@ -110,6 +110,48 @@ class CustomerController extends Controller
         }
     }
 
+    public function getUserActiveOrders($user, $per_page = false)
+    {
+        if ($per_page) {
+            
+            return new UserOrderCollection(
+                Order::with(['asap', 'schedule', 'cutlery', 'delivery'])
+                ->whereHasMorph('orderer', [ Customer::class ], 
+                    function($query) use($user) {
+                        $query->where('id', $user);
+                    }
+                )
+                ->where(function ($query) {
+                    $query->where('order_type', 'home-delivery')
+                    ->orWhere('order_type', 'serve-on-table')
+                    ->orWhere('order_type', 'take-away');
+                })
+                ->where('in_progress', 1)
+                ->paginate($per_page)
+            );
+
+        }
+        else {
+
+            return UserOrderResource::collection(
+                Order::with(['asap', 'schedule', 'cutlery', 'delivery'])
+                ->whereHasMorph('orderer', [ Customer::class ], 
+                    function($query) use($user) {
+                        $query->where('id', $user);
+                    }
+                )
+                ->where(function ($query) {
+                    $query->where('order_type', 'home-delivery')
+                    ->orWhere('order_type', 'serve-on-table')
+                    ->orWhere('order_type', 'take-away');
+                })
+                ->where('in_progress', 1)
+                ->get()
+            );
+
+        }
+    }
+
     public function getUserReservations($user, $per_page = false)
     {
         $reservations = Reservation::with('order')

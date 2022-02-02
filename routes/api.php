@@ -52,6 +52,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 				Route::get('/orders/{order}', 'OrderController@getOrderDetails')->name('orders.show');
 				Route::get('/user-orders/{user}/{per_page?}', 'CustomerController@getUserOrders')->name('user-orders.index');
+				Route::get('/user-active-orders/{user}/{per_page?}', 'CustomerController@getUserActiveOrders')->name('user-active-orders.index');
 				Route::get('/user-reservations/{user}/{per_page?}', 'CustomerController@getUserReservations')->name('user-reservations.index');
 				
 				Route::get('/order-restaurants/{order}', 'CustomerController@showOrderRestaurants')->name('order-restaurants.show');
