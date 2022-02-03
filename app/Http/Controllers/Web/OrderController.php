@@ -27,7 +27,7 @@ class OrderController extends Controller
 	// Admin
 	public function showOrderDetail($order)
 	{
-		return new OrderDetailResource(Order::with(['orderer', 'asap', 'schedule', 'cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'riderDeliveryReturn.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order));
+		return new OrderDetailResource(Order::with(['orderer', 'asap', 'schedule', 'cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderFoodPickConfirmations.rider', 'riderDeliveryConfirmation.rider', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant', 'payment', 'delivery.customerAddress'])->find($order));
 	}
 
 	public function showAllOrders($perPage = false)
@@ -36,17 +36,17 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => new OrderCollection(Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage)),
+               'all' => new OrderCollection(Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage)),
 
-               'unconfirmed' => new OrderCollection(Order::where('customer_confirmation', -1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage)),
+               'unconfirmed' => new OrderCollection(Order::where('customer_confirmation', -1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage)),
 
-               'active' => new OrderCollection(Order::where('customer_confirmation', 1)->where('in_progress', 1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage)),
+               'active' => new OrderCollection(Order::where('customer_confirmation', 1)->where('in_progress', 1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->latest()->paginate($perPage)),
 
-               'prepaid' => new OrderCollection(Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->has('payment')->latest()->paginate($perPage)),
+               'prepaid' => new OrderCollection(Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->has('payment')->latest()->paginate($perPage)),
                			
-               'postpaid' => new OrderCollection(Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->doesntHave('payment')->latest()->paginate($perPage)),
+               'postpaid' => new OrderCollection(Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])->doesntHave('payment')->latest()->paginate($perPage)),
 
-               'deliveredOrServed' => new OrderCollection(Order::where('complete_order', 1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
+               'deliveredOrServed' => new OrderCollection(Order::where('complete_order', 1)->with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
 				/*
 				->whereHas('riderDeliveryConfirmation', function($q){
    					$q->where('rider_delivery_confirmation', 1);
@@ -57,7 +57,7 @@ class OrderController extends Controller
 				*/
 				->latest()->paginate($perPage)),				
 
-               'cancelled' => new OrderCollection(Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
+               'cancelled' => new OrderCollection(Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
 				->where('complete_order', 0)
 				/*
 				->orHas('restaurantOrderCancelations')
@@ -109,7 +109,7 @@ class OrderController extends Controller
 	public function cancelNewOrder(Request $request, $order, $perPage)
 	{
 		$request->validate([
-	 		'canceller' => 'required|string|in:customer,rider,restaurants',
+	 		'canceller' => 'required|string|in:customer,rider,restaurants,admin',
 	 		'reason_id' => 'required|numeric|exists:cancelation_reasons,id',
 	 		'restaurant_id' => 'required_if:canceller,restaurants',
 	 		// 'rider_id' => 'required_if:canceller,rider',
@@ -117,10 +117,14 @@ class OrderController extends Controller
 
 		$orderToCancel = Order::findOrFail($order);	 	
 
-		// already customer or same restaurant cancelled this order
-		if ($orderToCancel->customerOrderCancelation()->exists() || $orderToCancel->restaurantOrderCancelations()->where('restaurant_id', $request->restaurant_id)->exists()) {
+		// already customer or same restaurant cancelled this order or order has been picked or order is stopped
+		if ($orderToCancel->customerOrderCancelation()->exists() || $orderToCancel->restaurantOrderCancelations()->where('restaurant_id', $request->restaurant_id)->exists() || $orderToCancel->riderFoodPickConfirmations()->where('rider_food_pick_confirmation', 1)->exists() || $orderToCancel->in_progress ===0 && $orderToCancel->complete_order ===1) {
 			
-			return $this->showAllOrders($perPage);
+			return response()->json(
+	 			[
+	 				'errors' => ['invalidCancellation' => ['Canceller or order status is invalid']]
+	 			], 422
+	 		);
 
 		}
 
@@ -136,7 +140,7 @@ class OrderController extends Controller
 	 	}
 
 	 	// if the restaurant actually belongs to ordered-restaurants and accepted the food request
-	 	else if ($request->canceller==='restaurants' && $orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->exists() /* && $orderToCancel->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->exists()*/) {
+	 	else if ($request->canceller==='restaurants' && $orderToCancel->customer_confirmation===1 && $orderToCancel->restaurants()->where('restaurant_id', $request->restaurant_id)->exists() /* && $orderToCancel->restaurantAcceptances()->where('restaurant_id', $request->restaurant_id)->exists()*/) {
 
 		 	// cancelling just arrived order request
 			$this->cancelRestaurantOrderRequest($orderToCancel, $request->restaurant_id);
@@ -167,7 +171,7 @@ class OrderController extends Controller
 	 	}
 
 	 	// if any rider is actually assigned and the food has't been picked up yet 
-	 	else if ($request->canceller==='rider' && $orderToCancel->riderAssignment()->exists() && ! $orderToCancel->riderFoodPickConfirmations()->where('rider_food_pick_confirmation', 1)->exists()) {
+	 	else if ($request->canceller==='rider' && $orderToCancel->customer_confirmation===1 && $orderToCancel->riderAssignment()->where('rider_id', $request->rider_id)->exists()) {
 		
 		 	// retreiving the expected RiderDeliveryOrder
 		 	$riderDeliveryOrderToCancel = $orderToCancel->riderAssignment;
@@ -192,12 +196,48 @@ class OrderController extends Controller
 
 	 	}
 
+	 	// stop order at any phase until order delivered / served
+	 	else if ($request->canceller=='admin' && $orderToCancel->customer_confirmation===1) {
+	 		
+	 		$this->disableOrderStatus($orderToCancel);
+
+	 		// $this->notifyCustomer($orderToCancel);
+
+	 		$this->notifyOrderRestaurants($orderToCancel);
+
+	 		// $this->notifyRestaurantWaiters($orderAccepted, $request->restaurant_id);
+
+	 		// inform rider on restaurant-cancelation if any rider has been assigned
+			if ($orderToCancel->riderAssignment()->exists()) {
+				
+				$this->notifyRider($orderToCancel->riderAssignment);
+
+			}
+
+			$currentUser = \Auth::guard('admin')->user();
+
+			$orderToCancel->update([
+				'canceller_type' => get_class($currentUser),
+				'canceller_id' => $currentUser->id,
+			]);
+
+	 	}
+	 	else {
+
+	 		return response()->json(
+	 			[
+	 				'errors' => ['invalidCancellation' => ['Canceller or order status is invalid']]
+	 			], 422
+	 		);
+
+	 	}
+
 	 	return $this->showAllOrders($perPage);
 	}
 
   	public function searchAllOrders($search, $perPage)
 	{	
-		$query = Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
+		$query = Order::with(['restaurantAcceptances.restaurant', 'riderAssignment', 'orderReadyConfirmations.restaurant', 'riderFoodPickConfirmations.restaurant', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'restaurantOrderCancelations.restaurant'])
 						->where('id', 'like', "%$search%")
 						->orWhere('order_type', 'like', "%$search%")
 						->orWhere('order_price', 'like', "%$search%")
@@ -314,11 +354,12 @@ class OrderController extends Controller
 
 	 	$orderToConfirm = Order::findOrFail($order);
 
-	 	if (! $this->confirmedOrder($orderToConfirm)) {
-	 		
-	 		return $this->showAllRestaurantOrders($request->restaurant_id, $perPage);
+	 	// already customer or same restaurant cancelled this order or order is stopped or completed
+		if (! $this->confirmedOrder($orderToConfirm) || $orderToConfirm->restaurantOrderCancelations()->where('restaurant_id', $request->restaurant_id)->exists() || $orderToConfirm->in_progress ===0 || $orderToConfirm->complete_order ===1) {
+			
+			return $this->showAllRestaurantOrders($request->restaurant_id, $perPage);
 
-	 	}
+		}
 
  		else if ($request->serveOrder) {
 
@@ -449,7 +490,7 @@ class OrderController extends Controller
 
             return response()->json([
 
-               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
+               'all' => RiderDeliveryRecord::where('rider_id', $rider)->with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
             
             ], 200);
 
@@ -458,7 +499,7 @@ class OrderController extends Controller
 
 	 		return response()->json([
 
-               'all' => RiderDeliveryRecord::with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
+               'all' => RiderDeliveryRecord::with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->paginate($perPage),
             
             ], 200);
 
@@ -467,7 +508,7 @@ class OrderController extends Controller
 
 	 		return response()->json([
 
-               'all' => RiderDeliveryRecord::with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'riderDeliveryReturn', 'restaurantOrderCancelations'])->latest()->get(),
+               'all' => RiderDeliveryRecord::with(['order.orderer', 'order.asap', 'order.schedule', 'order.cutlery', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant', 'restaurantsAccepted.restaurant', 'riderOrderCancelations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'restaurantOrderCancelations'])->latest()->get(),
             
             ], 200);
 
@@ -564,11 +605,8 @@ class OrderController extends Controller
         else if ($request->orderReturned && $this->allOrderPicked($deliveryToConfirm) /*&& $deliveryToConfirm->delivery_order_acceptance==1*/ && $deliveryToConfirm->riderDeliveryConfirmation()->exists()) {
 
             // deleting delivery record as not deliverd
-            $deliveryToConfirm->riderDeliveryConfirmation()->delete();
-                
-            $deliveryToConfirm->riderDeliveryReturn()->create([
-                'rider_return_confirmation' => 1,
-                'rider_id' => $deliveryToConfirm->rider_id,
+            $deliveryToConfirm->riderDeliveryConfirmation()->update([
+            	'rider_delivery_confirmation' => 2, // returned
             ]);
 
             $this->disableOrderStatus($deliveryToConfirm->order);
@@ -731,9 +769,16 @@ class OrderController extends Controller
 		event(new UpdateAdmin($order));
 	}
 
-	private function notifyRestaurant(OrderRestaurant $orderedRestaurant)
+	private function notifyRestaurant(OrderRestaurant $orderRestaurant)
 	{
-		event(new UpdateRestaurant($orderedRestaurant));
+		event(new UpdateRestaurant($orderRestaurant));
+	}
+
+	private function notifyOrderRestaurants(Order $order)
+	{
+		foreach ($order->restaurants as $orderRestaurantKey => $orderRestaurant) {
+			$this->notifyRestaurant($orderRestaurant);
+		}
 	}
 
 	private function notifyRider(RiderDeliveryRecord $riderNewDeliveryRecord)
@@ -746,15 +791,15 @@ class OrderController extends Controller
 		// checking for order confirmation and if already has made
         if ($order->customer_confirmation===1 && ! $order->restaurantAcceptances()->exists()) {
            
-           	foreach ($order->restaurants as $orderedRestaurant) {
+           	foreach ($order->restaurants as $orderRestaurant) {
 
               	$order->restaurantAcceptances()->create([
                  	'food_order_acceptance' => -1, // ringing
-                 	'restaurant_id' => $orderedRestaurant->restaurant_id,
+                 	'restaurant_id' => $orderRestaurant->restaurant_id,
               	]);
               
               	// Broadcast for restaurant
-              	$this->notifyRestaurant($orderedRestaurant);
+              	$this->notifyRestaurant($orderRestaurant);
 
            	}
 

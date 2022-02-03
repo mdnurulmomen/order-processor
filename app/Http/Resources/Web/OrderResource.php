@@ -30,14 +30,15 @@ class OrderResource extends JsonResource
             'has_cutlery' => /*$this->whenLoaded('cutlery')*/ $this->when($this->cutlery, $this->cutlery ? true : false),
             'delivery' => $this->when($this->delivery, $this->delivery ? $this->delivery->additional_info : false),
             'customer_confirmation' => $this->customer_confirmation,
-            'in_progress' => $this->in_progress,
+            'in_progress' => $this->in_progress,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
+            'complete_order' => $this->complete_order,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
             // 'restaurants' => OrderedRestaurantResource::collection($this->restaurants) /*route('api.v1.ordered-restaurants.show', ['order' => $this->id])*/,
             'restaurant_acceptances' => OrderRestaurantAcceptanceResource::collection($this->restaurantAcceptances),
             'rider_assignment' => $this->riderAssignment,
             'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->orderReadyConfirmations),
             'rider_food_pick_confirmations' => OrderPickUpProgressionResource::collection($this->riderFoodPickConfirmations),
             'rider_delivery_confirmation' => $this->riderDeliveryConfirmation ? new RiderDeliveryResource($this->riderDeliveryConfirmation) : null,
-            'rider_delivery_return' => $this->riderDeliveryReturn ? new RiderReturnResource($this->riderDeliveryReturn) : null,
+            // 'rider_delivery_return' => $this->riderDeliveryReturn ? new RiderReturnResource($this->riderDeliveryReturn) : null,
             'order_serve_confirmation' => $this->when($this->orderServeConfirmation, $this->orderServeConfirmation),
             'customer_order_cancelation' => $this->when($this->customer_confirmation==0, $this->customerOrderCancelation),
             'restaurant_order_cancelations' => $this->when($this->restaurantOrderCancelations->count(), RestaurantCancelationResource::collection($this->restaurantOrderCancelations)),

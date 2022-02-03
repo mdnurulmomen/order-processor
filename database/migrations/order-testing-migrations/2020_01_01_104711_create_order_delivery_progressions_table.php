@@ -18,6 +18,8 @@ class CreateOrderDeliveryProgressionsTable extends Migration
             $table->tinyInteger('rider_delivery_confirmation')->default(-1); // initially pending (-1 for pending, 1 for dropped, 2 for dropped at office, 0 for cancel)
             $table->unsignedMediumInteger('rider_id');
             $table->unsignedInteger('order_id')->unique();
+            // $table->string('updater_type')->nullable();     // App/Models/Admin / App/Models/Restaurant
+            // $table->unsignedSmallInteger('updater_id')->nullable(); // Admin 1
             $table->timestamps();
         });
     }

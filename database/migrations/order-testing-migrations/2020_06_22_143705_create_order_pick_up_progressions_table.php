@@ -21,6 +21,8 @@ class CreateOrderPickUpProgressionsTable extends Migration
             $table->unsignedInteger('order_id');
             $table->unsignedInteger('restaurant_id');
             $table->unsignedMediumInteger('rider_id');
+            // $table->string('updater_type')->nullable();     // App/Models/Admin / App/Models/Restaurant
+            // $table->unsignedSmallInteger('updater_id')->nullable(); // Admin 1
             $table->timestamps();
         });
     }

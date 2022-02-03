@@ -664,7 +664,13 @@
 			},
 			returnedOrder(riderDeliveryRecord){
 				
+				/*
 				if (riderDeliveryRecord.rider_delivery_return!=null && riderDeliveryRecord.rider_delivery_return.rider_return_confirmation==1) {
+					return true;
+				}
+				*/
+			
+				if (riderDeliveryRecord.rider_delivery_confirmation!=null && riderDeliveryRecord.rider_delivery_confirmation.rider_delivery_confirmation==2) {
 					return true;
 				}
 

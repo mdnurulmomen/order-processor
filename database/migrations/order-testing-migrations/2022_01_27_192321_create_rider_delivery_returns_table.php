@@ -18,6 +18,8 @@ class CreateRiderDeliveryReturnsTable extends Migration
             $table->tinyInteger('rider_return_confirmation')->default(0); // initially -1 for food return, 1 for confirm, 0 for not return, default 0 as may not returned)
             $table->unsignedInteger('order_id');
             $table->unsignedSmallInteger('rider_id');
+            // $table->string('updater_type')->nullable();     // App/Models/Admin / App/Models/Restaurant
+            // $table->unsignedSmallInteger('updater_id')->nullable(); // Admin 1
             $table->timestamp('created_at');
         });
     }

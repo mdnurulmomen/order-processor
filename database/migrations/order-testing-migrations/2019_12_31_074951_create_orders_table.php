@@ -19,7 +19,7 @@ class CreateOrdersTable extends Migration
             // $table->boolean('is_asap_order')->default(true);
             // $table->timestamp('order_schedule')->nullable();
             $table->unsignedMediumInteger('order_price');
-            $table->tinyInteger('vat');
+            $table->unsignedTinyInteger('vat');
             $table->unsignedTinyInteger('discount')->default(0);
             $table->unsignedTinyInteger('delivery_fee')->default(0);
             $table->unsignedMediumInteger('net_payable');
@@ -30,6 +30,8 @@ class CreateOrdersTable extends Migration
             $table->tinyInteger('customer_confirmation')->default(-1);
             $table->tinyInteger('in_progress')->default(-1);    // after customer confirmation turns to 1
             $table->tinyInteger('complete_order')->default(-1);    // after customer confirmation turns to 1
+            $table->string('canceller_type')->nullable();     // App/Models/Admin
+            $table->unsignedSmallInteger('canceller_id')->nullable(); // Admin 1
             $table->timestamps();
         });
     }

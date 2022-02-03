@@ -19,6 +19,8 @@ class CreateRestaurantOrderRecordsTable extends Migration
             $table->tinyInteger('food_order_acceptance')->default(-1);  // initially ringing (-1 for ringing, 1 for confirm, 0 for cancel)
             $table->unsignedInteger('order_id');
             $table->unsignedMediumInteger('restaurant_id');
+            // $table->string('updater_type');     // App/Models/Admin / App/Models/Restaurant
+            // $table->unsignedSmallInteger('updater_id'); // Admin 1
             $table->timestamps();
         });
     }

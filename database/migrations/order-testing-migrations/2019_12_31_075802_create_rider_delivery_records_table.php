@@ -20,6 +20,8 @@ class CreateRiderDeliveryRecordsTable extends Migration
             $table->tinyInteger('delivery_order_acceptance')->default(0); // initially ringing (-1 for ringing, 1 for confirm, 0 for cancel, default 0 as may not receive)
             $table->unsignedInteger('order_id');
             $table->unsignedSmallInteger('rider_id');
+            // $table->string('updater_type')->nullable();     // App/Models/Admin
+            // $table->unsignedSmallInteger('updater_id')->nullable(); // Admin ID
             $table->timestamps();
         });
     }
