@@ -16,8 +16,8 @@ class RestaurantCancelationResource extends JsonResource
     {
         return [
            'reason_id'=>$this->reason_id,  
-           'restaurant_id'=>$this->restaurant_id, 
-           'restaurant_name'=>$this->restaurant->name, 
+           'restaurant_id'=>$this->canceller_id, 
+           'restaurant_name'=>$this->canceller->name, 
         ];
     }
 }

@@ -107,48 +107,53 @@ class ReservationConfirmationRequest extends FormRequest
         $validator->after(
             function ($validator) {
 
-                $this->payment = json_decode(json_encode($this->input('payment')));
-                $this->menu_items = json_decode(json_encode($this->input('menu_items')));
-                $this->reservation = json_decode(json_encode($this->input('reservation')));
+                if (! $validator->failed()) {
+                    
+                    $this->payment = json_decode(json_encode($this->input('payment')));
+                    $this->menu_items = json_decode(json_encode($this->input('menu_items')));
+                    $this->reservation = json_decode(json_encode($this->input('reservation')));
 
-                foreach ($this->menu_items as $menuItemKey => $restaurantMenuItem) {
+                    foreach ($this->menu_items as $menuItemKey => $restaurantMenuItem) {
 
-                    $expectedMenuItem = RestaurantMenuItem::find($restaurantMenuItem->id);
+                        $expectedMenuItem = RestaurantMenuItem::findOrFail($restaurantMenuItem->id);
 
-                    if ($expectedMenuItem->has_variation && empty($restaurantMenuItem->item_variation)) {
-                        
-                        $validator->errors()->add("menu_items.$menuItemKey", 'Menu item has variation');
-
-                    }
-
-                    else if ($expectedMenuItem->has_variation && ! empty($restaurantMenuItem->item_variation)) {
-                        
-                        $expectedMenuItemVariation = RestaurantMenuItemVariation::find($restaurantMenuItem->item_variation->id);
-
-                        if (empty($expectedMenuItemVariation) || $expectedMenuItemVariation->restaurant_menu_item_id != $expectedMenuItem->id) {
+                        if ($expectedMenuItem->has_variation && empty($restaurantMenuItem->item_variation)) {
                             
-                            $validator->errors()->add("menu_items.$menuItemKey.item_variation", 'Item variation id is invalid');
+                            $validator->errors()->add("menu_items.$menuItemKey", 'Menu item has variation');
 
                         }
 
-                    }
-
-                    if ($expectedMenuItem->has_addon && ! empty($restaurantMenuItem->item_addons)) {
-
-                        foreach ($restaurantMenuItem->item_addons as $itemAddonKey => $itemAddon) {
+                        else if ($expectedMenuItem->has_variation && ! empty($restaurantMenuItem->item_variation)) {
                             
-                            $expectedMenuItemAddon = RestaurantMenuItemAddon::find($itemAddon->id);
+                            $expectedMenuItemVariation = RestaurantMenuItemVariation::find($restaurantMenuItem->item_variation->id);
 
-                            if (empty($expectedMenuItemAddon) || $expectedMenuItemAddon->restaurant_menu_item_id != $expectedMenuItem->id) {
+                            if (empty($expectedMenuItemVariation) || $expectedMenuItemVariation->restaurant_menu_item_id != $expectedMenuItem->id) {
                                 
-                                $validator->errors()->add("menu_items.$menuItemKey.item_addons.$itemAddonKey", 'Menu item has no such addon');
+                                $validator->errors()->add("menu_items.$menuItemKey.item_variation", 'Item variation id is invalid');
 
                             }
 
                         }
 
-                    }
+                        if ($expectedMenuItem->has_addon && ! empty($restaurantMenuItem->item_addons)) {
+
+                            foreach ($restaurantMenuItem->item_addons as $itemAddonKey => $itemAddon) {
+                                
+                                $expectedMenuItemAddon = RestaurantMenuItemAddon::find($itemAddon->id);
+
+                                if (empty($expectedMenuItemAddon) || $expectedMenuItemAddon->restaurant_menu_item_id != $expectedMenuItem->id) {
+                                    
+                                    $validator->errors()->add("menu_items.$menuItemKey.item_addons.$itemAddonKey", 'Menu item has no such addon');
+
+                                }
+
+                            }
+
+                        }
+                    } 
+
                 }
+
             }
         );
     }

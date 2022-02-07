@@ -50,15 +50,20 @@ class RiderDeliveryRecord extends Model
 		return $this->hasMany(RestaurantOrderRecord::class, 'order_id', 'order_id')->where('food_order_acceptance', 1);
 	}
 
-	public function restaurantOrderCancelations()
+	public function orderCancelations()
 	{
-		return $this->hasMany(RestaurantOrderCancelationReason::class, 'order_id', 'order_id');
+		return $this->hasMany(OrderCancelation::class, 'order_id', 'order_id');
 	}
 
-	public function riderOrderCancelations()
-	{
-		return $this->hasMany(RiderOrderCancelationReason::class, 'rider_id', 'rider_id');
-	}
+	public function restaurantOrderCancelations()
+   	{
+      return $this->orderCancelations()->where('canceller_type', 'App\Models\Restaurant');
+   	}
+
+   	public function riderOrderCancelations()
+   	{
+      return $this->orderCancelations()->where('canceller_type', 'App\Models\Rider');
+   	}
 
 	public function delivery()
 	{
@@ -75,8 +80,10 @@ class RiderDeliveryRecord extends Model
 		return $this->hasOne(OrderDeliveryProgression::class, 'order_id', 'order_id');
 	}
 
+	/*
 	public function riderDeliveryReturn()
 	{
 		return $this->hasOne(RiderDeliveryReturn::class, 'order_id', 'order_id');
 	}
+	*/
 }

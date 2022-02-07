@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRestaurantOrderCancelationReasonsTable extends Migration
+class CreateOrderCancelationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateRestaurantOrderCancelationReasonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('restaurant_order_cancelation_reasons', function (Blueprint $table) {
+        Schema::create('order_cancelations', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->unsignedTinyInteger('reason_id');
             $table->unsignedInteger('order_id');
-            $table->unsignedMediumInteger('restaurant_id');
+            $table->string('canceller_type');     // App/Models/Admin, App/Models/Merchant App/Models/Rider
+            $table->unsignedSmallInteger('canceller_id'); // id
             $table->timestamp('created_at')->useCurrent();
         });
     }
@@ -29,6 +30,6 @@ class CreateRestaurantOrderCancelationReasonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('restaurant_order_cancelation_reasons');
+        Schema::dropIfExists('order_cancelations');
     }
 }

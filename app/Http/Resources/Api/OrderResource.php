@@ -41,6 +41,7 @@ class OrderResource extends JsonResource
             'order_serve_confirmation' => $this->when($this->orderServeConfirmation, $this->orderServeConfirmation),
             'customer_order_cancelation' => $this->when($this->customerOrderCancelation, $this->customerOrderCancelation),
             // 'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->restaurantOrderCancelations),
+            // 'admin_order_cancelation' => $this->when($this->adminOrderCancelations->count(), $this->adminOrderCancelations),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

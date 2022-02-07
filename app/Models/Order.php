@@ -91,29 +91,41 @@ class Order extends Model
       return $this->hasOne(OrderDeliveryProgression::class, 'order_id', 'id');
    }
 
+   /*
    public function riderDeliveryReturn()
    {
       return $this->hasOne(RiderDeliveryReturn::class, 'order_id', 'id');
    }
+   */
 
    public function orderServeConfirmation()
    {
       return $this->hasOne(OrderServeProgression::class, 'order_id', 'id');
    }
 
+   public function orderCancelations()
+   {
+      return $this->hasMany(OrderCancelation::class, 'order_id', 'id');
+   }
+
    public function customerOrderCancelation()
    {
-      return $this->hasOne(CustomerOrderCancelationReason::class, 'order_id', 'id');
+      return $this->orderCancelations()->where('canceller_type', 'App\Models\Customer');
    }
 
    public function restaurantOrderCancelations()
    {
-      return $this->hasMany(RestaurantOrderCancelationReason::class, 'order_id', 'id');
+      return $this->orderCancelations()->where('canceller_type', 'App\Models\Restaurant');
    }
 
    public function riderOrderCancelations()
    {
-      return $this->hasMany(RiderOrderCancelationReason::class, 'order_id', 'id');
+      return $this->orderCancelations()->where('canceller_type', 'App\Models\Rider');
+   }
+
+   public function adminOrderCancelation()
+   {
+      return $this->orderCancelations()->where('canceller_type', 'App\Models\Admin');
    }
 
 }
