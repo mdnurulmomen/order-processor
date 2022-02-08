@@ -83,7 +83,7 @@
 											<th scope="col">#</th>
 											<th scope="col">Order Id</th>
 											<th scope="col">Type</th>
-											<!-- <th scope="col">Status</th> -->
+											<th scope="col">Status</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -96,7 +96,44 @@
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>{{ restaurant.order_id }}</td>
 								    		<td>{{ restaurant.order.order_type | capitalize }}</td>
-								    		<!-- <td></td> -->
+								    		<td>
+								    			<span 
+								    				v-if="failedOrder(restaurant.order) || cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations)" 
+								    				class="badge badge-secondary d-block"
+								    			>	
+								    				Cancelled
+								    			</span>
+
+												<!-- 
+													no option should be shown without picking/cancelling every restaurant orders 
+												-->
+								    			<span 
+								    				v-else-if="(servingOrder(restaurant.order) && servedOrder(restaurant.order)) || (! servingOrder(restaurant.order) && readyOrder(restaurant.order.order_ready_confirmations))" 
+								    				class='badge badge-success d-block'
+								    			>	
+								    				Success
+								    			</span>
+
+								    			<!-- 
+								    				// after call confirmation
+								    				if rider has been assigned (riderFoodPickConfirmations is auto set after assignment)  
+								    				// for each restaurants in order
+								    			-->
+							    				<span 
+							    					v-else-if="acceptedOrder(restaurant.order.restaurant_acceptances)"
+							    				>
+								    				<span class='badge badge-warning d-block'>
+									    				Pending
+								    				</span>
+							    				</span>	
+
+							    				<!-- 
+							    					new order before call confirmation
+							    				-->
+								    			<span class='badge badge-danger d-block' v-else>	
+								    				Ringing
+								    			</span>
+								    		</td>
 								    		<td>
 								      			<button 
 									      			type="button" 
@@ -110,7 +147,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && orderToServe(restaurant.order) && confirmedReservationOrder(restaurant.order)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && orderToServe(restaurant.order) && confirmedReservationOrder(restaurant.order) && ! stoppedOrder(restaurant.order)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.serveOrder=true;confirmOrder()" 
 								      			>
@@ -121,7 +158,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !readyOrder(restaurant.order.order_ready_confirmations) && confirmedReservationOrder(restaurant.order)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !readyOrder(restaurant.order.order_ready_confirmations) && confirmedReservationOrder(restaurant.order) && ! stoppedOrder(restaurant.order)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=true;confirmOrder()" 
 								      			>
@@ -132,7 +169,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-warning btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !readyOrder(restaurant.order.order_ready_confirmations) && !acceptedOrder(restaurant.order.restaurant_acceptances) && confirmedReservationOrder(restaurant.order)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !readyOrder(restaurant.order.order_ready_confirmations) && !acceptedOrder(restaurant.order.restaurant_acceptances) && confirmedReservationOrder(restaurant.order) && ! stoppedOrder(restaurant.order)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=restaurant.order;singleOrderData.order.orderReady=false;confirmOrder()" 
 								      			>
@@ -143,7 +180,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-secondary btn-sm" 
-									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !acceptedOrder(restaurant.order.restaurant_acceptances) && confirmedReservationOrder(restaurant.order)" 
+									      			v-if="!cancelledOrder(restaurant.order.restaurant_acceptances, restaurant.order.restaurant_order_cancelations) && !acceptedOrder(restaurant.order.restaurant_acceptances) && confirmedReservationOrder(restaurant.order) && ! stoppedOrder(restaurant.order)" 
 									      			@click="showOrderCancelationModal(restaurant.order)" 
 								      			>
 								        			<i class="fas fa-times"></i>
@@ -750,20 +787,13 @@
 			},
 			cancelledOrder(orderAcceptedRestaurants, restaurantOrderCancelations) {
 				
-				let cancelled = false;
-
-				if (orderAcceptedRestaurants.length) {
-					cancelled = orderAcceptedRestaurants.some(
+				return Boolean(
+					orderAcceptedRestaurants.some(
 						currentAcceptance => (currentAcceptance.restaurant_id==this.restaurant_id && currentAcceptance.food_order_acceptance==0)
-					);
-				}
-				if (!cancelled && restaurantOrderCancelations.length) {
-					return restaurantOrderCancelations.some(
+					) || restaurantOrderCancelations.some(
 						cancelationReason => (cancelationReason.restaurant_id==this.restaurant_id)
-					);
-				}
-				
-				return cancelled;
+					)
+				);
 			},
 			acceptedOrder(restaurantAcceptances) {
 
@@ -801,6 +831,12 @@
 				return order.order_type;
 
 			},
+			stoppedOrder(order){
+				return order.in_progress==0 ? true : false;
+			},
+			failedOrder(order){
+				return order.in_progress===0 && order.complete_order===0 ? true : false;
+			},
 			orderToServe(order) {
 
 				if (this.servingOrder(order) && !this.servedOrder(order)) {
@@ -835,7 +871,7 @@
 			},
 			orderRowClass(order) {
 
-				if (this.cancelledOrder(order.restaurant_acceptances, order.restaurant_order_cancelations) || !this.confirmedReservationOrder(order)) {
+				if (this.failedOrder(order) || this.cancelledOrder(order.restaurant_acceptances, order.restaurant_order_cancelations) || ! this.confirmedReservationOrder(order)) {
 
 					return 'bg-secondary';
 				}
@@ -847,7 +883,7 @@
 					
 					return 'bg-primary';
 				}
-				else if (!this.servingOrder(order) && this.readyOrder(order.order_ready_confirmations)) {
+				else if (! this.servingOrder(order) && this.readyOrder(order.order_ready_confirmations)) {
 					
 					return 'bg-success';
 				}

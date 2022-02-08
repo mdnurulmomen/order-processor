@@ -46,7 +46,7 @@
 									  	<tr v-show="deliveriesToShow.length"
 									    	v-for="(riderDeliveryRecord, index) in deliveriesToShow"
 									    	:key="riderDeliveryRecord.id" 
-									    	:class="[cancelledOrder(riderDeliveryRecord) ? 'bg-secondary' : returnedOrder(riderDeliveryRecord) ? 'bg-primary' : deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-info' : timeOutDeliveryOrder(riderDeliveryRecord) ? 'bg-secondary' : 'bg-danger']" 
+									    	:class="[(failedOrder(riderDeliveryRecord.order) || cancelledOrder(riderDeliveryRecord)) ? 'bg-secondary' : returnedOrder(riderDeliveryRecord) ? 'bg-primary' : deliveredOrder(riderDeliveryRecord) ? 'bg-success' : acceptedDeliveryOrder(riderDeliveryRecord) ? 'bg-info' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 
@@ -56,7 +56,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-show="riderDeliveryRecord.delivery_order_acceptance==1"
+									      			v-show="acceptedDeliveryOrder(riderDeliveryRecord)"
 									      			@click="showOrderDetailModal(riderDeliveryRecord)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
@@ -64,53 +64,57 @@
 								      			</button>
 								      			<!-- disabled if rider / restaurant already cancelled -->
 								      			
-								      			<!-- return button -->
-								      			<button 
-									      			type="button" 
-									      			class="btn btn-info btn-sm" 
-									      			v-if="! cancelledOrder(riderDeliveryRecord) && allRestaurantPickedUp(riderDeliveryRecord) && ! returnedOrder(riderDeliveryRecord) && ! deliveredOrder(riderDeliveryRecord)" 
-									      			:disabled="formSubmitionMode" 
-									      			@click="orderReturnConfirmation(riderDeliveryRecord)" 
-								      			>
-								        			<i class="fas fa-bell"></i>
-								        			Return
-								      			</button>
+								      			<div v-if="! failedOrder(riderDeliveryRecord.order) && ! cancelledOrder(riderDeliveryRecord) && ! deliveredOrder(riderDeliveryRecord) && ! returnedOrder(riderDeliveryRecord)">
+									      			<!-- return button -->
+									      			<div v-if="allRestaurantPickedUp(riderDeliveryRecord)">
+										      			<button 
+											      			type="button" 
+											      			class="btn btn-info btn-sm" 
+											      			:disabled="formSubmitionMode" 
+											      			@click="orderReturnConfirmation(riderDeliveryRecord)" 
+										      			>
+										        			<i class="fas fa-bell"></i>
+										        			Return
+										      			</button>
 
-								      			<!-- drop button -->
-								      			<button 
-									      			type="button" 
-									      			class="btn btn-success btn-sm" 
-									      			v-if="! cancelledOrder(riderDeliveryRecord) && allRestaurantPickedUp(riderDeliveryRecord) && ! returnedOrder(riderDeliveryRecord) && ! deliveredOrder(riderDeliveryRecord)" 
-									      			:disabled="formSubmitionMode" 
-									      			@click="orderDroppingConfirmation(riderDeliveryRecord)" 
-								      			>
-								        			<i class="fas fa-bell"></i>
-								        			Drop
-								      			</button>
-								      			
-								      			<!-- pick up buttons -->
-								      			<button
-								      				type="button" 
-									      			class="btn btn-warning btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && !allRestaurantPickedUp(riderDeliveryRecord) && !returnedOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && acceptedDeliveryOrder(riderDeliveryRecord)" 
-									      			v-for="restaurantOrderRecord in riderDeliveryRecord.restaurants_accepted" 
-									      			:disabled="Boolean(formSubmitionMode || pickedUp(riderDeliveryRecord, restaurantOrderRecord.restaurant.id))" 
-									      			:key="restaurantOrderRecord.id" 
-									      			@click="orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord)" 
-								      			>
-								      				{{ 'Pick Up from ' + restaurantOrderRecord.restaurant.name }}
-								      			</button>
+									      				<!-- drop button -->
+										      			<button 
+											      			type="button" 
+											      			class="btn btn-success btn-sm" 
+											      			:disabled="formSubmitionMode" 
+											      			@click="orderDroppingConfirmation(riderDeliveryRecord)" 
+										      			>
+										        			<i class="fas fa-bell"></i>
+										        			Drop
+										      			</button>
+									      			</div>
+									      			
+									      			<!-- pick up buttons -->
+									      			<div v-if="! allRestaurantPickedUp(riderDeliveryRecord) && acceptedDeliveryOrder(riderDeliveryRecord)">
+										      			<button
+										      				type="button" 
+											      			class="btn btn-warning btn-sm" 
+											      			v-for="restaurantOrderRecord in riderDeliveryRecord.restaurants_accepted" 
+											      			:disabled="Boolean(formSubmitionMode || pickedUp(riderDeliveryRecord, restaurantOrderRecord.restaurant.id))" 
+											      			:key="restaurantOrderRecord.id" 
+											      			@click="orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord)" 
+										      			>
+										      				{{ 'Pick Up from ' + restaurantOrderRecord.restaurant.name }}
+										      			</button>
+									      			</div>
 
-								      			<!-- accept button -->
-								      			<button
-								      				type="button" 
-									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(riderDeliveryRecord) && !timeOutDeliveryOrder(riderDeliveryRecord) && !returnedOrder(riderDeliveryRecord) && !deliveredOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)"
-									      			:disabled="formSubmitionMode"  
-									      			@click="orderAcceptanceConfirmation(riderDeliveryRecord)" 
-								      			>
-								      				Accept
-								      			</button>
+									      			<!-- accept button -->
+									      			<div v-if="! timeOutDeliveryOrder(riderDeliveryRecord) && !acceptedDeliveryOrder(riderDeliveryRecord)">
+										      			<button
+										      				type="button" 
+											      			class="btn btn-primary btn-sm" 
+											      			:disabled="formSubmitionMode"  
+											      			@click="orderAcceptanceConfirmation(riderDeliveryRecord)" 
+										      			>
+										      				Accept
+										      			</button>
+									      			</div>
+								      			</div>
 								    		</td>
 									  	</tr>
 									  	<tr 
@@ -616,9 +620,12 @@
 				      	}
 					});
 			},
+			failedOrder(order){
+				return order.in_progress===0 && order.complete_order===0 ? true : false;
+			},
 			cancelledOrder(riderDeliveryRecord) {
 
-				if (this.riderCancelledSameOrder(riderDeliveryRecord) || this.allRestaurantCancelled(riderDeliveryRecord)) {
+				if (this.riderCancelledOrder(riderDeliveryRecord) || this.allRestaurantCancelled(riderDeliveryRecord)) {
 					return true;
 				}
 
@@ -629,11 +636,11 @@
 
 			    // console.log(Date.now() - new Date(riderDeliveryRecord.created_at) > 1000 * 60);
 
-			    // one (1) minute ago
+			    // 30 seconds ago
 			    return Date.now() - new Date(riderDeliveryRecord.created_at) > 1000 * 30 ; 	/* ms */
 
 			},
-			riderCancelledSameOrder(riderDeliveryRecord){
+			riderCancelledOrder(riderDeliveryRecord){
 
 				return 	riderDeliveryRecord.rider_order_cancelations.some(
 							orderCancelled=>orderCancelled.order_id==riderDeliveryRecord.order_id

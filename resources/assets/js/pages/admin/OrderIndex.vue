@@ -286,7 +286,7 @@
 									no option should be shown without picking/cancelling every restaurant orders 
 								-->
 								<div 
-				    				:class="[returnedOrder(order) ? 'bg-primary' : 'bg-success', 'progress-bar progress-bar-striped progress-bar-animated']"
+				    				:class="[returnedOrder(singleOrderData.order) ? 'bg-primary' : 'bg-success', 'progress-bar progress-bar-striped progress-bar-animated']"
 									style="width:15%"
 									v-if="deliveredOrServedOrder(singleOrderData.order)" 
 								>

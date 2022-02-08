@@ -465,10 +465,10 @@
 						if (response.status == 200) {
 							this.singleMealData = {};
 
-							this.allMeals = response.data;
-
 							this.query = '';
 							this.currentTab = 'current';
+
+							this.allMeals = response.data;
 							this.showDataListOfSelectedTab();
 
 							toastr.success(response.data.success, "Added");

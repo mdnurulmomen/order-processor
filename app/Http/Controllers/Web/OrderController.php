@@ -173,20 +173,20 @@ class OrderController extends Controller
 	 	// if any rider is actually assigned and the food has't been picked up yet 
 	 	else if ($request->canceller==='rider' && $orderToCancel->customer_confirmation===1 && $orderToCancel->riderAssignment()->where('rider_id', $request->rider_id)->exists()) {
 		
+		 	// deleting related rider food pick records if any
+		 	$orderToCancel->riderFoodPickConfirmations()->delete();
+
 		 	// retreiving the expected RiderDeliveryOrder
 		 	$riderDeliveryOrderToCancel = $orderToCancel->riderAssignment;
 
 		 	// cancelling accepted order-delivery
 		 	$this->cancelRiderDeliveryOrder($orderToCancel);
 		 	
-		 	// deleting related rider food pick records if any
-		 	$orderToCancel->riderFoodPickConfirmations()->delete();
-
 		 	// reason of the cancelled order
 		 	$this->makeRiderDeliveryCancelationReason($orderToCancel, $request->reason_id);
 		 	
 		 	// evaluating related rider
-		 	$this->makeRiderEvaluation($request->rider_id);
+		 	$this->updateRiderEvaluation($request->rider_id);
 
 		 	// inform rider about delivery-order cancelation
 			$this->notifyRider($riderDeliveryOrderToCancel);
@@ -760,7 +760,7 @@ class OrderController extends Controller
 	 	]);
 	}
 
-	private function makeRiderEvaluation($rider)
+	private function updateRiderEvaluation($rider)
 	{
 		$totalDeliveryRequestReceived = RiderDeliveryRecord::where('rider_id', $rider)->where('delivery_order_acceptance', 1)->count();
 		$totalDeliveryRequestAchieved = RiderDeliveryRecord::where('rider_id', $rider)->count();
