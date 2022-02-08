@@ -1,10 +1,7 @@
 
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -43,7 +40,18 @@
 						<div class="card-body">
 							<div class="mb-3">
 								<div class="row">
-									<div class="col-sm-12 was-validated">
+									<div class="col-sm-6">
+									  	<ul class="nav nav-tabs mb-2" v-show="query === ''">
+											<li class="nav-item flex-fill">
+												<a :class="[{ 'active': currentTab=='current' }, 'nav-link']" data-toggle="tab" @click="showCurrentReasons">Current</a>
+											</li>
+											<li class="nav-item flex-fill">
+												<a :class="[{ 'active': currentTab=='trashed' }, 'nav-link']" data-toggle="tab" @click="showTrashedReasons">Trashed</a>
+											</li>
+										</ul>
+									</div>
+
+									<div class="col-sm-6 was-validated">
 									  	<input 
 									  		type="text" 
 									  		v-model="query" 
@@ -85,13 +93,25 @@
 										        	<i class="fas fa-edit"></i>
 										        	Edit
 										      	</button>
+
 								      			<button 
+								      				v-show="reason.deleted_at === null"
 								        			type="button"
 								        			@click="showReasonDeletionModal(reason)"
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
 								        			Delete
+								      			</button>
+
+								      			<button
+								        			v-show="reason.deleted_at !== null"
+								        			type="button"
+								        			@click="showReasonRestoreModal(reason)"
+								        			class="btn btn-danger btn-sm"
+							      				>
+								        			<i class="fas fa-undo"></i>
+								        			Restore
 								      			</button>
 								    		</td>
 									  	</tr>
@@ -286,8 +306,44 @@
 			</div>
 			<!-- /modal-reason-delete-confirmation -->
 
-	    </section>
+			<!-- modal-reason-restore-confirmation -->
+			<div class="modal fade" id="modal-reason-restore-confirmation">
+				<div class="modal-dialog">
+					<div class="modal-content bg-danger">
+						<div class="modal-header">
+						  	<h4 class="modal-title">Reason Restoration</h4>
+						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						    	<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					  	<!-- form start -->
+					  	<form class="form-horizontal" v-on:submit.prevent="restoreReason()" autocomplete="off">
+							<div class="modal-body">
+					      		<input 
+					      			type="hidden" 
+					      			name="_token" 
+					      			:value="csrf"
+					      		>
+					      		<h5>Are you sure want to restore reason ?? </h5>
+							</div>
+							<div class="modal-footer justify-content-between">
+							  	<button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
 
+							  	<button 
+							  		type="submit" 
+							  		class="btn btn-outline-light"
+							  	>
+							  		Restore
+							  	</button>
+							</div>
+						</form>
+					</div>
+				<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal-reason-restore-confirmation -->
+	    </section>
 	</div>
     
 </template>
@@ -315,6 +371,7 @@
     	editMode : false,
     	currentTab : 'current',
 
+    	allReasons : [],
     	reasonsToShow : [],
 
     	pagination: {
@@ -366,8 +423,8 @@
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
-							this.reasonsToShow = response.data.data;
-							this.pagination = response.data;	
+							this.allReasons = response.data;
+							this.showDataListOfSelectedTab();	
 						}
 					})
 					.catch(error => {
@@ -421,9 +478,10 @@
 							this.singleReasonData.reason = {};
 
 							this.query = '';
+							this.currentTab = 'current';
 
-							this.reasonsToShow = response.data.data;
-							this.pagination = response.data;
+							this.allReasons = response.data;
+							this.showDataListOfSelectedTab();	
 
 							toastr.success(response.data.success, "Added");
 						}
@@ -465,8 +523,8 @@
 							this.singleReasonData.reason = {};
 
 							if (this.query === '') {
-								this.reasonsToShow = response.data.data;
-								this.pagination = response.data;
+								this.allReasons = response.data;
+								this.showDataListOfSelectedTab();	
 							}
 							else {
 								this.pagination.current_page = 1;
@@ -500,8 +558,8 @@
 							this.singleReasonData.reason = {};
 
 							if (this.query === '') {
-								this.reasonsToShow = response.data.data;
-								this.pagination = response.data;
+								this.allReasons = response.data;
+								this.showDataListOfSelectedTab();	
 							}
 							else {
 								this.pagination.current_page = 1;
@@ -509,6 +567,42 @@
 							}
 
 							toastr.success(response.data.success, "Deleted");
+						}
+					})
+					.catch(error => {
+						console.log(error);
+						if (error.response.status == 422) {
+							for (var x in error.response.data.errors) {
+								toastr.error(error.response.data.errors[x], "Wrong Input");
+							}
+				      	}
+					});
+			},
+			showReasonRestoreModal(reason) {
+				this.singleReasonData.reason = reason;
+				$("#modal-reason-restore-confirmation").modal("show");
+			},
+			restoreReason(){
+
+				$("#modal-reason-restore-confirmation").modal("hide");
+
+				axios
+					.patch('/cancelation-reasons/' + this.singleReasonData.reason.id + '/' + this.perPage)
+					.then(response => {
+						if (response.status == 200) {
+							
+							this.singleReasonData.reason = {};
+
+							if (this.query === '') {
+								this.allReasons = response.data;
+								this.showDataListOfSelectedTab();	
+							}
+							else {
+								this.pagination.current_page = 1;
+								this.searchData();
+							}
+
+							toastr.success(response.data.success, "Restored");
 						}
 					})
 					.catch(error => {
@@ -529,12 +623,30 @@
 				    this.pagination.current_page
 				)
 				.then(response => {
-					this.reasonsToShow = response.data.all.data;
-					this.pagination = response.data.all;
+					this.allReasons = response.data;
+					this.reasonsToShow = this.allReasons.all.data;
+					this.pagination = this.allReasons.all;
 				})
 				.catch(e => {
 					console.log(e);
 				});
+			},
+			showCurrentReasons(){
+				this.currentTab = 'current';
+				this.showDataListOfSelectedTab();
+			},
+			showTrashedReasons(){
+				this.currentTab = 'trashed';
+				this.showDataListOfSelectedTab();
+			},
+			showDataListOfSelectedTab(){
+				if (this.currentTab=='current') {
+					this.reasonsToShow = this.allReasons.current.data;
+					this.pagination = this.allReasons.current;
+				}else {
+					this.reasonsToShow = this.allReasons.trashed.data;
+					this.pagination = this.allReasons.trashed;
+				}
 			},
 			validateFormInput () {
 				

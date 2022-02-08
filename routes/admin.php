@@ -101,7 +101,7 @@ Route::name('admin.')->group(function () {
 		    Route::post('/cancelation-reasons/{perPage?}', 'CancelationController@createCancelationReason');
 		    Route::put('/cancelation-reasons/{reason}/{perPage}', 'CancelationController@updateCancelationReason');
 		    Route::delete('/cancelation-reasons/{reason}/{perPage}', 'CancelationController@deleteCancelationReason');
-		    // Route::patch('/cancelation-reasons/{reason}/{perPage}', 'CancelationController@restoreCancelationReason');
+		    Route::patch('/cancelation-reasons/{reason}/{perPage}', 'CancelationController@restoreCancelationReason');
 
 
 		    Route::get('/api/restaurant-deals/{perPage?}', 'RestaurantController@showAllRestaurantDeals');

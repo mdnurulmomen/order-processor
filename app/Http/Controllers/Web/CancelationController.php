@@ -12,7 +12,11 @@ class CancelationController extends Controller
 	{
 	 	if ($perPage) {
 		 	
-		 	return response(CancelationReason::paginate($perPage), 200);
+		 	return response()->json([
+				'current' => CancelationReason::paginate($perPage),
+				'trashed' => CancelationReason::onlyTrashed()->paginate($perPage),
+
+			], 200);
 
 	 	}
 
@@ -60,9 +64,22 @@ class CancelationController extends Controller
      	return $this->showAllReasons($perPage);
   	}
 
+  	public function restoreCancelationReason($reason, $perPage)
+  	{
+     	$reasonToDelete = CancelationReason::onlyTrashed()->find($reason);
+
+     	if ($reasonToDelete) {
+     		
+     		$reasonToDelete->restore();
+     	
+     	}
+         
+        return $this->showAllReasons($perPage);
+  	}
+
   	public function searchAllReasons($search, $perPage)
 	{
-		$query = CancelationReason::where('reason', 'like', "%$search%");
+		$query = CancelationReason::withTrashed()->where('reason', 'like', "%$search%");
 
 		return response()->json([
 
