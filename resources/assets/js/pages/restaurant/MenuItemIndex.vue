@@ -87,8 +87,8 @@
 														</tr>
 													</thead>
 										    		<tbody>
-												    	<tr v-show="restaurantMenuCategory.restaurant_menu_items.length" 
-													    	v-for="(menuItem, index) in restaurantMenuCategory.restaurant_menu_items" 
+												    	<tr v-show="restaurantMenuCategory.menu_items.length" 
+													    	v-for="(menuItem, index) in restaurantMenuCategory.menu_items" 
 													    	:key="menuItem.id"
 													  	>
 													    	<td scope="row">
@@ -116,7 +116,7 @@
 												    			<ul class="text-left" 
 												    				v-show="menuItem.has_variation"
 												    			>
-																  	<li v-for="itemVariation in menuItem.restaurant_menu_item_variations" 
+																  	<li v-for="itemVariation in menuItem.variations" 
 																  		:key="itemVariation.id"
 																  	>
 																    	
@@ -170,9 +170,9 @@
 												    		</td>
 												    		<td>
 												    			<ul class="text-left" 
-												    				v-show="menuItem.restaurant_menu_item_variations.length"
+												    				v-show="menuItem.variations.length"
 												    			>
-																  	<li v-for="itemVariation in menuItem.restaurant_menu_item_variations" 
+																  	<li v-for="itemVariation in menuItem.variations" 
 																  		:key="itemVariation.id"
 																  	>
 																    	
@@ -211,7 +211,7 @@
 												    		</td>
 												    	</tr>
 
-												    	<tr v-show="!restaurantMenuCategory.restaurant_menu_items.length"
+												    	<tr v-show="! restaurantMenuCategory.menu_items.length"
 												    	>
 												    		<td colspan="8">
 													      		<div class="alert alert-danger" role="alert">

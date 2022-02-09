@@ -23,6 +23,39 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+// apply interceptor on response
+axios.interceptors.response.use(
+    
+    response => response,
+    
+    error => {
+
+        // check for errorHandle config
+        // if( error.config.hasOwnProperty('errorHandle') && error.config.errorHandle === false ) {
+        //     return Promise.reject(error);
+        // }
+
+        // if the request was made and the server responded with a status code that falls out of the range of 2xx
+        if (error.response) {
+
+            if (error.response.status === 401) {
+                window.localStorage.removeItem('roles');
+                window.localStorage.removeItem('permissions');
+                window.location.href = "/login";
+            }
+            else if (error.response.status === 403) {
+                location.reload();
+                // window.location.href = "/403"
+            }
+
+        }
+
+        return Promise.reject(error);
+
+    }
+
+);
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

@@ -95,7 +95,7 @@
 										      				type="button" 
 											      			class="btn btn-warning btn-sm" 
 											      			v-for="restaurantOrderRecord in riderDeliveryRecord.restaurants_accepted" 
-											      			:disabled="Boolean(formSubmitionMode || pickedUp(riderDeliveryRecord, restaurantOrderRecord.restaurant.id))" 
+											      			:disabled="Boolean(formSubmitionMode || pickedUp(riderDeliveryRecord, restaurantOrderRecord))" 
 											      			:key="restaurantOrderRecord.id" 
 											      			@click="orderPickUpConfirmation(riderDeliveryRecord, restaurantOrderRecord)" 
 										      			>
@@ -702,9 +702,9 @@
 			acceptedDeliveryOrder(riderDeliveryRecord){
 				return riderDeliveryRecord.delivery_order_acceptance==1 ? true : false;
 			},
-			pickedUp(riderDeliveryRecord, restaurantId) {
-				return 	riderDeliveryRecord.rider_food_pick_confirmations.some(
-					orderPickUp => (orderPickUp.rider_food_pick_confirmation == 1 && orderPickUp.restaurant_id == restaurantId)
+			pickedUp(riderDeliveryRecord, restaurantOrderRecord) {
+				return 	restaurantOrderRecord.hasOwnProperty('restaurant') && riderDeliveryRecord.rider_food_pick_confirmations.some(
+					orderPickUp => (orderPickUp.rider_food_pick_confirmation == 1 && orderPickUp.restaurant_id == restaurantOrderRecord.restaurant.id)
 				);
 			}
 		}

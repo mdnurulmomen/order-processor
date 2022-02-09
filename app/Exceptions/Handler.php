@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -54,6 +56,24 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'data' => 'Resource not found'
             ], 404);
+        }
+
+        else if ($exception instanceof ModelNotFoundException) {
+
+            return response()->json(['errors'=>["noUser" => 'Entry for '.str_replace('App\\Models\\', '', $exception->getModel()).' not found']], 422);  // 404 (later)
+            
+        }
+
+        else if ($exception instanceof TokenMismatchException) {
+            
+            return redirect()->back()->withErrors([
+                'sessionExpired' => ['Your session has been expired, please try again'],
+            ]);
+
+        }
+
+        else if ($exception instanceof HttpException)  {
+            return response()->json(['errors'=>["noPermission" => 'You dont have permission for this action, please reload']], 403); 
         }
 
         return parent::render($request, $exception);

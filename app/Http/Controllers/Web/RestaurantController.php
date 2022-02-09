@@ -796,7 +796,7 @@ class RestaurantController extends Controller
       public function showRestaurantAllMenuItems($restaurant, $perPage = false)
       {
          if ($perPage) {
-            return response(RestaurantMenuCategory::withTrashed()->where('restaurant_id', $restaurant)->with(['menuCategory', 'menuItems.variations', 'menuItems.addons'])->paginate($perPage), 200);
+            return response(RestaurantMenuCategory::withTrashed()->where('restaurant_id', $restaurant)->with(['restaurant', 'menuCategory', 'menuItems.variations', 'menuItems.addons'])->paginate($perPage), 200);
          }
 
          return response(RestaurantMenuCategory::where('restaurant_id', $restaurant)->with(['menuCategory', 'menuItems'])->get(), 200);
