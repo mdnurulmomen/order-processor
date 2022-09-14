@@ -37,21 +37,30 @@ class OrderController extends Controller
             'in_progress' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1,
         ]);
 
+        // asap / scheduled
         if ($request->order->is_asap_order) {
+
             $this->createAsapOrder($newOrder);
+
         }
         else {
-            $this->createScheduleOrder($newOrder, $request->order->order_schedule);           
+
+            $this->createScheduleOrder($newOrder, $request->order->order_schedule); 
+
         }
 
         if ($request->order->cutlery_addition) {
+
             $this->addCutlery($newOrder);
+
         }
 
         if ($request->payment->payment_method !=='cash' && $request->payment->payment_id) {
+
             $newOrderPayment = $newOrder->payment()->create([
                 'payment_id'=>$request->payment->payment_id
             ]);
+            
         }
 
         foreach ($request->restaurants as $orderedRestaurant) {
@@ -72,24 +81,30 @@ class OrderController extends Controller
                 $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
 
                 if ($addedMenuItem->has_variation && !empty($menuItem->item_variation) && !empty($menuItem->item_variation->id)) {
+                    
                     $orderedNewItem->variation()->create([
                         'restaurant_menu_item_variation_id'=>$menuItem->item_variation->id
                     ]);
+
                 }
 
                 if ($addedMenuItem->has_addon && !empty($menuItem->item_addons)) {
+                    
                     foreach ($menuItem->item_addons as $itemAddon) {
                         $orderedNewItem->addons()->create([
                             'restaurant_menu_item_addon_id'=>$itemAddon->id,
                             'quantity'=>$itemAddon->quantity,
                         ]);
                     }
+
                 }
 
                 if ($addedMenuItem->customizable && !empty($menuItem->customization)) {
+                    
                     $orderedNewItem->customization()->create([
                         'custom_instruction'=>$menuItem->customization,
                     ]);
+
                 }
             }
         }
@@ -136,11 +151,20 @@ class OrderController extends Controller
                 'delivery_address_id'=>$request->order->delivery_address_id ?? $existingAddress->id ?? $customerNewAddress->id,
             ]);
         }
+        else if ($request->order->order_type==='serve-on-table') {
+            
+            $newOrder->serve()->create([
+                'guest_number'=>$request->order->guest_number,
+            ]);
+
+        }
 
         // }
         
         if ($newOrder->customer_confirmation==1) {
+
             $this->makeRestaurantOrderCalls($newOrder);
+
         }
 
         $this->notifyAdmin($newOrder);
@@ -157,7 +181,9 @@ class OrderController extends Controller
         $newOrder = $this->createReservationOrder($request);
 
         if ($request->order->cutlery_addition) {
+
             $this->addCutlery($newOrder);
+
         }
 
         $this->createScheduleOrder($newOrder, $request->reservation->arriving_time);

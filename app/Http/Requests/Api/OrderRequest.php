@@ -73,6 +73,15 @@ class OrderRequest extends FormRequest
                 },
             ],
 
+            'order.guest_number' => [
+                'numeric', 'min:1',
+                Rule::requiredIf(function () {
+
+                    return $this->input('order.order_type')=='serve-on-table';
+
+                }),
+            ],
+
             'order.delivery_new_address' => [
                 Rule::requiredIf(function () {
 
@@ -283,7 +292,7 @@ class OrderRequest extends FormRequest
         return [
             // 'order.order_type.required' => 'Order type is required',
             'order.is_asap_order.*'  => 'Order schedule is required',
-            'order.order_schedule.*'  => 'Delivery datetime is not a valid',
+            'order.order_schedule.*'  => 'Order schedule is not a valid',
             'order.order_price.required'  => 'Order price is required',
             'order.vat.required'  => 'Vat amount is required',
             'order.discount.required'  => 'Discount amount is required',

@@ -17,12 +17,19 @@ class Order extends Model
       // 'in_progress' => 'boolean',
    ];
 
-   /**
-   * Get the owning orderer model.
-   */
-   public function orderer()
+   public function delivery()
    {
-     return $this->morphTo(__FUNCTION__, 'orderer_type', 'orderer_id');
+      return $this->hasOne(OrderDeliveryInfo::class, 'order_id', 'id');
+   }
+
+   public function serve()
+   {
+      return $this->hasOne(ServeOrder::class, 'order_id', 'id');
+   }
+
+   public function reservation()
+   {
+      return $this->hasOne(Reservation::class, 'order_id', 'id');
    }
 
    public function asap()
@@ -35,7 +42,7 @@ class Order extends Model
       return $this->hasOne(ScheduleOrder::class, 'order_id', 'id');
    }
 
-   public function cutlery()
+   public function cutlery()              // only for food items
    {
       return $this->hasOne(OrderCutlery::class, 'order_id', 'id');
    }
@@ -44,16 +51,6 @@ class Order extends Model
 	{
 		return $this->hasOne(OrderPayment::class, 'order_id', 'id');
 	}
-
-   public function delivery()
-   {
-      return $this->hasOne(OrderDeliveryInfo::class, 'order_id', 'id');
-   }
-
-   public function reservation()
-   {
-      return $this->hasOne(Reservation::class, 'order_id', 'id');
-   }
 
    public function riderCall()
    {
@@ -106,6 +103,11 @@ class Order extends Model
    public function orderCancelations()
    {
       return $this->hasMany(OrderCancelation::class, 'order_id', 'id');
+   }
+
+   public function orderer()
+   {
+     return $this->morphTo(__FUNCTION__, 'orderer_type', 'orderer_id');
    }
 
    public function customerOrderCancelation()
