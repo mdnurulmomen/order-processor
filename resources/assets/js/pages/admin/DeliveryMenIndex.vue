@@ -1,10 +1,6 @@
-
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -138,7 +134,7 @@
 								      			<button
 								        			v-show="deliveryMan.deleted_at === null"
 								        			type="button"
-								        			@click="showRestaurantDeliveryManDeletionModal(deliveryMan)"
+								        			@click="showDeliveryManDeletionModal(deliveryMan)"
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
@@ -787,7 +783,7 @@
     	},
     };
 
-	var restaurantDeliveryManListData = {
+	var deliveryMenListData = {
 
       	query : '',
     	perPage : 10,
@@ -826,7 +822,7 @@
 		},
 
 	    data() {
-	        return restaurantDeliveryManListData;
+	        return deliveryMenListData;
 		},
 
 		created(){
@@ -1078,7 +1074,7 @@
 				      	}
 					});
 			},
-			showRestaurantDeliveryManDeletionModal(deliveryMan) {
+			showDeliveryManDeletionModal(deliveryMan) {
 				this.singleDeliveryManData.deliveryMan = deliveryMan;
 				$("#modal-deliveryMan-delete-confirmation").modal("show");
 			},

@@ -32,13 +32,13 @@ class OrderResource extends JsonResource
             'customer_confirmation' => $this->customer_confirmation,
             'in_progress' => $this->in_progress,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
             'complete_order' => $this->complete_order,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
-            'restaurants' => OrderRestaurantResource::collection($this->restaurants) /*route('api.v1.ordered-restaurants.show', ['order' => $this->id])*/,
-            'restaurant_acceptances' => OrderRestaurantAcceptanceResource::collection($this->restaurantAcceptances),
+            'merchants' => MerchantOrderResource::collection($this->merchants) /*route('api.v1.ordered-merchants.show', ['order' => $this->id])*/,
+
             'rider_assignment' => $this->riderAssignment ? $this->riderAssignment : false,
-            'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->orderReadyConfirmations),
-            'rider_food_pick_confirmations' => OrderPickUpProgressionResource::collection($this->riderFoodPickConfirmations),
-            'rider_delivery_confirmation' => $this->riderDeliveryConfirmation ? new RiderDeliveryResource($this->riderDeliveryConfirmation) : null,
-            'order_serve_confirmation' => $this->when($this->orderServeConfirmation, $this->orderServeConfirmation),
+        
+            'collection_confirmations' => OrderCollectionResource::collection($this->collections),
+            
+            'order_serve_confirmation' => $this->when($this->serve, $this->serve),
             'customer_order_cancelation' => $this->when($this->customerOrderCancelation, $this->customerOrderCancelation),
             // 'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->restaurantOrderCancelations),
             // 'admin_order_cancelation' => $this->when($this->adminOrderCancelations->count(), $this->adminOrderCancelations),

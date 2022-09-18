@@ -16,8 +16,8 @@ class UserFavouriteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'restaurant' => $this->restaurant->name,
-            'restaurant_id' => $this->restaurant_id,
+            'merchant' => $this->merchant->name,
+            'merchant_id' => $this->merchant_id,
         ];
     }
 }

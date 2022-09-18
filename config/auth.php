@@ -46,9 +46,9 @@ return [
             'provider' => 'admins',
         ],
 
-        'restaurant' => [
+        'merchant' => [
             'driver' => 'session',
-            'provider' => 'restaurants',
+            'provider' => 'merchants',
         ],
 
         'api' => [
@@ -86,7 +86,7 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        'restaurants' => [
+        'merchants' => [
             'driver' => 'eloquent',
             'model' => App\Models\RestaurantAdmin::class,
         ],

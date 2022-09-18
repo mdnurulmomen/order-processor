@@ -1,10 +1,6 @@
-
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -70,7 +66,7 @@
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>
-								    			{{ coupon.coupon_code }}
+								    			{{ coupon.code.toUpperCase() }}
 								    		</td>
 								    		<td>
 								    			{{ coupon.percentage }}
@@ -187,15 +183,15 @@
 														<input 
 															type="text" 
 															class="form-control" 
-															v-model="singleCouponData.coupon.coupon_code" 
+															v-model="singleCouponData.coupon.code" 
 															placeholder="Coupon Code" 
 															required="true"
-															:class="!errors.coupon.coupon_code  ? 'is-valid' : 'is-invalid'"
-															@keyup="validateFormInput('coupon.coupon_code')"
+															:class="!errors.coupon.code  ? 'is-valid' : 'is-invalid'"
+															@keyup="validateFormInput('coupon.code')"
 									                	>
 									                	<div class="invalid-feedback">
 												        	{{ 
-												        		errors.coupon.coupon_code 
+												        		errors.coupon.code 
 												        	}}
 												  		</div>
 														
@@ -473,7 +469,7 @@
 	var singleCouponData = {
     	coupon : {
 			// id : null,
-			// coupon_code : null,
+			// code : null,
 			// percentage : null,
 			// min_order : null,
 			// max_discount_per_order : null,
@@ -711,17 +707,17 @@
 
 				switch(formInputName) {
 
-					case 'coupon.coupon_code' :
+					case 'coupon.code' :
 
-						if (!this.singleCouponData.coupon.coupon_code) {
-							this.errors.coupon.coupon_code = 'Coupon code is required';
+						if (!this.singleCouponData.coupon.code) {
+							this.errors.coupon.code = 'Coupon code is required';
 						}
-						else if (!this.singleCouponData.coupon.coupon_code.match(/^[_A-z0-9]*((-|_|\w)*[_A-z0-9])*$/g)) {
-							this.errors.coupon.coupon_code = 'No space or specail characters';
+						else if (!this.singleCouponData.coupon.code.match(/^[_A-z0-9]*((-|_|\w)*[_A-z0-9])*$/g)) {
+							this.errors.coupon.code = 'No space or specail characters';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.coupon, 'coupon_code');
+							this.$delete(this.errors.coupon, 'code');
 						}
 
 						break;	

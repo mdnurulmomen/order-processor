@@ -1,10 +1,6 @@
-
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div class="row justify-content-center vh-100" v-show="loading">
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
@@ -71,7 +67,7 @@
 									    	:key="addon.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ addon.name}}</td>
+								    		<td>{{ addon.name | capitalize }}</td>
 								    		<td>
 										      	<button type="button" v-show="addon.deleted_at === null" @click="showAddonEditModal(addon)" class="btn btn-primary btn-sm">
 										        	<i class="fas fa-edit"></i>
@@ -175,7 +171,7 @@
 															type="text" 
 															class="form-control" 
 															v-model="singleAddonData.addon.name" 
-															placeholder="Menu Name" 
+															placeholder="Ex. Extra Rice, Slice" 
 															required="true"
 															:class="!errors.addon.name  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('addon.name')"

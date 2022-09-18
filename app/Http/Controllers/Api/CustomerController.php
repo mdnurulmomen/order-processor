@@ -17,8 +17,8 @@ use App\Http\Resources\Api\UserOrderCollection;
 use App\Http\Resources\Api\ReservationResource;
 use App\Http\Resources\Api\UserFavouriteResource;
 use App\Http\Resources\Api\ReservationCollection;
+use App\Http\Resources\Api\MerchantOrderResource;
 use App\Http\Resources\Api\UserFavouriteCollection;
-use App\Http\Resources\Api\OrderRestaurantResource;
 
 class CustomerController extends Controller
 {
@@ -179,7 +179,7 @@ class CustomerController extends Controller
     public function showOrderRestaurants($order)
     {
         $expectedOrder = Order::findOrFail($order);
-        return OrderRestaurantResource::collection($expectedOrder->restaurants);
+        return MerchantOrderResource::collection($expectedOrder->restaurants);
     }
 
     public function getMyRegularItems($user, $per_page=false)

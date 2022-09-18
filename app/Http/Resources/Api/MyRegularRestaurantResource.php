@@ -15,9 +15,9 @@ class MyRegularRestaurantResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'restaurant_id' => $this->restaurant_id,
-            'restaurant_name' => $this->restaurant->name,
-            'menu_items' => MyRegularItemResource::collection($this->menuItems),
+            'merchant_id' => $this->merchant_id,
+            'merchant_name' => $this->merchant->name,
+            'products' => MyRegularItemResource::collection($this->products),
         ];
     }
 }

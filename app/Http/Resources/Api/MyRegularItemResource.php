@@ -15,10 +15,10 @@ class MyRegularItemResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'restaurant_menu_item'=>new RestaurantMenuItemResource($this->restaurantMenuItem),
+            'merchant_product'=>new MerchantProductResource($this->merchantProduct),
             'quantity'=>$this->quantity,
-            'variation'=>($this->restaurantMenuItem->has_variation & $this->variation()->exists()) ? new MyRegularItemVariationResource($this->variation) : false,
-            'addons'=>($this->restaurantMenuItem->has_addon & $this->addons()->exists()) ? MyRegularItemAddonResource::collection($this->addons) : [],
+            'variation'=>($this->merchantProduct->has_variation & $this->variation()->exists()) ? new MyRegularItemVariationResource($this->variation) : false,
+            'addons'=>($this->merchantProduct->has_addon & $this->addons()->exists()) ? MyRegularItemAddonResource::collection($this->addons) : [],
         ];
     }
 }

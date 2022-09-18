@@ -15,9 +15,9 @@ class CreateReviewsTable extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedTinyInteger('rating')->nullable()->default(3);
-            $table->string('reviewable_type', 50); // Restaurnat / Rider
-            $table->unsignedMediumInteger('reviewable_id'); // Restaurnat / Rider
+            $table->unsignedTinyInteger('rating')->default(3);
+            $table->string('reviewable_type', 50); // Merchant / Rider
+            $table->unsignedMediumInteger('reviewable_id'); // Merchant / Rider
             $table->unsignedMediumInteger('order_id');
             $table->unsignedInteger('customer_id');
         });

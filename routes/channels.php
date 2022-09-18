@@ -22,15 +22,15 @@ Broadcast::channel('notifyAdmin', function ($admin) {
 }, ['guards' => 'admin']);
 
 /*
-Broadcast::channel('notifyRestaurant', function ($restaurant) {
+Broadcast::channel('notifyMerchant', function ($merchant) {
 	return true;
-}, ['guards' => ['admin', 'restaurant']]);
+}, ['guards' => ['admin', 'merchant']]);
 */
 
-// separate channel for each restaurant with Authentication
-Broadcast::channel('notifyRestaurant.{restaurantId}', function ($restaurant, $restaurantId) {
-    return (int) $restaurant->id == $restaurantId;
-}, ['guards' => 'restaurant']);
+// separate channel for each merchant with Authentication
+Broadcast::channel('notifyMerchant.{merchantId}', function ($merchant, $merchantId) {
+    return (int) $merchant->id == $merchantId;
+}, ['guards' => 'merchant']);
 
 /*
 Broadcast::channel('notifyRider', function ($rider) {
@@ -43,8 +43,8 @@ Broadcast::channel('notifyRider.{riderId}', function ($rider, $riderId) {
     return $rider->id == $riderId;
 }, ['guards' => ['admin', 'api']]);
 
-// for now 'admin' guard is listed along with 'restaurant' guard
-Broadcast::channel('notifyRestaurantWaiters.{restaurantId}', function ($waiter) {
+// for now 'admin' guard is listed along with 'merchant' guard
+Broadcast::channel('notifyMerchantWaiters.{merchantId}', function ($waiter) {
     return true;
 }, ['guards' => ['admin', 'api']]);
 

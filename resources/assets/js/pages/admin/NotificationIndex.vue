@@ -1,10 +1,6 @@
-
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div 
 				class="row justify-content-center vh-100" 
 				v-show="loading"
@@ -77,7 +73,7 @@
 									    		{{ index + 1 }}
 									    	</td>
 								    		<td>
-								    			{{ notification.title }}
+								    			{{ notification.title | capitalize }}
 								    		</td>
 								    		<td>
 								    			<img 
@@ -86,9 +82,7 @@
 								    			>
 								    		</td>
 								    		<td>
-								    			<span v-html="notification.description">
-								    				
-								    			</span>
+								    			<span v-html="notification.description"></span>
 								    		</td>
 								    		<td>
 								    			<span 

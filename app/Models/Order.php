@@ -11,20 +11,20 @@ class Order extends Model
    ];
 
    protected $casts = [
-      // 'is_asap_order' => 'boolean',
-      // 'cutlery_addition' => 'boolean',
+      'has_cutlery' => 'boolean',
+      'is_asap_order' => 'boolean',
       // 'customer_confirmation' => 'boolean',
       // 'in_progress' => 'boolean',
    ];
 
-   public function delivery()
+   public function address()  // delivery order
    {
-      return $this->hasOne(OrderDeliveryInfo::class, 'order_id', 'id');
+      return $this->hasOne(DeliveryAddress::class, 'order_id', 'id');
    }
 
    public function serve()
    {
-      return $this->hasOne(ServeOrder::class, 'order_id', 'id');
+      return $this->hasOne(ServingOrder::class, 'order_id', 'id');
    }
 
    public function reservation()
@@ -32,19 +32,9 @@ class Order extends Model
       return $this->hasOne(Reservation::class, 'order_id', 'id');
    }
 
-   public function asap()
-   {
-      return $this->hasOne(AsapOrder::class, 'order_id', 'id');
-   }
-
    public function schedule()
    {
       return $this->hasOne(ScheduleOrder::class, 'order_id', 'id');
-   }
-
-   public function cutlery()              // only for food items
-   {
-      return $this->hasOne(OrderCutlery::class, 'order_id', 'id');
    }
 
    public function payment()
@@ -52,40 +42,30 @@ class Order extends Model
 		return $this->hasOne(OrderPayment::class, 'order_id', 'id');
 	}
 
-   public function riderCall()
+   public function merchants()
    {
-      return $this->hasOne(RiderDeliveryRecord::class, 'order_id', 'id');
+      return $this->hasMany(MerchantOrder::class, 'order_id', 'id');
    }
 
-   public function restaurants()
+   public function readyMerchants()
    {
-      return $this->hasMany(OrderRestaurant::class, 'order_id', 'id');
+      return $this->hasMany(MerchantOrder::class, 'order_id', 'id')->where('order_ready_confirmation', 1);
    }
 
-   public function restaurantAcceptances()
+   public function riders()            // riders who got request for this order
    {
-      return $this->hasMany(RestaurantOrderRecord::class, 'order_id', 'id');
+      return $this->hasMany(RiderDelivery::class, 'order_id', 'id');
    }
 
-   public function riderAssignment()
+   public function riderAssigned()   // rider who accepted request for this order
    {
       // There might be many riders got request for a single order untill one accepted
-      return $this->hasOne(RiderDeliveryRecord::class, 'order_id', 'id')->where('delivery_order_acceptance', 1);
+      return $this->hasOne(RiderDelivery::class, 'order_id', 'id')->where('delivery_order_acceptance', 1);
    }
 
-   public function orderReadyConfirmations()
+   public function collections()
    {
-      return $this->hasMany(OrderReadyConfirmation::class, 'order_id', 'id');
-   }
-
-   public function riderFoodPickConfirmations()
-   {
-      return $this->hasMany(OrderPickUpProgression::class, 'order_id', 'id');
-   }
-
-   public function riderDeliveryConfirmation()
-   {
-      return $this->hasOne(OrderDeliveryProgression::class, 'order_id', 'id');
+      return $this->hasMany(RiderCollection::class, 'order_id', 'id');
    }
 
    /*
@@ -95,19 +75,9 @@ class Order extends Model
    }
    */
 
-   public function orderServeConfirmation()
-   {
-      return $this->hasOne(OrderServeProgression::class, 'order_id', 'id');
-   }
-
    public function orderCancelations()
    {
       return $this->hasMany(OrderCancelation::class, 'order_id', 'id');
-   }
-
-   public function orderer()
-   {
-     return $this->morphTo(__FUNCTION__, 'orderer_type', 'orderer_id');
    }
 
    public function customerOrderCancelation()
@@ -115,9 +85,9 @@ class Order extends Model
       return $this->orderCancelations()->where('canceller_type', 'App\Models\Customer');
    }
 
-   public function restaurantOrderCancelations()
+   public function merchantOrderCancelations()
    {
-      return $this->orderCancelations()->where('canceller_type', 'App\Models\Restaurant');
+      return $this->orderCancelations()->where('canceller_type', 'App\Models\Merchant');
    }
 
    public function riderOrderCancelations()
@@ -128,6 +98,11 @@ class Order extends Model
    public function adminOrderCancelation()
    {
       return $this->orderCancelations()->where('canceller_type', 'App\Models\Admin');
+   }
+
+   public function orderer()
+   {
+     return $this->morphTo(__FUNCTION__, 'orderer_type', 'orderer_id');
    }
 
 }

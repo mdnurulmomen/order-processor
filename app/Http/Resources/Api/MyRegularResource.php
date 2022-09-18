@@ -20,7 +20,7 @@ class MyRegularResource extends JsonResource
             'time'=>$this->time,
             'days'=>$this->days,
             'delivery_address_id'=>$this->delivery_address_id,
-            'restaurants'=>MyRegularRestaurantResource::collection($this->restaurants),
+            'merchants'=>MyRegularRestaurantResource::collection($this->merchants),
         ];
     }
 }

@@ -21,9 +21,9 @@ class MyRegular extends Model
 
     public $timestamps = false;
 
-    public function restaurants()
+    public function products()
 	{
-		return $this->hasMany(MyRegularRestaurant::class, 'my_regular_id', 'id');
+		return $this->hasMany(MyRegularProduct::class, 'my_regular_id', 'id');
 	}
 
 	public function customer()
@@ -31,8 +31,8 @@ class MyRegular extends Model
 		return $this->belongsTo(Customer::class, 'customer_id', 'id');
 	}
 
-    public function deliveryAddress()
+    public function address()
     {
-        return $this->belongsTo(CustomerAddress::class, 'delivery_address_id', 'id');
+        return $this->belongsTo(DeliveryAddress::class, 'delivery_address_id', 'id');
     }
 }

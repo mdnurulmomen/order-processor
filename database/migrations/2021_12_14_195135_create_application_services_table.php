@@ -15,8 +15,8 @@ class CreateApplicationServicesTable extends Migration
     {
         Schema::create('application_services', function (Blueprint $table) {
             $table->tinyIncrements('id');
-            $table->string('name');
-            $table->string('code');
+            $table->string('name');         // home-delivery / take-away / pick-up
+            $table->string('code')->unique();
             $table->string('logo')->default('logo.png');
             $table->boolean('status')->default(false);
         });

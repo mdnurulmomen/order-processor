@@ -39,9 +39,9 @@ class NotificationController extends Controller
 
 		$newNotification =  new Notification();
 
-		$newNotification->title = $request->title;
+		$newNotification->title = strtolower($request->title);
 		$newNotification->banner = $request->banner;
-		$newNotification->description = $request->description;
+		$newNotification->description = strtolower($request->description);
 		$newNotification->status = $request->status ?? false;
 		$newNotification->editor_id = \Auth::guard('admin')->user()->id;
 
@@ -61,13 +61,13 @@ class NotificationController extends Controller
 			'status'=>'nullable|boolean',
 		]);
 
-		$notificationToUpdate->title = $request->title;
+		$notificationToUpdate->title = strtolower($request->title);
 
 		if ($request->banner) {
 			$notificationToUpdate->banner = $request->banner;
 		}
 
-		$notificationToUpdate->description = $request->description;
+		$notificationToUpdate->description = strtolower($request->description);
 		$notificationToUpdate->status = $request->status ?? false;
 		$notificationToUpdate->editor_id = \Auth::guard('admin')->user()->id;
 

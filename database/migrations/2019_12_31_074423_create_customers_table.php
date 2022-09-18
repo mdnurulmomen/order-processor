@@ -18,8 +18,8 @@ class CreateCustomersTable extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('user_name')->nullable();
-            $table->char('mobile', 13)->nullable();
-            $table->string('email', 50)->nullable();
+            $table->char('mobile')->unique();
+            $table->string('email')->nullable();
             $table->string('otp_code')->nullable(); // Login with username / mobile
             $table->rememberToken();
             $table->boolean('app_notification')->default(true);

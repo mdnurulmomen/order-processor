@@ -33,7 +33,7 @@ class UserOrderResource extends JsonResource
             // 'orderer' => $this->orderer,
             'customer_confirmation' => $this->customer_confirmation,
             'in_progress' => $this->in_progress,
-            'restaurants' => /*OrderedRestaurantResource::collection($this->restaurants)*/ route('api.v1.order-restaurants.show', ['order' => $this->id]),
+            'merchants' => route('api.v1.order-merchants.show', ['order' => $this->id]),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

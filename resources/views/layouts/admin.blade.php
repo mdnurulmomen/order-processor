@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +21,7 @@
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
   <!-- Toastr style -->
   <link href="{{ asset('plugins/toastr/css/toastr.css') }}" rel="stylesheet"/>
-  <!-- prefetching restaurant-list components -->
+  <!-- prefetching merchant-list components -->
   <link rel="prefetch" href="{{ asset('/js/0.js') }}" as="script">
   <link rel="prefetch" href="{{ asset('/js/1.js') }}" as="script">
   <link rel="prefetch" href="{{ asset('/js/2.js') }}" as="script">
@@ -118,12 +117,11 @@
                   </div>
 
                   <div class="col-4">
-                    <a class="btn btn-default btn-flat" href="{{ route('admin.logout') }}"
-                       onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
+                    <a class="btn btn-default btn-flat"
+                       onclick="document.getElementById('admin-logout-form').submit();">
                         {{ __('Logout') }}
                     </a>
-                    <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                    <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                   </div>

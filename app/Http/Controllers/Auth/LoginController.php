@@ -38,9 +38,9 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout', 'adminLogout', 'restaurantLogout');
-        $this->middleware('guest:admin')->except('logout', 'adminLogout', 'restaurantLogout');
-        $this->middleware('guest:restaurant')->except('logout', 'adminLogout', 'restaurantLogout');
+        $this->middleware('guest')->except('logout', 'adminLogout', 'merchantLogout');
+        $this->middleware('guest:admin')->except('logout', 'adminLogout', 'merchantLogout');
+        $this->middleware('guest:merchant')->except('logout', 'adminLogout', 'merchantLogout');
     }
 
     public function showAdminLoginForm()
@@ -48,9 +48,9 @@ class LoginController extends Controller
         return view('auth.login', ['url' => 'admin']);
     }
 
-    public function showRestaurantLoginForm()
+    public function showMerchantLoginForm()
     {
-        return view('auth.login', ['url' => 'resto']);
+        return view('auth.login', ['url' => 'merchant']);
     }
 
     // Customer Login
@@ -89,8 +89,8 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-    // Restaurant Login 
-    public function restaurantLogin(Request $request)
+    // Merchant Login 
+    public function merchantLogin(Request $request)
     {
         $this->validateLogin($request);
 
@@ -104,9 +104,9 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($request);
         }
 
-        if ($this->attemptRestaurantLoginWithMobile($request) || $this->attemptRestaurantLoginWithUsername($request)) {
+        if ($this->attemptMerchantLoginWithMobile($request) || $this->attemptMerchantLoginWithUsername($request)) {
 
-            return $this->sendRestaurantLoginResponse($request);
+            return $this->sendMerchantLoginResponse($request);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -126,9 +126,9 @@ class LoginController extends Controller
         return $this->loggedOut($request) ?: redirect('/');
     }
 
-    public function restaurantLogout(Request $request)
+    public function merchantLogout(Request $request)
     {
-        Auth::guard('restaurant')->logout();
+        Auth::guard('merchant')->logout();
 
         $request->session()->invalidate();
 
@@ -169,16 +169,16 @@ class LoginController extends Controller
             ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember'));
     }
 
-    protected function attemptRestaurantLoginWithMobile(Request $request)
+    protected function attemptMerchantLoginWithMobile(Request $request)
     {
-        return Auth::guard('restaurant')->attempt(
+        return Auth::guard('merchant')->attempt(
             ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
         );   
     }
 
-    protected function attemptRestaurantLoginWithUsername(Request $request)
+    protected function attemptMerchantLoginWithUsername(Request $request)
     {
-        return Auth::guard('restaurant')->attempt(
+        return Auth::guard('merchant')->attempt(
             ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
         );   
     }
@@ -205,13 +205,13 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    protected function sendRestaurantLoginResponse(Request $request)
+    protected function sendMerchantLoginResponse(Request $request)
     {
         $request->session()->regenerate();
 
         $this->clearLoginAttempts($request);
 
-        return $this->authenticated($request, Auth::guard('restaurant')->user())
+        return $this->authenticated($request, Auth::guard('merchant')->user())
                 ?: redirect()->intended($this->redirectPath());
     }
 

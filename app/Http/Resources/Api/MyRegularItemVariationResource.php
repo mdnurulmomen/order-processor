@@ -14,12 +14,12 @@ class MyRegularItemVariationResource extends JsonResource
      */
     public function toArray($request)
     {
-        $restaurantMenuItemVariation = $this->restaurantMenuItemVariation()->withTrashed()->first();
+        $merchantProductVariation = $this->merchantProductVariation()->withTrashed()->first();
 
         return [
-            'restaurant_menu_item_variation_id' => $this->id,
-            'restaurant_menu_item_variation' => /* new RestaurantMenuItemVariationResource($this->restaurantMenuItemVariation()->withTrashed()->first()) */ $restaurantMenuItemVariation->variation->name,
-            'price' => $restaurantMenuItemVariation->price,
+            'merchant_product_variation_id' => $this->id,
+            'merchant_product_variation' => /* new RestaurantMenuItemVariationResource($this->merchantProductVariation()->withTrashed()->first()) */ $merchantProductVariation->variation->name,
+            'price' => $merchantProductVariation->price,
         ];
     }
 }

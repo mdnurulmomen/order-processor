@@ -1,4 +1,3 @@
-
 <template> 
   <div>
     <!-- Navbar for back/forward button -->
@@ -89,7 +88,7 @@
             <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                :class="[['orders', 'rider-orders', 'waiter-orders'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                :class="[['orders', 'rider-orders', 'agent-orders'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fab fa-first-order"></i>
                 <p>
@@ -120,11 +119,11 @@
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'waiter-orders' }" 
-                    :class="[currentRoute=='waiter-orders' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'agent-orders' }" 
+                    :class="[currentRoute=='agent-orders' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Waiter-Orders</p>
+                    <p>Agent-Orders</p>
                   </router-link>
                 </li>
               </ul>
@@ -133,7 +132,7 @@
             <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                :class="[['meals', 'cuisines', 'addons', 'item-variations', 'menu-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                :class="[['meals', 'cuisines', 'addons', 'variations', 'product-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-utensils"></i>
                 <p>
@@ -173,21 +172,21 @@
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'item-variations' }" 
-                    :class="[currentRoute=='item-variations' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'variations' }" 
+                    :class="[currentRoute=='variations' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Item Variations</p>
+                    <p>Variations</p>
                   </router-link>
                 </li>
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'menu-categories' }"  
-                    :class="[currentRoute=='menu-categories' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'product-categories' }"  
+                    :class="[currentRoute=='product-categories' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Menu Categories</p>
+                    <p>Product Categories</p>
                   </router-link>
                 </li>
               </ul>
@@ -196,11 +195,11 @@
             <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                :class="[['restaurants', 'restaurant-deals', 'restaurant-meals', 'restaurant-admins', 'waiters', 'restaurant-cuisines', 'kitchens', 'expected-restaurant-menu-items', 'restaurant-menu-items', 'restaurant-menu-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                :class="[['merchants', 'merchant-deals', 'merchant-meals', 'merchant-admins', 'agents', 'merchant-cuisines', 'kitchens', 'merchant-products', 'merchant-all-products', 'merchant-product-categories', 'merchant-all-product-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-hotel"></i>
                 <p>
-                  Restaurants
+                  Merchants
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -208,18 +207,18 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'restaurants' }" 
-                    :class="[currentRoute=='restaurants' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'merchants' }" 
+                    :class="[currentRoute=='merchants' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Restaurants</p>
+                    <p>Merchants</p>
                   </router-link>
                 </li>
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'restaurant-deals' }" 
-                    :class="[currentRoute=='restaurant-deals' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'merchant-deals' }" 
+                    :class="[currentRoute=='merchant-deals' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Deals</p>
@@ -228,8 +227,8 @@
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'restaurant-meals' }" 
-                    :class="[currentRoute=='restaurant-meals' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'merchant-meals' }" 
+                    :class="[currentRoute=='merchant-meals' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Meals</p>
@@ -238,8 +237,8 @@
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'restaurant-admins' }" 
-                    :class="[currentRoute=='restaurant-admins' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'merchant-admins' }" 
+                    :class="[currentRoute=='merchant-admins' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Owners</p>
@@ -248,18 +247,18 @@
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'waiters' }"  
-                    :class="[currentRoute=='waiters' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'agents' }"  
+                    :class="[currentRoute=='agents' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Waiters</p>
+                    <p>Agents</p>
                   </router-link>
                 </li>
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'restaurant-cuisines' }" 
-                    :class="[currentRoute=='restaurant-cuisines' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'merchant-cuisines' }" 
+                    :class="[currentRoute=='merchant-cuisines' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Cuisines</p>
@@ -278,21 +277,21 @@
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'expected-restaurant-menu-items' }"  
-                    :class="[['expected-restaurant-menu-items', 'restaurant-menu-items'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'merchant-products' }"  
+                    :class="[['merchant-products', 'merchant-all-products'].includes(currentRoute) ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Menu-Items</p>
+                    <p>Products</p>
                   </router-link>
                 </li>
 
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'restaurant-menu-categories' }"  
-                    :class="[['restaurant-menu-categories', 'restaurant-menu-category-details'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'merchant-product-categories' }"  
+                    :class="[['merchant-product-categories', 'merchant-all-product-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Menu Categories</p>
+                    <p>Product Categories</p>
                   </router-link>
                 </li>
               </ul>
@@ -528,9 +527,9 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/examples/legacy-user-menu.html" class="nav-link">
+                  <a href="pages/examples/legacy-user-product.html" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Legacy User Menu</p>
+                    <p>Legacy User product</p>
                   </a>
                 </li>
                 <li class="nav-item">

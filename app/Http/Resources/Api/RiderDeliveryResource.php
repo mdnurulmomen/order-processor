@@ -15,7 +15,7 @@ class RiderDeliveryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'rider_delivery_confirmation' => $this->rider_delivery_confirmation,
+            'delivery_confirmation' => $this->delivery_confirmation,
         ];
     }
 }

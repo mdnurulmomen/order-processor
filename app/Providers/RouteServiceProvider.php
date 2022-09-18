@@ -46,7 +46,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapAdminRoutes();
 
-        $this->mapRestaurantRoutes();
+        $this->mapMerchantRoutes();
         
         $this->mapWebRoutes();
 
@@ -83,18 +83,18 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the "resto" routes for the application.
+     * Define the "merchant" routes for the application.
      *
      * These routes are typically stateless.
      *
      * @return void
      */
-    protected function mapRestaurantRoutes()
+    protected function mapMerchantRoutes()
     {
-        Route::domain('resto.'.env('APP_URL'))
+        Route::domain('merchant.'.env('APP_URL'))
              ->middleware('web')
              ->namespace($this->namespace)
-             ->group(base_path('routes/resto.php'));
+             ->group(base_path('routes/merchant.php'));
     }
 
     /**

@@ -70,7 +70,7 @@
 									    	:key="meal.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ meal.name}}</td>
+								    		<td>{{ meal.name | capitalize }}</td>
 								    		<td>
 								    			<span class="badge" :class="meal.search_preference ? 'badge-success' : 'badge-info'">
 								    				{{ meal.search_preference ? 'Published' : 'UnPublished' }}
@@ -178,7 +178,7 @@
 															type="text" 
 															class="form-control" 
 															v-model="singleMealData.name" 
-															placeholder="Menu Name" 
+															placeholder="Ex. Beakfast, Brunch, Lunch, Dinner" 
 															required="true"
 															:class="!errors.name  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('meal.name')"

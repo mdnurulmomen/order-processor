@@ -30,7 +30,7 @@ class CancelationController extends Controller
 	 	]);
 
 	 	$newCuisine = CancelationReason::create([
-	 		'reason' => $request->reason
+	 		'reason' => strtolower($request->reason)
 	 	]);
 
 	 	return $this->showAllReasons($perPage);
@@ -45,7 +45,7 @@ class CancelationController extends Controller
 	 	]);
 
 	 	$reasonUpdated = $reasonToUpdate->update([
-	 		'reason' => $request->reason
+	 		'reason' => strtolower($request->reason)
 	 	]);
 
 	 	return $this->showAllReasons($perPage);

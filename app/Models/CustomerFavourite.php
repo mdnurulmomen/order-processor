@@ -9,8 +9,8 @@ class CustomerFavourite extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
-    public function restaurant()
+    public function merchant()
     {
-    	return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');
+    	return $this->belongsTo(Merchant::class, 'merchant_id', 'id');
     }
 }

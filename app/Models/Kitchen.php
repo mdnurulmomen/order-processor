@@ -30,8 +30,8 @@ class Kitchen extends Model
         'password', 'remember_token',
     ];
 
-   	public function restaurant()
+   	public function merchant()
     {
-        return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');
+        return $this->belongsTo(Merchant::class, 'merchant_id', 'id');
     } 
 }

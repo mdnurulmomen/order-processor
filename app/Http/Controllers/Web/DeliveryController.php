@@ -47,10 +47,10 @@ class DeliveryController extends Controller
 
 		$newDeliveryMan =  new Rider();
 
-		$newDeliveryMan->first_name = $request->first_name;
-		$newDeliveryMan->last_name = $request->last_name;
-		$newDeliveryMan->user_name = $request->user_name;
-		$newDeliveryMan->email = $request->email;
+		$newDeliveryMan->first_name = strtolower($request->first_name);
+		$newDeliveryMan->last_name = strtolower($request->last_name);
+		$newDeliveryMan->user_name = strtolower($request->user_name);
+		$newDeliveryMan->email = strtolower($request->email);
 		$newDeliveryMan->mobile = $request->mobile;
 		$newDeliveryMan->password = Hash::make($request->password);
 		$newDeliveryMan->birth_date = $request->birth_date;
@@ -60,7 +60,7 @@ class DeliveryController extends Controller
 			$newDeliveryMan->profile_picture = $request->profile_pic_preview;
 		}
 
-		$newDeliveryMan->present_address = $request->present_address;
+		$newDeliveryMan->present_address = strtolower($request->present_address);
 		$newDeliveryMan->nid_number = $request->nid_number;
 
 		if ($request->nid_front_preview) {
@@ -71,7 +71,7 @@ class DeliveryController extends Controller
 			$newDeliveryMan->nid_back_preview = $request->nid_back_preview;
 		}
 
-		$newDeliveryMan->payment_method = $request->payment_method;
+		$newDeliveryMan->payment_method = strtolower($request->payment_method);
 		$newDeliveryMan->payment_account_number = $request->payment_account_number;
 		$newDeliveryMan->admin_approval = $request->admin_approval ?? false;
 
@@ -105,10 +105,10 @@ class DeliveryController extends Controller
 
 		]);
 
-		$deliveryManToUpdate->first_name = $request->first_name;
-		$deliveryManToUpdate->last_name = $request->last_name;
-		$deliveryManToUpdate->user_name = $request->user_name;
-		$deliveryManToUpdate->email = $request->email;
+		$deliveryManToUpdate->first_name = strtolower($request->first_name);
+		$deliveryManToUpdate->last_name = strtolower($request->last_name);
+		$deliveryManToUpdate->user_name = strtolower($request->user_name);
+		$deliveryManToUpdate->email = strtolower($request->email);
 		$deliveryManToUpdate->mobile = $request->mobile;
 
 		if ($request->password) {    
@@ -118,11 +118,11 @@ class DeliveryController extends Controller
 		$deliveryManToUpdate->birth_date = $request->birth_date;
 		$deliveryManToUpdate->gender = $request->gender;
 		$deliveryManToUpdate->profile_picture = $request->profile_pic_preview;
-		$deliveryManToUpdate->present_address = $request->present_address;
+		$deliveryManToUpdate->present_address = strtolower($request->present_address);
 		$deliveryManToUpdate->nid_number = $request->nid_number;
 		$deliveryManToUpdate->nid_front_preview = $request->nid_front_preview;
 		$deliveryManToUpdate->nid_back_preview = $request->nid_back_preview;
-		$deliveryManToUpdate->payment_method = $request->payment_method;
+		$deliveryManToUpdate->payment_method = strtolower($request->payment_method);
 		$deliveryManToUpdate->payment_account_number = $request->payment_account_number;
 		$deliveryManToUpdate->admin_approval = $request->admin_approval ?? false;
 

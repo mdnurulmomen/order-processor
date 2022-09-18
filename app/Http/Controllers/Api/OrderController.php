@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
-use App\Models\Restaurant;
+use App\Models\Merchant;
 use App\Events\UpdateAdmin;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Models\MerchantOrder;
+use App\Models\MerchantProduct;
 use App\Models\CustomerAddress;
 use App\Events\UpdateRestaurant;
-use App\Models\OrderRestaurant;
-use App\Models\RestaurantMenuItem;
 // use App\Models\RiderDeliveryRecord;
 // use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -33,25 +33,16 @@ class OrderController extends Controller
             'payment_method' => $request->payment->payment_method,
             'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
             'orderer_id' => $request->order->orderer_id,
+            'cutlery_addition' => $request->order->cutlery_addition ? true : false, 
+            'is_asap_order' => $request->order->is_asap_order ? true : false, 
             'customer_confirmation' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1, 
             'in_progress' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1,
         ]);
 
         // asap / scheduled
-        if ($request->order->is_asap_order) {
-
-            $this->createAsapOrder($newOrder);
-
-        }
-        else {
+        if (! $request->order->is_asap_order) {
 
             $this->createScheduleOrder($newOrder, $request->order->order_schedule); 
-
-        }
-
-        if ($request->order->cutlery_addition) {
-
-            $this->addCutlery($newOrder);
 
         }
 
@@ -63,46 +54,48 @@ class OrderController extends Controller
             
         }
 
-        foreach ($request->restaurants as $orderedRestaurant) {
+        foreach ($request->merchants as $merchantOrder) {
             
-            $orderedNewRestaurant = $newOrder->restaurants()->create([
-                'restaurant_id' => $orderedRestaurant->restaurant_id,
+            $merchantOrder = $newOrder->merchants()->create([
+                'merchant_id' => $merchantOrder->merchant_id,
             ]);
 
-            $request->menu_items = json_decode(json_encode($orderedRestaurant->menu_items));
+            $request->products = json_decode(json_encode($merchantOrder->products));
 
-            foreach ($request->menu_items as $menuItem) {
+            foreach ($request->products as $product) {
 
-                $orderedNewItem = $orderedNewRestaurant->items()->create([
-                     'restaurant_menu_item_id' => $menuItem->id,
-                     'quantity' => $menuItem->quantity,
+                $orderedNewItem = $merchantOrder->products()->create([
+                     'merchant_product_id' => $product->id,
+                     'quantity' => $product->quantity,
                 ]);
 
-                $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
+                $addedProduct = MerchantProduct::find($product->id);
 
-                if ($addedMenuItem->has_variation && !empty($menuItem->item_variation) && !empty($menuItem->item_variation->id)) {
+                if ($addedProduct->has_variation && !empty($product->item_variation) && !empty($product->item_variation->id)) {
                     
                     $orderedNewItem->variation()->create([
-                        'restaurant_menu_item_variation_id'=>$menuItem->item_variation->id
+                        'merchant_product_variation_id'=>$product->item_variation->id
                     ]);
 
                 }
 
-                if ($addedMenuItem->has_addon && !empty($menuItem->item_addons)) {
+                if ($addedProduct->has_addon && !empty($product->item_addons)) {
                     
-                    foreach ($menuItem->item_addons as $itemAddon) {
+                    foreach ($product->item_addons as $itemAddon) {
+
                         $orderedNewItem->addons()->create([
-                            'restaurant_menu_item_addon_id'=>$itemAddon->id,
+                            'merchant_product_addon_id'=>$itemAddon->id,
                             'quantity'=>$itemAddon->quantity,
                         ]);
+
                     }
 
                 }
 
-                if ($addedMenuItem->customizable && !empty($menuItem->customization)) {
+                if ($addedProduct->customizable && !empty($product->customization)) {
                     
                     $orderedNewItem->customization()->create([
-                        'custom_instruction'=>$menuItem->customization,
+                        'custom_instruction'=>$product->customization,
                     ]);
 
                 }
@@ -146,9 +139,9 @@ class OrderController extends Controller
 
             }
         
-            $newOrderAddress = $newOrder->delivery()->create([
+            $newOrderAddress = $newOrder->address()->create([
                 'additional_info'=>$request->order->delivery_additional_info,
-                'delivery_address_id'=>$request->order->delivery_address_id ?? $existingAddress->id ?? $customerNewAddress->id,
+                'customer_address_id'=>$request->order->delivery_address_id ?? $existingAddress->id ?? $customerNewAddress->id,
             ]);
         }
         else if ($request->order->order_type==='serve-on-table') {
@@ -163,7 +156,7 @@ class OrderController extends Controller
         
         if ($newOrder->customer_confirmation==1) {
 
-            $this->makeRestaurantOrderCalls($newOrder);
+            $this->makeMerchantOrderCalls($newOrder);
 
         }
 
@@ -176,29 +169,23 @@ class OrderController extends Controller
 
     public function makeNewReservation(ReservationRequest $request)
     {   
-        $expectedRestaurant = Restaurant::find($request->reservation->restaurant_id);
+        $expectedRestaurant = Merchant::find($request->reservation->merchant_id);
 
         $newOrder = $this->createReservationOrder($request);
-
-        if ($request->order->cutlery_addition) {
-
-            $this->addCutlery($newOrder);
-
-        }
 
         $this->createScheduleOrder($newOrder, $request->reservation->arriving_time);
         $this->createTableReservation($expectedRestaurant, $request, $newOrder->id);
         $this->updateRestaurantBookingStatus($expectedRestaurant, $request->reservation);
-        $orderedRestaurant = $this->createOrderedRestaurant($newOrder, $request->reservation->restaurant_id);
+        $merchantOrder = $this->createMerchantOrderRecord($newOrder, $request->reservation->merchant_id);
 
         $reservationMsg = 'Reservation request has been accepted';
 
-        if ($newOrder->customer_confirmation==1 && ! empty($request->menu_items) && ! empty($request->payment->payment_id)) {
+        if ($newOrder->customer_confirmation==1 && ! empty($request->products) && ! empty($request->payment->payment_id)) {
 
             $this->saveNewPayment($newOrder, $request->payment->payment_id);
-            $this->makeRestaurantOrderRecord($newOrder, $request->reservation->restaurant_id);
-            $this->makeOrderItems($orderedRestaurant, $request->menu_items);
-            // $this->confirmReservation($newOrder, $orderedRestaurant, $request);
+            $this->updateMerchantOrderRecord($merchantOrder);
+            $this->makeProductOrders($merchantOrder, $request->products);
+            // $this->confirmReservation($newOrder, $merchantOrder, $request);
 
             $reservationMsg = 'Reservation request has been confirmed';
 
@@ -206,8 +193,8 @@ class OrderController extends Controller
 
         // Broadcast for admin
         $this->notifyAdmin($newOrder);
-        // Broadcast for restaurant
-        $this->notifyRestaurant($orderedRestaurant);
+        // Broadcast for merchant
+        $this->notifyMerchant($merchantOrder);
 
         return response()->json([
             'success' => $reservationMsg
@@ -232,19 +219,19 @@ class OrderController extends Controller
             ], 422);
         }
         
-        $expectedOrderedRestaurant = $expectedOrder->restaurants->first();
-        // $expectedOrderedRestaurant = OrderRestaurant::find($request->reservation->ordered_restaurant_id);
+        $expectedMerchantOrder = $expectedOrder->merchants->first();
+        // $expectedMerchantOrder = MerchantOrder::find($request->reservation->ordered_restaurant_id);
 
         $this->confirmOrder($expectedOrder);
         // $this->confirmTableReservation($expectedReservation);
         $this->saveNewPayment($expectedOrder, $request->payment->payment_id);
-        $this->makeRestaurantOrderRecord($expectedOrder, $request->reservation->restaurant_id);
-        $this->makeOrderItems($expectedOrderedRestaurant, $request->menu_items);
+        $this->updateMerchantOrderRecord($expectedMerchantOrder);
+        $this->makeProductOrders($expectedMerchantOrder, $request->products);
 
         // Broadcast for admin
         $this->notifyAdmin($expectedOrder);
-        // Broadcast for restaurant
-        $this->makeRestaurantOrderCalls($expectedOrder);
+        // Broadcast for merchant
+        $this->makeMerchantOrderCalls($expectedOrder);
 
         return response()->json([
             'success' => 'Reservation has been confirmed'
@@ -253,7 +240,7 @@ class OrderController extends Controller
 
     public function getOrderDetails($order)
     {
-        return new OrderResource(Order::with(['asap', 'schedule', 'cutlery', 'payment', 'delivery', 'restaurantAcceptances', 'riderAssignment', 'orderReadyConfirmations', 'riderFoodPickConfirmations', 'riderDeliveryConfirmation', 'orderServeConfirmation', 'customerOrderCancelation', 'restaurants.items.restaurantMenuItem', 'restaurants.items.variation.restaurantMenuItemVariation.variation', 'restaurants.items.addons.restaurantMenuItemAddon.addon', 'restaurants.restaurant'])->findOrFail($order));
+        return new OrderResource(Order::with(['schedule', 'payment', 'address', 'riderAssigned', 'readyMerchants', 'collections', 'serve', 'customerOrderCancelation', 'merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.merchant'])->findOrFail($order));
     }
 
     /*
@@ -286,13 +273,10 @@ class OrderController extends Controller
             'orderer_type' => "App\Models\Customer",
             'orderer_id' => $request->order->orderer_id,
             'customer_confirmation' => ($request->payment->payment_method !== 'cash' && $request->payment->payment_id) ? 1 : -1, 
+            'cutlery_addition' => $request->order->cutlery_addition ? true : false, 
+            'is_asap_order' => $request->order->is_asap_order ? true : false,
             'in_progress' => ($request->payment->payment_method !== 'cash' && $request->payment->payment_id) ? 1 : -1,
         ]);
-    }
-
-    private function createAsapOrder(Order $order)
-    {
-        $order->asap()->create([]);
     }
 
     private function createScheduleOrder(Order $order, $schedule)
@@ -302,27 +286,22 @@ class OrderController extends Controller
         ]);
     }
 
-    private function addCutlery(Order $order)
+    private function createTableReservation(Merchant $merchant, Request $request, $orderId)
     {
-        $order->cutlery()->create([]);
-    }
-
-    private function createTableReservation(Restaurant $restaurant, Request $request, $orderId)
-    {
-        $newReservation = $restaurant->reservations()->create([
+        $newReservation = $merchant->reservations()->create([
             'guest_number'=>$request->reservation->guest_number,
             'mobile'=>$request->reservation->mobile,
             // 'booking_confirmation'=>($request->payment->payment_method!=='cash' && $request->payment->payment_id) ? 1 : 0,   // cancelled by default
             'order_id'=>$orderId,
-            'max_payment_time'=> now()->addMinutes(60),          // delay time should be as per restaurant choice
+            'max_payment_time'=> now()->addMinutes(60),          // delay time should be as per merchant choice
         ]);
     }
 
-    private function updateRestaurantBookingStatus(Restaurant $restaurant, $reservation)
+    private function updateRestaurantBookingStatus(Merchant $merchant, $reservation)
     {
-        $restaurant->booking()->update([
-            'engaged_seat' => ($restaurant->booking->engaged_seat + $reservation->guest_number),
-            'seat_left' => ($restaurant->booking->seat_left - $reservation->guest_number),
+        $merchant->booking()->update([
+            'engaged_seat' => ($merchant->booking->engaged_seat + $reservation->guest_number),
+            'seat_left' => ($merchant->booking->seat_left - $reservation->guest_number),
         ]);
     }
 
@@ -333,47 +312,53 @@ class OrderController extends Controller
         ]);
     }
 
-    private function createOrderedRestaurant(Order $order, $restaurantId)
+    private function createMerchantOrderRecord(Order $order, $merchantId)
     {
-        return  $orderedNewRestaurant = $order->restaurants()->create([
-                    'restaurant_id' => $restaurantId,
-                ]); 
+        return  $merchantOrder = $order->merchants()->create([
+            'merchant_id' => $merchantId,
+        ]); 
     }
 
-    private function makeOrderItems(OrderRestaurant $orderedNewRestaurant, $menu_items) 
+    private function makeProductOrders(MerchantOrder $merchantOrder, $products) 
     {
-        // foreach ($restaurants as $orderedRestaurant) {            
+        // foreach ($merchants as $merchantOrder) {            
 
-            // $menu_items = json_decode(json_encode($menu_items));
+            // $products = json_decode(json_encode($products));
 
-            foreach ($menu_items as $menuItem) {
+            foreach ($products as $product) {
 
-                $orderedNewItem = $orderedNewRestaurant->items()->create([
-                     'restaurant_menu_item_id' => $menuItem->id,
-                     'quantity' => $menuItem->quantity,
+                $orderedNewItem = $merchantOrder->products()->create([
+                     'merchant_product_id' => $product->id,
+                     'quantity' => $product->quantity,
                 ]);
 
-                $addedMenuItem = RestaurantMenuItem::find($menuItem->id);
+                $addedProduct = MerchantProduct::find($product->id);
 
-                if ($addedMenuItem->has_variation && !empty($menuItem->item_variation) && !empty($menuItem->item_variation->id)) {
+                if ($addedProduct->has_variation && !empty($product->item_variation) && !empty($product->item_variation->id)) {
                     $orderedNewItem->variation()->create([
-                        'restaurant_menu_item_variation_id'=>$menuItem->item_variation->id
+                        'merchant_product_variation_id'=>$product->item_variation->id
                     ]);
                 }
 
-                if ($addedMenuItem->has_addon && !empty($menuItem->item_addons)) {
-                    foreach ($menuItem->item_addons as $itemAddon) {
+                if ($addedProduct->has_addon && !empty($product->item_addons)) {
+
+                    foreach ($product->item_addons as $itemAddon) {
+
                         $orderedNewItem->addons()->create([
-                            'restaurant_menu_item_addon_id'=>$itemAddon->id,
+                            'merchant_product_addon_id'=>$itemAddon->id,
                             'quantity'=>$itemAddon->quantity,
                         ]);
+
                     }
+
                 }
 
-                if ($addedMenuItem->customizable && !empty($menuItem->customization)) {
+                if ($addedProduct->customizable && !empty($product->customization)) {
+
                     $orderedNewItem->customization()->create([
-                        'custom_instruction'=>$menuItem->customization,
+                        'custom_instruction'=>$product->customization,
                     ]);
+
                 }
 
             }
@@ -382,36 +367,36 @@ class OrderController extends Controller
 
     }
 
-    private function makeRestaurantOrderRecord(Order $order, $restaurantId)
+    private function updateMerchantOrderRecord(MerchantOrder $merchantOrder)
     {
-        $order->restaurantAcceptances()->create([
-            'food_order_acceptance' => -1, // ringing
-            'restaurant_id' => $restaurantId,
+        $merchantOrder->update([
+            'order_acceptance' => -1, // ringing
+            // 'merchant_id' => $merchantId,
         ]); 
     }
 
-    private function makeRestaurantOrderCalls(Order $order)
+    private function makeMerchantOrderCalls(Order $order)
     {
         // checking if already has made
-        if (! $order->restaurantAcceptances()->exists()) {
+        // if (! $order->restaurantAcceptances()->exists()) {
            
-            foreach ($order->restaurants as $orderedRestaurant) {
+            foreach ($order->merchants as $merchantOrder) {
 
-                // make restaurant new order record
-                $this->makeRestaurantOrderRecord($order, $orderedRestaurant->restaurant_id);
+                // make merchant new order record
+                $this->updateMerchantOrderRecord($merchantOrder);
               
-                // Broadcast for restaurant
-                $this->notifyRestaurant($orderedRestaurant);
+                // Broadcast for merchant
+                $this->notifyMerchant($merchantOrder);
 
             }
 
-        }
+        // }
     }
 
-    private function notifyRestaurant(OrderRestaurant $orderedRestaurant)
+    private function notifyMerchant(MerchantOrder $merchantOrder)
     {
         // Log::info('UpdateRestaurant');
-        event(new UpdateRestaurant($orderedRestaurant));
+        event(new UpdateRestaurant($merchantOrder));
     }
 
     private function notifyAdmin(Order $order) 

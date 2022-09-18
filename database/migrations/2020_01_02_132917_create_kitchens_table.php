@@ -17,11 +17,11 @@ class CreateKitchensTable extends Migration
             $table->mediumIncrements('id');
             $table->string('user_name', 30)->unique(); // phone or user_name
             $table->string('mobile', 13)->unique();
-            $table->string('email')->nullable()->unique();
+            $table->string('email')->unique();
             $table->string('password'); // Login with username / mobile
-            $table->unsignedMediumInteger('restaurant_id')->unique(); //Each restaurant has one kitchen
             $table->rememberToken();
             $table->boolean('admin_approval')->default(true);
+            $table->unsignedMediumInteger('merchant_id')->unique(); //Each restaurant has one kitchen
 
             $table->softDeletes();
             

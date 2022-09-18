@@ -50,8 +50,8 @@ class UpdateRider implements ShouldBroadcast
             'rider_delivery_confirmation' => $this->riderNewDeliveryRecord->riderDeliveryConfirmation,
             'rider_food_pick_confirmations' => $this->riderNewDeliveryRecord->riderFoodPickConfirmations,
             'restaurant_order_cancelations' => $this->riderNewDeliveryRecord->restaurantOrderCancelations,
-            'restaurants_accepted' => OrderRestaurantAcceptanceResource::collection($this->riderNewDeliveryRecord->restaurantsAccepted),
-            'restaurants' => OrderRestaurantResource::collection($this->riderNewDeliveryRecord->restaurants),
+            'merchants_accepted' => OrderRestaurantAcceptanceResource::collection($this->riderNewDeliveryRecord->merchantsAccepted),
+            'merchants' => OrderRestaurantResource::collection($this->riderNewDeliveryRecord->merchants),
 
         ];
     }

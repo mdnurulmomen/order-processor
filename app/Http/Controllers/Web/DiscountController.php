@@ -64,7 +64,7 @@ class DiscountController extends Controller
 	public function createNewCoupon(Request $request, $perPage = false)
 	{
 		$request->validate([
-			'coupon_code'=>'required|string|unique:coupons,coupon_code',
+			'code'=>'required|string|unique:coupons,code',
 			'percentage'=>'required|numeric|min:1|max:100',
 			'min_order'=>'required|numeric|min:100|max:255',
 			'max_discount_per_order'=>'required|numeric|max:255',
@@ -76,7 +76,7 @@ class DiscountController extends Controller
 
 		$newCoupon = new Coupon();
 
-		$newCoupon->coupon_code = $request->coupon_code;
+		$newCoupon->code = strtolower($request->code);
 		$newCoupon->percentage = $request->percentage;
 		$newCoupon->min_order = $request->min_order;
 		$newCoupon->max_discount_per_order = $request->max_discount_per_order;
@@ -100,7 +100,7 @@ class DiscountController extends Controller
 		$couponToUpdate = Coupon::find($coupon);
 
 		$request->validate([
-			'coupon_code'=>'required|string|unique:coupons,coupon_code,'.$couponToUpdate->id,
+			'code'=>'required|string|unique:coupons,code,'.$couponToUpdate->id,
 			'percentage'=>'required|numeric|min:1|max:100',
 			'min_order'=>'required|numeric|min:100|max:255',
 			'max_discount_per_order'=>'required|numeric|max:255',
@@ -110,7 +110,7 @@ class DiscountController extends Controller
 			'status'=>'nullable|boolean',
 		]);
 
-		$couponToUpdate->coupon_code = $request->coupon_code;
+		$couponToUpdate->code = strtolower($request->code);
 		$couponToUpdate->percentage = $request->percentage;
 		$couponToUpdate->min_order = $request->min_order;
 		$couponToUpdate->max_discount_per_order = $request->max_discount_per_order;
@@ -149,7 +149,7 @@ class DiscountController extends Controller
 	public function searchAllCoupons($search, $perPage)
 	{
 		return response()->json([
-			'all' => Coupon::where('coupon_code', 'like', "%$search%")
+			'all' => Coupon::where('code', 'like', "%$search%")
 							->orWhere('percentage', 'like', "%$search%")
 							->orWhere('min_order', 'like', "%$search%")
 							->orWhere('max_discount_per_order', 'like', "%$search%")

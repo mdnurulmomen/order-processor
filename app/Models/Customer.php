@@ -54,9 +54,6 @@ class Customer extends Authenticatable
         return $this->hasMany(CustomerCoupon::class, 'customer_id', 'id');
     }
 
-    /**
-     * Get all of the order's.
-     */
     public function orders()
     {
         return $this->morphMany(Order::class, 'orderer');

@@ -18,7 +18,7 @@ class CreateRidersTable extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('user_name')->unique();
-            $table->string('email')->nullable()->unique();
+            $table->string('email')->unique();
             $table->char('mobile', 13)->unique();
             $table->string('password');
             $table->date('birth_date')->nullable();
@@ -37,6 +37,8 @@ class CreateRidersTable extends Migration
             $table->string('approver_type')->nullable();
             $table->string('approver_id')->nullable();
             $table->timestamp('paused_at')->nullable();
+            $table->unsignedTinyInteger('order_acceptance_percentage')->default(0);
+            $table->unsignedTinyInteger('mean_rating')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -1,10 +1,6 @@
-
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div class="row justify-content-center vh-100" v-show="loading">
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
@@ -82,10 +78,10 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Username</th>
-											<th scope="col">Owner Restaurant Name</th>
+											<th scope="col">Owner</th>
 											<th scope="col">Mobile</th>
 											<th scope="col">Email</th>
-											<th scope="col">Kitchen Approval</th>
+											<th scope="col">Approval</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -95,21 +91,21 @@
 									    	:key="kitchen.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ kitchen.user_name}}</td>
+								    		<td>{{ kitchen.user_name | capitalize }}</td>
 								    		<td>
 								    			{{ 
-								    				kitchen.restaurant ? kitchen.restaurant.name : 'Trashed' 
+								    				kitchen.merchant ? kitchen.merchant.name : 'Trashed' 
 								    			}}
-								    			<span v-show="kitchen.restaurant" 
-								    				  :class="[kitchen.restaurant ? kitchen.restaurant.admin_approval ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"
+								    			<span v-show="kitchen.merchant" 
+								    				  :class="[kitchen.merchant ? kitchen.merchant.admin_approval ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"
 								    			>
 								    				{{ 
-								    					kitchen.restaurant ? kitchen.restaurant.admin_approval ? 'Approved' : 'Not-approved' : '' 
+								    					kitchen.merchant ? kitchen.merchant.admin_approval ? 'Approved' : 'Not-approved' : '' 
 								    				}}
 								    			</span>
 								    		</td>
-								    		<td>{{ kitchen.mobile}}</td>
-								    		<td>{{ kitchen.email}}</td>
+								    		<td>{{ kitchen.mobile }}</td>
+								    		<td>{{ kitchen.email }}</td>
 								    		<td>
 								    			<span :class="[kitchen.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>
@@ -126,14 +122,14 @@
 								      			<button
 								        			v-show="kitchen.deleted_at === null"
 								        			type="button"
-								        			@click="showRestaurantKitchenDeletionModal(kitchen)"
+								        			@click="showMerchantKitchenDeletionModal(kitchen)"
 								        			class="btn btn-danger btn-sm"
 							      				>
 								        			<i class="fas fa-trash-alt"></i>
 								        			Delete
 								      			</button>
 								      			<button
-								        			v-show="kitchen.deleted_at !== null && kitchen.restaurant !== null"
+								        			v-show="kitchen.deleted_at !== null && kitchen.merchant !== null"
 								        			type="button"
 								        			@click="showKitchenRestoreModal(kitchen)"
 								        			class="btn btn-danger btn-sm"
@@ -142,9 +138,9 @@
 								        			Restore
 								      			</button>
 								      			<p 	class="text-danger" 
-								      				v-show="kitchen.restaurant === null"
+								      				v-show="kitchen.merchant === null"
 								      			>
-								      				Restore Restaurant
+								      				Restore Merchant
 								      			</p>
 								    		</td>
 									  	</tr>
@@ -226,17 +222,17 @@
 								            <div class="card-body">
 								              	<div class="form-group row">	
 								              		<label for="inputKitchenName3" class="col-sm-4 col-form-label text-right">
-								              			Restaurant
+								              			Merchant
 								              		</label>
 									                <div class="col-sm-8">
 									                  	<multiselect 
-				                                  			v-model="singleKitchenData.restaurantObject"
-				                                  			placeholder="Restaurant Name" 
+				                                  			v-model="singleKitchenData.merchantObject"
+				                                  			placeholder="Merchant Name" 
 					                                  		label="name" 
 					                                  		track-by="id" 
-					                                  		:options="allRestaurants" 
+					                                  		:options="allMerchants" 
 					                                  		:required="true"
-					                                  		:class="!errors.kitchen.restaurant  ? 'is-valid' : 'is-invalid'"
+					                                  		:class="!errors.kitchen.merchant  ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"
 					                                  		deselect-label="Can't remove single value"
@@ -244,7 +240,7 @@
 					                                	</multiselect>
 									                	<div class="invalid-feedback">
 												        	{{ 
-												        		errors.kitchen.restaurant 
+												        		errors.kitchen.merchant 
 												        	}}
 												  		</div>
 									                </div>	
@@ -319,7 +315,7 @@
 															type="password" 
 															class="form-control" 
 															v-model="singleKitchenData.kitchen.password" 
-															placeholder="Kitchen Email" 
+															placeholder="Kitchen Password" 
 															:required="!editMode" 
 															:class="!errors.kitchen.password  ? 'is-valid' : 'is-invalid'"
 									                	>
@@ -338,7 +334,7 @@
 															type="password" 
 															class="form-control" 
 															v-model="singleKitchenData.kitchen.password_confirmation" 
-															placeholder="Kitchen Email" 
+															placeholder="Confirm Password" 
 															:required="!editMode"
 															:class="!errors.kitchen.password_confirmation  ? 'is-valid' : 'is-invalid'"
 									                	>
@@ -501,9 +497,7 @@
 			<!-- /.modal-kitchen-restore-confirmation -->
 
 	    </section>
-
 	</div>
-    
 </template>
 
 <script type="text/javascript">
@@ -519,18 +513,18 @@
 			mobile : null,
 			email : null,
 			password : null,
-			restaurant_id : null,
+			merchant_id : null,
 			admin_approval : false,
     	},
 
-    	restaurantObject : {
+    	merchantObject : {
     		// id : null,
 			// email : null,
 			// mobile : null,
     	}
     };
 
-	var restaurantKitchenListData = {
+	var merchantKitchenListData = {
 
       	query : '',
     	perPage : 10,
@@ -543,7 +537,7 @@
     	allKitchens : [],
     	kitchensToShow : [],
 
-    	allRestaurants : [],
+    	allMerchants : [],
 
     	pagination: {
         	current_page: 1
@@ -566,20 +560,20 @@
 		},
 
 	    data() {
-	        return restaurantKitchenListData;
+	        return merchantKitchenListData;
 		},
 
 		created(){
 			this.fetchAllKitchens();
-			this.fetchAllRestaurants();
+			this.fetchAllMerchants();
 		},
 
 		watch : {
-			'singleKitchenData.restaurantObject' : function(restaurantObject){
-				if (restaurantObject) {
-					this.singleKitchenData.kitchen.restaurant_id = restaurantObject.id;
+			'singleKitchenData.merchantObject' : function(merchantObject){
+				if (merchantObject) {
+					this.singleKitchenData.kitchen.merchant_id = merchantObject.id;
 				}else
-					this.singleKitchenData.kitchen.restaurant_id = null;
+					this.singleKitchenData.kitchen.merchant_id = null;
 			},
 			query : function(val){
 				if (val==='') {
@@ -610,14 +604,14 @@
 					this.pagination = this.allKitchens.trashed;
 				}
 			},
-			fetchAllRestaurants(){
+			fetchAllMerchants(){
 				this.loading = true;
 				axios
-					.get('/api/restaurants/')
+					.get('/api/merchants/')
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
-							this.allRestaurants = response.data;
+							this.allMerchants = response.data;
 						}
 					})
 					.catch(error => {
@@ -627,7 +621,7 @@
 			fetchAllKitchens(){
 				this.loading = true;
 				axios
-					.get('/api/restaurant-kitchens/' + this.perPage +'?page='+ this.pagination.current_page)
+					.get('/api/merchant-kitchens/' + this.perPage +'?page='+ this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
@@ -663,24 +657,22 @@
 				this.submitForm = true;
 
 				this.singleKitchenData.kitchen = {};
-				this.singleKitchenData.restaurantObject = {};
+				this.singleKitchenData.merchantObject = {};
 
 				$('#modal-createOrEdit-kitchen').modal('show');
 			},
     		storeKitchen(){
 
-				if (Object.keys(this.singleKitchenData.restaurantObject).length === 0) {
+				if (Object.keys(this.singleKitchenData.merchantObject).length === 0) {
 					
 					this.submitForm = false;
-					this.errors.kitchen.restaurant = 'Restaurant name is required';
+					this.errors.kitchen.merchant = 'Merchant name is required';
 					
 					return;
 				}
-
-				$('#modal-createOrEdit-kitchen').modal('hide');
 				
 				axios
-					.post('/restaurant-kitchens/'+ this.perPage, this.singleKitchenData.kitchen)
+					.post('/merchant-kitchens/'+ this.perPage, this.singleKitchenData.kitchen)
 					.then(response => {
 
 						if (response.status == 200) {
@@ -693,6 +685,8 @@
 							this.showDataListOfSelectedTab();
 
 							toastr.success(response.data.success, "Added");
+
+							$('#modal-createOrEdit-kitchen').modal('hide');
 						}
 					})
 					.catch(error => {
@@ -709,24 +703,22 @@
 				this.errors.kitchen = {};
 
 				this.singleKitchenData.kitchen = kitchen;
-				this.singleKitchenData.restaurantObject = kitchen.restaurant;
+				this.singleKitchenData.merchantObject = kitchen.merchant;
 
 				$("#modal-createOrEdit-kitchen").modal("show");
 			},
 			updateKitchen(){
 
-				if (Object.keys(this.singleKitchenData.restaurantObject).length === 0) {
+				if (Object.keys(this.singleKitchenData.merchantObject).length === 0) {
 					
 					this.submitForm = false;
-					this.errors.kitchen.restaurant = 'Restaurant name is required';
+					this.errors.kitchen.merchant = 'Merchant name is required';
 					
 					return;
 				}
-
-				$('#modal-createOrEdit-kitchen').modal('hide');
 				
 				axios
-					.put('/restaurant-kitchens/' + this.singleKitchenData.kitchen.id + '/' + this.perPage, this.singleKitchenData.kitchen)
+					.put('/merchant-kitchens/' + this.singleKitchenData.kitchen.id + '/' + this.perPage, this.singleKitchenData.kitchen)
 					.then(response => {
 
 						if (response.status == 200) {
@@ -743,6 +735,8 @@
 							}
 
 							toastr.success(response.data.success, "Updated");
+
+							$('#modal-createOrEdit-kitchen').modal('hide');
 						}
 					})
 					.catch(error => {
@@ -753,7 +747,7 @@
 				      	}
 					});
 			},
-			showRestaurantKitchenDeletionModal(kitchen) {
+			showMerchantKitchenDeletionModal(kitchen) {
 				this.singleKitchenData.kitchen = kitchen;
 				$("#modal-kitchen-delete-confirmation").modal("show");
 			},
@@ -762,7 +756,7 @@
 				$("#modal-kitchen-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/restaurant-kitchens/'+this.singleKitchenData.kitchen.id+'/'+this.perPage)
+					.delete('/merchant-kitchens/'+this.singleKitchenData.kitchen.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -798,7 +792,7 @@
 				$("#modal-kitchen-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/restaurant-kitchens/'+this.singleKitchenData.kitchen.id+'/'+this.perPage)
+					.patch('/merchant-kitchens/'+this.singleKitchenData.kitchen.id+'/'+this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -829,7 +823,7 @@
 				
 				axios
 				.get(
-					"/api/restaurant-kitchens/search/"+ this.query +"/" + this.perPage +
+					"/api/merchant-kitchens/search/"+ this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)
@@ -848,14 +842,14 @@
 
 				switch(formInputName) {
 
-					case 'kitchen.restaurantObject' :
+					case 'kitchen.merchantObject' :
 
-						if (Object.keys(singleKitchenData.restaurantObject).length === 0) {
-							this.errors.kitchen.restaurant = 'Restaurant name is required';
+						if (Object.keys(singleKitchenData.merchantObject).length === 0) {
+							this.errors.kitchen.merchant = 'Merchant name is required';
 						}
 						else{
 							this.submitForm = true;
-							this.$delete(this.errors.kitchen, 'restaurant');
+							this.$delete(this.errors.kitchen, 'merchant');
 						}
 
 						break;

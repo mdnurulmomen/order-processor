@@ -43,31 +43,31 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				Route::post('user-favourites', 'CustomerController@addUserFavourite')->name('user-favourites.create');
 				Route::delete('user-favourites/{customer_favourite_id}/{per_page?}', 'CustomerController@removeUserFavourite')->name('user-favourites.destroy');
 				
-				Route::post('/restaurants', 'RestaurantController@getRestaurants')->name('restaurants.index');
-				Route::get('/restaurants/{restaurant}', 'RestaurantController@showRestaurantDetails')->name('restaurants.show');
-				// Route::post('/restaurant-menu-items', 'RestaurantController@getRestaurantMenuItems')->name('restaurant-menu-items.show');
+				Route::post('/merchants', 'MerchantController@getMerchants')->name('merchants.index');
+				Route::get('/merchants/{merchant}', 'MerchantController@showMerchantDetails')->name('merchants.show');
+				// Route::post('/merchant-menu-items', 'MerchantController@getMerchantMerchantProducts')->name('merchant-menu-items.show');
 
-				Route::post('/sponsor-restaurants', 'RestaurantController@getSponsorRestaurants')->name('sponsor-restaurants.index');
-				Route::post('/promotional-menu-items', 'RestaurantController@getPromotionalMenuItems')->name('promotional-menu-items.index');
+				Route::post('/sponsor-merchants', 'MerchantController@getSponsorMerchants')->name('sponsor-merchants.index');
+				Route::post('/promotional-menu-items', 'MerchantController@getPromotionalMerchantProducts')->name('promotional-menu-items.index');
 
 				Route::get('/orders/{order}', 'OrderController@getOrderDetails')->name('orders.show');
 				Route::get('/user-orders/{user}/{per_page?}', 'CustomerController@getUserOrders')->name('user-orders.index');
 				Route::get('/user-active-orders/{user}/{per_page?}', 'CustomerController@getUserActiveOrders')->name('user-active-orders.index');
 				Route::get('/user-reservations/{user}/{per_page?}', 'CustomerController@getUserReservations')->name('user-reservations.index');
 				
-				Route::get('/order-restaurants/{order}', 'CustomerController@showOrderRestaurants')->name('order-restaurants.show');
+				Route::get('/order-merchants/{order}', 'CustomerController@showOrderMerchants')->name('order-merchants.show');
 				Route::post('/orders', 'OrderController@makeNewOrder')->name('orders.create');
 
-				Route::get('/restaurant-reviews/{restaurant}/{per_page?}', 'RestaurantController@getRestaurantReviews')->name('restaurant-reviews.show');
-				Route::post('/restaurant-reviews', 'RestaurantController@addRestaurantReview')->name('restaurant-reviews.create');
+				Route::get('/merchant-reviews/{merchant}/{per_page?}', 'MerchantController@getMerchantReviews')->name('merchant-reviews.show');
+				Route::post('/merchant-reviews', 'MerchantController@addMerchantReview')->name('merchant-reviews.create');
 				
 				Route::post('reservations', 'OrderController@makeNewReservation')->name('reservations.create');
 				Route::post('reservation-confirmations', 'OrderController@confirmReservation')->name('reservation-confirmations.create');
 
-				Route::get('/my-regulars/{user}/{per_page?}', 'CustomerController@getMyRegularItems')->name('my-regulars.index');
-				Route::post('/my-regulars', 'CustomerController@setMyRegularItems')->name('my-regulars.create');
-				Route::put('/my-regulars/{regular}/{per_page?}', 'CustomerController@updateMyRegularItems')->name('my-regulars.update');
-				Route::delete('/my-regulars/{regular}/{per_page?}', 'CustomerController@deleteMyRegularItems')->name('my-regulars.delete');
+				Route::get('/my-regulars/{user}/{per_page?}', 'CustomerController@getMyRegularProducts')->name('my-regulars.index');
+				Route::post('/my-regulars', 'CustomerController@setMyRegularProducts')->name('my-regulars.create');
+				Route::put('/my-regulars/{regular}/{per_page?}', 'CustomerController@updateMyRegularProducts')->name('my-regulars.update');
+				Route::delete('/my-regulars/{regular}/{per_page?}', 'CustomerController@deleteMyRegularProducts')->name('my-regulars.delete');
 
 				Route::post('/logout', 'CustomerController@logout')->name('logout');
 

@@ -8,8 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-// Registering component globally
-Vue.component('pagination', require('./pages/Pagination.vue').default);
+require('./custom');
 
 /**
  * The following block of code may be used to automatically register your
@@ -27,6 +26,8 @@ import appScss from './../sass/emptyScssForWebpackBug.scss';
 
 import App from './pages/AdminSideMenuBar.vue';
 
+// Registering component globally
+Vue.component('pagination', require('./pages/Pagination.vue').default);
 // import Home from './pages/admin/Home.vue';
 // import Dashboard2 from './pages/admin/Dashboard2.vue';
 // import Dashboard3 from './pages/admin/Dashboard3.vue';
@@ -85,9 +86,9 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/settings" */ './pages/admin/Setting.vue')
 		},
 		{
-			path: '/restaurants',
-            name: 'restaurants',
-            component: () => import(/* webpackChunkName : "js/restaurant-list" */ './pages/admin/RestaurantIndex.vue')
+			path: '/merchants',
+            name: 'merchants',
+            component: () => import(/* webpackChunkName : "js/merchant-list" */ './pages/admin/MerchantIndex.vue')
 		},
 		{
 			path: '/meals',
@@ -95,9 +96,9 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/meal-list" */ './pages/admin/MealIndex.vue')
 		},
 		{
-			path: '/menu-categories',
-            name: 'menu-categories',
-            component: () => import(/* webpackChunkName : "js/menu-category-list" */ './pages/admin/MenuCategoryIndex.vue')
+			path: '/product-categories',
+            name: 'product-categories',
+            component: () => import(/* webpackChunkName : "js/product-category-list" */ './pages/admin/ProductCategoryIndex.vue')
 		},
 		{
 			path: '/cuisines',
@@ -110,9 +111,9 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/addon-list" */ './pages/admin/AddonIndex.vue')
 		},
 		{
-			path: '/item-variations',
-            name: 'item-variations',
-            component: () => import(/* webpackChunkName : "js/item-variation-list" */ './pages/admin/ItemVariationIndex.vue')
+			path: '/variations',
+            name: 'variations',
+            component: () => import(/* webpackChunkName : "js/variation-list" */ './pages/admin/VariationIndex.vue')
 		},
 		{
 			path: '/kitchens',
@@ -120,9 +121,9 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/kitchen-list" */ './pages/admin/KitchenIndex.vue')
 		},
 		{
-			path: '/waiters',
-            name: 'waiters',
-            component: () => import(/* webpackChunkName : "js/waiter-list" */ './pages/admin/WaiterIndex.vue')
+			path: '/agents',
+            name: 'agents',
+            component: () => import(/* webpackChunkName : "js/agent-list" */ './pages/admin/MerchantAgentIndex.vue')
 		},
 		
 		// {
@@ -132,60 +133,60 @@ const router = new VueRouter({
 		// },
 		
 		{
-			path: '/restaurant-admins',
-            name: 'restaurant-admins',
-            component: () => import(/* webpackChunkName : "js/restaurant-admin-list" */ './pages/admin/RestaurantAdminIndex.vue')
+			path: '/merchant-admins',
+            name: 'merchant-admins',
+            component: () => import(/* webpackChunkName : "js/merchant-admin-list" */ './pages/admin/MerchantOwnerIndex.vue')
 		},
 		{
-			path: '/restaurant-deals',
-            name: 'restaurant-deals',
-            component: () => import(/* webpackChunkName : "js/restaurant-deal-list" */ './pages/admin/RestaurantDealIndex.vue')
+			path: '/merchant-deals',
+            name: 'merchant-deals',
+            component: () => import(/* webpackChunkName : "js/merchant-deal-list" */ './pages/admin/MerchantDealIndex.vue')
 		},
 		{
-			path: '/restaurant-meals',
-            name: 'restaurant-meals',
-            component: () => import(/* webpackChunkName : "js/restaurant-meal-list" */ './pages/admin/RestaurantMealIndex.vue')
+			path: '/merchant-meals',
+            name: 'merchant-meals',
+            component: () => import(/* webpackChunkName : "js/merchant-meal-list" */ './pages/admin/MerchantMealIndex.vue')
 		},
 		{
-			path: '/restaurant-cuisines',
-            name: 'restaurant-cuisines',
-            component: () => import(/* webpackChunkName : "js/restaurant-cuisine-list" */ './pages/admin/RestaurantCuisineIndex.vue')
+			path: '/merchant-cuisines',
+            name: 'merchant-cuisines',
+            component: () => import(/* webpackChunkName : "js/merchant-cuisine-list" */ './pages/admin/MerchantCuisineIndex.vue')
 		},
 		{
-			path: '/restaurant-menu-categories',
-            name: 'restaurant-menu-categories',
-            component: () => import(/* webpackChunkName : "js/restaurant-menu-category-list" */ './pages/admin/RestaurantMenuCategoryIndex.vue')
+			path: '/merchant-product-categories',
+            name: 'merchant-product-categories',
+            component: () => import(/* webpackChunkName : "js/merchant-product-category-list" */ './pages/admin/AllMerchantProductCategoryIndex.vue')
 		},
 		{
-			path: '/restaurant-menu-categories/:restaurantId',
-		    name: 'expected-restaurant-menu-categories',
-		    component: () => import(/* webpackChunkName : "js/restaurant-menu-category-detail-list" */ './pages/admin/ExpectedRestaurantMenuCategoryIndex.vue'),
+			path: '/merchant-product-categories/:merchantId',
+		    name: 'merchant-all-product-categories',
+		    component: () => import(/* webpackChunkName : "js/merchant-product-category-detail-list" */ './pages/admin/MerchantAllProductCategoryIndex.vue'),
 			props: true,
 			beforeEnter: (to, from, next) => {
-                if (to.params.restaurantId && to.params.restaurantName) {
+                if (to.params.merchantId && to.params.merchantName) {
                     next(); // <-- everything good, proceed
                 }
                 else {
-                    next('/restaurant-menu-categories');
+                    next('/merchant-product-categories');
                 }
             }
 		},
 		{
-			path: '/restaurant-menu-items',
-		    name: 'expected-restaurant-menu-items',
-		    component: () => import(/* webpackChunkName : "js/expected-restaurant-name-for-menu-item-list" */ './pages/admin/ExpectedRestaurantNameForMenuItem.vue'),
+			path: '/merchant-products',
+		    name: 'merchant-products',
+		    component: () => import(/* webpackChunkName : "js/expected-merchant-name-for-product-list" */ './pages/admin/SearchingMerchantIndex.vue'),
 		},
 		{
-			path: '/restaurant-menu-items/:restaurantId',
-		    name: 'restaurant-menu-items',
-		    component: () => import(/* webpackChunkName : "js/restaurant-menu-item-list" */ './pages/admin/RestaurantMenuItemIndex.vue'),
+			path: '/merchant-products/:merchantId',
+		    name: 'merchant-all-products',
+		    component: () => import(/* webpackChunkName : "js/merchant-product-list" */ './pages/admin/MerchantProductIndex.vue'),
 			props: true,
 			beforeEnter: (to, from, next) => {
-                if (to.params.restaurantId && to.params.restaurantName) {
+                if (to.params.merchantId && to.params.merchantName) {
                     next(); // <-- everything good, proceed
                 }
                 else {
-                    next('/restaurant-menu-items'); // name: 'expected-restaurant-menu-items',
+                    next('/merchant-products'); // name: 'expected-merchant-products',
                 }
             }
 		},
@@ -225,9 +226,9 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/rider-order-list" */ './pages/rider/OrderIndex.vue')
 		},
 		{
-			path: '/waiter-orders',
-            name: 'waiter-orders',
-            component: () => import(/* webpackChunkName : "js/waiter-order-list" */ './pages/waiter/OrderIndex.vue')
+			path: '/agent-orders',
+            name: 'agent-orders',
+            component: () => import(/* webpackChunkName : "js/agent-order-list" */ './pages/agent/OrderIndex.vue')
 		},
 
 		

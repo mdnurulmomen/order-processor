@@ -15,7 +15,7 @@ class CreateCancelationReasonsTable extends Migration
     {
         Schema::create('cancelation_reasons', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('reason');
+            $table->text('reason');
             $table->softDeletes();
         });
     }

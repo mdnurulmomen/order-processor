@@ -48,7 +48,7 @@ class Rider extends Model
     {
         if ($encodedImageFile) {
 
-            $directory = "uploads/delivery_man/profile/";
+            $directory = "uploads/rider/profile/";
 
             if (!file_exists($directory)) {
                 mkdir($directory, 0777, true);

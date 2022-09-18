@@ -18,7 +18,7 @@ class Review extends Model
     ];
 
     /**
-     * Get the parent reviewable model (Restaurant or Rider).
+     * Get the parent reviewable model (Merchant or Rider).
      */
     public function reviewable()
     {

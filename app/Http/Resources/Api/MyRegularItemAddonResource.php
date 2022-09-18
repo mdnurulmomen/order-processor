@@ -15,9 +15,9 @@ class MyRegularItemAddonResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'restaurant_menu_item_addon_id' => /*new RestaurantMenuItemAddonResource($this->restaurantMenuItemAddon)*/ $this->restaurantMenuItemAddon->id,
-            'restaurant_menu_item_addon' => /*new RestaurantMenuItemAddonResource($this->restaurantMenuItemAddon)*/ $this->restaurantMenuItemAddon->addon->name,
-            // 'restaurant_menu_item_addon_id' => $this->restaurant_menu_item_addon_id,
+            'merchant_product_addon_id' => /*new RestaurantMenuItemAddonResource($this->merchantProductAddon)*/ $this->merchantProductAddon->id,
+            'merchant_product_addon' => /*new RestaurantMenuItemAddonResource($this->merchantProductAddon)*/ $this->merchantProductAddon->addon->name,
+            // 'merchant_product_addon_id' => $this->merchant_product_addon_id,
             'quantity' => $this->quantity,
         ];
     }

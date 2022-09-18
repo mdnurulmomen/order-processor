@@ -1,10 +1,6 @@
-
 <template>
-
 	<div class="container-fluid">
-
 		<section>
-
 			<div class="row justify-content-center vh-100" v-show="loading">
 				<div class="d-flex align-items-center">
 					<div class="card p-5">
@@ -72,7 +68,7 @@
 									    	:key="cuisine.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ cuisine.name}}</td>
+								    		<td>{{ cuisine.name | capitalize }}</td>
 								    		<td>
 								    			<span class="badge" :class="cuisine.search_preference ? 'badge-success' : 'badge-info'">
 								    				{{ cuisine.search_preference ? 'Published' : 'UnPublished' }}
@@ -180,7 +176,7 @@
 															type="text" 
 															class="form-control" 
 															v-model="singleCuisineData.name" 
-															placeholder="Cuisine Name" 
+															placeholder="Ex. Bangla, Chinese, Japanese" 
 															required="true"
 															:class="!errors.name  ? 'is-valid' : 'is-invalid'"
 															@keyup="validateFormInput('cuisine.name')"
