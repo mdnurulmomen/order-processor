@@ -27,6 +27,11 @@ Broadcast::channel('notifyMerchant', function ($merchant) {
 }, ['guards' => ['admin', 'merchant']]);
 */
 
+// separate channel for each owner with Authentication
+Broadcast::channel('notifyOwner.{ownerId}', function ($owner, $ownerId) {
+    return (int) $owner->id == $ownerId;
+}, ['guards' => 'owner']);
+
 // separate channel for each merchant with Authentication
 Broadcast::channel('notifyMerchant.{merchantId}', function ($merchant, $merchantId) {
     return (int) $merchant->id == $merchantId;
@@ -44,7 +49,7 @@ Broadcast::channel('notifyRider.{riderId}', function ($rider, $riderId) {
 }, ['guards' => ['admin', 'api']]);
 
 // for now 'admin' guard is listed along with 'merchant' guard
-Broadcast::channel('notifyMerchantWaiters.{merchantId}', function ($waiter) {
+Broadcast::channel('notifyMerchantAgents.{merchantId}', function ($agent) {
     return true;
 }, ['guards' => ['admin', 'api']]);
 

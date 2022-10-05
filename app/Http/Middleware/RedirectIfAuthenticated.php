@@ -26,6 +26,10 @@ class RedirectIfAuthenticated
                     return redirect(RouteServiceProvider::HOME);
                     break;
 
+                case 'owner':
+                    return redirect(RouteServiceProvider::HOME);
+                    break;
+
                 case 'merchant':
                     return redirect(RouteServiceProvider::HOME);
                     break;

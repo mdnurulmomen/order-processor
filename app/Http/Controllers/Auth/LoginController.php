@@ -38,14 +38,20 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout', 'adminLogout', 'merchantLogout');
-        $this->middleware('guest:admin')->except('logout', 'adminLogout', 'merchantLogout');
-        $this->middleware('guest:merchant')->except('logout', 'adminLogout', 'merchantLogout');
+        $this->middleware('guest')->except('logout', 'adminLogout', 'ownerLogout', 'merchantLogout');
+        $this->middleware('guest:admin')->except('logout', 'adminLogout', 'ownerLogout', 'merchantLogout');
+        $this->middleware('guest:owner')->except('logout', 'adminLogout', 'ownerLogout', 'merchantLogout');
+        $this->middleware('guest:merchant')->except('logout', 'adminLogout', 'ownerLogout', 'merchantLogout');
     }
 
     public function showAdminLoginForm()
     {
         return view('auth.login', ['url' => 'admin']);
+    }
+
+    public function showOwnerLoginForm()
+    {
+        return view('auth.login', ['url' => 'owner']);
     }
 
     public function showMerchantLoginForm()
@@ -89,6 +95,34 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    // Owner Login 
+    public function ownerLogin(Request $request)
+    {
+        $this->validateLogin($request);
+
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if (method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        if ($this->attemptOwnerLoginWithMobile($request) || $this->attemptOwnerLoginWithUsername($request)) {
+
+            return $this->sendOwnerLoginResponse($request);
+        }
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
     // Merchant Login 
     public function merchantLogin(Request $request)
     {
@@ -117,6 +151,7 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    // Admin Logout
     public function adminLogout(Request $request)
     {
         Auth::guard('admin')->logout();
@@ -126,6 +161,17 @@ class LoginController extends Controller
         return $this->loggedOut($request) ?: redirect('/');
     }
 
+    // Owner Logout
+    public function ownerLogout(Request $request)
+    {
+        Auth::guard('owner')->logout();
+
+        $request->session()->invalidate();
+
+        return $this->loggedOut($request) ?: redirect('/');
+    }
+
+    // Merchant Logout
     public function merchantLogout(Request $request)
     {
         Auth::guard('merchant')->logout();
@@ -169,6 +215,20 @@ class LoginController extends Controller
             ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember'));
     }
 
+    protected function attemptOwnerLoginWithMobile(Request $request)
+    {
+        return Auth::guard('owner')->attempt(
+            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
+        );   
+    }
+
+    protected function attemptOwnerLoginWithUsername(Request $request)
+    {
+        return Auth::guard('owner')->attempt(
+            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
+        );   
+    }
+
     protected function attemptMerchantLoginWithMobile(Request $request)
     {
         return Auth::guard('merchant')->attempt(
@@ -196,6 +256,22 @@ class LoginController extends Controller
         $this->clearLoginAttempts($request);
 
         return $this->authenticated($request, Auth::guard('admin')->user())
+                ?: redirect()->intended($this->redirectPath());
+    }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    protected function sendOwnerLoginResponse(Request $request)
+    {
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        return $this->authenticated($request, Auth::guard('owner')->user())
                 ?: redirect()->intended($this->redirectPath());
     }
 

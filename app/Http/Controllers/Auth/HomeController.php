@@ -16,7 +16,8 @@ class HomeController extends Controller
     {
         $this->middleware('auth')->only('index');
         $this->middleware('auth:admin')->only('showAdminHome');
-        $this->middleware('auth:restaurant')->only('showRestaurantHome');
+        $this->middleware('auth:owner')->only('showOwnerHome');
+        $this->middleware('auth:merchant')->only('showMerchantHome');
     }
 
     /**
@@ -44,8 +45,18 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function showRestaurantHome()
+    public function showOwnerHome()
     {
-        return view('layouts.restaurant');
+        return view('layouts.owner');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function showMerchantHome()
+    {
+        return view('layouts.merchant');
     }    
 }

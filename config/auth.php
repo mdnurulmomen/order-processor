@@ -46,6 +46,11 @@ return [
             'provider' => 'admins',
         ],
 
+        'owner' => [
+            'driver' => 'session',
+            'provider' => 'owners',
+        ],
+
         'merchant' => [
             'driver' => 'session',
             'provider' => 'merchants',
@@ -86,9 +91,14 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
+        'owners' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\MerchantOwner::class,
+        ],
+
         'merchants' => [
             'driver' => 'eloquent',
-            'model' => App\Models\RestaurantAdmin::class,
+            'model' => App\Models\Merchant::class,
         ],
 
         // 'users' => [

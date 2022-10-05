@@ -46,6 +46,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapAdminRoutes();
 
+        $this->mapMerchantOwnerRoutes();
+
         $this->mapMerchantRoutes();
         
         $this->mapWebRoutes();
@@ -80,6 +82,21 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/admin.php'));
+    }
+
+    /**
+     * Define the "merchant" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapMerchantOwnerRoutes()
+    {
+        Route::domain('owner.'.env('APP_URL'))
+             ->middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/owner.php'));
     }
 
     /**
