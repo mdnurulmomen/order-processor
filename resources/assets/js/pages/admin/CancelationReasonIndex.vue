@@ -81,7 +81,7 @@
 									    		{{ index + 1 }}
 									    	</td>
 								    		<td>
-								    			<span v-html="reason.reason"></span>
+								    			<span v-html="reason.reason" class="text-capitalize"></span>
 								    		</td>
 								    		<td>
 										      	<button 

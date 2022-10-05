@@ -15,7 +15,7 @@ class CreateScheduleOrdersTable extends Migration
     {
         Schema::create('schedule_orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamp('order_schedule');
+            $table->timestamp('schedule');
             $table->unsignedInteger('order_id');
         });
     }

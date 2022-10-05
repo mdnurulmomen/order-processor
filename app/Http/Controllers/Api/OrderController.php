@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\MerchantOrder;
 use App\Models\MerchantProduct;
 use App\Models\CustomerAddress;
-use App\Events\UpdateRestaurant;
+use App\Events\UpdateMerchant;
 // use App\Models\RiderDeliveryRecord;
 // use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -24,68 +24,68 @@ class OrderController extends Controller
     public function makeNewOrder(OrderRequest $request)
     {        
         $newOrder = Order::create([
-            'order_type' => $request->order->order_type,
-            'order_price' => $request->order->order_price,
+            'type' => $request->order->type,
+            'price' => $request->order->price,
             'vat' => $request->order->vat,
             'discount' => $request->order->discount,
             'delivery_fee' => $request->order->delivery_fee,
             'net_payable' => $request->order->net_payable,
-            'payment_method' => $request->payment->payment_method,
+            'method' => $request->payment->method,
             'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
             'orderer_id' => $request->order->orderer_id,
-            'cutlery_addition' => $request->order->cutlery_addition ? true : false, 
+            'has_cutlery' => $request->order->has_cutlery ? true : false, 
             'is_asap_order' => $request->order->is_asap_order ? true : false, 
-            'customer_confirmation' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1, 
-            'in_progress' => ($request->order->orderer_type==='customer' && $request->payment->payment_method==='cash') ? -1 : 1,
+            'customer_confirmation' => ($request->order->orderer_type==='customer' && $request->payment->method==='cash') ? -1 : 1, 
+            'in_progress' => ($request->order->orderer_type==='customer' && $request->payment->method==='cash') ? -1 : 1,
         ]);
 
-        // asap / scheduled
+        //  scheduled
         if (! $request->order->is_asap_order) {
 
-            $this->createScheduleOrder($newOrder, $request->order->order_schedule); 
+            $this->createScheduleOrder($newOrder, $request->order->schedule); 
 
         }
 
-        if ($request->payment->payment_method !=='cash' && $request->payment->payment_id) {
+        if ($request->payment->method !=='cash' && $request->payment->id) {
 
             $newOrderPayment = $newOrder->payment()->create([
-                'payment_id'=>$request->payment->payment_id
+                'payment_id'=>$request->payment->id
             ]);
             
         }
 
         foreach ($request->merchants as $merchantOrder) {
             
-            $merchantOrder = $newOrder->merchants()->create([
-                'merchant_id' => $merchantOrder->merchant_id,
+            $merchantNewOrder = $newOrder->merchants()->create([
+                'merchant_id' => $merchantOrder->id,
             ]);
 
             $request->products = json_decode(json_encode($merchantOrder->products));
 
             foreach ($request->products as $product) {
 
-                $orderedNewItem = $merchantOrder->products()->create([
+                $orderedNewItem = $merchantNewOrder->products()->create([
                      'merchant_product_id' => $product->id,
                      'quantity' => $product->quantity,
                 ]);
 
                 $addedProduct = MerchantProduct::find($product->id);
 
-                if ($addedProduct->has_variation && !empty($product->item_variation) && !empty($product->item_variation->id)) {
+                if ($addedProduct->has_variation && !empty($product->variation) && !empty($product->variation->id)) {
                     
                     $orderedNewItem->variation()->create([
-                        'merchant_product_variation_id'=>$product->item_variation->id
+                        'merchant_product_variation_id'=>$product->variation->id
                     ]);
 
                 }
 
-                if ($addedProduct->has_addon && !empty($product->item_addons)) {
+                if ($addedProduct->has_addon && !empty($product->merchant_product_addons)) {
                     
-                    foreach ($product->item_addons as $itemAddon) {
+                    foreach ($product->merchant_product_addons as $merchantProductAddon) {
 
                         $orderedNewItem->addons()->create([
-                            'merchant_product_addon_id'=>$itemAddon->id,
-                            'quantity'=>$itemAddon->quantity,
+                            'merchant_product_addon_id'=>$merchantProductAddon->id,
+                            'quantity'=>$merchantProductAddon->quantity,
                         ]);
 
                     }
@@ -104,7 +104,7 @@ class OrderController extends Controller
 
         // if ($request->orderer_type==='customer') {
             
-        if ($request->order->order_type==='home-delivery') {
+        if ($request->order->type==='home-delivery') {
 
             if (isset($request->order->delivery_new_address) && empty($request->order->delivery_address_id)) {
 
@@ -144,7 +144,7 @@ class OrderController extends Controller
                 'customer_address_id'=>$request->order->delivery_address_id ?? $existingAddress->id ?? $customerNewAddress->id,
             ]);
         }
-        else if ($request->order->order_type==='serve-on-table') {
+        else if ($request->order->type==='serve-on-table') {
             
             $newOrder->serve()->create([
                 'guest_number'=>$request->order->guest_number,
@@ -169,20 +169,20 @@ class OrderController extends Controller
 
     public function makeNewReservation(ReservationRequest $request)
     {   
-        $expectedRestaurant = Merchant::find($request->reservation->merchant_id);
+        $expectedMerchant = Merchant::find($request->reservation->merchant_id);
 
         $newOrder = $this->createReservationOrder($request);
 
         $this->createScheduleOrder($newOrder, $request->reservation->arriving_time);
-        $this->createTableReservation($expectedRestaurant, $request, $newOrder->id);
-        $this->updateRestaurantBookingStatus($expectedRestaurant, $request->reservation);
+        $this->createTableReservation($expectedMerchant, $request, $newOrder->id);
+        $this->updateMerchantBookingStatus($expectedMerchant, $request->reservation);
         $merchantOrder = $this->createMerchantOrderRecord($newOrder, $request->reservation->merchant_id);
 
         $reservationMsg = 'Reservation request has been accepted';
 
-        if ($newOrder->customer_confirmation==1 && ! empty($request->products) && ! empty($request->payment->payment_id)) {
+        if ($newOrder->customer_confirmation==1 && ! empty($request->products) && ! empty($request->payment->id)) {
 
-            $this->saveNewPayment($newOrder, $request->payment->payment_id);
+            $this->saveNewPayment($newOrder, $request->payment->id);
             $this->updateMerchantOrderRecord($merchantOrder);
             $this->makeProductOrders($merchantOrder, $request->products);
             // $this->confirmReservation($newOrder, $merchantOrder, $request);
@@ -220,11 +220,11 @@ class OrderController extends Controller
         }
         
         $expectedMerchantOrder = $expectedOrder->merchants->first();
-        // $expectedMerchantOrder = MerchantOrder::find($request->reservation->ordered_restaurant_id);
+        // $expectedMerchantOrder = MerchantOrder::find($request->reservation->ordered_merchant_id);
 
         $this->confirmOrder($expectedOrder);
         // $this->confirmTableReservation($expectedReservation);
-        $this->saveNewPayment($expectedOrder, $request->payment->payment_id);
+        $this->saveNewPayment($expectedOrder, $request->payment->id);
         $this->updateMerchantOrderRecord($expectedMerchantOrder);
         $this->makeProductOrders($expectedMerchantOrder, $request->products);
 
@@ -263,26 +263,26 @@ class OrderController extends Controller
     private function createReservationOrder(Request $request)
     {
         return Order::create([
-            'order_type' => $request->order->order_type,
-            'order_price' => $request->order->order_price,
+            'type' => $request->order->type,
+            'price' => $request->order->price,
             'vat' => $request->order->vat,
             'discount' => $request->order->discount,
             'delivery_fee' => 0,
             'net_payable' => $request->order->net_payable,
-            'payment_method' => $request->payment->payment_method,
+            'method' => $request->payment->method,
             'orderer_type' => "App\Models\Customer",
             'orderer_id' => $request->order->orderer_id,
-            'customer_confirmation' => ($request->payment->payment_method !== 'cash' && $request->payment->payment_id) ? 1 : -1, 
-            'cutlery_addition' => $request->order->cutlery_addition ? true : false, 
+            'customer_confirmation' => ($request->payment->method !== 'cash' && $request->payment->id) ? 1 : -1, 
+            'has_cutlery' => $request->order->has_cutlery ? true : false, 
             'is_asap_order' => $request->order->is_asap_order ? true : false,
-            'in_progress' => ($request->payment->payment_method !== 'cash' && $request->payment->payment_id) ? 1 : -1,
+            'in_progress' => ($request->payment->method !== 'cash' && $request->payment->id) ? 1 : -1,
         ]);
     }
 
     private function createScheduleOrder(Order $order, $schedule)
     {
         $order->schedule()->create([
-            'order_schedule' => $schedule
+            'schedule' => $schedule
         ]);
     }
 
@@ -291,13 +291,13 @@ class OrderController extends Controller
         $newReservation = $merchant->reservations()->create([
             'guest_number'=>$request->reservation->guest_number,
             'mobile'=>$request->reservation->mobile,
-            // 'booking_confirmation'=>($request->payment->payment_method!=='cash' && $request->payment->payment_id) ? 1 : 0,   // cancelled by default
+            // 'booking_confirmation'=>($request->payment->method!=='cash' && $request->payment->id) ? 1 : 0,   // cancelled by default
             'order_id'=>$orderId,
             'max_payment_time'=> now()->addMinutes(60),          // delay time should be as per merchant choice
         ]);
     }
 
-    private function updateRestaurantBookingStatus(Merchant $merchant, $reservation)
+    private function updateMerchantBookingStatus(Merchant $merchant, $reservation)
     {
         $merchant->booking()->update([
             'engaged_seat' => ($merchant->booking->engaged_seat + $reservation->guest_number),
@@ -334,19 +334,19 @@ class OrderController extends Controller
 
                 $addedProduct = MerchantProduct::find($product->id);
 
-                if ($addedProduct->has_variation && !empty($product->item_variation) && !empty($product->item_variation->id)) {
+                if ($addedProduct->has_variation && !empty($product->variation) && !empty($product->variation->id)) {
                     $orderedNewItem->variation()->create([
-                        'merchant_product_variation_id'=>$product->item_variation->id
+                        'merchant_product_variation_id'=>$product->variation->id
                     ]);
                 }
 
-                if ($addedProduct->has_addon && !empty($product->item_addons)) {
+                if ($addedProduct->has_addon && !empty($product->merchant_product_addons)) {
 
-                    foreach ($product->item_addons as $itemAddon) {
+                    foreach ($product->merchant_product_addons as $merchantProductAddon) {
 
                         $orderedNewItem->addons()->create([
-                            'merchant_product_addon_id'=>$itemAddon->id,
-                            'quantity'=>$itemAddon->quantity,
+                            'merchant_product_addon_id'=>$merchantProductAddon->id,
+                            'quantity'=>$merchantProductAddon->quantity,
                         ]);
 
                     }
@@ -378,7 +378,7 @@ class OrderController extends Controller
     private function makeMerchantOrderCalls(Order $order)
     {
         // checking if already has made
-        // if (! $order->restaurantAcceptances()->exists()) {
+        // if (! $order->merchantAcceptances()->exists()) {
            
             foreach ($order->merchants as $merchantOrder) {
 
@@ -395,8 +395,8 @@ class OrderController extends Controller
 
     private function notifyMerchant(MerchantOrder $merchantOrder)
     {
-        // Log::info('UpdateRestaurant');
-        event(new UpdateRestaurant($merchantOrder));
+        // Log::info('UpdateMerchant');
+        event(new UpdateMerchant($merchantOrder));
     }
 
     private function notifyAdmin(Order $order) 

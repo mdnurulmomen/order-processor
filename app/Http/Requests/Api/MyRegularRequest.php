@@ -4,10 +4,10 @@ namespace App\Http\Requests\Api;
 
 use App\Models\Customer;
 use Illuminate\Validation\Rule;
-use App\Models\RestaurantMenuItem;
+use App\Models\MerchantProduct;
 use Illuminate\Support\Facades\Log;
-use App\Models\RestaurantMenuItemAddon;
-use App\Models\RestaurantMenuItemVariation;
+use App\Models\MerchantProductAddon;
+use App\Models\MerchantProductVariation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MyRegularRequest extends FormRequest
@@ -42,33 +42,33 @@ class MyRegularRequest extends FormRequest
                 })
             ],
 
-            'restaurants' => 'required|array|min:1',
-            'restaurants' => [
+            'merchants' => 'required|array|min:1',
+            'merchants' => [
                 'required', 'array', 'min:1', 'between:1,3', 
                 function ($attribute, $value, $fail) {
-                    if (count($this->input('restaurants.*.restaurant_id')) > 1 && $this->input('order.order_type')==='serve-on-table') {
+                    if (count($this->input('merchants.*.id')) > 1 && $this->input('order.type')==='serve-on-table') {
                         $fail('Multiple restaurant aint allowed for serve order.');
                     }
                 },
             ],
-            'restaurants.*.restaurant_id' => 'required|exists:restaurants,id',
+            'merchants.*.id' => 'required|exists:merchants,id',
 
-            'restaurants.*.menu_items' => 'required|array|min:1',
-            'restaurants.*.menu_items.*.id' => [
-                'bail', 'required', 'exists:restaurant_menu_items,id', 
+            'merchants.*.products' => 'required|array|min:1',
+            'merchants.*.products.*.id' => [
+                'bail', 'required', 'exists:merchant_products,id', 
             ],
-            'restaurants.*.menu_items.*.quantity' => 'required|numeric',
+            'merchants.*.products.*.quantity' => 'required|numeric',
 
-            'restaurants.*.menu_items.*.item_addons' => 'present|array',
-            'restaurants.*.menu_items.*.item_addons.*.id' => [
-                'required_unless:restaurants.*.menu_items.*.item_addons.*,', 
+            'merchants.*.products.*.addons' => 'present|array',
+            'merchants.*.products.*.addons.*.id' => [
+                'required_unless:merchants.*.products.*.addons.*,', 
                 'numeric', 
-                'exists:restaurant_menu_item_addons,id'
+                'exists:merchant_product_addons,id'
             ],
-            'restaurants.*.menu_items.*.item_addons.*.quantity' => 'required_unless:restaurants.*.menu_items.*.item_addons.*,|
+            'merchants.*.products.*.addons.*.quantity' => 'required_unless:merchants.*.products.*.addons.*,|
                 numeric',
 
-            // 'restaurants.*.menu_items.*.customization' => 'nullable|string',
+            // 'merchants.*.products.*.customization' => 'nullable|string',
         ];
     }
 
@@ -86,43 +86,43 @@ class MyRegularRequest extends FormRequest
         $validator->after(
             function ($validator) {
 
-                $this->restaurants = json_decode(json_encode($this->input('restaurants')));
+                $this->merchants = json_decode(json_encode($this->input('merchants')));
 
-                foreach ($this->restaurants as $orderedRestaurantKey => $orderedRestaurant) {
+                foreach ($this->merchants as $merchantOrderKey => $merchantOrder) {
 
-                    foreach ($orderedRestaurant->menu_items as $menuItemKey => $restaurantMenuItem) {
+                    foreach ($merchantOrder->products as $merchantProductKey => $merchantProduct) {
 
-                        $expectedMenuItem = RestaurantMenuItem::findOrFail($restaurantMenuItem->id);
+                        $expectedMerchantProduct = MerchantProduct::findOrFail($merchantProduct->id);
 
-                        if ($expectedMenuItem->restaurantMenuCategory->restaurant_id == $orderedRestaurant->restaurant_id) {
+                        if ($expectedMerchantProduct->merchantProductCategory->id == $merchantOrder->id) {
                             
-                            if ($expectedMenuItem->has_variation && empty($restaurantMenuItem->item_variation)) {
+                            if ($expectedMerchantProduct->has_variation && empty($merchantProduct->variation)) {
                                 
-                                $validator->errors()->add("restaurants.$orderedRestaurantKey.menu_items.$menuItemKey", 'Menu item has variation');
+                                $validator->errors()->add("merchants.$merchantOrderKey.products.$merchantProductKey", 'Product has variation');
 
                             }
 
-                            else if ($expectedMenuItem->has_variation && ! empty($restaurantMenuItem->item_variation)) {
+                            else if ($expectedMerchantProduct->has_variation && ! empty($merchantProduct->variation)) {
                                 
-                                $expectedMenuItemVariation = RestaurantMenuItemVariation::findOrFail($restaurantMenuItem->item_variation->id);
+                                $expectedMerchantProductVariation = MerchantProductVariation::findOrFail($merchantProduct->variation->id);
 
-                                if (empty($expectedMenuItemVariation) || $expectedMenuItemVariation->restaurant_menu_item_id != $expectedMenuItem->id) {
+                                if (empty($expectedMerchantProductVariation) || $expectedMerchantProductVariation->merchant_product_id != $expectedMerchantProduct->id) {
                                     
-                                    $validator->errors()->add("restaurants.$orderedRestaurantKey.menu_items.$menuItemKey.item_variation", 'Item variation id is invalid');
+                                    $validator->errors()->add("merchants.$merchantOrderKey.products.$merchantProductKey.variation", 'Product variation id is invalid');
 
                                 }
 
                             }
 
-                            if ($expectedMenuItem->has_addon && ! empty($restaurantMenuItem->item_addons)) {
+                            if ($expectedMerchantProduct->has_addon && ! empty($merchantProduct->addons)) {
 
-                                foreach ($restaurantMenuItem->item_addons as $itemAddonKey => $itemAddon) {
+                                foreach ($merchantProduct->addons as $merchantProductAddonKey => $merchantProductAddon) {
                                     
-                                    $expectedMenuItemAddon = RestaurantMenuItemAddon::findOrFail($itemAddon->id);
+                                    $expectedMerchantProductAddon = MerchantProductAddon::findOrFail($merchantProductAddon->id);
 
-                                    if (empty($expectedMenuItemAddon) || $expectedMenuItemAddon->restaurant_menu_item_id != $expectedMenuItem->id) {
+                                    if (empty($expectedMerchantProductAddon) || $expectedMerchantProductAddon->merchant_product_id != $expectedMerchantProduct->id) {
                                         
-                                        $validator->errors()->add("restaurants.$orderedRestaurantKey.menu_items.$menuItemKey.item_addons.$itemAddonKey", 'Menu item has no such addon');
+                                        $validator->errors()->add("merchants.$merchantOrderKey.products.$merchantProductKey.addons.$merchantProductAddonKey", 'Product has no such addon');
 
                                     }
 
@@ -133,7 +133,7 @@ class MyRegularRequest extends FormRequest
                         }
 
                         else {
-                            $validator->errors()->add("restaurants.$orderedRestaurantKey.menu_items.$menuItemKey", "Menu item id doesn't belong to restaurant");
+                            $validator->errors()->add("merchants.$merchantOrderKey.products.$merchantProductKey", "Product id doesn't belong to restaurant");
                         }
 
                     }
@@ -166,35 +166,35 @@ class MyRegularRequest extends FormRequest
             'order.delivery_address_id.required' => 'Customer address id is required',
             'order.delivery_address_id.*' => 'Address id is invalid',
 
-            'restaurants.*.restaurant_id.required'  => 'Restaurant id is required',
-            'restaurants.*.restaurant_id.*'  => 'Restaurant id is invalid',
+            'merchants.*.id.required'  => 'Restaurant id is required',
+            'merchants.*.id.*'  => 'Restaurant id is invalid',
 
-            'restaurants.*.menu_items.*.id.required'  => 'Menu item id is required',
-            // 'restaurants.*.menu_items.*.id.exists'  => 'Menu item id is invalid',
+            'merchants.*.products.*.id.required'  => 'Product id is required',
+            // 'merchants.*.products.*.id.exists'  => 'Product id is invalid',
             
-            'restaurants.*.menu_items.*.quantity.required'  => 'Menu item quantity is required',
-            'restaurants.*.menu_items.*.quantity.numeric'  => 'Menu item quantity is invalid',
+            'merchants.*.products.*.quantity.required'  => 'Product quantity is required',
+            'merchants.*.products.*.quantity.numeric'  => 'Product quantity is invalid',
 
-            // 'restaurants.*.menu_items.*.item_variation.required'  => 'Menu item variation is required',
-            // 'restaurants.*.menu_items.*.item_variation.id.required'  => 'Item variation id is required',
-            // 'restaurants.*.menu_items.*.item_variation.id.*'  => 'Item variation id is invalid',
+            // 'merchants.*.products.*.variation.required'  => 'Product variation is required',
+            // 'merchants.*.products.*.variation.id.required'  => 'Product variation id is required',
+            // 'merchants.*.products.*.variation.id.*'  => 'Product variation id is invalid',
 
-            'restaurants.*.menu_items.*.item_addons' => [
-                'present' => 'Menu item addons is required',
-                'array' => 'Menu item addons must be an array',
+            'merchants.*.products.*.addons' => [
+                'present' => 'Product addons is required',
+                'array' => 'Product addons must be an array',
             ],
 
-            'restaurants.*.menu_items.*.item_addons.*.id' => [
+            'merchants.*.products.*.addons.*.id' => [
                 'required' => 'Addon item id is required',
                 '*' => 'Addon item id is invalid',
             ],
 
-            'restaurants.*.menu_items.*.item_addons.*.quantity' => [
+            'merchants.*.products.*.addons.*.quantity' => [
                 'required' => 'Addon quantity is required',
                 '*' => 'Addon quantity is invalid',
             ],
 
-            'restaurants.*.menu_items.*.customization.*' => 'Menu item customization should be string',
+            'merchants.*.products.*.customization.*' => 'Product customization should be string',
         ];
     }
 
