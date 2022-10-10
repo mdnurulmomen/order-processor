@@ -94,7 +94,7 @@
 								    		<td>{{ kitchen.user_name | capitalize }}</td>
 								    		<td>
 								    			{{ 
-								    				kitchen.merchant ? kitchen.merchant.name : 'Trashed' 
+								    				kitchen.merchant ? kitchen.merchant.name : 'Trashed' | eachcapitalize 
 								    			}}
 								    			<span v-show="kitchen.merchant" 
 								    				  :class="[kitchen.merchant ? kitchen.merchant.admin_approval ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"

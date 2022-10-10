@@ -19,7 +19,6 @@
 				v-show="!loading"
 			>
 				<div class="col-sm-12">
-
 					<div class="card">
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">
@@ -118,10 +117,10 @@
 								    		<td>{{ merchant.name | capitalize }}</td>
 								    		<td>{{ merchant.mobile }}</td>
 								    		<td>
-								    			<span :class="[merchant.sponsored ? 'badge-danger' : 'badge-default', 'right badge']"
+								    			<span :class="[merchant.is_sponsored ? 'badge-danger' : 'badge-default', 'right badge']"
 								    			>
 								    				{{ 
-								    					merchant.sponsored ? 'Sponsored' : 'Not-Sponsored' 
+								    					merchant.is_sponsored ? 'Sponsored' : 'Not-Sponsored' 
 								    				}}
 								    			</span>	
 								    		</td>
@@ -176,7 +175,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-dark btn-sm"
-									      			@click="showMerchantMenuList(merchant)" 
+									      			@click="showMerchantProductList(merchant)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
 								        			Product
@@ -274,20 +273,24 @@
 							<!-- Tab panes -->
 							<div class="tab-content">
 								<div id="profile" class="container tab-pane active">
-									<div class="row d-flex">
-					            		<div class="col-sm-4 align-self-center">
-						                	<div class="text-center">
-						                  		<img class="img-fluid " :src="singleMerchantData.merchant.banner_preview" alt="Merchant Banner">
-						                	</div>
-						                	<h3 class="profile-username text-center">
-						                		{{ singleMerchantData.merchant.name | capitalize }}
-						                	</h3>
+									<div class="row">
+					            		<div class="card card-body">
+					            			<div class="row">
+					            				<div class="col-sm-12">
+								                	<div class="text-center">
+								                  		<img class="img-fluid " :src="singleMerchantData.merchant.banner_preview" alt="Merchant Banner">
+								                	</div>
+								                	<h3 class="profile-username text-center">
+								                		{{ singleMerchantData.merchant.name | eachcapitalize }}
+								                	</h3>
+					            				</div>
+					            			</div>
 						              	</div>
 						              	
-					            		<div class="col-sm-8">
+					            		<div class="col-sm-12">
 					            			<div class="form-group form-row">		
 							              		<label class="col-sm-6 text-right">
-							              			Merchant Owner :
+							              			Owner :
 							              		</label>
 								                <div 
 								                	class="col-sm-6" 
@@ -311,6 +314,15 @@
 
 								            <div class="form-group form-row">		
 							              		<label class="col-sm-6 text-right">
+							              			Username :
+							              		</label>
+								                <div class="col-sm-6">
+								                  	{{ singleMerchantData.merchant.user_name | capitalize }}
+								                </div>
+								            </div>
+
+								            <div class="form-group form-row">		
+							              		<label class="col-sm-6 text-right">
 							              			Mobile :
 							              		</label>
 
@@ -326,7 +338,7 @@
 								            </div>
 								            <div class="form-group form-row">		
 							              		<label class="col-sm-6 text-right">
-							              			Merchant Mobile :
+							              			Mobile :
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{singleMerchantData.merchant.mobile}}
@@ -368,8 +380,8 @@
 							              			Sponsored :
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span :class="[singleMerchantData.merchant.sponsored ? 'badge-danger' : 'badge-success', 'badge']">
-								                		{{ singleMerchantData.merchant.sponsored ? 'Sponsored' : 'Not-Sponsored'}}
+								                	<span :class="[singleMerchantData.merchant.is_sponsored ? 'badge-danger' : 'badge-success', 'badge']">
+								                		{{ singleMerchantData.merchant.is_sponsored ? 'Sponsored' : 'Not-Sponsored'}}
 								                	</span>
 								                </div>	
 								            </div>  
@@ -411,6 +423,7 @@
 								                  	{{singleMerchantData.merchant.max_booking || 'No Booking'}}
 								                </div>	
 								            </div>
+
 								            <div class="form-group form-row">		
 							              		<label class="col-sm-6 text-right">
 							              			Minimum Order :
@@ -419,28 +432,51 @@
 								                  	{{singleMerchantData.merchant.min_order}} tk
 								                </div>	
 								            </div>
+
 								            <div class="form-group form-row">		
+							              		<label class="col-sm-6 text-right">
+							              			Delivery Support :
+							              		</label>
+								                <div class="col-sm-6">
+								                	<span :class="[singleMerchantData.merchant.has_delivery_support ? 'badge-success' : 'badge-danger', 'badge']">
+								                		{{ singleMerchantData.merchant.has_delivery_support ? 'Supported' : 'Not-Supported'}}
+								                	</span>
+								                </div>	
+								            </div>
+
+								            <div 
+								            	class="form-group form-row" 
+								            	v-show="singleMerchantData.merchant.has_delivery_support"
+								            >		
 							              		<label class="col-sm-6 text-right">
 							              			Delivery Charge:
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleMerchantData.merchant.delivery_charge_per_kilometer }} BDT/KM
+								                  	{{ singleMerchantData.merchant.delivery_charge_per_kilometer }} {{ $application_settings.official_currency || 'BDT' | capitalize }}/KM
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">		
+
+								            <div 
+								            	class="form-group form-row" 
+								            	v-show="singleMerchantData.merchant.has_delivery_support"
+								            >		
 							              		<label class="col-sm-6 text-right">
 							              			Min Delivery Charge:
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleMerchantData.merchant.min_delivery_charge }} BDT
+								                  	{{ singleMerchantData.merchant.min_delivery_charge }} {{ $application_settings.official_currency || 'BDT' | capitalize }}
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">		
+
+								            <div 
+								            	class="form-group form-row" 
+								            	v-show="singleMerchantData.merchant.has_delivery_support"
+								            >		
 							              		<label class="col-sm-6 text-right">
 							              			Max Delivery Charge:
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleMerchantData.merchant.max_delivery_charge }} BDT
+								                  	{{ singleMerchantData.merchant.max_delivery_charge }} {{ $application_settings.official_currency || 'BDT' | capitalize }}
 								                </div>	
 								            </div>
 					            			<div class="form-group form-row">		
@@ -456,7 +492,7 @@
 							              			Service :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleMerchantData.merchant.is_self_service ? 'Self-service' : 'Waiter service'}}
+								                  	{{singleMerchantData.merchant.is_self_service ? 'Self-service' : 'Agent service'}}
 								                </div>	
 								            </div>
 								            <div class="form-group form-row">		
@@ -635,7 +671,7 @@
 																  		<div>
 																			<toggle-button 
 									                                  			:sync="true" 
-									                                  			v-model="singleMerchantData.merchant.sponsored" 
+									                                  			v-model="singleMerchantData.merchant.is_sponsored" 
 									                                  			value="true" 
 									                                  			:width="140"  
 									                                  			:height="30" 
@@ -741,7 +777,76 @@
 									                          		</div>
 																</div>
 
-									                      		<div class="col-6">
+																<div class="col-6">
+																	<div class="row">
+									                              		<label for="inputName3" class="col-sm-4 col-form-label text-right">
+									                              			User Name
+									                              		</label>
+									                              		<div class="col-sm-8">
+									                                  		<input 
+										                                  		type="text" 
+										                                  		class="form-control" 
+										                                  		v-model="singleMerchantData.merchant.user_name"  
+										                                  		placeholder="User Name" 
+										                                  		:class="!errors.merchant.user_name  ? 'is-valid' : 'is-invalid'"
+										                                  		@keyup="validateFormInput('merchant.user_name')" 
+									                                  		>
+									                                  		<div class="invalid-feedback">
+																		        {{ errors.merchant.user_name  }}
+																		  	</div>
+									                              		</div>
+									                          		</div>
+																</div>
+									                        </div>
+
+									                        <div class="form-group form-row">
+									                        	<div class="col-6">
+										                        	<div class="form-row">
+													              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+													              			Password
+													              		</label>
+														                <div class="col-sm-8">
+														                  	<input 
+															                  	type="password" class="form-control" 
+															                  	v-model="singleMerchantData.merchant.password"
+															                  	placeholder="Password" 
+															                  	required="true" 
+															                  	:class="!errors.merchant.password  ? 'is-valid' : 'is-invalid'"
+															                  	@keyup="validateFormInput('merchant.password')"
+														                  	>
+														                  	
+														                  	<div class="invalid-feedback">
+																	        	{{ errors.merchant.password }}
+																	  		</div>
+														                </div>	
+													              	</div>
+									                        	</div>
+
+									                        	<div class="col-6">
+													              	<div class="form-row">
+													              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+													              			Repeat Password
+													              		</label>
+														                <div class="col-sm-8">
+														                  	<input 
+															                  	type="password" class="form-control" 
+															                  	v-model="singleMerchantData.merchant.password_confirmation"
+															                  	placeholder="Confirm Password" 
+															                  	required="true" 
+															                  	:class="!errors.merchant.password_confirmation  ? 'is-valid' : 'is-invalid'"
+															                  	@keyup="validateFormInput('merchant.password_confirmation')"
+														                  	>
+														                  	
+														                  	<div class="invalid-feedback">
+																	        	{{ errors.merchant.password_confirmation }}
+																	  		</div>
+														                </div>	
+													              	</div>
+									                        	</div>
+									                        </div>
+
+									                        <div class="form-group form-row">
+									                        	<div class="col-6">
 										                            <div class="row">
 										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
 										                              		Mobile
@@ -763,9 +868,7 @@
 										                              	</div>
 										                            </div>
 									                          	</div>
-									                        </div>
 
-									                        <div class="form-group form-row">
 									                          	<div class="col-6">
 										                            <div class="row">
 										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-right">
@@ -792,7 +895,10 @@
 										                              	</div>
 										                          	</div>
 										                      	</div>
-									                          	<div class="col-6">
+									                        </div>
+
+									                        <div class="form-group form-row">
+									                        	<div class="col-6">
 										                            <div class="row">
 										                              	<label for="inputMaxBooking3" class="col-sm-4 col-form-label text-right">
 										                              		Max Booking
@@ -818,9 +924,7 @@
 										                              	</div>
 										                          	</div>
 									                          	</div>
-									                        </div>
-
-									                        <div class="form-group form-row">
+									                          	
 									                        	<div class="col-6">
 									                            	<div class="row">
 										                              	<div class="col-sm-4 text-right">
@@ -926,6 +1030,24 @@
 
 									                        <div class="form-group form-row">
 									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          		Delivery Support
+									                          	</label>
+									                          	<div class="col-sm-8">
+									                          		<toggle-button 
+							                                  			:sync="true" 
+							                                  			v-model="singleMerchantData.merchant.has_delivery_support" 
+							                                  			value="true" 
+							                                  			:width="140"  
+							                                  			:height="30" 
+							                                  			:font-size="15" 
+							                                  			:color="{checked: 'green', unchecked: 'red'}" 
+							                                  			:labels="{checked: 'Supported', unchecked: 'Not Supported' }"
+						                                  			/>
+									                          	</div> 
+									                        </div>
+
+									                        <div class="form-group form-row">
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
 									                          		Delivery Charge
 									                          	</label>
 									                          	<div class="col-sm-8">
@@ -935,14 +1057,15 @@
 									                                  		class="form-control" 
 									                                  		v-model.number="singleMerchantData.merchant.delivery_charge_per_kilometer" 
 									                                  		placeholder="Min Delivery Charge"
+									                                  		:class="!errors.merchant.delivery_charge_per_kilometer  ? 'is-valid' : 'is-invalid'"
+									                                  		@keyup="validateFormInput('merchant.delivery_charge_per_kilometer')" 
+									                                  		:disabled="! singleMerchantData.merchant.has_delivery_support" 
 									                                  		min="0" 
 									                                  		max="100" 
 									                                  		step="1" 
-									                                  		:class="!errors.merchant.delivery_charge_per_kilometer  ? 'is-valid' : 'is-invalid'"
-									                                  		@keyup="validateFormInput('merchant.delivery_charge_per_kilometer')"
 									                                  	>
 									                          			<div class="input-group-append">
-									                          				<span class="input-group-text">BDT/KM</span>
+									                          				<span class="input-group-text">{{ $application_settings.official_currency || 'BDT' | capitalize }}/KM</span>
 									                          			</div>
 									                          		</div>
 
@@ -967,14 +1090,15 @@
 									                                  		class="form-control" 
 									                                  		v-model.number="singleMerchantData.merchant.max_delivery_charge" 
 									                                  		placeholder="Max Delivery Charge"
+									                                  		:class="!errors.merchant.max_delivery_charge  ? 'is-valid' : 'is-invalid'"
+									                                  		@keyup="validateFormInput('merchant.max_delivery_charge')" 
+									                                  		:disabled="! singleMerchantData.merchant.has_delivery_support" 
 									                                  		min="0" 
 									                                  		max="100" 
 									                                  		step="1" 
-									                                  		:class="!errors.merchant.max_delivery_charge  ? 'is-valid' : 'is-invalid'"
-									                                  		@keyup="validateFormInput('merchant.max_delivery_charge')"
 									                                  	>
 									                          			<div class="input-group-append">
-									                          				<span class="input-group-text">BDT</span>
+									                          				<span class="input-group-text">{{ $application_settings.official_currency || 'BDT' | capitalize }}</span>
 									                          			</div>
 									                          		</div>
 
@@ -999,14 +1123,15 @@
 									                                  		class="form-control" 
 									                                  		v-model.number="singleMerchantData.merchant.min_delivery_charge" 
 									                                  		placeholder="Min Delivery Charge"
+									                                  		:class="!errors.merchant.min_delivery_charge ? 'is-valid' : 'is-invalid'"
+									                                  		@keyup="validateFormInput('merchant.min_delivery_charge')" 
+									                                  		:disabled="! singleMerchantData.merchant.has_delivery_support" 
 									                                  		min="0" 
 									                                  		max="100" 
 									                                  		step="1" 
-									                                  		:class="!errors.merchant.min_delivery_charge ? 'is-valid' : 'is-invalid'"
-									                                  		@keyup="validateFormInput('merchant.min_delivery_charge')"
 									                                  	>
 									                          			<div class="input-group-append">
-									                          				<span class="input-group-text">BDT</span>
+									                          				<span class="input-group-text">{{ $application_settings.official_currency || 'BDT' | capitalize }}</span>
 									                          			</div>
 									                          		</div>
 
@@ -2068,8 +2193,6 @@
 
 		    	}
 
-				$("#modal-createOrEdit-merchant").modal("hide");
-
 				this.singleMerchantData.merchant.banner_preview = this.merchantNewBanner;
 
 				this.singleMerchantData.merchant.service_schedule = this.service_schedule;
@@ -2093,6 +2216,8 @@
 
 							this.allMerchants = response.data;
 							this.showListDataForSelectedTab();
+
+							$("#modal-createOrEdit-merchant").modal("hide");
 
 							toastr.success(response.data.success, "Added");
 						}
@@ -2124,8 +2249,6 @@
 				$("#modal-createOrEdit-merchant").modal("show");
 			},
 			updateMerchant() {
-			
-				$("#modal-createOrEdit-merchant").modal("hide");
 
 				this.singleMerchantData.merchant.banner_preview = this.merchantNewBanner;
 				
@@ -2150,6 +2273,8 @@
 							else
 								this.searchData();
 
+							$("#modal-createOrEdit-merchant").modal("hide");
+
 							toastr.success(response.data.success, "Updated");
 						}
 					})
@@ -2167,8 +2292,6 @@
 				$("#modal-merchant-delete-confirmation").modal("show");
 			},
 			destroyMerchant() {
-				
-				$("#modal-merchant-delete-confirmation").modal("hide");
 
 				axios
 					.delete('/merchants/'+this.singleMerchantData.merchant.id+'/'+this.perPage)
@@ -2183,6 +2306,8 @@
 							}
 							else
 								this.searchData();
+
+							$("#modal-merchant-delete-confirmation").modal("hide");
 
 							toastr.success(response.data.success, "Deleted");
 						}
@@ -2202,8 +2327,6 @@
 				$("#modal-merchant-restore-confirmation").modal("show");
 			},
 			restoreMerchant() {
-				
-				$("#modal-merchant-restore-confirmation").modal("hide");
 
 				axios
 					.patch('/merchants/'+this.singleMerchantData.merchant.id+'/'+this.perPage)
@@ -2218,6 +2341,8 @@
 							}
 							else
 								this.searchData();
+
+							$("#modal-merchant-restore-confirmation").modal("hide");
 
 							toastr.success(response.data.success, "Restored");
 						}
@@ -2252,9 +2377,9 @@
 					console.log(e);
 				});
 			},
-			showMerchantMenuList(merchant) {
+			showMerchantProductList(merchant) {
 				this.$router.push({
-			 		name: 'merchant-menu-items', 
+			 		name: 'merchant-all-products', 
 			 		params: { 
 			 			merchantId : merchant.id, 
 			 			merchantName : merchant.name 
@@ -2266,7 +2391,16 @@
 			},
 			storeMerchantOwner(){
 
-				$('#modal-create-merchant-owner').modal('hide');
+				this.validateFormInput('merchantNewOwner.user_name');
+				this.validateFormInput('merchantNewOwner.mobile');
+				this.validateFormInput('merchantNewOwner.email');
+				this.validateFormInput('merchantNewOwner.password');
+				this.validateFormInput('merchantNewOwner.password_confirmation');
+
+				if (Object.keys(this.errors.merchantNewOwner).length) {
+					this.submitForm = false;
+					return;
+				}
 
 				axios
 					.post('/merchant-owners', this.merchantNewOwner)
@@ -2274,6 +2408,7 @@
 						if (response.status == 200) {
 							this.merchantNewOwner = {};
 							this.allMerchantOwners = response.data;
+							$('#modal-create-merchant-owner').modal('hide');
 							toastr.success(response.data.success, "Success");
 						}
 					})
@@ -2292,6 +2427,9 @@
 					this.validateFormInput ('merchant.merchantOwnerObject');
 					this.validateFormInput ('merchant.type');
 					this.validateFormInput ('merchant.name');
+					this.validateFormInput ('merchant.user_name');
+					this.validateFormInput ('merchant.password');
+					this.validateFormInput ('merchant.password_confirmation');
 					this.validateFormInput ('merchant.mobile');
 					this.validateFormInput ('merchant.min_order');
 					this.validateFormInput ('merchant.max_booking');
@@ -2348,11 +2486,50 @@
 							this.errors.merchant.name = 'Name is required';
 						}
 						else if (!this.singleMerchantData.merchant.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
-							this.errors.merchant.name = 'No special characters';
+							this.errors.merchant.name = 'No special character or space';
 						}
 						else {
 							this.submitForm = true;
 							this.$delete(this.errors.merchant, 'name');
+						}
+
+						break;
+
+					case 'merchant.user_name' :
+
+						if (!this.singleMerchantData.merchant.user_name) {
+							this.errors.merchant.user_name = 'Username is required';
+						}
+						else if (!this.singleMerchantData.merchant.user_name.match(/^[_A-z0-9]*((-|_|\w)*[_A-z0-9])*$/g)) {
+							this.errors.merchant.user_name = 'No special character or space';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.merchant, 'user_name');
+						}
+
+						break;
+
+					case 'merchant.password' :
+
+						if ((! this.editMode && ! this.singleMerchantData.merchant.password) || (this.singleMerchantData.merchant.password && this.singleMerchantData.merchant.password.length < 8)) {
+							this.errors.merchant.password = 'Password length has to be 8';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.merchant, 'password');
+						}
+
+						break;
+
+					case 'merchant.password_confirmation' :
+
+						if (this.singleMerchantData.merchant.password && this.singleMerchantData.merchant.password !== this.singleMerchantData.merchant.password_confirmation) {
+							this.errors.merchant.password_confirmation = "Password doesn't match" ;
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.merchant, 'password_confirmation');
 						}
 
 						break;
@@ -2497,10 +2674,10 @@
 
 					case 'merchant.delivery_charge_per_kilometer' :
 
-						if (!this.singleMerchantData.merchant.delivery_charge_per_kilometer) {
+						if (this.singleMerchantData.merchant.has_delivery_support && ! this.singleMerchantData.merchant.delivery_charge_per_kilometer) {
 							this.errors.merchant.delivery_charge_per_kilometer = 'Delivery charge is required';
 						}
-						else if (this.singleMerchantData.merchant.delivery_charge_per_kilometer < 0) {
+						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.delivery_charge_per_kilometer < 0) {
 							this.errors.merchant.delivery_charge_per_kilometer = 'Value should be positive';
 						}
 						else {
@@ -2512,13 +2689,13 @@
 
 					case 'merchant.min_delivery_charge' :
 
-						if (!this.singleMerchantData.merchant.min_delivery_charge) {
+						if (this.singleMerchantData.merchant.has_delivery_support && !this.singleMerchantData.merchant.min_delivery_charge) {
 							this.errors.merchant.min_delivery_charge = 'Delivery min charge is required';
 						}
-						else if (this.singleMerchantData.merchant.min_delivery_charge < 0) {
+						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.min_delivery_charge < 0) {
 							this.errors.merchant.min_delivery_charge = 'Value should be positive';
 						}
-						else if (this.singleMerchantData.merchant.max_delivery_charge && this.singleMerchantData.merchant.max_delivery_charge < this.singleMerchantData.merchant.min_delivery_charge) {
+						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.max_delivery_charge && this.singleMerchantData.merchant.max_delivery_charge < this.singleMerchantData.merchant.min_delivery_charge) {
 							this.errors.merchant.min_delivery_charge = 'Value should be smaller than max value';
 						}
 						else {
@@ -2530,13 +2707,13 @@
 
 					case 'merchant.max_delivery_charge' :
 
-						if (!this.singleMerchantData.merchant.max_delivery_charge) {
+						if (this.singleMerchantData.merchant.has_delivery_support && !this.singleMerchantData.merchant.max_delivery_charge) {
 							this.errors.merchant.max_delivery_charge = 'Delivery max charge is required';
 						}
-						else if (this.singleMerchantData.merchant.max_delivery_charge < 0) {
+						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.max_delivery_charge < 0) {
 							this.errors.merchant.max_delivery_charge = 'Value should be positive';
 						}
-						else if (this.singleMerchantData.merchant.min_delivery_charge && this.singleMerchantData.merchant.max_delivery_charge < this.singleMerchantData.merchant.min_delivery_charge) {
+						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.min_delivery_charge && this.singleMerchantData.merchant.max_delivery_charge < this.singleMerchantData.merchant.min_delivery_charge) {
 							this.errors.merchant.max_delivery_charge = 'Value should be greater than min value';
 						}
 						else {

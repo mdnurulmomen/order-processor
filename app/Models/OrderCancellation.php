@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderCancelation extends Model
+class OrderCancellation extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -28,5 +28,9 @@ class OrderCancelation extends Model
 	{
 		return $this->belongsTo(Order::class, 'order_id', 'id');
 	}
-    
+
+    public function cancellationReason()
+    {
+        return $this->belongsTo(CancellationReason::class, 'cancellation_reason_id', 'id');
+    }
 }

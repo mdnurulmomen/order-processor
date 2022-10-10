@@ -8,14 +8,14 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
+use App\Http\Resources\Web\ServingOrderResource;
 use App\Http\Resources\Web\RiderDeliveryResource;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use App\Http\Resources\Web\MerchantOrderResource;
+use App\Http\Resources\Web\OrderCollectionResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\Http\Resources\Web\RestaurantAcceptanceResource;
-use App\Http\Resources\Web\RestaurantCancelationResource;
+use App\Http\Resources\Web\MerchantCancelationResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use App\Http\Resources\Web\OrderPickUpProgressionResource;
-use App\Http\Resources\Web\OrderReadyConfirmationResource;
 
 class UpdateAdmin implements ShouldBroadcast
 {
@@ -42,20 +42,16 @@ class UpdateAdmin implements ShouldBroadcast
     {
         return [
             'id' => $this->order->id,
-            'order_type' => $this->order->order_type,
-            // 'order_price' => $this->order->order_price,
-            // 'vat' => $this->order->vat,
-            // 'discount' => $this->order->discount,
-            // 'delivery_fee' => $this->order->delivery_fee,
-            // 'net_payable' => $this->order->net_payable,
-            // 'payment_method' => $this->order->payment_method,
-            // 'orderer_type' => $this->order->orderer_type,
-            // 'orderer_id' => $this->order->orderer_id,
-            'customer_confirmation' => $this->order->customer_confirmation ?? -1,
+            'type' => $this->order->type,
             'in_progress' => $this->order->in_progress,
-            // 'created_at' => $this->order->created_at,
-            // 'updated_at' => $this->order->updated_at,
-            /*'orderer' => $this->order->orderer,*/
+            'customer_confirmation' => $this->order->customer_confirmation ?? -1,
+            'merchants' => MerchantOrderResource::collection($this->order->merchants),
+            'rider_assigned' => $this->order->riderAssigned()->exists() ? new RiderDeliveryResource($this->order->riderAssigned) : null,
+            'collections' => OrderCollectionResource::collection($this->order->collections),
+            'order_serve_confirmation' => $this->order->serve()->exists() ? new ServingOrderResource($this->order->serve) : null,
+            'merchant_order_cancelations' => MerchantCancelationResource::collection($this->order->merchantOrderCancelations),
+            
+            /*
             'restaurant_acceptances' => RestaurantAcceptanceResource::collection($this->order->restaurantAcceptances),
             'rider_assignment' => $this->order->riderAssignment,
             'order_ready_confirmations' => OrderReadyConfirmationResource::collection($this->order->orderReadyConfirmations),
@@ -63,6 +59,21 @@ class UpdateAdmin implements ShouldBroadcast
             'rider_delivery_confirmation' => $this->order->riderDeliveryConfirmation ? new RiderDeliveryResource($this->order->riderDeliveryConfirmation) : null,
             'order_serve_confirmation' => $this->order->orderServeConfirmation,
             'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->order->restaurantOrderCancelations),
+             */
+            
+            /*
+            'order_price' => $this->order->order_price,
+            'vat' => $this->order->vat,
+            'discount' => $this->order->discount,
+            'delivery_fee' => $this->order->delivery_fee,
+            'net_payable' => $this->order->net_payable,
+            'payment_method' => $this->order->payment_method,
+            'orderer_type' => $this->order->orderer_type,
+            'orderer_id' => $this->order->orderer_id,
+            'created_at' => $this->order->created_at,
+            'updated_at' => $this->order->updated_at,
+            'orderer' => $this->order->orderer,
+            */
         ];
     }
 

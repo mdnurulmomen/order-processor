@@ -19,13 +19,12 @@
 				v-show="!loading"
 			>
 				<div class="col-sm-12">
-
 					<div class="card">
 						<div class="card-header">
 							<div class="row">
 								<div class="col-sm-12">
 									<h2 class="lead mt-1">
-										Waiter Order List
+										Agent Order List
 									</h2>
 								</div>
 							</div>
@@ -43,30 +42,30 @@
 										</tr>
 									</thead>
 									<tbody>
-									  	<tr v-show="restaurantOrdersToShow.length"
-									    	v-for="(restaurantOrderRecord, index) in restaurantOrdersToShow"
-									    	:key="restaurantOrderRecord.id" 
-									    	:class="[cancelledOrder(restaurantOrderRecord) ? 'bg-secondary' :  servedOrder(restaurantOrderRecord) ? 'bg-success' : 'bg-danger']" 
+									  	<tr v-show="merchantOrdersToShow.length"
+									    	v-for="(merchantOrderRecord, index) in merchantOrdersToShow"
+									    	:key="merchantOrderRecord.id" 
+									    	:class="[cancelledOrder(merchantOrderRecord) ? 'bg-secondary' :  servedOrder(merchantOrderRecord) ? 'bg-success' : 'bg-danger']" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ restaurantOrderRecord.order_id }}</td>
+								    		<td>{{ merchantOrderRecord.order_id }}</td>
 								    		<td>
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-info btn-sm"
-									      			@click="showOrderDetailModal(restaurantOrderRecord)" 
+									      			@click="showOrderDetailModal(merchantOrderRecord)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
 								        			Details
 								      			</button>
-								      			<!-- disabled if waiter / restaurant already cancelled -->
+								      			<!-- disabled if agent / restaurant already cancelled -->
 								      			<!-- drop button -->
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(restaurantOrderRecord) && restaurantOrderReady(restaurantOrderRecord) && !servedOrder(restaurantOrderRecord)" 
+									      			v-if="!cancelledOrder(merchantOrderRecord) && merchantOrderIsReady(merchantOrderRecord) && !servedOrder(merchantOrderRecord)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="orderServingConfirmation(restaurantOrderRecord)" 
+									      			@click="orderServingConfirmation(merchantOrderRecord)" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 								        			Serve
@@ -75,7 +74,7 @@
 								    		</td>
 									  	</tr>
 									  	<tr 
-									  		v-show="!restaurantOrdersToShow.length"
+									  		v-show="!merchantOrdersToShow.length"
 									  	>
 								    		<td colspan="6">
 									      		<div class="alert alert-danger" role="alert">
@@ -144,8 +143,8 @@
 									</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#show-order-items-details">
-										Order Items
+									<a class="nav-link" data-toggle="tab" href="#show-order-products">
+										Products
 									</a>
 								</li>
 								<li class="nav-item">
@@ -162,29 +161,29 @@
 					            		<div class="col-sm-12">
 					            			<div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
-							              			Order id
+							              			Id
 							              		</label>
 								                <div class="col-sm-6" >
 								                  	{{ singleOrderData.order.id }}
 								                </div>
 								            </div>
-								            <div class="form-group row" v-if="singleOrderData.order.asap || singleOrderData.order.scheduled">		
+								            <div class="form-group row" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.schedule">		
 							              		<label class="col-sm-6 text-right">
 							              			ASAP/Scheduled
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{
-								                  		singleOrderData.order.asap ?
-								                  		'ASAP' : singleOrderData.order.scheduled.order_schedule
+								                  		singleOrderData.order.is_asap_order ?
+								                  		'ASAP' : singleOrderData.order.schedule.schedule
 								                  	}}
 								                </div>	
 								            </div>
-								            <div class="form-group row">		
+								            <div class="form-group row" v-show="singleOrderData.order.has_cutlery">		
 							              		<label class="col-sm-6 text-right">
 							              			Cutlery
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.cutlery_added ? 'Added' : 'None' }}
+								                  	{{ singleOrderData.order.has_cutlery ? 'Added' : 'None' }}
 								                </div>	
 								            </div> 
 								            <div class="form-group row">		
@@ -192,7 +191,8 @@
 							              			Price
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.order_price }}
+								                  	{{ singleOrderData.order.price }}
+								                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
@@ -200,7 +200,7 @@
 							              			Vat
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.vat }}
+								                  	{{ singleOrderData.order.vat }} %
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
@@ -208,7 +208,7 @@
 							              			Discount
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.discount }}
+								                  	{{ singleOrderData.order.discount }} %
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
@@ -217,6 +217,7 @@
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{ singleOrderData.order.net_payable }}
+								                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 								                </div>	
 								            </div>
 								            <div class="form-group row">		
@@ -238,55 +239,76 @@
 					            		</div>
 					            	</div>
 								</div>
-								<div id="show-order-items-details" class="container tab-pane fade">
+								<div id="show-order-products" class="container tab-pane fade">
 									<div class="row">
-					            		<div class="col-sm-12">
-					            			<div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Order Items
-							              		</label>
-								                <div class="col-sm-6">
+						                <div class="col-sm-12 text-md-center">
+						                	<ul 
+						                		class="list-group" 
+						                		v-show="singleOrderData.order.merchants && singleOrderData.order.merchants.length"
+						                	>
+												<li 
+													class="list-group-item"
+													v-for="(merchantOrder, index) in singleOrderData.order.merchants" 
+													:key="merchantOrder.id"
+												>
+													<p class="font-weight-bold">
+														{{ merchantOrder.merchant_name | capitalize }}
+													</p>
 
-								                	<ul v-show="singleOrderData.order.restaurants && singleOrderData.order.restaurants.length">
-														<li v-for="(orderedRestaurant, index) in singleOrderData.order.restaurants" 
-															:key="orderedRestaurant.id" 
-															style="list-style-type:none;" 
-														>
-															<ol v-show="orderedRestaurant.items.length">
-																<li v-for="(item, index) in orderedRestaurant.items" 
-																	:key="item.id"
-																>	
-																	{{ item.restaurant_menu_item.name }} 
+													<ul 
+														class="list-group" 
+														v-show="merchantOrder.products.length" 
+													>
+														<li 
+															class="list-group-item" 
+															v-for="(product, index) in merchantOrder.products" 
+															:key="product.id"
+														>	
+															{{ product.merchant_product.name | capitalize }} 
 
-																	<span class="d-block"
-																		v-if="item.restaurant_menu_item.has_variation" 
-																	>
-																		(Selected Variation : {{ item.selected_item_variation.restaurant_menu_item_variation.variation.name }} )
-																	</span>
+															<span v-if="product.merchant_product.has_variation" 
+															>
+																({{ product.variation.merchant_product_variation.variation.name | capitalize }} )
+															</span>
 
-																	(quantity : {{ item.quantity }})
+															<p class="d-block">
+																<span class="font-weight-bold">- Qty : </span>
+																{{ product.quantity }}
+															</p>
 
-																	<span 
-																		class="d-block" 
-																		v-if="item.additional_ordered_addons.length"
-																	>
-																		Extra Addons
-																	</span>
+															<span 
+																class="d-block font-weight-bold" 
+																v-if="product.addons.length"
+															>
+																- Extra Addons
+															</span>
 
-																	<ul v-if="item.restaurant_menu_item.has_addon && item.additional_ordered_addons.length">
+															<ul 
+																class="form-group" 
+																style="list-style-type: circle; list-style-position: inside;" 
+																v-if="product.merchant_product.has_addon && product.addons.length"
+															>
 
-																		<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
-																			{{ additionalOrderedAddon.restaurant_menu_item_addon.addon.name }}
-																		</li>
-																	</ul>
-
+																<li v-for="(additionalOrderedAddon, index) in product.addons">
+																	{{ additionalOrderedAddon.merchant_product_addon.addon.name | capitalize }} (Qty:{{ additionalOrderedAddon.quantity }})
 																</li>
-															</ol>
+															</ul>
+
+															<p class="d-block" v-if="product.customization">
+																<span class="font-weight-bold">- Customization : </span>
+																{{ product.customization | capitalize }}
+															</p>
 														</li>
 													</ul>
-								                </div>	
-								            </div> 
-					            		</div>
+
+													<p class="text-danger" 
+														v-show="! merchantOrder.products.length"
+													>
+														No Products Found Yet
+													</p>
+												</li>
+											</ul>
+						                </div>
 					            	</div>
 								</div>
 								<div id="show-orderer-details" class="container tab-pane fade">
@@ -303,7 +325,7 @@
 								                  		singleOrderData.order.orderer.user_name : 'NA' | capitalize 
 													}}
 													({{
-														singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('restaurant_id') ? 
+														singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('merchant_id') ? 
 								                  		'Waiter' : 'Customer'
 													}})
 								                </div>	
@@ -326,11 +348,8 @@
 				<!-- /.modal-dialog -->
 			</div>
 			<!-- /modal-show-order -->
-
 	    </section>
-
 	</div>
-    
 </template>
 
 <script type="text/javascript">
@@ -341,19 +360,19 @@
 		order : {
 			
 		},
-		waiter : {
-			waiter_id : null,
-			restaurant_id : null,
+		agent : {
+			merchant_agent_id : null,
+			merchant_id : null,
 			orderServed : false,
 		}
 	};
 
-	var restaurantListData = {
+	var merchantListData = {
       	query : '',
     	perPage : 10,
     	loading : false,
     	
-    	restaurantOrdersToShow : [],
+    	merchantOrdersToShow : [],
     	allOrdersToBeServed : [],
     	formSubmitionMode : false,
 
@@ -364,15 +383,15 @@
       	singleOrderData : singleOrderData,
 
         csrf : document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        // restaurant_id : document.querySelector('meta[name="restaurant-id"]').getAttribute('content'),
-        waiter_id : 1,
-        restaurant_id : 1,
+        // merchant_id : document.querySelector('meta[name="restaurant-id"]').getAttribute('content'),
+        merchant_agent_id : 1,
+        merchant_id : 1,
     };
 
 	export default {
 
 	    data() {
-	        return restaurantListData;
+	        return merchantListData;
 		},
 
 		created(){
@@ -383,28 +402,28 @@
 			    
 			Pusher.logToConsole = true;
 
-			Echo.private(`notifyRestaurantWaiters.` + this.restaurant_id)
-			.listen('.updation-for-waiters', (waiterOrderToServe) => {
+			Echo.private(`notifyMerchantAgents.` + this.merchant_id)
+			.listen('.updation-for-agents', (merchantOrderToServe) => {
 			    
-			    console.log(waiterOrderToServe);
+			    // console.log(merchantOrderToServe);
 
 			    // due to pagination, checking if this broadcasted one already exists 
-			    const objectExist = (restaurantOrderRecord) => restaurantOrderRecord.order_id==waiterOrderToServe.order_id;
+			    const objectExist = (merchantOrderRecord) => merchantOrderRecord.order_id==merchantOrderToServe.order_id;
 
 			    // if new delivery order in the list or nothing in the list
-			    if ((!this.restaurantOrdersToShow.some(objectExist)) || (Array.isArray(this.restaurantOrdersToShow) && !this.restaurantOrdersToShow.length)) {
+			    if ((!this.merchantOrdersToShow.some(objectExist)) || (Array.isArray(this.merchantOrdersToShow) && !this.merchantOrdersToShow.length)) {
 			    	
-			    	this.restaurantOrdersToShow.unshift(waiterOrderToServe);
-			    	toastr.info("New serve-order arrives");
+			    	this.merchantOrdersToShow.unshift(merchantOrderToServe);
+			    	// toastr.info("New serve-order arrives");
 			    }
 			    // now showing the order in this page
-			    else if (this.restaurantOrdersToShow.some(objectExist)) {
-				    let index = this.restaurantOrdersToShow.findIndex(
-				    		currentRestaurantOrder => (currentRestaurantOrder.order_id==waiterOrderToServe.order_id)
+			    else if (this.merchantOrdersToShow.some(objectExist)) {
+				    let index = this.merchantOrdersToShow.findIndex(
+				    		currentMerchantOrder => (currentMerchantOrder.order_id==merchantOrderToServe.order_id)
 				    	);
 
-				    Vue.set(this.restaurantOrdersToShow, index, waiterOrderToServe)
-				    toastr.info("Old serve-order update arrives");
+				    Vue.set(this.merchantOrdersToShow, index, merchantOrderToServe)
+				    // toastr.info("Old serve-order update arrives");
 				    // console.log(index);
 			    }
 			    
@@ -426,7 +445,7 @@
 			fetchAllOrdersToBeServed(){
 				this.loading = true;
 				axios
-					.get('/api/waiter-orders/' + this.restaurant_id + '/' + this.perPage +'?page='+ this.pagination.current_page)
+					.get('/api/agent-orders/' + this.merchant_id + '/' + this.perPage +'?page='+ this.pagination.current_page)
 					.then(response => {		
 						if (response.status == 200) {
 							this.allOrdersToBeServed = response.data;
@@ -439,7 +458,7 @@
 					});
 			},
 			showListDataForSelectedTab(){
-				this.restaurantOrdersToShow = this.allOrdersToBeServed.all.data;
+				this.merchantOrdersToShow = this.allOrdersToBeServed.all.data;
 				this.pagination = this.allOrdersToBeServed.all;
 			},
 			changeNumberContents() {
@@ -450,16 +469,16 @@
 				this.pagination.current_page = 1;
 				this.fetchAllOrdersToBeServed();
     		},
-    		showOrderDetailModal(restaurantOrderRecord) {
+    		showOrderDetailModal(merchantOrderRecord) {
 
-				this.singleOrderData.order = restaurantOrderRecord.order;
+				this.singleOrderData.order = merchantOrderRecord.order;
 
-				this.singleOrderData.order.restaurants = restaurantOrderRecord.ordered_restaurants;
+				// this.singleOrderData.order.merchants = merchantOrderRecord.ordered_restaurants;
 				
 				// if any food is picked
-				if (this.restaurantOrderReady(restaurantOrderRecord)) {
+				if (this.merchantOrderIsReady(merchantOrderRecord)) {
 
-					this.singleOrderData.order.orderer = restaurantOrderRecord.order.orderer;
+					this.singleOrderData.order.orderer = merchantOrderRecord.order.orderer;
 
 				}
 
@@ -467,16 +486,16 @@
 
 			},
 
-			orderServingConfirmation(restaurantOrderRecord){
+			orderServingConfirmation(merchantOrderRecord){
 
 				this.formSubmitionMode = true;
 
-				this.singleOrderData.waiter = {};
-				this.singleOrderData.waiter.orderServed = true;
-				this.singleOrderData.waiter.waiter_id = this.waiter_id;
-				this.singleOrderData.waiter.restaurant_id = this.restaurant_id;
+				this.singleOrderData.agent = {};
+				this.singleOrderData.agent.orderServed = true;
+				this.singleOrderData.agent.merchant_agent_id = this.merchant_agent_id;
+				this.singleOrderData.agent.merchant_id = this.merchant_id;
 
-				this.singleOrderData.order = restaurantOrderRecord.order;
+				this.singleOrderData.order = merchantOrderRecord.order;
 				
 				this.submitConfirmation();
 
@@ -485,23 +504,22 @@
 			submitConfirmation(){
 
 				// console.log(this.singleOrderData.order);
-				// console.log(this.singleOrderData.waiter);
+				// console.log(this.singleOrderData.agent);
 				// return;
-				
-				$("#modal-acceptOrPickOrDrop-order").modal("hide");
 
 				axios
-					.post('/order-serve-confirmations/' + this.singleOrderData.order.id + '/' + this.perPage + '?page=' + this.pagination.current_page, this.singleOrderData.waiter)
+					.post('/order-serve-confirmations/' + this.singleOrderData.order.id + '/' + this.perPage + '?page=' + this.pagination.current_page, this.singleOrderData.agent)
 					.then(response => {
 						if (response.status == 200) {
 							
 							this.singleOrderData.order = {};
-							this.singleOrderData.waiter = {};
+							this.singleOrderData.agent = {};
 
 							this.allOrdersToBeServed = response.data;
 							this.showListDataForSelectedTab();
 
 							this.formSubmitionMode = false;
+							$("#modal-acceptOrPickOrDrop-order").modal("hide");
 							toastr.success(response.data.success, "Success");
 						}
 					})
@@ -514,9 +532,9 @@
 				      	}
 					});
 			},
-			cancelledOrder(restaurantOrderRecord) {
+			cancelledOrder(merchantOrderRecord) {
 
-				if (restaurantOrderRecord.order_cancellation_reasons.length) {
+				if (merchantOrderRecord.order_cancellations.length) {
 					return true;
 				}
 
@@ -524,9 +542,9 @@
 
 			},
 
-			servedOrder(restaurantOrderRecord){
+			servedOrder(merchantOrderRecord){
 				
-				if (restaurantOrderRecord.order_serve_progression) {
+				if (merchantOrderRecord.order_serve_progression) {
 					return true;
 				}
 
@@ -534,9 +552,9 @@
 					
 			},
 
-			restaurantOrderReady(restaurantOrderRecord) {
+			merchantOrderIsReady(merchantOrderRecord) {
 
-				if (restaurantOrderRecord.order_ready_confirmations.length) {
+				if (merchantOrderRecord.is_ready) {
 					return true;
 				}
 

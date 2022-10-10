@@ -4,7 +4,7 @@ namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RiderDeliveryResource extends JsonResource
+class OrderCollectionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,10 @@ class RiderDeliveryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'is_accepted' => $this->is_accepted,
-            'accepted_at' => $this->accepted_at,
-            'is_delivered' => $this->is_delivered,
-            'delivered_at' => $this->delivered_at,
+            'merchant_id' => $this->merchant_id,
+            'merchant_name' => $this->when($this->relationLoaded('merchant'), $this->merchant->name),
+            'is_collected' => $this->is_collected,
+            'collected_at' => $this->collected_at,
             'created_at' => $this->created_at,
         ];
     }

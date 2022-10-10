@@ -1,4 +1,3 @@
-
 <template>
 	<div class="container-fluid">
 		<section>
@@ -81,34 +80,32 @@
 									<thead>
 										<tr>
 											<th scope="col">#</th>
-											<th scope="col">Order Id</th>
+											<th scope="col">Id</th>
 											<th scope="col">Type</th>
 											<th scope="col">Status</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-									  	<tr v-show="ordersToShow.length"
-									    	v-for="(merchant, index) in ordersToShow"
-									    	:key="merchant.id" 
-									    	:class="orderRowClass(merchant.order)" 
+									  	<tr v-show="merchantOrdersToShow.length"
+									    	v-for="(merchantOrder, index) in merchantOrdersToShow"
+									    	:key="merchantOrder.id" 
+									    	:class="orderRowClass(merchantOrder)" 
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ merchant.order_id }}</td>
-								    		<td>{{ merchant.order.order_type | capitalize }}</td>
+								    		<td>{{ merchantOrder.order_id }}</td>
+								    		<td>{{ merchantOrder.order.type | capitalize }}</td>
 								    		<td>
 								    			<span 
-								    				v-if="failedOrder(merchant.order) || cancelledOrder(merchant.order.merchant_acceptances, merchant.order.merchant_order_cancelations)" 
+								    				v-if="failedOrder(merchantOrder.order) || cancelledOrder(merchantOrder)" 
 								    				class="badge badge-secondary d-block"
 								    			>	
 								    				Cancelled
 								    			</span>
 
-												<!-- 
-													no option should be shown without picking/cancelling every merchant orders 
-												-->
+												<!-- no option should be shown without picking/cancelling every merchant orders -->
 								    			<span 
-								    				v-else-if="(servingOrder(merchant.order) && servedOrder(merchant.order)) || (! servingOrder(merchant.order) && readyOrder(merchant.order.order_ready_confirmations))" 
+								    				v-else-if="(servingOrder(merchantOrder.order) && servedOrder(merchantOrder)) || (! servingOrder(merchantOrder.order) && readyOrder(merchantOrder))" 
 								    				class='badge badge-success d-block'
 								    			>	
 								    				Success
@@ -120,7 +117,7 @@
 								    				// for each merchants in order
 								    			-->
 							    				<span 
-							    					v-else-if="acceptedOrder(merchant.order.merchant_acceptances)"
+							    					v-else-if="acceptedOrder(merchantOrder)"
 							    				>
 								    				<span class='badge badge-warning d-block'>
 									    				Pending
@@ -138,50 +135,54 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-info btn-sm"
-									      			@click="showOrderDetailModal(merchant)" 
+									      			@click="showOrderDetailModal(merchantOrder)" 
 								      			>
 								        			<i class="fas fa-eye"></i>
 								        			Details
 								      			</button>
+
 								      			<!-- disabled if merchant already confirmed as ready-->
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="!cancelledOrder(merchant.order.merchant_acceptances, merchant.order.merchant_order_cancelations) && orderToServe(merchant.order) && confirmedReservationOrder(merchant.order) && ! stoppedOrder(merchant.order)" 
+									      			v-if="!cancelledOrder(merchantOrder) && orderToServe(merchantOrder) && confirmedReservationOrder(merchantOrder.order) && ! stoppedOrder(merchantOrder.order)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order=merchant.order;singleOrderData.order.serveOrder=true;confirmOrder()" 
+									      			@click="singleOrderData.order=merchantOrder.order;singleOrderData.order.serveOrder=true;confirmOrder()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 							        				Serve-Order
 								      			</button>
+
 								      			<!-- disabled if merchant already confirmed as ready-->
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(merchant.order.merchant_acceptances, merchant.order.merchant_order_cancelations) && !readyOrder(merchant.order.order_ready_confirmations) && confirmedReservationOrder(merchant.order) && ! stoppedOrder(merchant.order)" 
+									      			v-if="!cancelledOrder(merchantOrder) && !readyOrder(merchantOrder) && confirmedReservationOrder(merchantOrder.order) && ! stoppedOrder(merchantOrder.order)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order=merchant.order;singleOrderData.order.orderReady=true;confirmOrder()" 
+									      			@click="singleOrderData.order=merchantOrder.order;singleOrderData.order.orderReady=true;confirmOrder()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 							        				Order-Ready
 								      			</button>
+
 								      			<!-- if merchant not accepted yet-->
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-warning btn-sm" 
-									      			v-if="!cancelledOrder(merchant.order.merchant_acceptances, merchant.order.merchant_order_cancelations) && !readyOrder(merchant.order.order_ready_confirmations) && !acceptedOrder(merchant.order.merchant_acceptances) && confirmedReservationOrder(merchant.order) && ! stoppedOrder(merchant.order)" 
+									      			v-if="!cancelledOrder(merchantOrder) && !readyOrder(merchantOrder) && !acceptedOrder(merchantOrder) && confirmedReservationOrder(merchantOrder.order) && ! stoppedOrder(merchantOrder.order)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order=merchant.order;singleOrderData.order.orderReady=false;confirmOrder()" 
+									      			@click="singleOrderData.order=merchantOrder.order;singleOrderData.order.orderReady=false;confirmOrder()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 								        			Accept-Order
 								      			</button>
+
 								      			<!-- disabled if merchant accepted -->
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-secondary btn-sm" 
-									      			v-if="!cancelledOrder(merchant.order.merchant_acceptances, merchant.order.merchant_order_cancelations) && !acceptedOrder(merchant.order.merchant_acceptances) && confirmedReservationOrder(merchant.order) && ! stoppedOrder(merchant.order)" 
-									      			@click="showOrderCancelationModal(merchant.order)" 
+									      			v-if="!cancelledOrder(merchantOrder) && !acceptedOrder(merchantOrder) && confirmedReservationOrder(merchantOrder.order) && ! stoppedOrder(merchantOrder.order)" 
+									      			@click="showOrderCancellationModal(merchantOrder.order)" 
 								      			>
 								        			<i class="fas fa-times"></i>
 								        			Cancel
@@ -189,7 +190,7 @@
 								    		</td>
 									  	</tr>
 									  	<tr 
-									  		v-show="!ordersToShow.length"
+									  		v-show="!merchantOrdersToShow.length"
 									  	>
 								    		<td colspan="6">
 									      		<div class="alert alert-danger" role="alert">
@@ -259,8 +260,8 @@
 									</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link active" data-toggle="tab" href="#show-order-items-details">
-										Order Items
+									<a class="nav-link active" data-toggle="tab" href="#show-order-products">
+										Products
 									</a>
 								</li>
 							</ul>
@@ -271,7 +272,7 @@
 									
 			            			<div class="form-group row">		
 					              		<label class="col-sm-6 text-right">
-					              			Order id
+					              			Id
 					              		</label>
 						                <div class="col-sm-6" >
 						                  	{{ singleOrderData.order.id }}
@@ -283,16 +284,16 @@
 					              		</label>
 
 						                <div class="col-sm-6">
-						                	{{ singleOrderData.order.order_type | capitalize }}
+						                	{{ singleOrderData.order.type | capitalize }}
 						                </div>
 						            </div>
-						            <div class="form-group row" v-if="singleOrderData.order.asap || singleOrderData.order.scheduled">		
+						            <div class="form-group row" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.scheduled">		
 					              		<label class="col-sm-6 text-right">
 					              			ASAP/Scheduled
 					              		</label>
 						                <div class="col-sm-6">
 						                  	{{
-						                  		singleOrderData.order.asap ?
+						                  		singleOrderData.order.is_asap_order ?
 						                  		'ASAP' : singleOrderData.order.scheduled.order_schedule
 						                  	}}
 						                </div>	
@@ -302,7 +303,8 @@
 					              			Price
 					              		</label>
 						                <div class="col-sm-6">
-						                  	{{ singleOrderData.order.order_price }}
+						                  	{{ singleOrderData.order.price }}
+						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 						                </div>	
 						            </div>
 						            <div class="form-group row">		
@@ -310,7 +312,7 @@
 					              			Vat
 					              		</label>
 						                <div class="col-sm-6">
-						                  	{{ singleOrderData.order.vat }}
+						                  	{{ singleOrderData.order.vat }} %
 						                </div>	
 						            </div>
 						            <div class="form-group row">		
@@ -318,7 +320,7 @@
 					              			Discount
 					              		</label>
 						                <div class="col-sm-6">
-						                  	{{ singleOrderData.order.discount }}
+						                  	{{ singleOrderData.order.discount }} %
 						                </div>	
 						            </div>
 						            <div class="form-group row">		
@@ -327,6 +329,7 @@
 					              		</label>
 						                <div class="col-sm-6">
 						                  	{{ singleOrderData.order.delivery_fee }}
+						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 						                </div>	
 						            </div> 
 						            <div class="form-group row">		
@@ -335,14 +338,15 @@
 					              		</label>
 						                <div class="col-sm-6">
 						                  	{{ singleOrderData.order.net_payable }}
+						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 						                </div>	
 						            </div> 
-						            <div class="form-group row">		
+						            <div class="form-group row" v-show="singleOrderData.order.has_cutlery">		
 					              		<label class="col-sm-6 text-right">
 					              			Cutlery
 					              		</label>
 						                <div class="col-sm-6">
-						                  	{{ singleOrderData.order.cutlery_added ? 'Added' : 'None' }}
+						                  	{{ singleOrderData.order.has_cutlery ? 'Added' : 'None' }}
 						                </div>	
 						            </div> 
 						            <div class="form-group row">		
@@ -356,62 +360,67 @@
 											}}
 											({{
 												singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('merchant_id') ? 
-						                  		'Waiter' : 'Customer'
+						                  		'Merchant Agent' : 'Customer'
 											}})
 						                </div>	
 						            </div>
 								</div>
-								<div id="show-order-items-details" class="container tab-pane active">
+								<div id="show-order-products" class="container tab-pane active">
 									<div class="row">
-					            		<div class="col-sm-12">
-					            			<div class="form-group row">		
-							              		<label class="col-sm-6 text-right">
-							              			Order Items
-							              		</label>
-								                <div class="col-sm-6">
+						                <div class="col-sm-12 text-md-center">
+						                	<ul 
+												class="list-group list-group-flush" 
+												v-show="Boolean(singleOrderData.order.products && singleOrderData.order.products.length)" 
+											>
+												<li 
+													class="list-group-item" 
+													v-for="(product, index) in singleOrderData.order.products" 
+													:key="product.id"
+												>	
+													{{ product.merchant_product.name | capitalize }} 
 
-								                	<ul v-show="Boolean(singleOrderData.order.items && singleOrderData.order.items.length)" 
-								                	>	
-														<li v-for="(item, index) in singleOrderData.order.items" 
-															:key="item.id"
-														>	
-															{{ item.merchant_product.name | capitalize }}
+													<span v-if="product.merchant_product.has_variation" 
+													>
+														({{ product.variation.merchant_product_variation | capitalize }})
+													</span>
 
-															<span class="d-block"
-																v-if="item.merchant_product.has_variation" 
-															>
-																(Selected Variation : {{ item.variation.merchant_product_variation.variation.name | capitalize }} )
-															</span>
+													<p class="d-block">
+														<span class="font-weight-bold">- Qty : </span>
+														{{ product.quantity }}
+													</p>
 
-															(Quantity : {{ item.quantity }})
+													<span 
+														class="d-block font-weight-bold" 
+														v-if="product.addons.length"
+													>
+														- Addons
+													</span>
 
-															<span 
-																class="d-block font-weight-bold" 
-																v-if="item.addons.length"
-															>
-																Addons
-															</span>
+													<ul 
+														class="form-group" 
+														style="list-style-type: circle; list-style-position: inside;" 
+														v-if="product.merchant_product.has_addon && product.addons.length"
+													>
 
-															<ul v-if="item.merchant_product.has_addon && item.addons.length">
-
-																<li v-for="(additionalOrderedAddon, index) in item.additional_ordered_addons">
-																	{{ additionalOrderedAddon.merchant_product_addon.addon.name | capitalize }} ({{ additionalOrderedAddon.quantity }})
-																</li>
-															</ul>
-
+														<li v-for="(additionalOrderedAddon, index) in product.addons">
+															{{ additionalOrderedAddon.merchant_product_addon | capitalize }} ({{ additionalOrderedAddon.quantity }})
 														</li>
 													</ul>
 
-													<p 
-														class="text-danger" 
-														v-show="Boolean(singleOrderData.order.items && !singleOrderData.order.items.length)"
-													>
-														No Items Found Yet
+													<p class="d-block" v-if="product.customization">
+														<span class="font-weight-bold">- Customization : </span>
+														{{ product.customization | capitalize }}
 													</p>
+												</li>
+											</ul>
 
-								                </div>	
-								            </div>  
-					            		</div>
+											<p 
+												class="text-danger" 
+												v-show="Boolean(singleOrderData.order.products && !singleOrderData.order.products.length)"
+											>
+												No Products Found Yet
+											</p>
+						                </div>
 					            	</div>
 								</div>
 							</div>
@@ -429,13 +438,13 @@
 			</div>
 			<!-- /modal-show-order -->
 
-			<!-- modal-order-cancelation -->
-			<div class="modal fade" id="modal-order-cancelation">
+			<!-- modal-order-cancellation -->
+			<div class="modal fade" id="modal-order-cancellation">
 				<div class="modal-dialog">
 					<div class="modal-content bg-secondary">
 						<div class="modal-header">
 						  	<h4 class="modal-title">
-						  		{{ defineOrderType(singleOrderData.order) | capitalize }} Cancelation
+						  		{{ defineOrderType(singleOrderData.order) | capitalize }} Cancellation
 						  	</h4>
 						  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						    	<span aria-hidden="true">&times;</span>
@@ -454,28 +463,28 @@
 				              			for="inputMenuName3" 
 				              			class="col-sm-4 col-form-label text-right"
 				              		>
-				              			Cancelation Reason
+				              			Cancellation Reason
 				              		</label>
 					                <div class="col-sm-8">
 					                  	<select 
-					                  		v-model="singleOrderData.orderCancelation.reason_id" 
+					                  		v-model="singleOrderData.orderCancellation.cancellation_reason_id" 
 					                  		class="form-control" 
-					                  		@change="submitCancelationForm=true;errors.orderCancelation.reason=null"
+					                  		@change="submitCancellationForm=true;errors.orderCancellation.reason=null"
 					                  	>
-											<option :value="null" selected="true" disabled>Reason of cancelation</option>
+											<option :value="null" selected="true" disabled>Reason of cancellation</option>
 											<option 
-												v-for="cancelationReason in allCancelationReasons" 
-												v-bind:value="cancelationReason.id"
+												v-for="cancellationReason in allCancellationReasons" 
+												v-bind:value="cancellationReason.id"
 											>
-												<span v-html="cancelationReason.reason"></span>
+												<span v-html="cancellationReason.reason"></span>
 											</option>
 										</select>
 
 					                	<div 
 						                	class="text-danger" 
-						                	v-if="errors.orderCancelation.reason"
+						                	v-if="errors.orderCancellation.reason"
 					                	>
-								        	{{ errors.orderCancelation.reason }}
+								        	{{ errors.orderCancellation.reason }}
 								  		</div>
 					                </div>
 				              	</div>
@@ -488,7 +497,7 @@
 							  	<button 
 							  		type="submit" 
 							  		class="btn btn-outline-light float-right" 
-							  		:disabled="!submitCancelationForm" 
+							  		:disabled="!submitCancellationForm" 
 							  	>
 							  		Cancel Order
 							  	</button>
@@ -499,7 +508,7 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
-			<!-- /modal-order-cancelation -->
+			<!-- /modal-order-cancellation -->
 	    </section>
 	</div>
 </template>
@@ -512,8 +521,8 @@
 		order : {
 			orderReady : false,
 		},
-		orderCancelation : {
-			reason_id : null,
+		orderCancellation : {
+			cancellation_reason_id : null,
 			merchant_id : document.querySelector('meta[name="merchant-id"]').getAttribute('content'),
 		}
 	};
@@ -523,11 +532,11 @@
     	perPage : 10,
     	loading : false,
     	formSubmitionMode : false,
-    	submitCancelationForm : true,
+    	submitCancellationForm : true,
     	
     	allOrders : [],
-    	ordersToShow : [],
-    	allCancelationReasons : [],
+    	merchantOrdersToShow : [],
+    	allCancellationReasons : [],
 
     	currentTab : 'all',
 
@@ -538,7 +547,7 @@
       	singleOrderData : singleOrderData,
 
       	errors : {
-      		orderCancelation : {
+      		orderCancellation : {
       			reason : null,
       		},
       	},
@@ -560,7 +569,7 @@
 
 		created(){
 			this.fetchAllOrders();
-			this.fetchAllCancelationReasons();
+			this.fetchAllCancellationReasons();
 		},
 
 		mounted(){
@@ -568,34 +577,30 @@
 			Pusher.logToConsole = true;
 
 			Echo.private(`notifyMerchant.` + this.merchant_id)
-			.listen('.updation-for-merchant', (orderedMerchant) => {
+			.listen('.updation-for-merchant', (merchantOrder) => {
 
-			    // console.log(orderedMerchant);
+			    // console.log(merchantOrder);
 
 			    // due to pagination, checking if this broadcasted one already exists 
-			    const orderExist = (currentOrder) => currentOrder.order_id==orderedMerchant.order_id;
-
-			    // due to pagination, checking if this broadcasted merchant is for this one & ringing 
-			    const merchantRinging = (merchantOrderRecord) => (merchantOrderRecord.merchant_id==this.merchant_id && merchantOrderRecord.food_order_acceptance==-1);
+			    const orderExist = (currentOrder) => currentOrder.order_id==merchantOrder.order_id;
 			    
-			    // console.log(orderedMerchant.order.merchant_acceptances.some(merchantRinging));
-			    // console.log(!this.ordersToShow.some(orderExist));
+			    // console.log(!this.merchantOrdersToShow.some(orderExist));
 
 			    // new order and not in the list or nothing in the list
-			    if ((orderedMerchant.order.merchant_acceptances.some(merchantRinging) && !this.ordersToShow.some(orderExist)) || (Array.isArray(this.ordersToShow) && !this.ordersToShow.length)) {
+			    if ((merchantOrder.is_accepted == -1 && !this.merchantOrdersToShow.some(orderExist)) || (Array.isArray(this.merchantOrdersToShow) && !this.merchantOrdersToShow.length)) {
 			    	
-			    	this.ordersToShow.unshift(orderedMerchant);
-			    	toastr.info("New Order arrives");
+			    	this.merchantOrdersToShow.unshift(merchantOrder);
+			    	// toastr.info("New Order arrives");
 			    }
 			    // now showing the order in this page
-			    else if (this.ordersToShow.some(orderExist)) {
-				    let index = this.ordersToShow.findIndex(currentOrder => currentOrder.order_id==orderedMerchant.order_id);
+			    else if (this.merchantOrdersToShow.some(orderExist)) {
+				    let index = this.merchantOrdersToShow.findIndex(currentOrder => currentOrder.order_id==merchantOrder.order_id);
 				    // console.log(index);
-				    // this.ordersToShow[index] = orderedMerchant;
-				    // this.ordersToShow.$set(index, orderedMerchant);
-				    // this.$set(this.ordersToShow, index, orderedMerchant)
-				    Vue.set(this.ordersToShow, index, orderedMerchant);
-				    toastr.info("Old Order arrives");
+				    // this.merchantOrdersToShow[index] = merchantOrder;
+				    // this.merchantOrdersToShow.$set(index, merchantOrder);
+				    // this.$set(this.merchantOrdersToShow, index, merchantOrder)
+				    Vue.set(this.merchantOrdersToShow, index, merchantOrder);
+				    // toastr.info("Old Order arrives");
 			    }
 			    // no previous order available
 			    else {
@@ -641,20 +646,20 @@
 			},
 			showListDataForSelectedTab(){
 				if (this.currentTab=='all') {
-					this.ordersToShow = this.allOrders.all.data;
+					this.merchantOrdersToShow = this.allOrders.all.data;
 					this.pagination = this.allOrders.all;
 				}else if (this.currentTab=='served') {
-					this.ordersToShow = this.allOrders.served.data;
+					this.merchantOrdersToShow = this.allOrders.served.data;
 					this.pagination = this.allOrders.served;
 				}
 			},
-			fetchAllCancelationReasons(){
+			fetchAllCancellationReasons(){
 				this.loading = true;
 				axios
-					.get('/api/cancelation-reasons/')
+					.get('/api/cancellation-reasons/')
 					.then(response => {		
 						if (response.status == 200) {
-							this.allCancelationReasons = response.data;
+							this.allCancellationReasons = response.data;
 							this.loading = false;
 						}
 					})
@@ -695,7 +700,7 @@
     		},
     		showOrderDetailModal(merchant) {
 				this.singleOrderData.order = merchant.order;
-				this.singleOrderData.order.items = merchant.items;
+				this.singleOrderData.order.products = merchant.products;
 				$("#modal-show-order").modal("show");
 			},
 			confirmOrder(){
@@ -704,7 +709,7 @@
 				this.singleOrderData.order.merchant_id = this.merchant_id;
 
 				axios
-					.post('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.order)
+					.post('/orders/' + this.singleOrderData.order.id + '/' + this.perPage + '?page=' + this.pagination.current_page, this.singleOrderData.order)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -726,26 +731,26 @@
 				      	}
 					});
 			},
-			showOrderCancelationModal(order) {
+			showOrderCancellationModal(order) {
 				this.singleOrderData.order = order;
-				// this.singleOrderData.orderCancelation.reason_id = null;
-				this.singleOrderData.orderCancelation.merchant_id = this.merchant_id;
-				$("#modal-order-cancelation").modal("show");
+				// this.singleOrderData.orderCancellation.cancellation_reason_id = null;
+				this.singleOrderData.orderCancellation.merchant_id = this.merchant_id;
+				$("#modal-order-cancellation").modal("show");
 			},
 			cancelOrder(){
 				
-				if (!this.singleOrderData.orderCancelation.reason_id) {
-					this.submitCancelationForm = false;
-					this.errors.orderCancelation.reason = 'Reason is required';
+				if (!this.singleOrderData.orderCancellation.cancellation_reason_id) {
+					this.submitCancellationForm = false;
+					this.errors.orderCancellation.reason = 'Reason is required';
 					return;
 				}
 
-				$("#modal-order-cancelation").modal("hide");
+				$("#modal-order-cancellation").modal("hide");
 				
 				this.formSubmitionMode = true;
 
 				axios
-					.put('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.orderCancelation)
+					.put('/orders/'+this.singleOrderData.order.id+'/'+this.perPage+'?page='+ this.pagination.current_page, this.singleOrderData.orderCancellation)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -777,7 +782,7 @@
 				)
 				.then(response => {
 					this.allOrders = response.data;
-					this.ordersToShow = this.allOrders.all.data;
+					this.merchantOrdersToShow = this.allOrders.all.data;
 					this.pagination = this.allOrders.all;
 				})
 				.catch(e => {
@@ -785,35 +790,19 @@
 				});
 
 			},
-			cancelledOrder(orderAcceptedMerchants, merchantOrderCancelations) {
+			cancelledOrder(merchantOrder) {
 				
-				return Boolean(
-					orderAcceptedMerchants.some(
-						currentAcceptance => (currentAcceptance.merchant_id==this.merchant_id && currentAcceptance.food_order_acceptance==0)
-					) || merchantOrderCancelations.some(
-						cancelationReason => (cancelationReason.merchant_id==this.merchant_id)
-					)
-				);
+				return Boolean(merchantOrder.is_accepted==0);
 			},
-			acceptedOrder(merchantAcceptances) {
+			acceptedOrder(merchantOrder) {
 
-				if (merchantAcceptances.length) {
-					return merchantAcceptances.some(
-						currentMerchantAcceptance => (currentMerchantAcceptance.merchant_id==this.merchant_id && currentMerchantAcceptance.food_order_acceptance==1)
-					);
-				}
+				return merchantOrder.is_accepted == 0 ? true : false;
 
-				return false;
 			},
-			readyOrder(orderReadyConfirmations) {
+			readyOrder(merchantOrder) {
 
-				if (orderReadyConfirmations.length) {
-					return orderReadyConfirmations.some(
-						currentMerchantConfirmation => (currentMerchantConfirmation.merchant_id==this.merchant_id && currentMerchantConfirmation.food_ready_confirmation==1)
-					);
-				}
-				
-				return false;
+				return merchantOrder.is_ready == 1 ? true : false;
+
 			},
 			confirmedReservationOrder(order) {
 
@@ -828,18 +817,18 @@
 			}, 
 			defineOrderType(order) {
 
-				return order.order_type;
+				return order.type;
 
 			},
 			stoppedOrder(order){
 				return order.in_progress==0 ? true : false;
 			},
 			failedOrder(order){
-				return order.in_progress===0 && order.complete_order===0 ? true : false;
+				return order.in_progress===0 && order.is_completed===0 ? true : false;
 			},
-			orderToServe(order) {
+			orderToServe(merchantOrder) {
 
-				if (this.servingOrder(order) && !this.servedOrder(order)) {
+				if (this.servingOrder(merchantOrder.order) && !this.servedOrder(merchantOrder)) {
 
 					return true;
 
@@ -851,7 +840,7 @@
 			// order is for serve 
 			servingOrder(order) {
 
-				if (this.defineOrderType(order)==='reservation' || this.defineOrderType(order)==='serve-on-table' ) {
+				if (this.defineOrderType(order)==='reservation' || this.defineOrderType(order)==='serving' ) {
 
 					return true;
 
@@ -861,33 +850,35 @@
 
 			},
 			// completed order
-			servedOrder(order) {
+			servedOrder(merchantOrder) {
 
-				if (order.order_serve_confirmation && order.order_serve_confirmation.food_serve_confirmation==1) {
+				if (merchantOrder.order_serve_confirmation && merchantOrder.order_serve_confirmation.is_served==1) {
+
 					return true;
-				}else
+				}
+				else{
 					return false;
-
+				}
 			},
-			orderRowClass(order) {
+			orderRowClass(merchantOrder) {
 
-				if (this.failedOrder(order) || this.cancelledOrder(order.merchant_acceptances, order.merchant_order_cancelations) || ! this.confirmedReservationOrder(order)) {
+				if (this.failedOrder(merchantOrder.order) || this.cancelledOrder(merchantOrder) || ! this.confirmedReservationOrder(merchantOrder.order)) {
 
 					return 'bg-secondary';
 				}
-				else if (this.servingOrder(order) && this.servedOrder(order)) {
+				else if (this.servingOrder(merchantOrder.order) && this.servedOrder(merchantOrder)) {
 					
 					return 'bg-success';
 				}
-				else if (this.servingOrder(order) && this.readyOrder(order.order_ready_confirmations)) {
+				else if (this.servingOrder(merchantOrder.order) && this.readyOrder(merchantOrder)) {
 					
 					return 'bg-primary';
 				}
-				else if (! this.servingOrder(order) && this.readyOrder(order.order_ready_confirmations)) {
+				else if (! this.servingOrder(merchantOrder.order) && this.readyOrder(merchantOrder)) {
 					
 					return 'bg-success';
 				}
-				else if (this.acceptedOrder(order.merchant_acceptances)) {
+				else if (this.acceptedOrder(merchantOrder)) {
 
 					return 'bg-warning';
 				}

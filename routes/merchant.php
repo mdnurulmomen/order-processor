@@ -61,11 +61,11 @@ Route::name('merchant.')->group(function () {
 		    // Route::put('/my-kitchen/{merchant}', 'MerchantController@updateMerchantKitchen');
 		    // Route::put('/my-kitchen/{merchant}', 'MerchantController@updateMerchantMenuItemStock');
 
-		    // Cancelation-Reasons
-		    Route::get('/api/cancelation-reasons/{perPage?}', 'CancelationController@showAllReasons');
+		    // Cancellation-Reasons
+		    Route::get('/api/cancellation-reasons/{perPage?}', 'CancellationController@showAllReasons');
 
 		    // Orders
-		    Route::get('/orders/{merchant}/{perPage?}', 'OrderController@showAllMerchantOrders');
+		    Route::get('/orders/{merchant}/{perPage?}', 'OrderController@showMerchantAllOrders');
 		    Route::post('/orders/{order}/{perPage}', 'OrderController@confirmMerchantOrder');
 		    Route::put('/orders/{order}/{perPage}', 'OrderController@cancelMerchantOrder');
 		    // Route::get('/api/orders/search/{search}/{perPage}', 'OrderController@searchAllOrders');

@@ -15,7 +15,7 @@ class CreateMerchantNotificationsTable extends Migration
     {
         Schema::create('merchant_notifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedMediumInteger('restaurant_id');
+            $table->unsignedMediumInteger('merchant_id');
             $table->unsignedMediumInteger('notification_id');
         });
     }

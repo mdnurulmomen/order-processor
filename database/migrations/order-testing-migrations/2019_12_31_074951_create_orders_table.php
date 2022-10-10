@@ -15,9 +15,9 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('order_type');
+            $table->string('type');
             $table->boolean('is_asap_order')->default(true);
-            $table->unsignedMediumInteger('order_price');
+            $table->unsignedMediumInteger('price');
             $table->unsignedTinyInteger('vat');
             $table->unsignedTinyInteger('discount')->default(0);
             $table->unsignedTinyInteger('delivery_fee')->default(0);
@@ -28,7 +28,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedInteger('orderer_id');
             $table->tinyInteger('customer_confirmation')->default(-1);
             $table->tinyInteger('in_progress')->default(-1);    // after customer confirmation turns to 1
-            $table->tinyInteger('complete_order')->default(-1);    // after customer confirmation turns to 0
+            $table->tinyInteger('is_completed')->default(-1);    // after customer confirmation turns to 0
             // $table->string('canceller_type')->nullable();     // App/Models/Admin
             // $table->unsignedSmallInteger('canceller_id')->nullable(); // Admin 1
             $table->timestamps();

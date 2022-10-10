@@ -33,7 +33,7 @@ class RiderDelivery extends Model
 
 	public function merchantsAccepted()
 	{
-		return $this->hasMany(MerchantOrder::class, 'order_id', 'order_id')->where('order_acceptance', 1);
+		return $this->hasMany(MerchantOrder::class, 'order_id', 'order_id')->where('is_accepted', 1);
 	}
 
 	public function collections()
@@ -41,19 +41,19 @@ class RiderDelivery extends Model
 		return $this->hasMany(RiderCollection::class, 'order_id', 'order_id');
 	}
 
-	public function orderCancelations()
+	public function orderCancellations()
 	{
-		return $this->hasMany(OrderCancelation::class, 'order_id', 'order_id');
+		return $this->hasMany(OrderCancellation::class, 'order_id', 'order_id');
 	}
 
-	public function merchantOrderCancelations()
+	public function merchantOrderCancellations()
    	{
-      return $this->orderCancelations()->where('canceller_type', 'App\Models\Merchant');
+      return $this->orderCancellations()->where('canceller_type', 'App\Models\Merchant');
    	}
 
-   	public function riderOrderCancelations()
+   	public function riderOrderCancellations()
    	{
-      return $this->orderCancelations()->where('canceller_type', 'App\Models\Rider');
+      return $this->orderCancellations()->where('canceller_type', 'App\Models\Rider');
    	}
 
    	public function order()

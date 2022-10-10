@@ -45,10 +45,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 				
 				Route::post('/merchants', 'MerchantController@getMerchants')->name('merchants.index');
 				Route::get('/merchants/{merchant}', 'MerchantController@showMerchantDetails')->name('merchants.show');
-				// Route::post('/merchant-menu-items', 'MerchantController@getMerchantMerchantProducts')->name('merchant-menu-items.show');
+				// Route::post('/merchant-merchant-products', 'MerchantController@getMerchantMerchantProducts')->name('merchant-merchant-products.show');
 
 				Route::post('/sponsor-merchants', 'MerchantController@getSponsorMerchants')->name('sponsor-merchants.index');
-				Route::post('/promotional-menu-items', 'MerchantController@getPromotionalMerchantProducts')->name('promotional-menu-items.index');
+				Route::post('/promotional-merchant-products', 'MerchantController@getPromotionalMerchantProducts')->name('promotional-merchant-products.index');
 
 				Route::get('/orders/{order}', 'OrderController@getOrderDetails')->name('orders.show');
 				Route::get('/user-orders/{user}/{per_page?}', 'CustomerController@getUserOrders')->name('user-orders.index');

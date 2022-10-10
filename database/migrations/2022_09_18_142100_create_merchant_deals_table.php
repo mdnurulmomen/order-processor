@@ -19,7 +19,7 @@ class CreateMerchantDealsTable extends Migration
             $table->float('promotional_discount', 5, 2)->default(0);
             $table->float('native_discount', 5, 2)->default(0);
             $table->unsignedTinyInteger('net_discount')->default(0);
-            $table->boolean('delivery_fee_addition')->default(true);
+            $table->boolean('has_delivery_fee')->default(true);
             $table->unsignedMediumInteger('merchant_id')->unique();
             $table->softDeletes();
         });

@@ -17,7 +17,7 @@ class SponsorMerchantResource extends JsonResource
         return [
             'id' => $this->id,
             'banner_preview' => $this->banner_preview,
-            'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
+            'cuisines' => MerchantCuisineResource::collection($this->merchantCuisines),
             'url' => route('api.v1.merchants.show', [ 'merchant'=>$this->id ])
         ];
     }

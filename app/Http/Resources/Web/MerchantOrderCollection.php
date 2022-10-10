@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Api;
+namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class PromotionalMenuItemCollection extends ResourceCollection
+class MerchantOrderCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -16,7 +16,7 @@ class PromotionalMenuItemCollection extends ResourceCollection
     {
         return [
             'current_page' => $this->currentPage(),
-            'data'=> MerchantProductResource::collection($this->collection),
+            'data'=> MerchantOrderResource::collection($this->collection),
             'first_page_url'=> $this->url(1),
             'from'=> $this->firstItem(),
             'last_page'=> $this->lastPage(),
@@ -26,7 +26,7 @@ class PromotionalMenuItemCollection extends ResourceCollection
             'per_page'=> $this->perPage(),
             'prev_page_url'=> $this->previousPageUrl(),
             'to'=> $this->lastItem(),
-            'total'=> $this->total()
+            'total'=> $this->total(),
         ];
     }
 }

@@ -79,7 +79,7 @@
 														:key="cuisine.id"
 													>
 													
-														{{ cuisine.name }}
+														{{ cuisine.name | capitalize }}
 													
 													</li>
 												</ul>

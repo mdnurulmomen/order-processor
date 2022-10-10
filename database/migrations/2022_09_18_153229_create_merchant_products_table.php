@@ -20,10 +20,10 @@ class CreateMerchantProductsTable extends Migration
             $table->text('detail')->nullable(); // A short description / quantity / half, full
             $table->boolean('has_variation')->default(false);
             $table->boolean('has_addon')->default(false);
-            $table->boolean('sponsored')->default(false);
+            $table->boolean('is_sponsored')->default(false);
             $table->unsignedSmallInteger('price'); // price / if variation exists, then price of minimum-one
             $table->boolean('customizable')->default(true);
-            $table->boolean('promoted')->default(false);
+            $table->boolean('is_promoted')->default(false);
             $table->boolean('available')->default(true);
             $table->unsignedMediumInteger('merchant_product_category_id');
             $table->softDeletes();

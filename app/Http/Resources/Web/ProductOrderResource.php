@@ -16,10 +16,10 @@ class ProductOrderResource extends JsonResource
     {
         return [
             // 'restaurant_menu_item_id' => $this->restaurant_menu_item_id,
-            'merchant_product' => new MerchantProductResource($this->merchantProduct),
+            'merchant_product' => new MerchantProductResource($this->whenLoaded('merchantProduct')),
             'quantity' => $this->quantity,
-            'variation' => $this->when($this->merchantProduct->has_variation, new ProductOrderVariationResource($this->variation)),
-            'addons' => ProductOrderAddonResource::collection($this->addons),
+            'variation' => new ProductOrderVariationResource($this->whenLoaded('variation')),
+            'addons' => ProductOrderAddonResource::collection($this->whenLoaded('addons')),
             'customization' => $this->when($this->customization, $this->customization ? $this->customization->custom_instruction : false),
         ];
     }

@@ -117,7 +117,7 @@
                     <a class="btn btn-default btn-flat" href="{{ route('merchant.logout') }}"
                        onclick="event.preventDefault();
                         document.getElementById('merchant-logout-form').submit();">
-                        {{ __('logout') }}
+                        {{ __('Logout') }}
                     </a>
                     <form id="merchant-logout-form" action="{{ route('merchant.logout') }}" method="POST" style="display: none;">
                         @csrf
@@ -128,19 +128,15 @@
               </ul>
             </li>
             <!-- Control Sidebar Toggle Button -->
-            
           </ul>
         </li>
-
       </ul>
-
     </nav>
     <!-- /.navbar -->
 
     <div id="app">
       
     </div>
-
   </div>
 <!-- ./wrapper -->
 
@@ -153,6 +149,8 @@
     } 
   
   });
+
+  localStorage.setItem("application_settings", JSON.stringify(@json($applicationSettings)));
 
 </script>
 

@@ -27,13 +27,14 @@ class CreateMerchantsTable extends Migration
             $table->string('website')->nullable();
             $table->string('banner_preview')->nullable();
             $table->unsignedMediumInteger('min_order')->default(150);
+            $table->boolean('has_delivery_support')->default(false);
             $table->boolean('is_post_paid')->default(false);
             $table->boolean('is_self_service')->default(true);
             $table->boolean('has_parking')->default(false);
-            $table->boolean('sponsored')->default(false);
-            $table->unsignedTinyInteger('delivery_charge_per_kilometer');
-            $table->unsignedTinyInteger('min_delivery_charge');
-            $table->unsignedTinyInteger('max_delivery_charge');
+            $table->boolean('is_sponsored')->default(false);
+            $table->unsignedTinyInteger('delivery_charge_per_kilometer')->default(0);
+            $table->unsignedTinyInteger('min_delivery_charge')->default(0);
+            $table->unsignedTinyInteger('max_delivery_charge')->default(0);
             $table->unsignedTinyInteger('order_acceptance_percentage')->default(0);
             $table->unsignedTinyInteger('mean_rating')->default(0);     // From Customers
             $table->json('service_schedule')->nullable(); // service hour for whole week

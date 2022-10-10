@@ -3,42 +3,42 @@
 namespace App\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
-use App\Models\CancelationReason;
+use App\Models\CancellationReason;
 use App\Http\Controllers\Controller;
 
-class CancelationController extends Controller
+class CancellationController extends Controller
 {
-   	public function showAllReasons($perPage = false)
+    public function showAllReasons($perPage = false)
 	{
 	 	if ($perPage) {
 		 	
 		 	return response()->json([
-				'current' => CancelationReason::paginate($perPage),
-				'trashed' => CancelationReason::onlyTrashed()->paginate($perPage),
+				'current' => CancellationReason::paginate($perPage),
+				'trashed' => CancellationReason::onlyTrashed()->paginate($perPage),
 
 			], 200);
 
 	 	}
 
-	 	return response(CancelationReason::get(), 200);
+	 	return response(CancellationReason::get(), 200);
 	}
 
-	public function createCancelationReason(Request $request, $perPage = false)
+	public function createCancellationReason(Request $request, $perPage = false)
 	{
 	 	$request->validate([
 	    	'reason'=>'required|max:65,500',
 	 	]);
 
-	 	$newCuisine = CancelationReason::create([
+	 	$newCuisine = CancellationReason::create([
 	 		'reason' => strtolower($request->reason)
 	 	]);
 
 	 	return $this->showAllReasons($perPage);
 	}
 
-	public function updateCancelationReason(Request $request, $reason, $perPage)
+	public function updateCancellationReason(Request $request, $reason, $perPage)
 	{
-	 	$reasonToUpdate = CancelationReason::find($reason);
+	 	$reasonToUpdate = CancellationReason::find($reason);
 
 	 	$request->validate([
 	    	'reason'=>'required|max:65,500',
@@ -51,9 +51,9 @@ class CancelationController extends Controller
 	 	return $this->showAllReasons($perPage);
 	}
 
-	public function deleteCancelationReason($reason, $perPage)
+	public function deleteCancellationReason($reason, $perPage)
   	{
-     	$reasonToDelete = CancelationReason::find($reason);
+     	$reasonToDelete = CancellationReason::find($reason);
 
      	if ($reasonToDelete) {
 
@@ -64,9 +64,9 @@ class CancelationController extends Controller
      	return $this->showAllReasons($perPage);
   	}
 
-  	public function restoreCancelationReason($reason, $perPage)
+  	public function restoreCancellationReason($reason, $perPage)
   	{
-     	$reasonToDelete = CancelationReason::onlyTrashed()->find($reason);
+     	$reasonToDelete = CancellationReason::onlyTrashed()->find($reason);
 
      	if ($reasonToDelete) {
      		
@@ -79,7 +79,7 @@ class CancelationController extends Controller
 
   	public function searchAllReasons($search, $perPage)
 	{
-		$query = CancelationReason::withTrashed()->where('reason', 'like', "%$search%");
+		$query = CancellationReason::withTrashed()->where('reason', 'like', "%$search%");
 
 		return response()->json([
 

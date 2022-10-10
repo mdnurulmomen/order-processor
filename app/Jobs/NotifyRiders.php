@@ -70,11 +70,11 @@ class NotifyRiders implements ShouldQueue
      */
     public function handle()
     {  
-        if ($this->order->in_progress==1 && ! $this->order->riderAssignment()->exists()) {
+        if ($this->order->in_progress==1 && ! $this->order->riderAssigned()->exists()) {
             
             // initially cancelling order delivery request
-            $riderNewDeliveryRecord = $this->order->riderAssignment()->create([
-                'delivery_order_acceptance' => 0,
+            $riderNewDeliveryRecord = $this->order->riderAssigned()->create([
+                'is_accepted' => 0,
                 'rider_id' => $this->rider->id
             ]);
 

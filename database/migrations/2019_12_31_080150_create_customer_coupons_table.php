@@ -15,7 +15,7 @@ class CreateCustomerCouponsTable extends Migration
     {
         Schema::create('customer_coupons', function (Blueprint $table) {
             $table->mediumIncrements('id');
-            $table->unsignedTinyInteger('achieved_amount');
+            $table->unsignedTinyInteger('amount_achieved');
             $table->unsignedSmallInteger('coupon_id');
             $table->unsignedInteger('customer_id');
             $table->timestamp('created_at')->useCurrent();

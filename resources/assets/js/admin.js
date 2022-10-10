@@ -28,6 +28,7 @@ import App from './pages/AdminSideMenuBar.vue';
 
 // Registering component globally
 Vue.component('pagination', require('./pages/Pagination.vue').default);
+
 // import Home from './pages/admin/Home.vue';
 // import Dashboard2 from './pages/admin/Dashboard2.vue';
 // import Dashboard3 from './pages/admin/Dashboard3.vue';
@@ -56,6 +57,10 @@ Vue.component('pagination', require('./pages/Pagination.vue').default);
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
+
+// import mixin
+// import ApplicationSetting from './mixins/ApplicationSetting';
+// Vue.mixin(ApplicationSetting);
 
 const router = new VueRouter({
 	mode : 'history',

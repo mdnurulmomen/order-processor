@@ -40,7 +40,7 @@ class OrderRequest extends FormRequest
         return [
 
             'order'=>'required',
-            'order.type'=>'required|in:home-delivery,serve-on-table,take-away',
+            'order.type'=>'required|in:delivery,serving,collection',
             'order.is_asap_order'=>'required_without:order.schedule|boolean',
             'order.schedule'=>'required_if:order.is_asap_order,0|date|date_format:Y-m-d H:i:s|after:'.now()->subMinutes(3),
             'order.price'=>'required|numeric',
@@ -60,8 +60,8 @@ class OrderRequest extends FormRequest
                     else if ($this->input('order.orderer_type') === 'merchant_agent' && ! MerchantAgent::where('id', $value)->exists()) {
                         return $fail($attribute.' is invalid.');
                     }
-                    else if ($this->input('order.orderer_type') === 'merchant_agent' && $this->input('order.type') === 'home-delivery') {
-                        return $fail('Delivery order is invalid.');
+                    else if ($this->input('order.orderer_type') === 'merchant_agent' && $this->input('order.type') === 'delivery') {
+                        return $fail('Delivery order is invalid.');     // Merchant Agent cant order for delivery
                     }
                     
                     /*
@@ -77,7 +77,7 @@ class OrderRequest extends FormRequest
                 'numeric', 'min:1',
                 Rule::requiredIf(function () {
 
-                    return $this->input('order.type')=='serve-on-table';
+                    return $this->input('order.type')=='serving';
 
                 }),
             ],
@@ -85,7 +85,7 @@ class OrderRequest extends FormRequest
             'order.delivery_new_address' => [
                 Rule::requiredIf(function () {
 
-                    return (($this->input('order.type')=='home-delivery') && ($this->missing('order.delivery_address_id')));
+                    return (($this->input('order.type')=='delivery') && ($this->missing('order.delivery_address_id')));
 
                 }),
             ],
@@ -102,7 +102,7 @@ class OrderRequest extends FormRequest
                 }),
                 Rule::requiredIf(function () {
                     
-                    return (($this->input('order.type')=='home-delivery') && ($this->missing('order.delivery_new_address')));
+                    return (($this->input('order.type')=='delivery') && ($this->missing('order.delivery_new_address')));
 
                 }),
             ],
@@ -118,7 +118,7 @@ class OrderRequest extends FormRequest
             'merchants' => [
                 'required', 'array', 'min:1', 'between:1,3', 
                 function ($attribute, $value, $fail) {
-                    if (count($this->input('merchants.*.id')) > 1 && $this->input('order.type')==='serve-on-table') {
+                    if (count($this->input('merchants.*.id')) > 1 && $this->input('order.type')==='serving') {
                         $fail('Multiple merchant aint allowed for serve order.');
                     }
                 },
@@ -131,13 +131,13 @@ class OrderRequest extends FormRequest
         /*
                 function ($attribute, $value, $fail) {
                     
-                    $menuRestaurantId = MerchantProduct::find($value)->merchantProductCategory->id;
-                    $givenRestaurantIds = $this->input('merchants.*.id');
+                    $productMerchantId = MerchantProduct::find($value)->merchantProductCategory->id;
+                    $givenMerchantIds = $this->input('merchants.*.id');
 
                     // Log::info($this->input('merchants.*.id'));
                     // Log::warning($this->input('merchants.*.products.*.id'));
 
-                    if (!in_array($menuRestaurantId, $givenRestaurantIds)) {
+                    if (!in_array($productMerchantId, $givenMerchantIds)) {
                         $fail($attribute.' is invalid.');
                     }
                 },
@@ -161,7 +161,7 @@ class OrderRequest extends FormRequest
                 },
         */
         /*
-                Rule::exists('restaurant_menu_item_variations', 'id')->where(function ($query) {
+                Rule::exists('merchant_product_variations', 'id')->where(function ($query) {
                     
                     Log::info($this->input('merchants.*.products.*.id'));
 
@@ -225,7 +225,7 @@ class OrderRequest extends FormRequest
                         }
                         */
 
-                        if ($expectedMerchantProduct->merchantProductCategory->id == $merchantOrder->id) {
+                        if ($expectedMerchantProduct->merchantProductCategory->merchant_id == $merchantOrder->id) { // checking merchant
                             
                             if ($expectedMerchantProduct->has_variation && empty($merchantProduct->variation)) {
                                 
@@ -247,9 +247,9 @@ class OrderRequest extends FormRequest
 
                             if ($expectedMerchantProduct->has_addon && ! empty($merchantProduct->addons)) {
 
-                                foreach ($merchantProduct->addons as $productAddonKey => $itemAddon) {
+                                foreach ($merchantProduct->addons as $productAddonKey => $productAddon) {
                                     
-                                    $expectedMerchantProductAddon = MerchantProductAddon::findOrFail($itemAddon->id);
+                                    $expectedMerchantProductAddon = MerchantProductAddon::findOrFail($productAddon->id);
 
                                     if (empty($expectedMerchantProductAddon) || $expectedMerchantProductAddon->merchant_product_id != $expectedMerchantProduct->id) {
                                         
@@ -264,6 +264,7 @@ class OrderRequest extends FormRequest
                         }
 
                         else {
+                            
                             $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey", "Product id doesn't belong to merchant");
                         }
 

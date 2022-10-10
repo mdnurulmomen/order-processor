@@ -15,33 +15,35 @@ class OrderResource extends JsonResource
     public function toArray($request)
     {
         return [
+
             'id' => $this->id,
-            'order_type' => $this->order_type,
-            // 'order_price' => $this->order_price,
+            'type' => $this->type,
+            
+            // 'is_asap_order' => $this->is_asap_order,
+            // 'price' => $this->price,
             // 'vat' => $this->vat,
             // 'discount' => $this->discount,
             // 'delivery_fee' => $this->when($this->delivery_fee, $this->delivery_fee),
             // 'net_payable' => $this->net_payable,
             // 'payment_method' => $this->payment_method,
-            // 'payment_id' => $this->when($this->payment_method != 'cash', $this->payment ? $this->payment->payment_id : false),
-            // 'asap' => /*$this->whenLoaded('asap')*/ $this->when($this->asap, $this->asap ? true : false),
-            // 'schedule' => /*$this->whenLoaded('schedule')*/ $this->when($this->schedule, $this->schedule ? $this->schedule->order_schedule : false),
-            // 'has_cutlery' => /*$this->whenLoaded('cutlery')*/ $this->when($this->cutlery, $this->cutlery ? true : false),
-            // 'delivery' => $this->when($this->delivery, $this->delivery ? $this->delivery->additional_info : false),
-                // 'orderer' => $this->orderer,
+            // 'has_cutlery' => $this->has_cutlery,
+            
             'customer_confirmation' => $this->customer_confirmation,
             'in_progress' => $this->in_progress,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
-            'complete_order' => $this->complete_order,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
-            'merchants' => MerchantOrderResource::collection($this->merchants) /*route('api.v1.ordered-merchants.show', ['order' => $this->id])*/,
-
-            'rider_assignment' => $this->riderAssignment ? $this->riderAssignment : false,
-        
-            'collection_confirmations' => OrderCollectionResource::collection($this->collections),
-            
-            'order_serve_confirmation' => $this->when($this->serve, $this->serve),
-            'customer_order_cancelation' => $this->when($this->customerOrderCancelation, $this->customerOrderCancelation),
-            // 'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->restaurantOrderCancelations),
-            // 'admin_order_cancelation' => $this->when($this->adminOrderCancelations->count(), $this->adminOrderCancelations),
+            'is_completed' => $this->is_completed,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
+            // 'orderer' => $this->whenLoaded('orderer'),
+            'merchants' => MerchantOrderResource::collection($this->whenLoaded('merchants')) /*route('api.v1.ordered-merchants.show', ['order' => $this->id])*/,
+            // 'payment' => /*$this->when($this->payment_method != 'cash', $this->payment ? $this->payment : 'cash')*/ $this->whenLoaded('payment'),
+            // 'schedule' => $this->whenLoaded('schedule') /*$this->when(! $this->is_asap_order, $this->schedule ? $this->schedule->order_schedule : false)*/,
+            // 'address' => $this->whenLoaded('address') /*$this->when($this->address, $this->address ? $this->address->additional_info : false)*/,
+            // 'restaurants' => OrderedRestaurantResource::collection($this->restaurants) /*route('api.v1.ordered-restaurants.show', ['order' => $this->id])*/,
+            'rider_assigned' => new RiderDeliveryResource($this->whenLoaded('riderAssigned')),
+            'collections' => OrderCollectionResource::collection($this->whenLoaded('collections')),
+            // 'rider_delivery_return' => $this->riderDeliveryReturn ? new RiderReturnResource($this->riderDeliveryReturn) : null,
+            'order_serve_confirmation' => /*$this->when($this->serve, $this->serve)*/ $this->whenLoaded('serve'),
+            'customer_order_cancellation' => $this->when($this->customer_confirmation==0, $this->customerOrderCancellation),
+            // 'merchant_order_cancellations' => MerchantCancellationResource::collection($this->whenLoaded('merchantOrderCancellations')),
+            // 'admin_order_cancellation' => new AdminCancellationResource($this->whenLoaded('adminOrderCancellation')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

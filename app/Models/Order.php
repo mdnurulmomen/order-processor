@@ -17,17 +17,17 @@ class Order extends Model
       // 'in_progress' => 'boolean',
    ];
 
-   public function address()  // delivery order
+   public function address()  // Delivery Order
    {
       return $this->hasOne(DeliveryAddress::class, 'order_id', 'id');
    }
 
-   public function serve()
+   public function serve() // Serving Order
    {
       return $this->hasOne(ServingOrder::class, 'order_id', 'id');
    }
 
-   public function reservation()
+   public function reservation() // Reservation Order
    {
       return $this->hasOne(Reservation::class, 'order_id', 'id');
    }
@@ -49,7 +49,7 @@ class Order extends Model
 
    public function readyMerchants()
    {
-      return $this->hasMany(MerchantOrder::class, 'order_id', 'id')->where('order_ready_confirmation', 1);
+      return $this->hasMany(MerchantOrder::class, 'order_id', 'id')->where('is_ready', 1);
    }
 
    public function riders()            // riders who got request for this order
@@ -59,8 +59,7 @@ class Order extends Model
 
    public function riderAssigned()   // rider who accepted request for this order
    {
-      // There might be many riders got request for a single order untill one accepted
-      return $this->hasOne(RiderDelivery::class, 'order_id', 'id')->where('delivery_order_acceptance', 1);
+      return $this->hasOne(RiderDelivery::class, 'order_id', 'id')->where('is_accepted', 1);
    }
 
    public function collections()
@@ -75,29 +74,29 @@ class Order extends Model
    }
    */
 
-   public function orderCancelations()
+   public function orderCancellations()
    {
-      return $this->hasMany(OrderCancelation::class, 'order_id', 'id');
+      return $this->hasMany(OrderCancellation::class, 'order_id', 'id');
    }
 
-   public function customerOrderCancelation()
+   public function customerOrderCancellation()
    {
-      return $this->orderCancelations()->where('canceller_type', 'App\Models\Customer');
+      return $this->orderCancellations()->where('canceller_type', 'App\Models\Customer');
    }
 
-   public function merchantOrderCancelations()
+   public function merchantOrderCancellations()
    {
-      return $this->orderCancelations()->where('canceller_type', 'App\Models\Merchant');
+      return $this->orderCancellations()->where('canceller_type', 'App\Models\Merchant');
    }
 
-   public function riderOrderCancelations()
+   public function riderOrderCancellations()
    {
-      return $this->orderCancelations()->where('canceller_type', 'App\Models\Rider');
+      return $this->orderCancellations()->where('canceller_type', 'App\Models\Rider');
    }
 
-   public function adminOrderCancelation()
+   public function adminOrderCancellation()
    {
-      return $this->orderCancelations()->where('canceller_type', 'App\Models\Admin');
+      return $this->hasOne(OrderCancellation::class, 'order_id', 'id')->where('canceller_type', 'App\Models\Admin');
    }
 
    public function orderer()

@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MyRegularRestaurantResource extends JsonResource
+class MyRegularMerchantResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +17,7 @@ class MyRegularRestaurantResource extends JsonResource
         return [
             'merchant_id' => $this->merchant_id,
             'merchant_name' => $this->merchant->name,
-            'products' => MyRegularItemResource::collection($this->products),
+            'products' => MyRegularProductResource::collection($this->products),
         ];
     }
 }

@@ -77,7 +77,7 @@
 													<li v-for="meal in merchant.meals" 
 														:key="meal.id">
 													
-														{{ meal.name }}
+														{{ meal.name | capitalize }}
 													
 													</li>
 												</ul>

@@ -2,18 +2,17 @@
 
 namespace App\Events;
 
-use App\Models\RiderDeliveryRecord;
+use App\Models\RiderDelivery;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
-use App\Http\Resources\Api\RiderOrderResource;
+use App\Http\Resources\Web\RiderOrderResource;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use App\Http\Resources\Api\OrderRestaurantResource;
+use App\Http\Resources\Web\MerchantOrderResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use App\Http\Resources\Api\OrderRestaurantAcceptanceResource;
 
 class UpdateRider implements ShouldBroadcast
 {
@@ -26,9 +25,9 @@ class UpdateRider implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(RiderDeliveryRecord $riderDeliveryRecord)
+    public function __construct(RiderDelivery $riderDelivery)
     {
-        $this->riderNewDeliveryRecord = $riderDeliveryRecord;
+        $this->riderNewDeliveryRecord = $riderDelivery;
     }
 
     /**
@@ -41,17 +40,14 @@ class UpdateRider implements ShouldBroadcast
         return [
 
             'id' => $this->riderNewDeliveryRecord->id,
-            'delivery_order_acceptance' => $this->riderNewDeliveryRecord->delivery_order_acceptance,
+            'is_accepted' => $this->riderNewDeliveryRecord->is_accepted,
             'order_id' => $this->riderNewDeliveryRecord->order_id,
             'rider_id' => $this->riderNewDeliveryRecord->rider_id,
-            'delivery' => $this->riderNewDeliveryRecord->delivery,
+            'is_delivered' => $this->riderNewDeliveryRecord->is_delivered,
             'order' => new RiderOrderResource($this->riderNewDeliveryRecord->order),
-            'rider_order_cancelations' => $this->riderNewDeliveryRecord->riderOrderCancelations,
-            'rider_delivery_confirmation' => $this->riderNewDeliveryRecord->riderDeliveryConfirmation,
-            'rider_food_pick_confirmations' => $this->riderNewDeliveryRecord->riderFoodPickConfirmations,
-            'restaurant_order_cancelations' => $this->riderNewDeliveryRecord->restaurantOrderCancelations,
-            'merchants_accepted' => OrderRestaurantAcceptanceResource::collection($this->riderNewDeliveryRecord->merchantsAccepted),
-            'merchants' => OrderRestaurantResource::collection($this->riderNewDeliveryRecord->merchants),
+            'rider_order_cancellations' => $this->riderNewDeliveryRecord->riderOrderCancellations,
+            'merchant_order_cancellations' => $this->riderNewDeliveryRecord->merchantOrderCancellations,
+            'merchants' => MerchantOrderResource::collection($this->riderNewDeliveryRecord->merchants),
 
         ];
     }

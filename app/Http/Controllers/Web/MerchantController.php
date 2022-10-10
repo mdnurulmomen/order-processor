@@ -38,22 +38,25 @@ class MerchantController extends Controller
 	{
 		$request->validate([
 			'merchant_owner_id'=>'required|exists:merchant_owners,id',
-         'name'=>'required|unique:merchants,name|string|max:50',
+         'name'=>'required|unique:merchants,name|string|max:255',
+         'user_name'=>'required|unique:merchants,user_name|string|max:255',
          'type'=>'required|string|in:restaurant,shop',
 			'mobile'=>'required|unique:merchants,mobile|max:13',
+         'password'=>'required|string|min:8|max:100|confirmed',
 			'website'=>'nullable|url|max:255',
-			// 'lat'=>'required|unique:product_categories,name|max:50',
-			// 'lng'=>'required|unique:product_categories,name|max:50',
+			// 'lat'=>'required|unique:product_categories,name|max:255',
+			// 'lng'=>'required|unique:product_categories,name|max:255',
 			'address'=>'required|string|max:255',
 			// 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
          'min_order'=>'required|numeric|min:100|max:65535',
          'max_booking'=>'required|numeric|min:0|max:1000',
+         'has_delivery_support'=>'nullable|boolean',
          'delivery_charge_per_kilometer'=>'required|numeric|min:0|max:1000',
          'min_delivery_charge'=>'required|numeric|min:0|max:1000',
 			'max_delivery_charge'=>'required|numeric|min:0|max:1000|gte:min_delivery_charge',
          'admin_approval'=>'nullable|boolean',
          'taking_order'=>'nullable|boolean',
-         'sponsored'=>'nullable|boolean',
+         'is_sponsored'=>'nullable|boolean',
          'is_post_paid'=>'nullable|boolean',
 			'has_parking'=>'nullable|boolean',
          'is_self_service'=>'nullable|boolean',
@@ -69,6 +72,8 @@ class MerchantController extends Controller
       $newMerchant->merchant_owner_id = $request->merchant_owner_id;
       
       $newMerchant->name = strtolower($request->name);
+      $newMerchant->user_name = str_replace(' ', '', strtolower($request->user_name));
+      $newMerchant->password = Hash::make($request->password);
       $newMerchant->type = strtolower($request->type);
       $newMerchant->mobile = $request->mobile;
       $newMerchant->website = $request->website;
@@ -78,12 +83,14 @@ class MerchantController extends Controller
       
       $newMerchant->address = strtolower($request->address);
       $newMerchant->min_order = $request->min_order;
-      $newMerchant->delivery_charge_per_kilometer = $request->delivery_charge_per_kilometer;
-      $newMerchant->min_delivery_charge = $request->min_delivery_charge;
-      $newMerchant->max_delivery_charge = $request->max_delivery_charge;
+
+      $newMerchant->has_delivery_support = $request->has_delivery_support ?? false;
+      $newMerchant->delivery_charge_per_kilometer = $request->has_delivery_support ? $request->delivery_charge_per_kilometer : 0;
+      $newMerchant->min_delivery_charge = $request->has_delivery_support ? $request->min_delivery_charge : 0;
+      $newMerchant->max_delivery_charge = $request->has_delivery_support ? $request->max_delivery_charge : 0;
       // $newMerchant->max_booking = $request->max_booking;
       $newMerchant->taking_order = $request->taking_order ?? 0;
-      $newMerchant->sponsored = $request->sponsored ?? 0;
+      $newMerchant->is_sponsored = $request->is_sponsored ?? 0;
       $newMerchant->is_post_paid = $request->is_post_paid ?? 0;
       $newMerchant->has_parking = $request->has_parking ?? 0;
       $newMerchant->is_self_service = $request->is_self_service ?? 0;
@@ -111,22 +118,25 @@ class MerchantController extends Controller
 
       $request->validate([
          'merchant_owner_id'=>'required|exists:merchant_owners,id',
-         'name'=>'required|string|max:50|unique:merchants,name,'.$merchantToUpdate->id,
+         'name'=>'required|string|max:255|unique:merchants,name,'.$merchantToUpdate->id,
+         'user_name'=>'required|string|max:255|unique:merchants,user_name,'.$merchantToUpdate->id,
+         'password'=>'nullable|string|min:8|max:100|confirmed',
          'type'=>'required|string|in:restaurant,shop',
          'mobile'=>'required|max:13|unique:merchants,mobile,'.$merchantToUpdate->id,
          'min_order'=>'required|numeric|min:100|max:65535',
          'max_booking'=>'required|numeric|min:0|max:1000',
+         'has_delivery_support'=>'nullable|boolean',
          'delivery_charge_per_kilometer'=>'required|numeric|min:0|max:1000',
          'min_delivery_charge'=>'required|numeric|min:0|max:1000',
          'max_delivery_charge'=>'required|numeric|min:0|max:1000|gte:min_delivery_charge',
          'website'=>'nullable|url|max:255',
-         // 'lat'=>'required|unique:product_categories,name|max:50',
-         // 'lng'=>'required|unique:product_categories,name|max:50',
+         // 'lat'=>'required|unique:product_categories,name|max:255',
+         // 'lng'=>'required|unique:product_categories,name|max:255',
          'address'=>'required|string|max:255',
          // 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
          'admin_approval'=>'nullable|boolean',
          'taking_order'=>'nullable|boolean',
-         'sponsored'=>'nullable|boolean',
+         'is_sponsored'=>'nullable|boolean',
          'is_post_paid'=>'required|boolean',
          'has_parking'=>'required|boolean',
          'is_self_service'=>'nullable|boolean',
@@ -138,6 +148,12 @@ class MerchantController extends Controller
       $merchantToUpdate->merchant_owner_id = $request->merchant_owner_id;
       
       $merchantToUpdate->name = strtolower($request->name);
+      $merchantToUpdate->user_name = str_replace(' ', '', strtolower($request->user_name));
+
+      if ($request->password) {       
+         $merchantToUpdate->password = Hash::make($request->password);
+      } 
+
       $merchantToUpdate->type = strtolower($request->type);
       $merchantToUpdate->mobile = $request->mobile;
       $merchantToUpdate->website = $request->website;
@@ -147,12 +163,13 @@ class MerchantController extends Controller
       
       $merchantToUpdate->address = strtolower($request->address);
       $merchantToUpdate->min_order = $request->min_order;
-      $merchantToUpdate->delivery_charge_per_kilometer = $request->delivery_charge_per_kilometer;
-      $merchantToUpdate->min_delivery_charge = $request->min_delivery_charge;
-      $merchantToUpdate->max_delivery_charge = $request->max_delivery_charge;
+      $merchantToUpdate->has_delivery_support = $request->has_delivery_support ?? false;
+      $merchantToUpdate->delivery_charge_per_kilometer = $request->has_delivery_support ? $request->delivery_charge_per_kilometer : 0;
+      $merchantToUpdate->min_delivery_charge = $request->has_delivery_support ? $request->min_delivery_charge : 0;
+      $merchantToUpdate->max_delivery_charge = $request->has_delivery_support ? $request->max_delivery_charge : 0;
       // $merchantToUpdate->max_booking = $request->max_booking;
       $merchantToUpdate->taking_order = $request->taking_order ?? 0;
-      $merchantToUpdate->sponsored = $request->sponsored ?? 0;
+      $merchantToUpdate->is_sponsored = $request->is_sponsored ?? 0;
       $merchantToUpdate->is_post_paid = $request->is_post_paid;
       $merchantToUpdate->has_parking = $request->has_parking;
       $merchantToUpdate->is_self_service = $request->is_self_service;
@@ -245,14 +262,14 @@ class MerchantController extends Controller
    public function createMerchantOwner(Request $request, $perPage = false)
    {
       $request->validate([
-         'user_name'=>'required|unique:merchant_owners,user_name|string|max:50',
-         'email'=>'required|unique:merchant_owners,email|email|string|max:50',
+         'user_name'=>'required|unique:merchant_owners,user_name|string|max:255',
+         'email'=>'required|unique:merchant_owners,email|email|string|max:255',
          'mobile'=>'required|unique:merchant_owners,mobile|max:13',
          'password'=>'required|string|min:8|max:100|confirmed',
       ]);
 
       $newMerchantOwner = MerchantOwner::create([
-         'user_name' => strtolower($request->user_name),
+         'user_name' => str_replace(' ', '', strtolower($request->user_name)),
          'email' => strtolower($request->email),
          'mobile' => $request->mobile,
          'password' => Hash::make($request->password)
@@ -266,13 +283,13 @@ class MerchantController extends Controller
       $merchantAdminToUpdate = MerchantOwner::find($owner);
 
       $request->validate([
-         'user_name'=>'required|string|max:50|unique:merchant_owners,user_name,'.$merchantAdminToUpdate->id,
-         'email'=>'required|email|string|max:50|unique:merchant_owners,email,'.$merchantAdminToUpdate->id,
+         'user_name'=>'required|string|max:255|unique:merchant_owners,user_name,'.$merchantAdminToUpdate->id,
+         'email'=>'required|email|string|max:255|unique:merchant_owners,email,'.$merchantAdminToUpdate->id,
          'mobile'=>'required|max:13|unique:merchant_owners,mobile,'.$merchantAdminToUpdate->id,
          'password'=>'nullable|string|min:8|max:100|confirmed',
       ]);
 
-      $merchantAdminToUpdate->user_name = strtolower($request->user_name);        
+      $merchantAdminToUpdate->user_name = str_replace(' ', '', strtolower($request->user_name));        
       $merchantAdminToUpdate->email = strtolower($request->email);        
       $merchantAdminToUpdate->mobile = $request->mobile;
 
@@ -355,16 +372,16 @@ class MerchantController extends Controller
    public function createMerchantKitchen(Request $request, $perPage = false)
    {
       $request->validate([
-         'user_name'=>'required|string|max:50|unique:kitchens,user_name',
+         'user_name'=>'required|string|max:255|unique:kitchens,user_name',
          'mobile'=>'required|unique:kitchens,mobile|max:13',
-         'email'=>'required|unique:kitchens,email|email|string|max:50',
+         'email'=>'required|unique:kitchens,email|email|string|max:255',
          'password'=>'required|string|min:8|max:100|confirmed',
          'merchant_id'=>'numeric|required|exists:merchants,id',
          'admin_approval'=>'nullable|boolean',
       ]);
 
       $newMerchantOwner = Kitchen::create([
-         'user_name' => strtolower($request->user_name),
+         'user_name' => str_replace(' ', '', strtolower($request->user_name)),
          'mobile' => $request->mobile,
          'email' => strtolower($request->email),
          'password' => Hash::make($request->password),
@@ -380,15 +397,15 @@ class MerchantController extends Controller
       $merchantKitchenToUpdate = Kitchen::find($kitchenToUpdate);
 
       $request->validate([
-         'user_name'=>'required|string|max:50|unique:kitchens,user_name,'.$merchantKitchenToUpdate->id,
+         'user_name'=>'required|string|max:255|unique:kitchens,user_name,'.$merchantKitchenToUpdate->id,
          'mobile'=>'required|max:13|unique:kitchens,mobile,'.$merchantKitchenToUpdate->id,
-         'email'=>'required|email|string|max:50|unique:kitchens,email,'.$merchantKitchenToUpdate->id,
+         'email'=>'required|email|string|max:255|unique:kitchens,email,'.$merchantKitchenToUpdate->id,
          'password'=>'nullable|string|min:8|max:100|confirmed',
          'merchant_id'=>'numeric|required|exists:merchants,id',
          'admin_approval'=>'nullable|boolean',
       ]);
 
-      $merchantKitchenToUpdate->user_name = strtolower($request->user_name);        
+      $merchantKitchenToUpdate->user_name = str_replace(' ', '', strtolower($request->user_name));        
       $merchantKitchenToUpdate->mobile = $request->mobile;
       $merchantKitchenToUpdate->email = strtolower($request->email);        
 
@@ -474,11 +491,11 @@ class MerchantController extends Controller
    public function createMerchantAgent(Request $request, $perPage = false)
    {
       $request->validate([
-         'first_name'=>'nullable|string|max:50',
-         'last_name'=>'nullable|string|max:50',
-         'user_name'=>'required|string|max:50|unique:merchant_agents,user_name',
+         'first_name'=>'nullable|string|max:255',
+         'last_name'=>'nullable|string|max:255',
+         'user_name'=>'required|string|max:255|unique:merchant_agents,user_name',
          'mobile'=>'required|unique:merchant_agents,mobile|max:13',
-         'email'=>'required|unique:merchant_agents,email|email|string|max:50',
+         'email'=>'required|unique:merchant_agents,email|email|string|max:255',
          'password'=>'required|string|min:8|max:100|confirmed',
          'merchant_id'=>'numeric|required|exists:merchants,id',
          'admin_approval'=>'nullable|boolean',
@@ -487,7 +504,7 @@ class MerchantController extends Controller
       $newMerchantOwner = MerchantAgent::create([
          'first_name' => strtolower($request->first_name),
          'last_name' => strtolower($request->last_name),
-         'user_name' => strtolower($request->user_name),
+         'user_name' => str_replace(' ', '', strtolower($request->user_name)),
          'mobile' => $request->mobile,
          'email' => strtolower($request->email),
          'password' => Hash::make($request->password),
@@ -503,11 +520,11 @@ class MerchantController extends Controller
       $merchantAgentToUpdate = MerchantAgent::find($waiterToUpdate);
 
       $request->validate([
-         'first_name'=>'nullable|string|max:50',
-         'last_name'=>'nullable|string|max:50',
-         'user_name'=>'required|string|max:50|unique:merchant_agents,user_name,'.$merchantAgentToUpdate->id,
+         'first_name'=>'nullable|string|max:255',
+         'last_name'=>'nullable|string|max:255',
+         'user_name'=>'required|string|max:255|unique:merchant_agents,user_name,'.$merchantAgentToUpdate->id,
          'mobile'=>'required|max:13|unique:merchant_agents,mobile,'.$merchantAgentToUpdate->id,
-         'email'=>'required|email|string|max:50|unique:merchant_agents,email,'.$merchantAgentToUpdate->id,
+         'email'=>'required|email|string|max:255|unique:merchant_agents,email,'.$merchantAgentToUpdate->id,
          'password'=>'nullable|string|min:8|max:100|confirmed',
          'merchant_id'=>'numeric|required|exists:merchants,id',
          'admin_approval'=>'nullable|boolean',
@@ -515,7 +532,7 @@ class MerchantController extends Controller
 
       $merchantAgentToUpdate->first_name = strtolower($request->first_name);      
       $merchantAgentToUpdate->last_name = strtolower($request->last_name);      
-      $merchantAgentToUpdate->user_name = strtolower($request->user_name);      
+      $merchantAgentToUpdate->user_name = str_replace(' ', '', strtolower($request->user_name));      
       $merchantAgentToUpdate->mobile = $request->mobile;
       $merchantAgentToUpdate->email = strtolower($request->email);        
 

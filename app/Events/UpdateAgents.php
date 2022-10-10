@@ -5,13 +5,14 @@ namespace App\Events;
 use App\Models\MerchantOrder;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
+use App\Http\Resources\Web\OrderResource;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
+use App\Http\Resources\Web\ServingOrderResource;
+use App\Http\Resources\Web\ProductOrderResource;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use App\Http\Resources\Web\RestaurantOrderResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\Http\Resources\Web\MyOrderedRestaurantResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class UpdateAgents
@@ -41,12 +42,14 @@ class UpdateAgents
             'id' => $this->merchantOrderRecord->id,
             'order_id' => $this->merchantOrderRecord->order_id,
             'merchant_id' => $this->merchantOrderRecord->merchant_id,
-            'order_acceptance' => $this->merchantOrderRecord->order_acceptance,
-            'order_ready_confirmation' => $this->merchantOrderRecord->order_ready_confirmation,
-            'order' => new RestaurantOrderResource($this->merchantOrderRecord->order),
-            'items' => OrderedRestaurantItemResource::collection($this->items),
+            'is_accepted' => $this->merchantOrderRecord->is_accepted,
+            'accepted_at' => $this->merchantOrderRecord->accepted_at,
+            'is_ready' => $this->merchantOrderRecord->is_ready,
+            'ready_at' => $this->merchantOrderRecord->ready_at,
+            'order' => new OrderResource($this->merchantOrderRecord->order),
+            'products' => ProductOrderResource::collection($this->products),
             'order_cancellation_reasons' => $this->merchantOrderRecord->orderCancellations()->where('merchant_id', $this->merchantOrderRecord->merchant_id)->get(),
-            'order_serve_progression' => $this->merchantOrderRecord->serveProgression,
+            'order_serve_progression' => new ServingOrderResource($this->merchantOrderRecord->serve),
         ];
     }
 

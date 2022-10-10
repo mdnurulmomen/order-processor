@@ -126,16 +126,12 @@
                     </form>
                   </div>
                 </li>
-
               </ul>
             </li>
             <!-- Control Sidebar Toggle Button -->
-            
           </ul>
         </li>
-
       </ul>
-
     </nav>
     <!-- /.navbar -->
 
@@ -152,9 +148,11 @@
     
     toastr.options = {
       "timeOut": "2000"
-    } 
-  
+    };
+
   });
+
+  localStorage.setItem("application_settings", JSON.stringify(@json($applicationSettings)));
 
 </script>
 

@@ -8,9 +8,9 @@ use App\Events\UpdateAdmin;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\MerchantOrder;
+use App\Events\UpdateMerchant;
 use App\Models\MerchantProduct;
 use App\Models\CustomerAddress;
-use App\Events\UpdateMerchant;
 // use App\Models\RiderDeliveryRecord;
 // use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -30,7 +30,7 @@ class OrderController extends Controller
             'discount' => $request->order->discount,
             'delivery_fee' => $request->order->delivery_fee,
             'net_payable' => $request->order->net_payable,
-            'method' => $request->payment->method,
+            'payment_method' => $request->payment->method,
             'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
             'orderer_id' => $request->order->orderer_id,
             'has_cutlery' => $request->order->has_cutlery ? true : false, 
@@ -64,7 +64,7 @@ class OrderController extends Controller
 
             foreach ($request->products as $product) {
 
-                $orderedNewItem = $merchantNewOrder->products()->create([
+                $orderedNewProduct = $merchantNewOrder->products()->create([
                      'merchant_product_id' => $product->id,
                      'quantity' => $product->quantity,
                 ]);
@@ -73,17 +73,17 @@ class OrderController extends Controller
 
                 if ($addedProduct->has_variation && !empty($product->variation) && !empty($product->variation->id)) {
                     
-                    $orderedNewItem->variation()->create([
+                    $orderedNewProduct->variation()->create([
                         'merchant_product_variation_id'=>$product->variation->id
                     ]);
 
                 }
 
-                if ($addedProduct->has_addon && !empty($product->merchant_product_addons)) {
+                if ($addedProduct->has_addon && !empty($product->addons)) {
                     
-                    foreach ($product->merchant_product_addons as $merchantProductAddon) {
+                    foreach ($product->addons as $merchantProductAddon) {
 
-                        $orderedNewItem->addons()->create([
+                        $orderedNewProduct->addons()->create([
                             'merchant_product_addon_id'=>$merchantProductAddon->id,
                             'quantity'=>$merchantProductAddon->quantity,
                         ]);
@@ -94,7 +94,7 @@ class OrderController extends Controller
 
                 if ($addedProduct->customizable && !empty($product->customization)) {
                     
-                    $orderedNewItem->customization()->create([
+                    $orderedNewProduct->customization()->create([
                         'custom_instruction'=>$product->customization,
                     ]);
 
@@ -104,7 +104,7 @@ class OrderController extends Controller
 
         // if ($request->orderer_type==='customer') {
             
-        if ($request->order->type==='home-delivery') {
+        if ($request->order->type==='delivery') {
 
             if (isset($request->order->delivery_new_address) && empty($request->order->delivery_address_id)) {
 
@@ -144,7 +144,7 @@ class OrderController extends Controller
                 'customer_address_id'=>$request->order->delivery_address_id ?? $existingAddress->id ?? $customerNewAddress->id,
             ]);
         }
-        else if ($request->order->type==='serve-on-table') {
+        else if ($request->order->type==='serving') {
             
             $newOrder->serve()->create([
                 'guest_number'=>$request->order->guest_number,
@@ -240,7 +240,7 @@ class OrderController extends Controller
 
     public function getOrderDetails($order)
     {
-        return new OrderResource(Order::with(['schedule', 'payment', 'address', 'riderAssigned', 'readyMerchants', 'collections', 'serve', 'customerOrderCancelation', 'merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.merchant'])->findOrFail($order));
+        return new OrderResource(Order::with(['schedule', 'payment', 'address', 'riderAssigned', 'collections', 'serve', 'customerOrderCancelation', 'merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.merchant'])->findOrFail($order));
     }
 
     /*
@@ -269,12 +269,12 @@ class OrderController extends Controller
             'discount' => $request->order->discount,
             'delivery_fee' => 0,
             'net_payable' => $request->order->net_payable,
-            'method' => $request->payment->method,
+            'payment_method' => $request->payment->method,
             'orderer_type' => "App\Models\Customer",
             'orderer_id' => $request->order->orderer_id,
             'customer_confirmation' => ($request->payment->method !== 'cash' && $request->payment->id) ? 1 : -1, 
             'has_cutlery' => $request->order->has_cutlery ? true : false, 
-            'is_asap_order' => $request->order->is_asap_order ? true : false,
+            'is_asap_order' => /*$request->order->is_asap_order ? true : */ false,
             'in_progress' => ($request->payment->method !== 'cash' && $request->payment->id) ? 1 : -1,
         ]);
     }
@@ -327,7 +327,7 @@ class OrderController extends Controller
 
             foreach ($products as $product) {
 
-                $orderedNewItem = $merchantOrder->products()->create([
+                $orderedNewProduct = $merchantOrder->products()->create([
                      'merchant_product_id' => $product->id,
                      'quantity' => $product->quantity,
                 ]);
@@ -335,16 +335,16 @@ class OrderController extends Controller
                 $addedProduct = MerchantProduct::find($product->id);
 
                 if ($addedProduct->has_variation && !empty($product->variation) && !empty($product->variation->id)) {
-                    $orderedNewItem->variation()->create([
+                    $orderedNewProduct->variation()->create([
                         'merchant_product_variation_id'=>$product->variation->id
                     ]);
                 }
 
-                if ($addedProduct->has_addon && !empty($product->merchant_product_addons)) {
+                if ($addedProduct->has_addon && !empty($product->addons)) {
 
-                    foreach ($product->merchant_product_addons as $merchantProductAddon) {
+                    foreach ($product->addons as $merchantProductAddon) {
 
-                        $orderedNewItem->addons()->create([
+                        $orderedNewProduct->addons()->create([
                             'merchant_product_addon_id'=>$merchantProductAddon->id,
                             'quantity'=>$merchantProductAddon->quantity,
                         ]);
@@ -355,7 +355,7 @@ class OrderController extends Controller
 
                 if ($addedProduct->customizable && !empty($product->customization)) {
 
-                    $orderedNewItem->customization()->create([
+                    $orderedNewProduct->customization()->create([
                         'custom_instruction'=>$product->customization,
                     ]);
 
@@ -370,7 +370,7 @@ class OrderController extends Controller
     private function updateMerchantOrderRecord(MerchantOrder $merchantOrder)
     {
         $merchantOrder->update([
-            'order_acceptance' => -1, // ringing
+            'is_accepted' => -1, // ringing
             // 'merchant_id' => $merchantId,
         ]); 
     }
@@ -396,13 +396,13 @@ class OrderController extends Controller
     private function notifyMerchant(MerchantOrder $merchantOrder)
     {
         // Log::info('UpdateMerchant');
-        event(new UpdateMerchant($merchantOrder));
+        event(new UpdateMerchant(MerchantOrder::with(['order', 'products.merchantProduct', 'products.variation.merchantProductVariation.variation', 'products.addons.merchantProductAddon.addon', 'products.customization'])->find($merchantOrder->id)));
     }
 
     private function notifyAdmin(Order $order) 
     {
         // Log::info('UpdateAdmin');
-        event(new UpdateAdmin($order));
+        event(new UpdateAdmin(Order::with(['merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.products.customization', 'riderAssigned', 'collections.merchant', 'serve', 'merchantOrderCancelations.canceller'])->find($order->id)));
 
     }
 

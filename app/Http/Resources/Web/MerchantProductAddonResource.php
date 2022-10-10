@@ -4,7 +4,7 @@ namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MerchantCancelationResource extends JsonResource
+class MerchantProductAddonResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,12 @@ class MerchantCancelationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'reason_id'=>$this->reason_id,  
-            'merchant_id'=>$this->canceller_id, 
-            'merchant_name'=>$this->canceller->name, 
+
+            'id' => $this->id,
+            'price' => $this->price,
+            'addon' => $this->addon,
+            'name' => $this->addon->name,
+            
         ];
     }
 }

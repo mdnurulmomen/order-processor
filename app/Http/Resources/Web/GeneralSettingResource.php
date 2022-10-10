@@ -95,13 +95,14 @@ class GeneralSettingResource extends JsonResource
             "search_preferences" => [
                 "cuisines" => AssetResource::collection(Cuisine::where('search_preference', true)->get()),    
                 "meals" => AssetResource::collection(Meal::where('search_preference', true)->get()),    
-                "menus" => AssetResource::collection(ProductCategory::where('search_preference', true)->get())
+                "product_categories" => AssetResource::collection(ProductCategory::where('search_preference', true)->get())
             ],
 
             // "preferences" => RestaurantMenuCategoryResource::collection(ProductCategory::all()),
 
             // 'delivery_charge' => $this->delivery_charge,
             'multiple_delivery_charge_percentage' => $this->multiple_delivery_charge_percentage,
+            'official_currency' => $this->official_currency,
             'official_mail_address' => $this->official_mail_address,
             'official_contact_address' => $this->official_contact_address ?? '',
             'official_customer_care_number' => $this->official_customer_care_number,

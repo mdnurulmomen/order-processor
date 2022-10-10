@@ -21,7 +21,7 @@
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">
 								{{ 
-									merchantName | capitalize
+									merchantName | eachcapitalize
 								}}
 
 								Products
@@ -102,7 +102,7 @@
 													    		{{ index + 1 }}
 													    	</td>
 												    		<td>
-												    			{{ merchantProduct.name }}
+												    			{{ merchantProduct.name | eachcapitalize }}
 
 												    			<span 
 														    		class="badge badge-danger" 
@@ -350,7 +350,8 @@
 					                                  		:options="merchantAllProductCategories" 
 					                                  		:custom-label="productCategoryName" 
 					                                  		track-by="id" 
-					                                  		:required="true"
+					                                  		:required="true" 
+					                                  		class="form-control p-0" 
 					                                  		:class="!errors.merchantProduct.merchantProductCategory ? 'is-valid' : 'is-invalid'"
 					                                  		:allow-empty="false"
 					                                  		selectLabel = "Press/Click"

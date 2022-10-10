@@ -84,16 +84,16 @@
 									    		{{ index + 1 }}
 									    	</td>
 								    		<td>
-								    			{{ merchantOwner.user_name}}
+								    			{{ merchantOwner.name | eachcapitalize }}
 								    		</td>
 								    		<td>
-								    			{{ merchantOwner.mobile}}
+								    			{{ merchantOwner.mobile }}
 								    		</td>
 								    		<td>
-								    			{{ merchantOwner.email}}
+								    			{{ merchantOwner.email }}
 								    		</td>
 								    		<td>
-								    			{{ merchantOwner.merchants.length}}
+								    			{{ merchantOwner.merchants.length }}
 								    		</td>
 								    		<td>
 										      	<button type="button" v-show="merchantOwner.deleted_at === null" @click="showMerchantOwnerEditModal(merchantOwner)" class="btn btn-primary btn-sm">

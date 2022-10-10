@@ -15,7 +15,7 @@ class CreateProductCategoriesTable extends Migration
     {
         Schema::create('product_categories', function (Blueprint $table) {
             $table->mediumIncrements('id');
-            $table->string('name', 50);
+            $table->string('name');
             $table->boolean('search_preference')->default(true);
             $table->softDeletes();
         });

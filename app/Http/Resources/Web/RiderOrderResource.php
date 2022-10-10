@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Api;
+namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -13,7 +13,7 @@ class RiderOrderResource extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {   
+    {
         return [
             'id' => $this->id,
             'is_asap_order' => $this->is_asap_order,

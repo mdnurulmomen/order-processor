@@ -14,11 +14,11 @@ use App\Http\Resources\Api\MerchantResource;
 use App\Http\Resources\Api\MerchantReviewResource;
 use App\Http\Resources\Api\SearchMerchantResource;
 use App\Http\Resources\Api\MerchantReviewCollection;
+use App\Http\Resources\Api\MerchantProductResource;
 use App\Http\Resources\Api\SponsorMerchantResource;
 use App\Http\Resources\Api\SearchMerchantCollection;
 use App\Http\Resources\Api\SponsorMerchantCollection;
-use App\Http\Resources\Api\PromotionalProductCollection;
-use App\Http\Resources\Api\MerchantProductDetailResource;
+use App\Http\Resources\Api\PromotionalMerchantProductCollection;
 
 class MerchantController extends Controller
 {
@@ -29,10 +29,10 @@ class MerchantController extends Controller
         'longitude' => 'required|string',
         'per_page' => 'nullable|numeric',
         // 'preference' => 'nullable',
-        'preference.type' => [ 'nullable', 'string', 'in:meals,cuisines,menus' ],
-        'preference.ids' => 'nullable|array|required_unless:preference.type,',
+        'preference.type' => [ 'nullable', 'string', 'in:meals,cuisines,product_categories' ],
+        'preference.ids' => 'nullable|array|required_with:preference.type',
         'preference.ids.*' => [
-          'required_unless:preference.type,',
+          'required_with:preference.type',
           function ($attribute, $value, $fail) use ($request) {
             if ($request->input('preference.type') === 'meals' && Meal::find($value) === null) {
               $fail('Invalid meal preference.');
@@ -40,8 +40,8 @@ class MerchantController extends Controller
             else if ($request->input('preference.type') === 'cuisines' && Cuisine::find($value) === null) {
               $fail('Invalid cuisine preference.');
             }
-            else if ($request->input('preference.type') === 'menus' && ProductCategory::find($value) === null) {
-              $fail('Invalid menu preference.');
+            else if ($request->input('preference.type') === 'product_categories' && ProductCategory::find($value) === null) {
+              $fail('Invalid category preference.');
             }
           },
         ]
@@ -68,10 +68,10 @@ class MerchantController extends Controller
           });
 
         }
-        else if ($request->preference['type']=='menus') {
+        else if ($request->preference['type']=='product_categories') {
 
-          $merchants = $merchantsInArea->whereHas('menuCategories', function ($query) use ($request) {
-            $query->whereIn('menu_category_id', $request->preference['ids']);
+          $merchants = $merchantsInArea->whereHas('productCategories', function ($query) use ($request) {
+            $query->whereIn('product_category_id', $request->preference['ids']);
           });
 
         }
@@ -96,7 +96,7 @@ class MerchantController extends Controller
 
     public function showMerchantDetails($merchant)
     {
-      return new MerchantResource(Merchant::with(['booking', 'merchantMeals', 'merchantCuisines', 'merchantMenuCategories.menuItems.variations', 'reviews'])->findOrFail($merchant));
+      return new MerchantResource(Merchant::with(['booking', 'merchantMeals', 'merchantCuisines', 'merchantProductCategories.merchantProducts.variations', 'reviews'])->findOrFail($merchant));
     }
 
     public function getSponsorMerchants(Request $request)
@@ -107,10 +107,10 @@ class MerchantController extends Controller
         'per_page' => 'nullable|numeric',
         // 'preference' => 'nullable',
         /*
-        'preference.type' => [ 'nullable', 'string', 'in:meals,cuisines,menus' ],
-        'preference.ids' => 'nullable|array|required_unless:preference.type,',
+        'preference.type' => [ 'nullable', 'string', 'in:meals,cuisines,product_categories' ],
+        'preference.ids' => 'nullable|array|required_with:preference.type,',
         'preference.ids.*' => [
-          'required_unless:preference.type,',
+          'required_with:preference.type,',
           function ($attribute, $value, $fail) use ($request) {
             if ($request->input('preference.type') === 'meals' && Meal::find($value) === null) {
               $fail('Invalid meal preference.');
@@ -118,8 +118,8 @@ class MerchantController extends Controller
             else if ($request->input('preference.type') === 'cuisines' && Cuisine::find($value) === null) {
               $fail('Invalid cuisine preference.');
             }
-            else if ($request->input('preference.type') === 'menus' && ProductCategory::find($value) === null) {
-              $fail('Invalid menu preference.');
+            else if ($request->input('preference.type') === 'product_categories' && ProductCategory::find($value) === null) {
+              $fail('Invalid category preference.');
             }
           },
         ]
@@ -127,7 +127,7 @@ class MerchantController extends Controller
       ]);
 
       $merchantsInArea = Merchant::where('admin_approval', 1)
-      ->where('taking_order', 1)->where('sponsored', 1)
+      ->where('taking_order', 1)->where('is_sponsored', 1)
       ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
       ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)]);
 
@@ -149,10 +149,10 @@ class MerchantController extends Controller
           });
 
         }
-        else if ($request->preference['type']=='menus') {
+        else if ($request->preference['type']=='product_categories') {
 
-          $merchants = $merchantsInArea->whereHas('menuCategories', function ($query) use ($request) {
-            $query->whereIn('menu_category_id', $request->preference['ids']);
+          $merchants = $merchantsInArea->whereHas('productCategories', function ($query) use ($request) {
+            $query->whereIn('product_category_id', $request->preference['ids']);
           });
 
         }
@@ -176,7 +176,7 @@ class MerchantController extends Controller
 
     }
 
-    public function getPromotionalMenuItems(Request $request)
+    public function getPromotionalMerchantProducts(Request $request)
     {
       $request->validate([
         'latitude' => 'required|string',
@@ -184,8 +184,8 @@ class MerchantController extends Controller
         'per_page' => 'nullable|numeric'
       ]);
 
-      $merchantsInArea = MerchantProduct::where('promoted', 1)
-      ->whereHas('merchantMenuCategory.merchant', function ($query) use ($request) {
+      $merchantsInArea = MerchantProduct::where('is_promoted', 1)
+      ->whereHas('merchantProductCategory.merchant', function ($query) use ($request) {
           $query->where('taking_order', 1)->where('admin_approval', 1)
           ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
           ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)]);
@@ -193,25 +193,25 @@ class MerchantController extends Controller
 
       // pagination
       if ($request->per_page) {
-        return new PromotionalProductCollection($merchantsInArea->paginate($request->per_page));
+        return new PromotionalMerchantProductCollection($merchantsInArea->paginate($request->per_page));
       }
       else {
         // return new MerchantCollection(); // aggregations, products
-        return MerchantProductDetailResource::collection($merchantsInArea->get());
+        return MerchantProductResource::collection($merchantsInArea->get());
       }     
 
     }
 
     /*
-    public function getMerchantMenuItems(Request $request)
+    public function getMerchantProducts(Request $request)
     {
       $request->validate([
         'id' => 'required|numeric|exists:merchants,id'
       ]);
 
-      $merchantMenuItems =  Merchant::findOrFail($request->id)->with(['menuCategories.menuCategory', 'menuCategories.merchantMenuItems.merchantMenuItemVariations', 'menuCategories.merchantMenuItems.merchantMenuItemAddons'])->get();
+      $merchantProducts =  Merchant::findOrFail($request->id)->with(['productCategories.productCategory', 'productCategories.merchantProducts.merchantProductVariations', 'productCategories.merchantProducts.merchantProductAddons'])->get();
 
-      return MerchantMenuItemResource::collection($merchantMenuItems);
+      return MerchantProductResource::collection($merchantProducts);
     }
     */
 

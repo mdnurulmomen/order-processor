@@ -18,11 +18,11 @@ class UserOrderResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'order_type' => $this->order_type,
-            'asap' => /*$this->whenLoaded('asap')*/ $this->when($this->asap, $this->asap ? true : false),
-            'schedule' => /*$this->whenLoaded('schedule')*/ $this->when($this->schedule, $this->schedule ? $this->schedule->order_schedule : false),
+            'type' => $this->type,
+            'is_asap_order' => /*$this->whenLoaded('is_asap_order')*/ $this->when($this->is_asap_order, $this->is_asap_order ? true : false),
+            'schedule' => /*$this->whenLoaded('schedule')*/ $this->when($this->schedule, $this->schedule ? $this->schedule->schedule : false),
             'has_cutlery' => /*$this->whenLoaded('cutlery')*/ $this->when($this->cutlery, $this->cutlery ? true : false),
-            'order_price' => $this->order_price,
+            'price' => $this->price,
             'vat' => $this->vat,
             'discount' => $this->discount,
             'delivery_fee' => $this->when($this->delivery_fee, $this->delivery_fee),

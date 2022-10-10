@@ -47,7 +47,7 @@ class MyRegularRequest extends FormRequest
                 'required', 'array', 'min:1', 'between:1,3', 
                 function ($attribute, $value, $fail) {
                     if (count($this->input('merchants.*.id')) > 1 && $this->input('order.type')==='serve-on-table') {
-                        $fail('Multiple restaurant aint allowed for serve order.');
+                        $fail('Multiple merchant aint allowed for serve order.');
                     }
                 },
             ],
@@ -133,7 +133,7 @@ class MyRegularRequest extends FormRequest
                         }
 
                         else {
-                            $validator->errors()->add("merchants.$merchantOrderKey.products.$merchantProductKey", "Product id doesn't belong to restaurant");
+                            $validator->errors()->add("merchants.$merchantOrderKey.products.$merchantProductKey", "Product id doesn't belong to merchant");
                         }
 
                     }
@@ -166,8 +166,8 @@ class MyRegularRequest extends FormRequest
             'order.delivery_address_id.required' => 'Customer address id is required',
             'order.delivery_address_id.*' => 'Address id is invalid',
 
-            'merchants.*.id.required'  => 'Restaurant id is required',
-            'merchants.*.id.*'  => 'Restaurant id is invalid',
+            'merchants.*.id.required'  => 'Merchant id is required',
+            'merchants.*.id.*'  => 'Merchant id is invalid',
 
             'merchants.*.products.*.id.required'  => 'Product id is required',
             // 'merchants.*.products.*.id.exists'  => 'Product id is invalid',

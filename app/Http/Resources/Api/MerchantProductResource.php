@@ -19,12 +19,16 @@ class MerchantProductResource extends JsonResource
         return [
 
             'id' => $this->id,
+            'sku' => $this->sku,
             'name' => $this->name,
             'price' => $this->price,
             'detail' => $this->detail,
             'has_addon' => $this->has_addon,
-            'has_variation' => $this->has_variation,
+            'is_promoted' => $this->is_promoted,
+            'is_sponsored' => $this->is_sponsored,
             'customizable' => $this->customizable,
+            'has_variation' => $this->has_variation,
+            
             'discount_price' => round($this->price - ($this->price * $discount/100)),
             
             'addons' => MerchantProductAddonResource::collection($this->whenLoaded('merchantProductAddons')),

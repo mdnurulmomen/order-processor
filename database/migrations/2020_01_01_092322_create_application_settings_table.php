@@ -18,6 +18,7 @@ class CreateApplicationSettingsTable extends Migration
             // $table->unsignedTinyInteger('delivery_charge')->default(0);
             $table->string('app_name')->default('qupaid');
             $table->float('multiple_delivery_charge_percentage')->default(0);
+            $table->string('official_currency')->default('taka');
             $table->string('official_mail_address')->default('email@qupaid.com');
             $table->string('official_contact_address')->default('House : XX, Road : XX, Area : XXXX, Dhaka-XXX');
             $table->char('official_customer_care_number', 13)->default('880XXXXXXXXX');

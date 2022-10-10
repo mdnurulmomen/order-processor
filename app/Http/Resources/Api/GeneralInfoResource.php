@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use App\Models\Meal;
 use App\Models\Cuisine;
-use App\Models\MenuCategory;
+use App\Models\ProductCategory;
 use App\Models\ThanksGreeting;
 use App\Models\WelcomeGreeting;
 use App\Models\PromotionalSlider;
@@ -138,10 +138,10 @@ class GeneralInfoResource extends JsonResource
 
                 "meals" => $this->when(Meal::where('search_preference', true)->count(), AssetResource::collection(Meal::where('search_preference', true)->get())), 
                    
-                "menus" => $this->when(MenuCategory::where('search_preference', true)->count(), AssetResource::collection(MenuCategory::where('search_preference', true)->get()))
+                "product_categories" => $this->when(ProductCategory::where('search_preference', true)->count(), AssetResource::collection(ProductCategory::where('search_preference', true)->get()))
             ],
 
-            // "preferences" => RestaurantMenuCategoryResource::collection(MenuCategory::all()),
+            // "preferences" => MerchantProductCategoryResource::collection(ProductCategory::all()),
 
             // 'delivery_charge' => $this->delivery_charge,
             // 'multiple_delivery_charge_percentage' => $this->multiple_delivery_charge_percentage,

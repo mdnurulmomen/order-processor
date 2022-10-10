@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
+use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManagerStatic as ImageIntervention;
 
 class ApplicationService extends Model
@@ -28,12 +30,22 @@ class ApplicationService extends Model
 
             $directory = "uploads/application/services/";
 
-            if (!file_exists($directory)) {
-                mkdir($directory, 0777, true);
+            if(!File::isDirectory($directory)){
+                File::makeDirectory($directory, 0777, true, true);
             }
-            
-            $imageObject = ImageIntervention::make($encodedImageFile);
-            $imageObject->save($directory.$this->code.'-logo.png');
+
+            try 
+            {
+                $img = ImageIntervention::make($encodedImageFile);
+            }
+            catch(NotReadableException $e)
+            {
+                // If error, stop and return
+                return;
+            }
+
+            // $imageObject = $img->resize(300, 300);  // when facebook uses 180*180
+            $img->save($directory.$this->code.'-logo.png', 100);
 
             $this->attributes['logo'] = $directory.$this->code.'-logo.png';
         }

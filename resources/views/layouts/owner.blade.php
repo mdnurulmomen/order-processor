@@ -54,7 +54,7 @@
             style="opacity: .8"
         >
         <span class="font-weight-light">
-          Qupaid
+          Qupaid | Owner
         </span>
       </a>
 
@@ -148,6 +148,8 @@
     } 
   
   });
+
+  localStorage.setItem("application_settings", JSON.stringify(@json($applicationSettings)));
 
 </script>
 

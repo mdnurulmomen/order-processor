@@ -69,9 +69,9 @@ class ReservationRequest extends FormRequest
                 'exists:merchant_products,id',
                 function ($attribute, $value, $fail) {
 
-                    $menuItem = MerchantProduct::findOrFail($value);
+                    $merchantProduct = MerchantProduct::findOrFail($value);
                     
-                    if ($menuItem->restaurantMenuCategory->merchant_id != $this->input('reservation.merchant_id')) {
+                    if ($merchantProduct->merchantProductCategory->merchant_id != $this->input('reservation.merchant_id')) {
                         $fail($attribute.' is invalid.');
                     }
                 },

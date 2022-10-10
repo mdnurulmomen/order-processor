@@ -14,4 +14,9 @@ class ServingOrder extends Model
     protected $guarded = [
         'id'
     ];
+
+    public function confirmer()
+    {
+        return $this->morphTo();
+    }
 }

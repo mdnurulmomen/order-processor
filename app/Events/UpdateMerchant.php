@@ -10,8 +10,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use App\Http\Resources\Web\ProductOrderResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\Http\Resources\Web\OrderRestaurantItemResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class UpdateMerchant implements ShouldBroadcast
@@ -27,7 +27,7 @@ class UpdateMerchant implements ShouldBroadcast
      */
     public function __construct(MerchantOrder $merchantOrder)
     {
-        $this->merchantOrder = $merchantOrder;
+        $this->merchantOrder = $merchantOrder->loadMissing(['products.merchantProduct', 'products.variation.merchantProductVariation.variation', 'products.addons.merchantProductAddon.addon', 'products.customization', 'order.orderer', 'serve']);
     }
 
     /**
@@ -38,10 +38,18 @@ class UpdateMerchant implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'order_id' => $this->merchantOrder->order_id,
+            'id' => $this->merchantOrder->id,
             'merchant_id' => $this->merchantOrder->merchant_id,
+            'merchant_name' => $this->merchantOrder->merchant->name,
+            'is_accepted' => $this->merchantOrder->is_accepted,
+            'accepted_at' => $this->merchantOrder->accepted_at,
+            'is_ready' => $this->merchantOrder->is_ready,
+            'ready_at' => $this->merchantOrder->ready_at,
+            'order_id' => $this->merchantOrder->order_id,
             'order' => new OrderResource($this->merchantOrder->order),
-            'products'=> OrderRestaurantItemResource::collection($this->merchantOrder->items)
+            'products' => ProductOrderResource::collection($this->merchantOrder->products),
+            'order_serve_confirmation' => $this->merchantOrder->serve,
+            'created_at' => $this->merchantOrder->created_at
         ];
     }
 

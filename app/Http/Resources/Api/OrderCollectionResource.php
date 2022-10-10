@@ -16,8 +16,10 @@ class OrderCollectionResource extends JsonResource
     {
         return [
             'merchant_id' => $this->merchant_id,
-            'merchant_name' => $this->merchant->name,
-            'collection_confirmation' => $this->collection_confirmation,
+            'merchant_name' => $this->when($this->relationLoaded('merchant'), $this->merchant->name),
+            'is_collected' => $this->is_collected,
+            'collected_at' => $this->collected_at,
+            'created_at' => $this->created_at,
         ];
     }
 }

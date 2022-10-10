@@ -15,11 +15,12 @@ class CreateRiderCollectionsTable extends Migration
     {
         Schema::create('rider_collections', function (Blueprint $table) {
             $table->increments('id');
-            $table->tinyInteger('collection_confirmation')->default(-1); // -1 for pending, 1 for confirm, 0 for cancel
-            $table->unsignedInteger('merchant_id');
+            $table->tinyInteger('is_collected')->default(-1); // -1 for pending, 1 for confirm, 0 for cancel
+            $table->timestamp('collected_at')->nullable();
             $table->unsignedInteger('order_id');
+            $table->unsignedInteger('merchant_id');
             $table->unsignedSmallInteger('rider_id');
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

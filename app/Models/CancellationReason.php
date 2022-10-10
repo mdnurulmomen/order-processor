@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CancelationReason extends Model
+class CancellationReason extends Model
 {
-   	use SoftDeletes;
+    use SoftDeletes;
 
    	public $timestamps = false;
    	protected $guarded = ['id'];

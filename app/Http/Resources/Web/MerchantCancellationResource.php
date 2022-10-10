@@ -4,7 +4,7 @@ namespace App\Http\Resources\Web;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RiderDeliveryResource extends JsonResource
+class MerchantCancellationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,10 @@ class RiderDeliveryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'is_accepted' => $this->is_accepted,
-            'accepted_at' => $this->accepted_at,
-            'is_delivered' => $this->is_delivered,
-            'delivered_at' => $this->delivered_at,
-            'created_at' => $this->created_at,
+            'merchant_id'=>$this->canceller_id, 
+            'merchant_name'=>$this->canceller->name, 
+            'cancellation_reason_id'=>$this->cancellation_reason_id,  
+            'cancellation_reason' => $this->whenLoaded('cancellationReason'),
         ];
     }
 }

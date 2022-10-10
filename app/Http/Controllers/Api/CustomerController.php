@@ -41,18 +41,18 @@ class CustomerController extends Controller
     	$request->validate([
     		// 'lat' => 'required|string',
     		// 'lang' => 'required|string',
-    		'restaurant_id' => 'required|numeric|exists:restaurants,id',
+    		'merchant_id' => 'required|numeric|exists:merchants,id',
     		'customer_address_id' => 'required|numeric|exists:customer_addresses,id',
             'per_page' => 'nullable|numeric'
     		// 'id' => 'required|numeric|exists:customers,id'
     	]);
 
-    	$existingFavourite = CustomerFavourite::where('customer_address_id', $request->customer_address_id)->where('restaurant_id', $request->restaurant_id)->exists();
+    	$existingFavourite = CustomerFavourite::where('customer_address_id', $request->customer_address_id)->where('merchant_id', $request->merchant_id)->exists();
 
     	if (! $existingFavourite) {
     		
     		CustomerFavourite::create([
-    			'restaurant_id' => $request->restaurant_id,
+    			'merchant_id' => $request->merchant_id,
     			'customer_address_id' => $request->customer_address_id,
     		]);
 
@@ -75,16 +75,16 @@ class CustomerController extends Controller
         if ($per_page) {
             
             return new UserOrderCollection(
-                Order::with(['asap', 'schedule', 'cutlery', 'delivery'])
+                Order::with(['schedule', 'delivery'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
                     }
                 )
                 ->where(function ($query) {
-                    $query->where('order_type', 'home-delivery')
-                    ->orWhere('order_type', 'serve-on-table')
-                    ->orWhere('order_type', 'take-away');
+                    $query->where('type', 'delivery')
+                    ->orWhere('type', 'serving')
+                    ->orWhere('type', 'collection');
                 })
                 ->paginate($per_page)
             );
@@ -93,16 +93,16 @@ class CustomerController extends Controller
         else {
 
             return UserOrderResource::collection(
-                Order::with(['asap', 'schedule', 'cutlery', 'delivery'])
+                Order::with(['schedule', 'delivery'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
                     }
                 )
                 ->where(function ($query) {
-                    $query->where('order_type', 'home-delivery')
-                    ->orWhere('order_type', 'serve-on-table')
-                    ->orWhere('order_type', 'take-away');
+                    $query->where('type', 'delivery')
+                    ->orWhere('type', 'serving')
+                    ->orWhere('type', 'collection');
                 })
                 ->get()
             );
@@ -115,16 +115,16 @@ class CustomerController extends Controller
         if ($per_page) {
             
             return new UserOrderCollection(
-                Order::with(['asap', 'schedule', 'cutlery', 'delivery'])
+                Order::with(['schedule', 'delivery'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
                     }
                 )
                 ->where(function ($query) {
-                    $query->where('order_type', 'home-delivery')
-                    ->orWhere('order_type', 'serve-on-table')
-                    ->orWhere('order_type', 'take-away');
+                    $query->where('type', 'delivery')
+                    ->orWhere('type', 'serving')
+                    ->orWhere('type', 'collection');
                 })
                 ->where('in_progress', 1)
                 ->paginate($per_page)
@@ -134,16 +134,16 @@ class CustomerController extends Controller
         else {
 
             return UserOrderResource::collection(
-                Order::with(['asap', 'schedule', 'cutlery', 'delivery'])
+                Order::with(['schedule', 'delivery'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
                     }
                 )
                 ->where(function ($query) {
-                    $query->where('order_type', 'home-delivery')
-                    ->orWhere('order_type', 'serve-on-table')
-                    ->orWhere('order_type', 'take-away');
+                    $query->where('type', 'delivery')
+                    ->orWhere('type', 'serving')
+                    ->orWhere('type', 'collection');
                 })
                 ->where('in_progress', 1)
                 ->get()
@@ -156,7 +156,7 @@ class CustomerController extends Controller
     {
         $reservations = Reservation::with('order')
         ->whereHas('order', function ($query) use ($user) {
-            $query->where('order_type', 'reservation')
+            $query->where('type', 'reservation')
             ->whereHasMorph('orderer', [ Customer::class ], 
                 function($query) use($user) {
                     $query->where('id', $user);
@@ -176,13 +176,13 @@ class CustomerController extends Controller
         }
     }
 
-    public function showOrderRestaurants($order)
+    public function showOrderMerchants($order)
     {
         $expectedOrder = Order::findOrFail($order);
-        return MerchantOrderResource::collection($expectedOrder->restaurants);
+        return MerchantOrderResource::collection($expectedOrder->merchants);
     }
 
-    public function getMyRegularItems($user, $per_page=false)
+    public function getMyRegularProducts($user, $per_page=false)
     {
         if ($per_page) {
             
@@ -193,7 +193,7 @@ class CustomerController extends Controller
         return MyRegularResource::collection(MyRegular::where('customer_id', $user)->get());
     }
 
-    public function setMyRegularItems(MyRegularRequest $request)
+    public function setMyRegularProducts(MyRegularRequest $request)
     {
         $myRegular = MyRegular::where('package', $request->package)->where('customer_id', $request->customer_id)->first();
 
@@ -219,36 +219,36 @@ class CustomerController extends Controller
 
         }
 
-        $request->restaurants = json_decode(json_encode($request->restaurants));
+        $request->merchants = json_decode(json_encode($request->merchants));
 
-        foreach ($request->restaurants as $myRestaurantKey => $myRestaurant) {
+        foreach ($request->merchants as $myMerchantKey => $myMerchant) {
             
-            $myRegularRestaurant = $myRegular->restaurants()->create([
-                'restaurant_id' => $myRestaurant->restaurant_id,
+            $myRegularMerchant = $myRegular->merchants()->create([
+                'merchant_id' => $myMerchant->merchant_id,
             ]);
 
-            foreach ($myRestaurant->menu_items as $myRestaurantItemKey => $myRestaurantItem) {
+            foreach ($myMerchant->menu_items as $myMerchantProductKey => $myMerchantProduct) {
                 
-                $myRegularItem = $myRegularRestaurant->menuItems()->create([
-                    'restaurant_menu_item_id'=> $myRestaurantItem->id,
-                    'quantity'=> $myRestaurantItem->quantity,
+                $myRegularProduct = $myRegularMerchant->products()->create([
+                    'merchant_product_id'=> $myMerchantProduct->id,
+                    'quantity'=> $myMerchantProduct->quantity,
                 ]);
 
-                if ($myRegularItem->restaurantMenuItem->has_variation && ! empty($myRestaurantItem->variation)) {
+                if ($myRegularProduct->merchantProduct->has_variation && ! empty($myMerchantProduct->variation)) {
                     
-                    $myRegularItemVariation = $myRegularItem->variation()->create([
-                        'restaurant_menu_item_variation_id'=> $myRestaurantItem->variation->id
+                    $myRegularItemVariation = $myRegularProduct->variation()->create([
+                        'merchant_product_variation_id'=> $myMerchantProduct->variation->id
                     ]);
 
                 }
 
-                if ($myRegularItem->restaurantMenuItem->has_addon && count($myRestaurantItem->addons)) {
+                if ($myRegularProduct->merchantProduct->has_addon && count($myMerchantProduct->addons)) {
                     
-                    foreach ($myRestaurantItem->addons as $myRestaurantItemAddonkey => $myRestaurantItemAddon) {
+                    foreach ($myMerchantProduct->addons as $myMerchantItemAddonkey => $myMerchantProductAddon) {
                         
-                        $myRegularItemAddon = $myRegularItem->addons()->create([
-                            'restaurant_menu_item_addon_id'=> $myRestaurantItemAddon->id,
-                            'quantity'=> $myRestaurantItemAddon->quantity,
+                        $myRegularItemAddon = $myRegularProduct->addons()->create([
+                            'merchant_product_addon_id'=> $myMerchantProductAddon->id,
+                            'quantity'=> $myMerchantProductAddon->quantity,
                         ]);
 
                     }  
@@ -259,10 +259,10 @@ class CustomerController extends Controller
 
         }
 
-        return $this->getMyRegularItems($request->customer_id);
+        return $this->getMyRegularProducts($request->customer_id);
     }
 
-    public function updateMyRegularItems(MyRegularRequest $request, $regular)
+    public function updateMyRegularProducts(MyRegularRequest $request, $regular)
     {
         $myRegular = MyRegular::findOrFail($regular);
      
@@ -273,38 +273,38 @@ class CustomerController extends Controller
             'delivery_address_id'=>$request->delivery_address_id
         ]);
 
-        $this->deleteMyRegularRestaurants($myRegular);
+        $this->deleteMyRegularMerchants($myRegular);
 
-        $request->restaurants = json_decode(json_encode($request->restaurants));
+        $request->merchants = json_decode(json_encode($request->merchants));
 
-        foreach ($request->restaurants as $myRestaurantKey => $myRestaurant) {
+        foreach ($request->merchants as $myMerchantKey => $myMerchant) {
             
-            $myRegularRestaurant = $myRegular->restaurants()->create([
-                'restaurant_id' => $myRestaurant->restaurant_id,
+            $myRegularMerchant = $myRegular->merchants()->create([
+                'merchant_id' => $myMerchant->merchant_id,
             ]);
 
-            foreach ($myRestaurant->menu_items as $myRestaurantItemKey => $myRestaurantItem) {
+            foreach ($myMerchant->menu_items as $myMerchantProductKey => $myMerchantProduct) {
                 
-                $myRegularItem = $myRegularRestaurant->menuItems()->create([
-                    'restaurant_menu_item_id'=> $myRestaurantItem->id,
-                    'quantity'=> $myRestaurantItem->quantity,
+                $myRegularProduct = $myRegularMerchant->products()->create([
+                    'merchant_product_id'=> $myMerchantProduct->id,
+                    'quantity'=> $myMerchantProduct->quantity,
                 ]);
 
-                if ($myRegularItem->restaurantMenuItem->has_variation && ! empty($myRestaurantItem->variation)) {
+                if ($myRegularProduct->merchantProduct->has_variation && ! empty($myMerchantProduct->variation)) {
                     
-                    $myRegularItemVariation = $myRegularItem->variation()->create([
-                        'restaurant_menu_item_variation_id'=> $myRestaurantItem->variation->id
+                    $myRegularItemVariation = $myRegularProduct->variation()->create([
+                        'merchant_product_variation_id'=> $myMerchantProduct->variation->id
                     ]);
 
                 }
 
-                if ($myRegularItem->restaurantMenuItem->has_addon && count($myRestaurantItem->addons)) {
+                if ($myRegularProduct->merchantProduct->has_addon && count($myMerchantProduct->addons)) {
                     
-                    foreach ($myRestaurantItem->addons as $myRestaurantItemAddonkey => $myRestaurantItemAddon) {
+                    foreach ($myMerchantProduct->addons as $myMerchantItemAddonkey => $myMerchantProductAddon) {
                         
-                        $myRegularItemAddon = $myRegularItem->addons()->create([
-                            'restaurant_menu_item_addon_id'=> $myRestaurantItemAddon->id,
-                            'quantity'=> $myRestaurantItemAddon->quantity,
+                        $myRegularItemAddon = $myRegularProduct->addons()->create([
+                            'merchant_product_addon_id'=> $myMerchantProductAddon->id,
+                            'quantity'=> $myMerchantProductAddon->quantity,
                         ]);
 
                     }  
@@ -315,7 +315,7 @@ class CustomerController extends Controller
 
         }
 
-        return $this->getMyRegularItems($request->customer_id);
+        return $this->getMyRegularProducts($request->customer_id);
     }
 
     public function deleteMyRegularItems($regular, $per_page = false)
@@ -324,11 +324,11 @@ class CustomerController extends Controller
         
         $user = $myRegular->customer;
 
-        $this->deleteMyRegularRestaurants($myRegular);
+        $this->deleteMyRegularMerchants($myRegular);
 
         $myRegular->delete(); 
 
-        return $this->getMyRegularItems($user->id, $per_page);
+        return $this->getMyRegularProducts($user->id, $per_page);
     }
 
     public function logout(Request $request)
@@ -344,19 +344,19 @@ class CustomerController extends Controller
         ];
     }
 
-    private function deleteMyRegularRestaurants(MyRegular $myRegular)
+    private function deleteMyRegularMerchants(MyRegular $myRegular)
     {
-        foreach ($myRegular->restaurants as $myRestaurantKey => $myRestaurant) {
+        foreach ($myRegular->merchants as $myMerchantKey => $myMerchant) {
             
-            foreach ($myRestaurant->menuItems as $myRestaurantItemKey => $myRestaurantItem) {
+            foreach ($myMerchant->products as $myMerchantProductKey => $myMerchantProduct) {
                 
-                $myRestaurantItem->addons()->delete();
-                $myRestaurantItem->variation()->delete();
-                $myRestaurantItem->delete();
+                $myMerchantProduct->addons()->delete();
+                $myMerchantProduct->variation()->delete();
+                $myMerchantProduct->delete();
 
             }
 
-            $myRestaurant->delete();
+            $myMerchant->delete();
 
         }
     }

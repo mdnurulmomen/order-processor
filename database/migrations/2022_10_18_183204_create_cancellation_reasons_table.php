@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCancelationReasonsTable extends Migration
+class CreateCancellationReasonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCancelationReasonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cancelation_reasons', function (Blueprint $table) {
+        Schema::create('cancellation_reasons', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->text('reason');
             $table->softDeletes();
@@ -27,6 +27,6 @@ class CreateCancelationReasonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cancelation_reasons');
+        Schema::dropIfExists('cancellation_reasons');
     }
 }

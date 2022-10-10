@@ -51,7 +51,7 @@ class SettingController extends Controller
         
         $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
 
-        $settings->app_name = $request->app_name;
+        $settings->app_name = strtolower($request->app_name);
         $settings->searching_radius = $request->searching_radius;
         $settings->multiple_delivery_charge_percentage = $request->multiple_delivery_charge_percentage;
         $settings->admin_id = \Auth::guard('admin')->user()->id;
@@ -77,6 +77,7 @@ class SettingController extends Controller
         $request->validate([
 
             'services'=>'required|array|min:1',
+            'services.*.id'=>'required|numeric|exists:application_services,id',
             'services.*.name'=>'required|string|max:255',
             'services.*.code'=>'required|string|max:255',
             'services.*.status'=>'nullable|boolean',
@@ -84,20 +85,20 @@ class SettingController extends Controller
 
         ]);
         
-        ApplicationService::truncate();
+        // ApplicationService::truncate();
 
         foreach (json_decode(json_encode($request->services)) as $serviceKey => $service) {
             
-            $newService = new ApplicationService();
+            $serviceToUpdate = ApplicationService::find($service->id);
 
-            $newService->name = $service->name;
-            // $newService->code = $service->code;
-            $newService->status = $service->status ?? false;
+            $serviceToUpdate->name = strtolower($service->name);
+            // $serviceToUpdate->code = $service->code;
+            $serviceToUpdate->status = $service->status ?? false;
 
-            $newService->save();
+            $serviceToUpdate->save();
 
-            $newService->logo_icon = $service->logo;
-            $newService->save();
+            $serviceToUpdate->logo_icon = $service->logo;
+            $serviceToUpdate->save();
         
         }
 
@@ -114,6 +115,7 @@ class SettingController extends Controller
     public function updatePaymentSettings(Request $request)
     {   
         $request->validate([
+            'official_currency'=>'required|string',
             'vat_rate'=>'required|numeric|max:100',
             'official_bank'=>'required|string',
             'official_bank_account_number'=>'required|string',
@@ -128,10 +130,11 @@ class SettingController extends Controller
         
         $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
 
+        $settings->official_currency = strtolower($request->official_currency);
         $settings->vat_rate = $request->vat_rate;
-        $settings->official_bank = $request->official_bank;
-        $settings->official_bank_account_holder_name = $request->official_bank_account_holder_name;
-        $settings->official_bank_account_number = $request->official_bank_account_number;
+        $settings->official_bank = strtolower($request->official_bank);
+        $settings->official_bank_account_holder_name = strtolower($request->official_bank_account_holder_name);
+        $settings->official_bank_account_number = strtolower($request->official_bank_account_number);
         $settings->merchant_number = $request->merchant_number;
         $settings->admin_id = \Auth::guard('admin')->user()->id;
 
@@ -155,8 +158,8 @@ class SettingController extends Controller
         
         $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
 
-        $settings->official_contact_address = $request->official_contact_address;
-        $settings->official_mail_address = $request->official_mail_address;
+        $settings->official_contact_address = strtolower($request->official_contact_address);
+        $settings->official_mail_address = strtolower($request->official_mail_address);
         $settings->official_customer_care_number = $request->official_customer_care_number;
         $settings->admin_id = \Auth::guard('admin')->user()->id;
 

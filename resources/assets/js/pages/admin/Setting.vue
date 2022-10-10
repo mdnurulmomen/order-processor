@@ -482,7 +482,7 @@
 																		v-for="cuisine in applicationSettings.search_preferences.cuisines" 
 																		:key="'cuisine-search-preferences-' + cuisine.id"
 																	>
-																		{{ cuisine.name }}
+																		{{ cuisine.name | capitalize }}
 																	</li>
 																</ul>
 											                </div>
@@ -507,7 +507,7 @@
 																		v-for="meal in applicationSettings.search_preferences.meals" 
 																		:key="'meal-search-preferences-' + meal.id"
 																	>
-																		{{ meal.name }}
+																		{{ meal.name | capitalize }}
 																	</li>
 																</ul>
 											                </div>
@@ -515,13 +515,13 @@
 
 										              	<div 
 										              		class="form-group row"
-										              		v-if="applicationSettings.hasOwnProperty('search_preferences') && applicationSettings.search_preferences.hasOwnProperty('menus') && applicationSettings.search_preferences.menus.length"
+										              		v-if="applicationSettings.hasOwnProperty('search_preferences') && applicationSettings.search_preferences.hasOwnProperty('product_categories') && applicationSettings.search_preferences.product_categories.length"
 										              	>
 										              		<label class="col-sm-3 text-right">
 										              			<span class="col-form-label">
-										              				Menu Category 
+										              				Product Category 
 										              			</span>
-																<router-link :to="{ name: 'menu-categories' }">
+																<router-link :to="{ name: 'product-categories' }">
 																	<i class="fa fa-link" aria-hidden="true"></i>
 																</router-link>
 										              		</label>
@@ -529,10 +529,10 @@
 											                <div class="col-sm-9">
 																<ul id="example-1">
 																	<li 
-																		v-for="menu in applicationSettings.search_preferences.menus" 
-																		:key="'menu-search-preferences-' + menu.id"
+																		v-for="productCategory in applicationSettings.search_preferences.product_categories" 
+																		:key="'product-category-search-preferences-' + productCategory.id"
 																	>
-																		{{ menu.name }}
+																		{{ productCategory.name | capitalize }}
 																	</li>
 																</ul>
 											                </div>
@@ -752,6 +752,25 @@
 						      		>
 						            
 						            <div class="card-body box-profile">  
+						              	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			Official Currency
+						              		</label>
+							                <div class="col-sm-9">
+							                  	<input 
+							                  		type="text" 
+							                  		class="form-control" 
+							                  		v-model="applicationSettings.official_currency" 
+							                  		placeholder="Currency Name" 
+							                  		:class="!errors.official_currency ? 'is-valid' : 'is-invalid'"
+													@keyup="validateFormInput('official_currency')"
+							                  	>
+							                  	<div class="invalid-feedback">
+										        	{{ errors.official_currency }}
+										  		</div>
+							                </div>
+						              	</div>
+
 						              	<div class="form-group row">
 						              		<label for="inputnumber3" class="col-sm-3 col-form-label text-right">
 						              			Vat Rate
@@ -1477,7 +1496,7 @@
 				this.validateFormInput('payment_name');
 				this.validateFormInput('payment_logo');
 
-				if (!this.applicationSettings.vat_rate || !this.applicationSettings.official_bank || !this.applicationSettings.official_bank_account_number || !this.applicationSettings.official_bank_account_holder_name || !this.applicationSettings.merchant_number) {
+				if (!this.applicationSettings.official_currency || !this.applicationSettings.vat_rate || !this.applicationSettings.official_bank || !this.applicationSettings.official_bank_account_number || !this.applicationSettings.official_bank_account_holder_name || !this.applicationSettings.merchant_number) {
 
 					this.submitForm = false;
 					return;
@@ -1950,7 +1969,7 @@
 					case 'multiple_delivery_charge_percentage' :
 
 						if (! this.applicationSettings.multiple_delivery_charge_percentage || this.applicationSettings.multiple_delivery_charge_percentage <= 0) {
-							this.errors.multiple_delivery_charge_percentage = 'Searching radius is required';
+							this.errors.multiple_delivery_charge_percentage = 'Delivery percentage is required';
 						}
 						else if (! (/^[+-]?\d+(\.\d+)?$/g).test(this.applicationSettings.multiple_delivery_charge_percentage)) {
 							this.errors.multiple_delivery_charge_percentage = 'Only numbers';
@@ -1998,7 +2017,7 @@
 							this.applicationSettings.welcome_greetings.forEach((welcomeGreeting, welcomeGreetingIndex) => {
 
 								if (! welcomeGreeting.paragraph) {
-									this.errors.welcome_greetings[welcomeGreetingIndex].paragraph = 'Payment paragraph is required';
+									this.errors.welcome_greetings[welcomeGreetingIndex].paragraph = 'Welcome paragraph is required';
 								}
 								else if (! welcomeGreeting.paragraph.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
 									this.errors.welcome_greetings[welcomeGreetingIndex].paragraph = 'No special characters';
@@ -2272,6 +2291,21 @@
 
 						break;
 
+					case 'official_currency' :
+
+						if (!this.applicationSettings.official_currency) {
+							this.errors.official_bank = 'Bank name is required';
+						}
+						else if (!this.applicationSettings.official_currency.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+							this.errors.official_bank = 'No special character';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors, 'official_currency');
+						}
+
+						break;
+
 					case 'vat_rate' :
 
 						if (! this.applicationSettings.vat_rate) {
@@ -2456,6 +2490,7 @@
 
 						break;
 
+					/*
 					case 'welcome_greetings' :
 
 						if (!this.applicationSettings.multiple_delivery_charge_percentage) {
@@ -2470,6 +2505,7 @@
 						}
 
 						break;
+					*/
 				}
 	 
 			},

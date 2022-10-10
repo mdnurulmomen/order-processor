@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use App\Models\ApplicationSetting;
 use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
+    protected $applicationSettings;
+
     /**
      * Create a new controller instance.
      *
@@ -14,6 +17,8 @@ class HomeController extends Controller
      **/
     public function __construct()
     {
+        $this->applicationSettings = ApplicationSetting::first();
+
         $this->middleware('auth')->only('index');
         $this->middleware('auth:admin')->only('showAdminHome');
         $this->middleware('auth:owner')->only('showOwnerHome');
@@ -37,7 +42,7 @@ class HomeController extends Controller
      */
     public function showAdminHome()
     {
-        return view('layouts.admin');
+        return view('layouts.admin', ['applicationSettings' => $this->applicationSettings]);
     }
 
     /**
@@ -47,7 +52,7 @@ class HomeController extends Controller
      */
     public function showOwnerHome()
     {
-        return view('layouts.owner');
+        return view('layouts.owner', ['applicationSettings' => $this->applicationSettings]);
     }
 
     /**
@@ -57,6 +62,6 @@ class HomeController extends Controller
      */
     public function showMerchantHome()
     {
-        return view('layouts.merchant');
+        return view('layouts.merchant', ['applicationSettings' => $this->applicationSettings]);
     }    
 }

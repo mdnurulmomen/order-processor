@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Intervention\Image\ImageManagerStatic as ImageIntervention;
 
-class Merchant extends Model
+class Merchant extends Authenticatable
 {
     use SoftDeletes;
 
@@ -33,7 +33,8 @@ class Merchant extends Model
         'break_schedule' => 'json',
         'taking_order' => 'boolean',
         'admin_approval' => 'boolean',
-        'sponsored' => 'boolean',
+        'is_sponsored' => 'boolean',
+        'has_delivery_support' => 'boolean',
     ];
 
     public function deal()
