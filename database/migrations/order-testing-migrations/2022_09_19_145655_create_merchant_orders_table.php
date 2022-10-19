@@ -20,6 +20,7 @@ class CreateMerchantOrdersTable extends Migration
             $table->timestamp('accepted_at')->nullable();
             $table->tinyInteger('is_ready')->nullable();  // 1 for confirm, 0 for cancel
             $table->timestamp('ready_at')->nullable();
+            $table->boolean('has_delivery_support')->default(false);
             $table->unsignedInteger('order_id');
             $table->timestamp('created_at')->useCurrent();
         });

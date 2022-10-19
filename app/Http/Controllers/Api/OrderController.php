@@ -58,6 +58,7 @@ class OrderController extends Controller
             
             $merchantNewOrder = $newOrder->merchants()->create([
                 'merchant_id' => $merchantOrder->id,
+                'has_delivery_support' => Merchant::find($merchantOrder->id)->need_delivery_support,
             ]);
 
             $request->products = json_decode(json_encode($merchantOrder->products));

@@ -38,7 +38,7 @@ class NotifyRiders implements ShouldQueue
      *
      * @var int
      */
-    // public $maxExceptions = 5;
+    public $maxExceptions = 5;
 
     /**
      * Create a new job instance.
@@ -90,6 +90,8 @@ class NotifyRiders implements ShouldQueue
             event(new UpdateRider($riderNewDeliveryRecord));
             
         }
+
+        return;
     }
 
     /**

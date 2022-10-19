@@ -926,6 +926,7 @@
 											<option 
 												v-for="merchantOrder in singleOrderData.order.merchants" 
 												:value="merchantOrder.merchant_id" 
+												:disabled="typeof merchantCancelledOrder(singleOrderData.order.merchant_order_cancellations, merchantOrder.merchant_id) !== 'undefined'"
 											>
 												{{ merchantOrder.merchant_name | capitalize }}
 											</option>
@@ -1233,7 +1234,7 @@
 
 				// if (this.singleOrderData.orderCancellation.canceller==='merchants' || this.singleOrderData.orderCancellation.canceller === 'rider') {
 
-					if (this.singleOrderData.orderCancellation.canceller==='merchants' && ! this.singleOrderData.orderCancellation.merchant_id) {	
+					if (this.singleOrderData.orderCancellation.canceller==='merchants' && (! this.singleOrderData.orderCancellation.merchant_id || typeof this.merchantCancelledOrder(this.singleOrderData.order.merchant_order_cancellations, this.singleOrderData.orderCancellation.merchant_id) !== 'undefined')) {	
 
 						this.errors.orderCancellation.merchant = 'Merchant name is required';
 						this.submitCancellationForm = false;

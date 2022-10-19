@@ -34,7 +34,7 @@ class Merchant extends Authenticatable
         'taking_order' => 'boolean',
         'admin_approval' => 'boolean',
         'is_sponsored' => 'boolean',
-        'has_delivery_support' => 'boolean',
+        'need_delivery_support' => 'boolean',
     ];
 
     public function deal()

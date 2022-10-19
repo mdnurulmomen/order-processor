@@ -24,6 +24,7 @@ class MerchantOrderResource extends JsonResource
             'is_ready' => $this->is_ready,
             'ready_at' => $this->ready_at,
             'order_id' => $this->order_id,
+            'has_delivery_support' => $this->has_delivery_support,
             'order' => new OrderResource($this->whenLoaded('order')),
             'products' => ProductOrderResource::collection($this->whenLoaded('products')),
             'order_serve_confirmation' => /*$this->when($this->serve, $this->serve)*/ $this->whenLoaded('serve'),

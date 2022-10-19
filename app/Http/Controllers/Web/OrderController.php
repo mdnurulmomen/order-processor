@@ -72,6 +72,7 @@ class OrderController extends Controller
 	 	// return response(Order::get(), 200);
 	}
 
+	// Admin
 	public function confirmNewOrder(Request $request, $perPage)
 	{
 	 	$request->validate([
@@ -96,7 +97,18 @@ class OrderController extends Controller
 	 	if ($orderToConfirm->customer_confirmation) {			// -1 / 1
 
 		 	$this->confirmCustomerOrderRequest($orderToConfirm);
-	 		$this->makeMerchantCalls($orderToConfirm);
+	 		
+	 		// make rider call if merchant has delivery support
+			if ($orderToConfirm->type=='delivery' && $orderToConfirm->merchants()->where('has_delivery_support', 1)->count()) {
+				
+				$this->makeRiderOrderCall($orderToConfirm);
+			
+			}
+			else {		// order type is other than delivery / merchant has own delivery 
+
+				$this->makeMerchantCalls($orderToConfirm);
+
+			}
 
 	 	}
 
@@ -115,8 +127,8 @@ class OrderController extends Controller
 
 		$orderToCancel = Order::findOrFail($order);	 	
 
-		// already customer or same merchant cancelled this order or order has been picked or order is stopped
-		if ($orderToCancel->customerOrderCancellation()->exists() || $orderToCancel->merchantOrderCancellations()->where('canceller_id', $request->merchant_id)->exists() || $orderToCancel->collections()->where('is_collected', 1)->exists() || $orderToCancel->in_progress === 0 && $orderToCancel->is_completed === 1) {
+		// already customer or same merchant cancelled this order or order is stopped
+		if ($orderToCancel->customerOrderCancellation()->exists() || $orderToCancel->merchantOrderCancellations()->where('canceller_id', $request->merchant_id)->exists() || $orderToCancel->in_progress === 0 && $orderToCancel->is_completed === 1) {
 			
 			return response()->json(
 	 			[
@@ -137,8 +149,8 @@ class OrderController extends Controller
 
 	 	}
 
-	 	// if the merchant actually belongs to ordered-merchants and accepted the food request
-	 	else if ($request->canceller==='merchants' && $orderToCancel->customer_confirmation===1 && $orderToCancel->merchants()->where('merchant_id', $request->merchant_id)->exists() /* && $orderToCancel->merchants()->where('merchant_id', $request->merchant_id)->exists()*/) {
+	 	// if the merchant actually belongs to ordered-merchants and accepted the food request and order has been picked
+	 	else if ($request->canceller==='merchants' && $orderToCancel->customer_confirmation===1 && $orderToCancel->merchants()->where('merchant_id', $request->merchant_id)->exists() && ! $orderToCancel->collections()->where('merchant_id', $request->merchant_id)->where('is_collected', 1)->exists()) {
 
 		 	// cancelling just arrived order request
 			$this->cancelMerchantOrderRequest($orderToCancel, $request->merchant_id);
@@ -169,7 +181,7 @@ class OrderController extends Controller
 	 	}
 
 	 	// if any rider is actually assigned and the food has't been picked up yet 
-	 	else if ($request->canceller==='rider' && $orderToCancel->customer_confirmation===1 && $orderToCancel->riderAssigned()->where('rider_id', $request->rider_id)->exists()) {
+	 	else if ($request->canceller==='rider' && $orderToCancel->customer_confirmation===1 && $orderToCancel->riderAssigned()->where('rider_id', $request->rider_id)->exists() && ! $orderToCancel->collections()->where('rider_id', $request->rider_id)->where('is_collected', 1)->exists()) {
 		
 		 	// deleting related rider food pick records if any
 		 	$orderToCancel->collections()->delete();
@@ -190,12 +202,12 @@ class OrderController extends Controller
 			$this->notifyRider($riderDeliveryOrderToCancel);
 
 		 	// making rider call to assign another food man for the order
-			$this->makeRiderOrderCall($orderToCancel, $riderDeliveryOrderToCancel->rider_id);
+			$this->makeRiderOrderCall($orderToCancel);
 
 	 	}
 
 	 	// stop order at any phase until order delivered / served
-	 	else if ($request->canceller=='admin' && $orderToCancel->customer_confirmation===1) {
+	 	else if ($request->canceller=='admin' && $orderToCancel->customer_confirmation===1 && $orderToCancel->is_completed===-1) {
 	 		
 	 		$this->disableOrderStatus($orderToCancel);
 
@@ -231,17 +243,17 @@ class OrderController extends Controller
   	public function searchAllOrders($search, $perPage)
 	{	
 		$query = Order::with(['merchants.merchant', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller'])
-						->where('id', 'like', "%$search%")
-						->orWhere('type', 'like', "%$search%")
-						->orWhere('order_price', 'like', "%$search%")
-						->orWhere('vat', 'like', "%$search%")
-						->orWhere('discount', 'like', "%$search%")
-						->orWhere('delivery_fee', 'like', "%$search%")
-						->orWhere('net_payable', 'like', "%$search%")
-						->orWhere('payment_method', 'like', "%$search%")
-						->orWhere('orderer_type', 'like', "%$search%")
-						->orWhere('orderer_id', 'like', "%$search%")
-						->orWhere('customer_confirmation', 'like', "%$search%");
+		->where('id', 'like', "%$search%")
+		->orWhere('type', 'like', "%$search%")
+		->orWhere('price', 'like', "%$search%")
+		->orWhere('vat', 'like', "%$search%")
+		->orWhere('discount', 'like', "%$search%")
+		->orWhere('delivery_fee', 'like', "%$search%")
+		->orWhere('net_payable', 'like', "%$search%")
+		->orWhere('payment_method', 'like', "%$search%")
+		->orWhere('orderer_type', 'like', "%$search%")
+		->orWhere('orderer_id', 'like', "%$search%")
+		->orWhere('customer_confirmation', 'like', "%$search%");
 
         // Retrieve comments associated to posts or videos with a title like foo%...
 		$query->whereHasMorph('orderer', ['App\Models\Customer', 'App\Models\MerchantAgent'], function($q)use ($search) {
@@ -334,16 +346,9 @@ class OrderController extends Controller
 			'merchant_id' => ['required','exists:merchants,id',
 			        function ($attribute, $value, $fail) use ($order) {
 			            $merchantExist = MerchantOrder::where('merchant_id', $value)
-			            									->where('order_id', $order)
-			            									->exists();
-			            if (!$merchantExist) {
-			                $fail('Invalid Merchant or Order');
-			            }
-			        },
-			        function ($attribute, $value, $fail) use ($order) {
-			            $merchantExist = MerchantOrder::where('merchant_id', $value)
-			            										->where('order_id', $order)
-			            										->exists();
+						->where('order_id', $order)
+						->exists();
+
 			            if (!$merchantExist) {
 			                $fail('Invalid Merchant or Order');
 			            }
@@ -356,12 +361,11 @@ class OrderController extends Controller
 	 	$orderToConfirm = Order::findOrFail($order);
 
 	 	// already customer or same merchant cancelled this order or order is stopped or completed
-		if (! $this->confirmedOrder($orderToConfirm) || $orderToConfirm->merchantOrderCancellations()->where('canceller_id', $request->merchant_id)->exists() || $orderToConfirm->in_progress ===0 || $orderToConfirm->is_completed ===1) {
+		if (! $this->confirmedOrder($orderToConfirm) || $orderToConfirm->merchantOrderCancellations()->where('canceller_id', $request->merchant_id)->exists() || $orderToConfirm->in_progress === 0 || $orderToConfirm->is_completed === 1) {
 			
 			return $this->showMerchantAllOrders($request->merchant_id, $perPage);
 
 		}
-
  		else if ($request->serveOrder) {
 
  			$orderServed = $this->makeMerchantOrderServed($orderToConfirm, 'App\Models\Merchant', $request->merchant_id);
@@ -384,27 +388,18 @@ class OrderController extends Controller
  		}
 
  		// checking if order is for delivery and order is from customer and any rider notification is already broadcasted
-		if ($orderToConfirm->type==='delivery' && $orderToConfirm->orderer instanceof Customer) {
+		if($orderToConfirm->riderAssigned()->exists()) {
 
-			if (! $orderToConfirm->riderAssigned()->exists()) {
+			// notifying rider about updation
+			$this->notifyRider($orderToConfirm->riderAssigned);
 
-				// make rider call with RiderDelivery
-				$this->makeRiderOrderCall($orderToConfirm);
-
-			}
-			else if($orderToConfirm->riderAssigned()->exists()) {
-
-				// adding new merchant to pick up for assigned rider
-				$this->makeMerchantCollections($orderToConfirm->riderAssigned);
-
-				// notifying rider about updation
-				$this->notifyRider($orderToConfirm->riderAssigned);
-			}
+			// adding new merchant to pick up for assigned rider
+			$this->makeMerchantCollections($orderToConfirm->riderAssigned);
 
 		}
 
-		// checking if order is for serving or reservation
-		else if ($orderToConfirm->type==='serving' || $orderToConfirm->type==='reservation') {
+		// delivery order but no rider has been called merchant need not delivery or order is for serving or reservation
+		else if (($orderToConfirm->type=='delivery' && ! $orderToConfirm->riders()->exists()) || $orderToConfirm->type==='serving' || $orderToConfirm->type==='reservation') {
 
 			// make agent call with MerchantOrder
 			$this->notifyMerchantAgents($orderAccepted, $request->merchant_id);
@@ -424,19 +419,12 @@ class OrderController extends Controller
 		$request->validate([
 			'cancellation_reason_id' => 'required|exists:cancellation_reasons,id',
 			'merchant_id' => ['required','exists:merchants,id',
-					function ($attribute, $value, $fail) use ($order) {
-						$merchantExist = MerchantOrder::where('merchant_id', $value)
-															->where('order_id', $order)
-															->exists();
-			            if (! $merchantExist) {
-			                $fail('Invalid Merchant or Order');
-			            }
-			        },
 			        function ($attribute, $value, $fail) use ($order) {
 			            $merchantExist = MerchantOrder::where('merchant_id', $value)
-			            										->where('order_id', $order)
-			            										->where('is_accepted', -1)
-			            										->exists();
+						->where('order_id', $order)
+						->where('is_accepted', -1)
+						->exists();
+
 			            if (! $merchantExist) {
 			                $fail('Invalid Merchant or Order');
 			            }
@@ -529,8 +517,9 @@ class OrderController extends Controller
             'rider_id' => ['required','exists:riders,id',
                     function ($attribute, $value, $fail) use ($order) {
                         $riderExist = RiderDelivery::where('rider_id', $value)
-                                                            ->where('order_id', $order)
-                                                            ->exists();
+                        ->where('order_id', $order)
+                        ->exists();
+
                         if (!$riderExist) {
                             $fail('Invalid Rider or Order');
                         }
@@ -563,11 +552,11 @@ class OrderController extends Controller
             	'paused_at' => NULL
             ]);
 
-            $this->makeMerchantCollections($orderToConfirm->riderAssigned);
+            $this->makeMerchantCalls($orderToConfirm);
 
         }
         // confirming pick-up
-        else if ($request->orderPicked /*&& $deliveryToConfirm->is_accepted==1*/) {
+        else if ($request->orderPicked && $deliveryToConfirm->is_accepted==1) {
             
             $merchantToPick = $deliveryToConfirm->collections()->where('rider_id', $request->rider_id)->where('merchant_id', $request->merchant_id)->first();
 
@@ -582,8 +571,6 @@ class OrderController extends Controller
                 $deliveryToConfirm->update([
                     'is_delivered' => -1,
                 ]);
-
-                
 
             }
 
@@ -915,17 +902,14 @@ class OrderController extends Controller
 	}
 
 	// broadcasting for riders
-	private function makeRiderOrderCall(Order $order, $cancelledRiderId = NULL)
+	private function makeRiderOrderCall(Order $order)
 	{	
 		// to calculate the nearest rider laterly
-		$allNearestRiders = $this->findNearestRiders($order->address);
-		$allNearestRiders = $allNearestRiders->reject(function ($rider) use ($cancelledRiderId){
-												    return $rider->id==$cancelledRiderId;
-												});
+		$allNearestAvailableRiders = $this->findNearestAvailableRiders($order);
 		
 		$delay = 0;
 
-		foreach ($allNearestRiders as $rider) {
+		foreach ($allNearestAvailableRiders as $rider) {
 			
 			NotifyRiders::dispatch($order, $rider)->delay(now()->addSeconds($delay));
 
@@ -946,19 +930,24 @@ class OrderController extends Controller
 		}
 	}
 
-	// should calculate the nearest rider and snoozing time laterly
-	private function findNearestRiders(DeliveryAddress $delivery=null) 
+	// should calculate the nearest rider and snoozing time laterly (now 1 minute)
+	private function findNearestAvailableRiders(Order $order) 
 	{
+		$alreadyRequestedRiders = $order->riders->pluck('id')->toArray();
+
 		return Rider::whereNull('current_lat')
-					->whereNull('current_lang')
-					->where('available', true)
-					->where('admin_approval', true)
-					->where(function ($query) {
-					    $query->whereNull('paused_at')->orWhere('paused_at', '<=', now()->subMinutes(1)->toDateTimeString());
-					})
-					// ->orderBy('evaluation.order_acceptance_percentage', 'desc')
-					->take(10)
-					->get();
+		->whereNull('current_lang')
+		->where('admin_approval', true)
+		->where('is_available', true)
+		->where('is_engaged', false)
+		->where(function ($query) {
+		    $query->whereNull('paused_at')
+		    ->orWhere('paused_at', '<=', now()->subMinutes(1)->toDateTimeString());
+		})
+		->whereNotIn('id', $alreadyRequestedRiders)
+		// ->orderBy('evaluation.order_acceptance_percentage', 'desc')
+		// ->take(10)
+		->get();
 	}
 
     private function makeMerchantCollections(RiderDelivery $riderDelivery)

@@ -30,7 +30,8 @@ class CreateRidersTable extends Migration
             $table->string('nid_back_preview');
             $table->string('payment_method'); // bkash / nexus
             $table->string('payment_account_number'); // bkash / nexus no.
-            $table->boolean('available')->default(true);
+            $table->boolean('is_available')->default(true);
+            $table->boolean('is_engaged')->default(false);
             $table->string('current_lat')->nullable();
             $table->string('current_lang')->nullable();
             $table->boolean('admin_approval')->default(false);

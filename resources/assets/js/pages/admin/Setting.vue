@@ -754,7 +754,7 @@
 						            <div class="card-body box-profile">  
 						              	<div class="form-group row">
 						              		<label class="col-sm-3 col-form-label text-right">
-						              			Official Currency
+						              			Currency
 						              		</label>
 							                <div class="col-sm-9">
 							                  	<input 
@@ -821,7 +821,7 @@
 
 						              	<div class="form-group row">
 						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
-						              			Bank Account Number  
+						              			Account Number  
 						              		</label>
 							                <div class="col-sm-9">
 							                  	<input  
@@ -841,7 +841,7 @@
 
 						              	<div class="form-group row">
 						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
-						              			Account Holder Name 
+						              			Account Name 
 						              		</label>
 							                <div class="col-sm-9">
 							                  	<input 
@@ -860,7 +860,7 @@
 
 						              	<div class="form-group row">
 						              		<label for="inputConfirmnumber3" class="col-sm-3 col-form-label text-right">
-						              			Mobile Banking Number 
+						              			MFS Number 
 						              		</label>
 							                <div class="col-sm-9">
 							                  	<input 
@@ -2354,7 +2354,7 @@
 					case 'official_bank_account_holder_name' :
 
 						if (!this.applicationSettings.official_bank_account_holder_name) {
-							this.errors.official_bank_account_holder_name = 'Account holder name is required';
+							this.errors.official_bank_account_holder_name = 'Account name is required';
 						}
 						else if (!this.applicationSettings.official_bank_account_holder_name.match(/^[_A-z0-9]*((-|_|\s)*[_A-z0-9])*$/g)) {
 							this.errors.official_bank_account_holder_name = 'No special character';

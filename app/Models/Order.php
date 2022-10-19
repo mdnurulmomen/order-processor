@@ -52,7 +52,7 @@ class Order extends Model
       return $this->hasMany(MerchantOrder::class, 'order_id', 'id')->where('is_ready', 1);
    }
 
-   public function riders()            // riders who got request for this order
+   public function riders()            // all riders who got request for this order
    {
       return $this->hasMany(RiderDelivery::class, 'order_id', 'id');
    }

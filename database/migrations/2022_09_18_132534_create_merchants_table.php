@@ -27,7 +27,7 @@ class CreateMerchantsTable extends Migration
             $table->string('website')->nullable();
             $table->string('banner_preview')->nullable();
             $table->unsignedMediumInteger('min_order')->default(150);
-            $table->boolean('has_delivery_support')->default(false);
+            $table->boolean('need_delivery_support')->default(false);
             $table->boolean('is_post_paid')->default(false);
             $table->boolean('is_self_service')->default(true);
             $table->boolean('has_parking')->default(false);
