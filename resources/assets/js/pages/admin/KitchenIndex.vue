@@ -97,20 +97,20 @@
 								    				kitchen.merchant ? kitchen.merchant.name : 'Trashed' | eachcapitalize 
 								    			}}
 								    			<span v-show="kitchen.merchant" 
-								    				  :class="[kitchen.merchant ? kitchen.merchant.admin_approval ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"
+								    				  :class="[kitchen.merchant ? kitchen.merchant.is_approved ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"
 								    			>
 								    				{{ 
-								    					kitchen.merchant ? kitchen.merchant.admin_approval ? 'Approved' : 'Not-approved' : '' 
+								    					kitchen.merchant ? kitchen.merchant.is_approved ? 'Approved' : 'Not-approved' : '' 
 								    				}}
 								    			</span>
 								    		</td>
 								    		<td>{{ kitchen.mobile }}</td>
 								    		<td>{{ kitchen.email }}</td>
 								    		<td>
-								    			<span :class="[kitchen.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
+								    			<span :class="[kitchen.is_approved ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>
 								    				{{ 
-								    					kitchen.admin_approval ? 'Approved' : 'Not-approved' 
+								    					kitchen.is_approved ? 'Approved' : 'Not-approved' 
 								    				}}
 								    			</span>
 								    		</td>
@@ -297,7 +297,6 @@
 															class="form-control" 
 															v-model="singleKitchenData.kitchen.email" 
 															placeholder="Kitchen Email" 
-															required="true"
 															:class="!errors.kitchen.email  ? 'is-valid' : 'is-invalid'"
 									                	>
 									                	<div class="invalid-feedback">
@@ -353,7 +352,7 @@
 									                <div class="col-sm-8">
 									                  	<toggle-button 
 				                                  			:sync="true" 
-				                                  			v-model="singleKitchenData.kitchen.admin_approval" 
+				                                  			v-model="singleKitchenData.kitchen.is_approved" 
 				                                  			value="true" 
 				                                  			:width="140"  
 				                                  			:height="30" 
@@ -514,7 +513,7 @@
 			email : null,
 			password : null,
 			merchant_id : null,
-			admin_approval : false,
+			is_approved : false,
     	},
 
     	merchantObject : {
@@ -871,10 +870,7 @@
 
 					case 'kitchen.email' :
 
-						if (!this.singleKitchenData.kitchen.email) {
-							this.errors.kitchen.email = 'Email is required';
-						}
-						else if (!this.singleKitchenData.kitchen.email.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
+						if (this.singleKitchenData.kitchen.email && !this.singleKitchenData.kitchen.email.match(/[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g)) {
 							this.errors.kitchen.email = 'Invalid Email';
 						}
 						else{

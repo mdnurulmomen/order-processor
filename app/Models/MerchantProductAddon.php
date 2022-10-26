@@ -20,6 +20,10 @@ class MerchantProductAddon extends Model
 
    	public $timestamps = false;
 
+    protected $casts = [
+        'is_available' => 'boolean',
+    ];
+
     public function addon()
     {
         return $this->belongsTo(Addon::class, 'addon_id', 'id')->withTrashed();

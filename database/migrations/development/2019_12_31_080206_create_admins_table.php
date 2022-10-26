@@ -17,7 +17,7 @@ class CreateAdminsTable extends Migration
             $table->smallIncrements('id');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            // $table->string('user_name', 50)->unique();
+            $table->string('user_name')->unique();
             $table->string('mobile', 13)->unique();
             $table->string('email')->unique();
             $table->string('password'); // Login with email / mobile with OTP

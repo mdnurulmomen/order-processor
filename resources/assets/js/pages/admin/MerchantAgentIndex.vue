@@ -99,20 +99,20 @@
 								    				agent.merchant ? agent.merchant.name : 'Trashed' | capitalize 
 								    			}}
 								    			<span v-show="agent.merchant" 
-								    				  :class="[agent.merchant ? agent.merchant.admin_approval ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"
+								    				  :class="[agent.merchant ? agent.merchant.is_approved ? 'badge-success' : 'badge-danger' : '', 'right badge ml-1']"
 								    			>
 								    				{{ 
-								    					agent.merchant ? agent.merchant.admin_approval ? 'Approved' : 'Not-approved' : '' 
+								    					agent.merchant ? agent.merchant.is_approved ? 'Approved' : 'Not-approved' : '' 
 								    				}}
 								    			</span>
 								    		</td>
 								    		<td>{{ agent.mobile }}</td>
 								    		<td>{{ agent.email }}</td>
 								    		<td>
-								    			<span :class="[agent.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
+								    			<span :class="[agent.is_approved ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>
 								    				{{ 
-								    					agent.admin_approval ? 'Approved' : 'Not-approved' 
+								    					agent.is_approved ? 'Approved' : 'Not-approved' 
 								    				}}
 								    			</span>
 								    		</td>
@@ -397,7 +397,7 @@
 									                <div class="col-sm-8">
 									                  	<toggle-button 
 				                                  			:sync="true" 
-				                                  			v-model="singleAgentData.agent.admin_approval" 
+				                                  			v-model="singleAgentData.agent.is_approved" 
 				                                  			value="true" 
 				                                  			:width="140"  
 				                                  			:height="30" 
@@ -553,7 +553,7 @@
 			mobile : null,
 			password : null,
 			merchant_id : null,
-			admin_approval : false,
+			is_approved : false,
     	},
 
     	merchantObject : {

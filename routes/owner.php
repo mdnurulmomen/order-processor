@@ -19,7 +19,7 @@ Route::name('owner.')->group(function () {
 		Route::post('/', 'LoginController@ownerLogin');
 	    
 	    // For all other routes coming from vue
-    	Route::get('/{any}/{id?}', 'HomeController@showOwnerHome')->where('id', '[0-9]+');
+    	Route::get('/{any}', 'HomeController@showOwnerHome')->where('any', '^[^.]*$');	
 
 		Route::group(['middleware' => ['auth:owner']], function () {
 		    

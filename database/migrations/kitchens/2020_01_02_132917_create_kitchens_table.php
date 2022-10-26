@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMerchantOwnersTable extends Migration
+class CreateKitchensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,18 @@ class CreateMerchantOwnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('merchant_owners', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('user_name')->unique(); // Auto Generated
-            $table->char('mobile')->unique();
-            $table->string('email')->unique();
+        Schema::create('kitchens', function (Blueprint $table) {
+            $table->mediumIncrements('id');
+            $table->string('user_name', 30)->unique(); // phone or user_name
+            $table->string('email')->nullable();
+            $table->string('mobile', 13)->unique();
             $table->string('password'); // Login with username / mobile
-
             $table->rememberToken();
-            
+            $table->boolean('is_approved')->default(true);
+            $table->unsignedMediumInteger('merchant_id')->unique(); //Each restaurant has one kitchen
+
             $table->softDeletes();
+            
             $table->timestamps();
         });
     }
@@ -34,6 +36,6 @@ class CreateMerchantOwnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('merchant_owners');
+        Schema::dropIfExists('kitchens');
     }
 }

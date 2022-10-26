@@ -19,7 +19,7 @@ Route::name('merchant.')->group(function () {
 		Route::post('/', 'LoginController@merchantLogin');
 	    
 	    // For all other routes coming from vue
-    	Route::get('/{any}/{id?}', 'HomeController@showMerchantHome')->where('id', '[0-9]+');
+    	Route::get('/{any}', 'HomeController@showMerchantHome')->where('any', '^[^.]*$');	
 
 		Route::group(['middleware' => ['auth:merchant']], function () {
 		    

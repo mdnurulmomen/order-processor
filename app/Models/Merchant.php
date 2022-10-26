@@ -19,6 +19,14 @@ class Merchant extends Authenticatable
         'id'
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password'
+    ];
     
     /**
      * The attributes that should be cast to native types.
@@ -28,19 +36,15 @@ class Merchant extends Authenticatable
     protected $casts = [
         'is_post_paid' => 'boolean',
         'is_self_service' => 'boolean',
-        'has_parking' => 'boolean',
-        'service_schedule' => 'json',
-        'break_schedule' => 'json',
-        'taking_order' => 'boolean',
-        'admin_approval' => 'boolean',
         'is_sponsored' => 'boolean',
-        'need_delivery_support' => 'boolean',
+        'has_parking' => 'boolean',
+        'has_free_delivery' => 'boolean',
+        'has_self_delivery_support' => 'boolean',
+        'is_open' => 'boolean',
+        'is_approved' => 'boolean',
+        'service_schedule' => 'json',
+        'booking_break_schedule' => 'json',
     ];
-
-    public function deal()
-    {
-        return $this->hasOne(MerchantDeal::class, 'merchant_id', 'id');
-    }
 
     public function kitchen()
     {

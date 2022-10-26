@@ -68,7 +68,7 @@ const router = new VueRouter({
 		{
 			path: '/home',
             name: 'home',
-            component: () => import(/* webpackChunkName : "js/home-component" */ './pages/admin/Home.vue')
+            component: () => import(/* webpackChunkName : "js/home-component" */ './pages/admin/HomeComponent.vue')
 		},
 		{
 			path: '/dashboard2',
@@ -83,12 +83,12 @@ const router = new VueRouter({
 		{
 			path: '/profile',
             name: 'profile',
-            component: () => import(/* webpackChunkName : "js/profile" */ './pages/admin/Profile.vue')
+            component: () => import(/* webpackChunkName : "js/profile" */ './pages/admin/ProfileComponent.vue')
 		},
 		{
 			path: '/settings',
             name: 'setting',
-            component: () => import(/* webpackChunkName : "js/settings" */ './pages/admin/Setting.vue')
+            component: () => import(/* webpackChunkName : "js/settings" */ './pages/admin/SettingComponent.vue')
 		},
 		{
 			path: '/merchants',
@@ -142,11 +142,11 @@ const router = new VueRouter({
             name: 'merchant-admins',
             component: () => import(/* webpackChunkName : "js/merchant-admin-list" */ './pages/admin/MerchantOwnerIndex.vue')
 		},
-		{
-			path: '/merchant-deals',
-            name: 'merchant-deals',
-            component: () => import(/* webpackChunkName : "js/merchant-deal-list" */ './pages/admin/MerchantDealIndex.vue')
-		},
+		// {
+		// 	path: '/merchant-deals',
+  		//	name: 'merchant-deals',
+  		//	component: () => import(/* webpackChunkName : "js/merchant-deal-list" */ './pages/admin/MerchantDealIndex.vue')
+		// },
 		{
 			path: '/merchant-meals',
             name: 'merchant-meals',
@@ -211,9 +211,9 @@ const router = new VueRouter({
             component: () => import(/* webpackChunkName : "js/coupon-list" */ './pages/admin/CouponIndex.vue')
 		},
 		{
-			path: '/cancelation-reasons',
-            name: 'cancelation-reasons',
-            component: () => import(/* webpackChunkName : "js/cancelation-reason-list" */ './pages/admin/CancelationReasonIndex.vue')
+			path: '/cancellation-reasons',
+            name: 'cancellation-reasons',
+            component: () => import(/* webpackChunkName : "js/cancelation-reason-list" */ './pages/admin/CancellationReasonIndex.vue')
 		},
 		{
 			path: '/api-list',
@@ -240,7 +240,7 @@ const router = new VueRouter({
 		{
 			path: '/404',
             name: 'routeNotFound',
-            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFound.vue')
+            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFoundComponent.vue')
 		},
 		{
 			path: '*',

@@ -48,7 +48,7 @@
 									<thead>
 										<tr>
 											<th scope="col">#</th>
-											<th scope="col">Merchant Name</th>
+											<th scope="col">Merchant</th>
 											<th scope="col">Meals</th>
 											<th scope="col">Action</th>
 										</tr>

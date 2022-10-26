@@ -195,7 +195,7 @@
             <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                :class="[['merchants', 'merchant-deals', 'merchant-meals', 'merchant-admins', 'agents', 'merchant-cuisines', 'kitchens', 'merchant-products', 'merchant-all-products', 'merchant-product-categories', 'merchant-all-product-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                :class="[['merchants', 'merchant-meals', 'merchant-admins', 'agents', 'merchant-cuisines', 'kitchens', 'merchant-products', 'merchant-all-products', 'merchant-product-categories', 'merchant-all-product-categories'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-hotel"></i>
                 <p>
@@ -215,6 +215,7 @@
                   </router-link>
                 </li>
 
+                <!-- 
                 <li class="nav-item">
                   <router-link 
                     :to="{ name: 'merchant-deals' }" 
@@ -223,7 +224,8 @@
                     <i class="far fa-circle nav-icon"></i>
                     <p>Deals</p>
                   </router-link>
-                </li>
+                </li> 
+                -->
 
                 <li class="nav-item">
                   <router-link 
@@ -348,7 +350,7 @@
             <li class="nav-item has-treeview">
               <a 
                 href="#" 
-                :class="[['cancelation-reasons'].includes(currentRoute) ? 'active' : '', 'nav-link']"
+                :class="[['cancellation-reasons'].includes(currentRoute) ? 'active' : '', 'nav-link']"
               >
                 <i class="nav-icon fas fa-times"></i>
                 <p>
@@ -359,8 +361,8 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <router-link 
-                    :to="{ name: 'cancelation-reasons' }" 
-                    :class="[currentRoute=='cancelation-reasons' ? 'active' : '', 'nav-link']"
+                    :to="{ name: 'cancellation-reasons' }" 
+                    :class="[currentRoute=='cancellation-reasons' ? 'active' : '', 'nav-link']"
                   >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Reasons</p>

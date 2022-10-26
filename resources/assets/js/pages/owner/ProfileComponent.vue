@@ -1,6 +1,4 @@
-
 <template>
-
 	<!-- /.card-header -->
 	<!-- 
 	<div class="card-header">
@@ -9,9 +7,7 @@
   	-->
 
 	<div class="container-fluid">
-
 		<section>
-
 			<div class="row justify-content-center vh-100" v-show="loading">
 				<div class="d-flex align-items-center">
 					<div class="card p-5">

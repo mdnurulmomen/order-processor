@@ -28,9 +28,10 @@ class MerchantProduct extends Model
     protected $casts = [
         'has_variation' => 'boolean',
         'has_addon' => 'boolean',
-        'customizable' => 'boolean',
-        'available' => 'boolean',
-        'promoted' => 'boolean',
+        'is_sponsored' => 'boolean',
+        'is_customizable' => 'boolean',
+        'is_available' => 'boolean',
+        'is_promoted' => 'boolean',
     ];
 
     public function orders()

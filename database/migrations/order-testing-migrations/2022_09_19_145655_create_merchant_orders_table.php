@@ -16,11 +16,16 @@ class CreateMerchantOrdersTable extends Migration
         Schema::create('merchant_orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('merchant_id');
-            $table->tinyInteger('is_accepted')->nullable();  // -1 for ringing, 1 for confirm, 0 for cancel
+            $table->boolean('is_accepted')->nullable();  // -1 for ringing, 1 for confirm, 0 for cancel
             $table->timestamp('accepted_at')->nullable();
-            $table->tinyInteger('is_ready')->nullable();  // 1 for confirm, 0 for cancel
+            $table->boolean('is_ready')->nullable();  // 1 for confirm, 0 for cancel
             $table->timestamp('ready_at')->nullable();
-            $table->boolean('has_delivery_support')->default(false);
+            $table->boolean('is_free_delivery')->nullable();
+            $table->boolean('has_delivery_support')->nullable();        // if self-delivery or system delivery
+            $table->unsignedMediumInteger('net_price')->default(0);     // total payable price including addons and applying discounts
+            // $table->unsignedTinyInteger('total_vat');         // applied vat % when ordering
+            $table->float('applied_sale_percentage', 5, 2)->default(0);     // applied on price (excluding vat)
+            $table->boolean('is_payment_settled')->nullable();      // if order succeeds, then turns to 0 and after settlement 1
             $table->unsignedInteger('order_id');
             $table->timestamp('created_at')->useCurrent();
         });

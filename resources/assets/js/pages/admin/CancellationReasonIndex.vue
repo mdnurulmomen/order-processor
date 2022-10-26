@@ -418,7 +418,7 @@
 			fetchAllReasons(){
 				this.loading = true;
 				axios
-					.get('/api/cancelation-reasons/' + this.perPage + '?page='+ this.pagination.current_page)
+					.get('/api/cancellation-reasons/' + this.perPage + '?page='+ this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
 							this.loading = false;
@@ -469,7 +469,7 @@
 				$('#modal-createOrEdit-reason').modal('hide');
 				
 				axios
-					.post('/cancelation-reasons/' + this.perPage, this.singleReasonData.reason)
+					.post('/cancellation-reasons/' + this.perPage, this.singleReasonData.reason)
 					.then(response => {
 
 						if (response.status == 200) {
@@ -514,7 +514,7 @@
 				$('#modal-createOrEdit-reason').modal('hide');
 				
 				axios
-					.put('/cancelation-reasons/' + this.singleReasonData.reason.id + '/' + this.perPage, this.singleReasonData.reason)
+					.put('/cancellation-reasons/' + this.singleReasonData.reason.id + '/' + this.perPage, this.singleReasonData.reason)
 					.then(response => {
 
 						if (response.status == 200) {
@@ -550,7 +550,7 @@
 				$("#modal-reason-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/cancelation-reasons/' + this.singleReasonData.reason.id + '/' + this.perPage)
+					.delete('/cancellation-reasons/' + this.singleReasonData.reason.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -586,7 +586,7 @@
 				$("#modal-reason-restore-confirmation").modal("hide");
 
 				axios
-					.patch('/cancelation-reasons/' + this.singleReasonData.reason.id + '/' + this.perPage)
+					.patch('/cancellation-reasons/' + this.singleReasonData.reason.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -617,7 +617,7 @@
 				
 				axios
 				.get(
-					"/api/cancelation-reasons/search/"+ this.query +"/" + this.perPage +
+					"/api/cancellation-reasons/search/"+ this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)

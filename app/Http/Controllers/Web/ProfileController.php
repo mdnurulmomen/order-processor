@@ -27,17 +27,19 @@ class ProfileController extends Controller
         $adminToUpdate = \Auth::guard('admin')->user();
         
         $request->validate([
-            'first_name'=>'nullable|string|max:50',
-            'last_name'=>'nullable|string|max:50',
+            'first_name'=>'nullable|string|max:255',
+            'last_name'=>'nullable|string|max:255', 
+            'user_name'=>'required|string|max:255|unique:admins,user_name,'.$adminToUpdate->id,
             'mobile'=>'string|required|max:13|bail|unique:admins,mobile,'.$adminToUpdate->id,
             'email'=>'email|required|bail|unique:admins,email,'.$adminToUpdate->id,
             // 'profile_picture'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $adminToUpdate->first_name = $request->first_name;
-        $adminToUpdate->last_name = $request->last_name;
+        $adminToUpdate->first_name = strtolower($request->first_name);
+        $adminToUpdate->last_name = strtolower($request->last_name);
+        $adminToUpdate->user_name = str_replace(' ', '', strtolower($request->user_name));
         $adminToUpdate->mobile = $request->mobile;
-        $adminToUpdate->email = $request->email;
+        $adminToUpdate->email = strtolower($request->email);
         $adminToUpdate->profile_picture = $request->profile_picture;
 
         $adminToUpdate->save();

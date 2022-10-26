@@ -22,16 +22,16 @@ class MerchantController extends Controller
             
             'all' => Merchant::withTrashed()->with(['owner', 'booking'])->latest()->paginate($perPage),
 
-            'approved' => Merchant::where('admin_approval', 1)->with(['owner', 'booking'])->latest()->paginate($perPage),
+            'approved' => Merchant::where('is_approved', 1)->with(['owner', 'booking'])->latest()->paginate($perPage),
 
-            'nonApproved' => Merchant::where('admin_approval', 0)->with(['owner', 'booking'])->latest()->paginate($perPage),
+            'nonApproved' => Merchant::where('is_approved', 0)->with(['owner', 'booking'])->latest()->paginate($perPage),
 
             'trashed' => Merchant::onlyTrashed()->with(['owner', 'booking'])->latest()->paginate($perPage),
             
          ], 200);
       }
 
-      return response(Merchant::where('admin_approval', 1)->latest()->get(), 200);
+      return response(Merchant::where('is_approved', 1)->latest()->get(), 200);
 	}
 
    public function createNewMerchant(Request $request, $perPage)
@@ -42,6 +42,7 @@ class MerchantController extends Controller
          'user_name'=>'required|unique:merchants,user_name|string|max:255',
          'type'=>'required|string|in:restaurant,shop',
 			'mobile'=>'required|unique:merchants,mobile|max:13',
+         'email'=>'nullable|email|unique:merchants,email|max:255',
          'password'=>'required|string|min:8|max:100|confirmed',
 			'website'=>'nullable|url|max:255',
 			// 'lat'=>'required|unique:product_categories,name|max:255',
@@ -50,31 +51,33 @@ class MerchantController extends Controller
 			// 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
          'min_order'=>'required|numeric|min:100|max:65535',
          'max_booking'=>'required|numeric|min:0|max:1000',
-         'has_delivery_support'=>'nullable|boolean',
-         'delivery_charge_per_kilometer'=>'required|numeric|min:0|max:1000',
-         'min_delivery_charge'=>'required|numeric|min:0|max:1000',
-			'max_delivery_charge'=>'required|numeric|min:0|max:1000|gte:min_delivery_charge',
-         'admin_approval'=>'nullable|boolean',
-         'taking_order'=>'nullable|boolean',
-         'is_sponsored'=>'nullable|boolean',
+         'is_approved'=>'nullable|boolean',
+         'is_open'=>'nullable|boolean',
          'is_post_paid'=>'nullable|boolean',
-			'has_parking'=>'nullable|boolean',
+         'is_sponsored'=>'nullable|boolean',
          'is_self_service'=>'nullable|boolean',
+			'has_parking'=>'nullable|boolean',
+         'has_free_delivery' => 'boolean',
+         'has_self_delivery_support'=>'nullable|boolean',
 			'service_schedule'=>'required',
 			'booking_break_schedule'=>'required',
+         'supported_delivery_order_sale_percentage' => 'required|numeric|min:0|max:100',
+         'general_order_sale_percentage' => 'required|numeric|min:0|max:100',
+         'discount' => 'required|integer|min:0|max:100',
 		]);
 
       // return $request;
 
 		$newMerchant = new Merchant();
 
-      $newMerchant->admin_approval = $request->admin_approval ?? 0;
+      $newMerchant->is_approved = $request->is_approved ?? 0;
       $newMerchant->merchant_owner_id = $request->merchant_owner_id;
       
       $newMerchant->name = strtolower($request->name);
       $newMerchant->user_name = str_replace(' ', '', strtolower($request->user_name));
       $newMerchant->password = Hash::make($request->password);
       $newMerchant->type = strtolower($request->type);
+      $newMerchant->email = strtolower($request->email);
       $newMerchant->mobile = $request->mobile;
       $newMerchant->website = $request->website;
       
@@ -84,18 +87,19 @@ class MerchantController extends Controller
       $newMerchant->address = strtolower($request->address);
       $newMerchant->min_order = $request->min_order;
 
-      $newMerchant->has_delivery_support = $request->has_delivery_support ?? false;
-      $newMerchant->delivery_charge_per_kilometer = $request->has_delivery_support ? $request->delivery_charge_per_kilometer : 0;
-      $newMerchant->min_delivery_charge = $request->has_delivery_support ? $request->min_delivery_charge : 0;
-      $newMerchant->max_delivery_charge = $request->has_delivery_support ? $request->max_delivery_charge : 0;
+      $newMerchant->has_self_delivery_support = $request->has_self_delivery_support ?? false;
       // $newMerchant->max_booking = $request->max_booking;
-      $newMerchant->taking_order = $request->taking_order ?? 0;
-      $newMerchant->is_sponsored = $request->is_sponsored ?? 0;
+      $newMerchant->is_open = $request->is_open ?? 0;
       $newMerchant->is_post_paid = $request->is_post_paid ?? 0;
-      $newMerchant->has_parking = $request->has_parking ?? 0;
+      $newMerchant->is_sponsored = $request->is_sponsored ?? 0;
       $newMerchant->is_self_service = $request->is_self_service ?? 0;
-      $newMerchant->service_schedule = json_encode($request->service_schedule);
-      $newMerchant->booking_break_schedule = json_encode($request->booking_break_schedule);
+      $newMerchant->has_parking = $request->has_parking ?? 0;
+      $newMerchant->has_free_delivery = $request->has_self_delivery_support ? 0 : $request->has_free_delivery ?? 0;
+      $newMerchant->service_schedule = $request->service_schedule;
+      $newMerchant->booking_break_schedule = $request->booking_break_schedule;
+      $newMerchant->supported_delivery_order_sale_percentage = $request->supported_delivery_order_sale_percentage;
+      $newMerchant->general_order_sale_percentage = $request->general_order_sale_percentage;
+      $newMerchant->discount = $request->discount;
       
       $newMerchant->save();
         
@@ -120,31 +124,33 @@ class MerchantController extends Controller
          'merchant_owner_id'=>'required|exists:merchant_owners,id',
          'name'=>'required|string|max:255|unique:merchants,name,'.$merchantToUpdate->id,
          'user_name'=>'required|string|max:255|unique:merchants,user_name,'.$merchantToUpdate->id,
-         'password'=>'nullable|string|min:8|max:100|confirmed',
          'type'=>'required|string|in:restaurant,shop',
          'mobile'=>'required|max:13|unique:merchants,mobile,'.$merchantToUpdate->id,
-         'min_order'=>'required|numeric|min:100|max:65535',
-         'max_booking'=>'required|numeric|min:0|max:1000',
-         'has_delivery_support'=>'nullable|boolean',
-         'delivery_charge_per_kilometer'=>'required|numeric|min:0|max:1000',
-         'min_delivery_charge'=>'required|numeric|min:0|max:1000',
-         'max_delivery_charge'=>'required|numeric|min:0|max:1000|gte:min_delivery_charge',
+         'email'=>'nullable|email|unique:merchants,email|max:255',
+         'password'=>'nullable|string|min:8|max:100|confirmed',
          'website'=>'nullable|url|max:255',
          // 'lat'=>'required|unique:product_categories,name|max:255',
          // 'lng'=>'required|unique:product_categories,name|max:255',
          'address'=>'required|string|max:255',
          // 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-         'admin_approval'=>'nullable|boolean',
-         'taking_order'=>'nullable|boolean',
+         'min_order'=>'required|numeric|min:100|max:65535',
+         'max_booking'=>'required|numeric|min:0|max:1000',
+         'is_approved'=>'nullable|boolean',
+         'is_open'=>'nullable|boolean',
+         'is_post_paid'=>'nullable|boolean',
          'is_sponsored'=>'nullable|boolean',
-         'is_post_paid'=>'required|boolean',
-         'has_parking'=>'required|boolean',
          'is_self_service'=>'nullable|boolean',
+         'has_parking'=>'nullable|boolean',
+         'has_free_delivery' => 'boolean',
+         'has_self_delivery_support'=>'nullable|boolean',
          'service_schedule'=>'required',
          'booking_break_schedule'=>'required',
+         'supported_delivery_order_sale_percentage' => 'required|numeric|min:0|max:100',
+         'general_order_sale_percentage' => 'required|numeric|min:0|max:100',
+         'discount' => 'required|integer|min:0|max:100',
       ]);
 
-      $merchantToUpdate->admin_approval = $request->admin_approval ?? 0;
+      $merchantToUpdate->is_approved = $request->is_approved ?? 0;
       $merchantToUpdate->merchant_owner_id = $request->merchant_owner_id;
       
       $merchantToUpdate->name = strtolower($request->name);
@@ -155,27 +161,30 @@ class MerchantController extends Controller
       } 
 
       $merchantToUpdate->type = strtolower($request->type);
+      $merchantToUpdate->email = strtolower($request->email);
       $merchantToUpdate->mobile = $request->mobile;
-      $merchantToUpdate->website = $request->website;
+      $merchantToUpdate->website = strtolower($request->website);
       
       $merchantToUpdate->lat = '23.781800';
       $merchantToUpdate->lng = '90.415710';
       
       $merchantToUpdate->address = strtolower($request->address);
       $merchantToUpdate->min_order = $request->min_order;
-      $merchantToUpdate->has_delivery_support = $request->has_delivery_support ?? false;
-      $merchantToUpdate->delivery_charge_per_kilometer = $request->has_delivery_support ? $request->delivery_charge_per_kilometer : 0;
-      $merchantToUpdate->min_delivery_charge = $request->has_delivery_support ? $request->min_delivery_charge : 0;
-      $merchantToUpdate->max_delivery_charge = $request->has_delivery_support ? $request->max_delivery_charge : 0;
+      $merchantToUpdate->has_self_delivery_support = $request->has_self_delivery_support ?? false;
       // $merchantToUpdate->max_booking = $request->max_booking;
-      $merchantToUpdate->taking_order = $request->taking_order ?? 0;
+      $merchantToUpdate->is_open = $request->is_open ?? 0;
       $merchantToUpdate->is_sponsored = $request->is_sponsored ?? 0;
       $merchantToUpdate->is_post_paid = $request->is_post_paid;
       $merchantToUpdate->has_parking = $request->has_parking;
+      $merchantToUpdate->has_free_delivery = $request->has_self_delivery_support ? 0 : $request->has_free_delivery ?? 0;
       $merchantToUpdate->is_self_service = $request->is_self_service;
 
-      $merchantToUpdate->service_schedule = json_encode($request->service_schedule);
-      $merchantToUpdate->booking_break_schedule = json_encode($request->booking_break_schedule);
+      $merchantToUpdate->service_schedule = $request->service_schedule;
+      $merchantToUpdate->booking_break_schedule = $request->booking_break_schedule;
+
+      $merchantToUpdate->supported_delivery_order_sale_percentage = $request->supported_delivery_order_sale_percentage;
+      $merchantToUpdate->general_order_sale_percentage = $request->general_order_sale_percentage;
+      $merchantToUpdate->discount = $request->discount;
       
       $merchantToUpdate->banner_preview = $request->banner_preview;
       
@@ -262,13 +271,17 @@ class MerchantController extends Controller
    public function createMerchantOwner(Request $request, $perPage = false)
    {
       $request->validate([
+         'first_name'=>'nullable|string|max:255',
+         'last_name'=>'nullable|string|max:255', 
          'user_name'=>'required|unique:merchant_owners,user_name|string|max:255',
-         'email'=>'required|unique:merchant_owners,email|email|string|max:255',
+         'email'=>'required|unique:merchant_owners,email|email|max:255',
          'mobile'=>'required|unique:merchant_owners,mobile|max:13',
          'password'=>'required|string|min:8|max:100|confirmed',
       ]);
 
       $newMerchantOwner = MerchantOwner::create([
+         'first_name' => strtolower($request->first_name),
+         'last_name' => strtolower($request->last_name),
          'user_name' => str_replace(' ', '', strtolower($request->user_name)),
          'email' => strtolower($request->email),
          'mobile' => $request->mobile,
@@ -283,12 +296,16 @@ class MerchantController extends Controller
       $merchantAdminToUpdate = MerchantOwner::find($owner);
 
       $request->validate([
+         'first_name'=>'nullable|string|max:255',
+         'last_name'=>'nullable|string|max:255', 
          'user_name'=>'required|string|max:255|unique:merchant_owners,user_name,'.$merchantAdminToUpdate->id,
-         'email'=>'required|email|string|max:255|unique:merchant_owners,email,'.$merchantAdminToUpdate->id,
+         'email'=>'required|email|max:255|unique:merchant_owners,email,'.$merchantAdminToUpdate->id,
          'mobile'=>'required|max:13|unique:merchant_owners,mobile,'.$merchantAdminToUpdate->id,
          'password'=>'nullable|string|min:8|max:100|confirmed',
       ]);
 
+      $merchantAdminToUpdate->first_name = strtolower($request->first_name); 
+      $merchantAdminToUpdate->last_name = strtolower($request->last_name); 
       $merchantAdminToUpdate->user_name = str_replace(' ', '', strtolower($request->user_name));        
       $merchantAdminToUpdate->email = strtolower($request->email);        
       $merchantAdminToUpdate->mobile = $request->mobile;
@@ -373,11 +390,11 @@ class MerchantController extends Controller
    {
       $request->validate([
          'user_name'=>'required|string|max:255|unique:kitchens,user_name',
-         'mobile'=>'required|unique:kitchens,mobile|max:13',
-         'email'=>'required|unique:kitchens,email|email|string|max:255',
+         'mobile'=>'required|max:13|unique:kitchens,mobile',
+         'email'=>'nullable|email|max:255|unique:kitchens,email',
          'password'=>'required|string|min:8|max:100|confirmed',
-         'merchant_id'=>'numeric|required|exists:merchants,id',
-         'admin_approval'=>'nullable|boolean',
+         'merchant_id'=>'required|numeric|exists:merchants,id',
+         'is_approved'=>'nullable|boolean',
       ]);
 
       $newMerchantOwner = Kitchen::create([
@@ -386,7 +403,7 @@ class MerchantController extends Controller
          'email' => strtolower($request->email),
          'password' => Hash::make($request->password),
          'merchant_id' => $request->merchant_id,
-         'admin_approval' => $request->admin_approval ?? false,
+         'is_approved' => $request->is_approved ?? false,
       ]);
 
       return $this->showAllMerchantKitchens($perPage);
@@ -399,10 +416,10 @@ class MerchantController extends Controller
       $request->validate([
          'user_name'=>'required|string|max:255|unique:kitchens,user_name,'.$merchantKitchenToUpdate->id,
          'mobile'=>'required|max:13|unique:kitchens,mobile,'.$merchantKitchenToUpdate->id,
-         'email'=>'required|email|string|max:255|unique:kitchens,email,'.$merchantKitchenToUpdate->id,
+         'email'=>'nullable|email|max:255|unique:kitchens,email,'.$merchantKitchenToUpdate->id,
          'password'=>'nullable|string|min:8|max:100|confirmed',
-         'merchant_id'=>'numeric|required|exists:merchants,id',
-         'admin_approval'=>'nullable|boolean',
+         'merchant_id'=>'required|numeric|exists:merchants,id',
+         'is_approved'=>'nullable|boolean',
       ]);
 
       $merchantKitchenToUpdate->user_name = str_replace(' ', '', strtolower($request->user_name));        
@@ -414,7 +431,7 @@ class MerchantController extends Controller
       }        
 
       $merchantKitchenToUpdate->merchant_id = $request->merchant_id;        
-      $merchantKitchenToUpdate->admin_approval = $request->admin_approval ?? false;        
+      $merchantKitchenToUpdate->is_approved = $request->is_approved ?? false;        
       $merchantKitchenToUpdate->save();        
 
       return $this->showAllMerchantKitchens($perPage);
@@ -494,14 +511,14 @@ class MerchantController extends Controller
          'first_name'=>'nullable|string|max:255',
          'last_name'=>'nullable|string|max:255',
          'user_name'=>'required|string|max:255|unique:merchant_agents,user_name',
-         'mobile'=>'required|unique:merchant_agents,mobile|max:13',
-         'email'=>'required|unique:merchant_agents,email|email|string|max:255',
+         'mobile'=>'required|max:13|unique:merchant_agents,mobile',
+         'email'=>'nullable|email|max:255|unique:merchant_agents,email',
          'password'=>'required|string|min:8|max:100|confirmed',
-         'merchant_id'=>'numeric|required|exists:merchants,id',
-         'admin_approval'=>'nullable|boolean',
+         'merchant_id'=>'required|numeric|exists:merchants,id',
+         'is_approved'=>'nullable|boolean',
       ]);
 
-      $newMerchantOwner = MerchantAgent::create([
+      $newMerchantAgent = MerchantAgent::create([
          'first_name' => strtolower($request->first_name),
          'last_name' => strtolower($request->last_name),
          'user_name' => str_replace(' ', '', strtolower($request->user_name)),
@@ -509,7 +526,7 @@ class MerchantController extends Controller
          'email' => strtolower($request->email),
          'password' => Hash::make($request->password),
          'merchant_id' => $request->merchant_id,
-         'admin_approval' => $request->admin_approval ?? false,
+         'is_approved' => $request->is_approved ?? false,
       ]);
 
       return $this->showAllMerchantAgents($perPage);
@@ -524,10 +541,10 @@ class MerchantController extends Controller
          'last_name'=>'nullable|string|max:255',
          'user_name'=>'required|string|max:255|unique:merchant_agents,user_name,'.$merchantAgentToUpdate->id,
          'mobile'=>'required|max:13|unique:merchant_agents,mobile,'.$merchantAgentToUpdate->id,
-         'email'=>'required|email|string|max:255|unique:merchant_agents,email,'.$merchantAgentToUpdate->id,
+         'email'=>'nullable|email|max:255|unique:merchant_agents,email,'.$merchantAgentToUpdate->id,
          'password'=>'nullable|string|min:8|max:100|confirmed',
-         'merchant_id'=>'numeric|required|exists:merchants,id',
-         'admin_approval'=>'nullable|boolean',
+         'merchant_id'=>'required|numeric|exists:merchants,id',
+         'is_approved'=>'nullable|boolean'
       ]);
 
       $merchantAgentToUpdate->first_name = strtolower($request->first_name);      
@@ -541,7 +558,7 @@ class MerchantController extends Controller
       }        
 
       $merchantAgentToUpdate->merchant_id = $request->merchant_id;        
-      $merchantAgentToUpdate->admin_approval = $request->admin_approval ?? false;        
+      $merchantAgentToUpdate->is_approved = $request->is_approved ?? false;        
       $merchantAgentToUpdate->save();        
 
       return $this->showAllMerchantAgents($perPage);
@@ -620,6 +637,7 @@ class MerchantController extends Controller
       ], 200);
    }
 
+   /*
    // All Merchant-Deals
    public function showAllMerchantDeals($perPage = false)
    {
@@ -641,11 +659,9 @@ class MerchantController extends Controller
    public function createMerchantDeal(Request $request, $perPage = false)
    {
       $request->validate([
-         'sale_percentage'=>'numeric|min:0|max:100',
-         'promotional_discount'=>'numeric|min:0|max:100',
-         'native_discount'=>'numeric|min:0|max:100',
-         'net_discount'=>'required|numeric',
-         'delivery_fee_addition'=>'nullable|boolean',
+         'supported_delivery_order_sale_percentage'=>'numeric|min:0|max:100',
+         'general_order_sale_percentage'=>'numeric|min:0|max:100',
+         'discount'=>'required|numeric',
          'merchant_id'=>'required|numeric|exists:merchants,id',
       ]);
 
@@ -654,11 +670,9 @@ class MerchantController extends Controller
             'merchant_id' => $request->merchant_id
          ], 
          [
-            'sale_percentage' => $request->sale_percentage,
-            'promotional_discount' => $request->promotional_discount,
-            'native_discount' => $request->native_discount,
-            'net_discount' => $request->net_discount,
-            'delivery_fee_addition' => $request->delivery_fee_addition
+            'supported_delivery_order_sale_percentage' => $request->supported_delivery_order_sale_percentage,
+            'general_order_sale_percentage' => $request->general_order_sale_percentage,
+            'discount' => $request->discount,
          ]
       );
 
@@ -668,11 +682,9 @@ class MerchantController extends Controller
    public function updateMerchantDeal(Request $request, $merchantDeal, $perPage)
    {
       $request->validate([
-         'sale_percentage'=>'numeric|min:0|max:100',
-         'promotional_discount'=>'numeric|min:0|max:100',
-         'native_discount'=>'numeric|min:0|max:100',
-         'net_discount'=>'required|numeric',
-         'delivery_fee_addition'=>'nullable|boolean',
+         'supported_delivery_order_sale_percentage'=>'numeric|min:0|max:100',
+         'general_order_sale_percentage'=>'numeric|min:0|max:100',
+         'discount'=>'required|numeric',
          'merchant_id'=>'required|numeric|exists:merchants,id',
       ]);
 
@@ -681,11 +693,9 @@ class MerchantController extends Controller
             'merchant_id' => $request->merchant_id
          ], 
          [
-            'sale_percentage' => $request->sale_percentage,
-            'promotional_discount' => $request->promotional_discount,
-            'native_discount' => $request->native_discount,
-            'net_discount' => $request->net_discount,
-            'delivery_fee_addition' => $request->delivery_fee_addition
+            'supported_delivery_order_sale_percentage' => $request->supported_delivery_order_sale_percentage,
+            'general_order_sale_percentage' => $request->general_order_sale_percentage,
+            'discount' => $request->discount,
          ]
       );        
 
@@ -700,9 +710,9 @@ class MerchantController extends Controller
 
       $query->orWhereHas('deal', function($q) use ($search){
 
-         $q->where('sale_percentage', 'like', "%$search%")
-         ->orWhere('promotional_discount', 'like', "%$search%")
-         ->orWhere('native_discount', 'like', "%$search%"); 
+         $q->where('supported_delivery_order_sale_percentage', 'like', "%$search%")
+         ->orWhere('general_order_sale_percentage', 'like', "%$search%")
+         ->orWhere('discount', 'like', "%$search%"); 
 
       });
       
@@ -714,5 +724,6 @@ class MerchantController extends Controller
          'all' => $query->paginate($perPage),  
       ], 200);
    }
+   */
 
 }

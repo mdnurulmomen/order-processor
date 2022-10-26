@@ -13,8 +13,11 @@ class MerchantOrder extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		// 'is_accepted' => 'boolean',
-		// 'is_ready' => 'boolean',
+		'is_accepted' => 'boolean',
+		'is_ready' => 'boolean',
+		'is_free_delivery' => 'boolean',
+		'has_delivery_support' => 'boolean',
+		'is_payment_settled' => 'boolean'
 	];
 
 	public function products()

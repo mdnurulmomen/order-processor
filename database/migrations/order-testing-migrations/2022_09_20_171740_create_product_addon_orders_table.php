@@ -16,6 +16,7 @@ class CreateProductAddonOrdersTable extends Migration
         Schema::create('product_addon_orders', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->unsignedSmallInteger('merchant_product_addon_id');
+            $table->unsignedMediumInteger('price'); // each
             $table->unsignedTinyInteger('quantity')->default(1);
             $table->unsignedMediumInteger('product_order_id');
         });

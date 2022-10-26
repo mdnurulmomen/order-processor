@@ -30,9 +30,14 @@ class Rider extends Model
      * @var array
      */
     protected $casts = [
-        'available' => 'boolean',
-        'admin_approval' => 'boolean',
+        'is_approved' => 'boolean',
+        'is_available' => 'boolean',
     ];
+
+    public function orders()            // all order-requests
+    {
+      return $this->hasMany(RiderDelivery::class, 'rider_id', 'id');
+    }
 
     public function evaluation() 
     {

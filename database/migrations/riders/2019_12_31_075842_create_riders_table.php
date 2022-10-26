@@ -28,13 +28,16 @@ class CreateRidersTable extends Migration
             $table->string('nid_number')->unique();
             $table->string('nid_front_preview');
             $table->string('nid_back_preview');
+            $table->unsignedTinyInteger('delivery_rate_per_kilometer')->default(0);
+            $table->unsignedTinyInteger('min_delivery_charge')->default(0);
+            $table->unsignedTinyInteger('max_delivery_charge')->default(0);
             $table->string('payment_method'); // bkash / nexus
             $table->string('payment_account_number'); // bkash / nexus no.
-            $table->boolean('is_available')->default(true);
-            $table->boolean('is_engaged')->default(false);
+            $table->boolean('is_available')->default(true);     // if rider-app is on / off
+            $table->boolean('is_engaged')->default(false);      // if rider is busy at any order
             $table->string('current_lat')->nullable();
             $table->string('current_lang')->nullable();
-            $table->boolean('admin_approval')->default(false);
+            $table->boolean('is_approved')->default(false);
             $table->string('approver_type')->nullable();
             $table->string('approver_id')->nullable();
             $table->timestamp('paused_at')->nullable();

@@ -19,7 +19,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <!-- Favicon Icon -->
-    <link rel="icon" type="image/gif" href="uploads/application/favicon.png" sizes="16x16">
+    <link rel="icon" type="image/gif" href="{{ asset('system/favicon.png') }}" sizes="16x16">
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -33,7 +33,7 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ \App\Models\ApplicationSetting::first()->logo ?? 'Qupaid Logo' }}" width="40px" alt="Qupaid Logo">
+                <img src="{{ asset('system/logo.png') }}" width="40px" alt="Qupaid Logo">
                 {{ config('app.name', 'Qupaid') }}
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

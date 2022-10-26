@@ -47,7 +47,7 @@ class MerchantController extends Controller
         ]
       ]);
 
-      $merchantsInArea = Merchant::where('admin_approval', 1)->where('taking_order', 1)
+      $merchantsInArea = Merchant::where('is_approved', 1)->where('is_open', 1)
       ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
       ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)]);
 
@@ -126,8 +126,8 @@ class MerchantController extends Controller
         */
       ]);
 
-      $merchantsInArea = Merchant::where('admin_approval', 1)
-      ->where('taking_order', 1)->where('is_sponsored', 1)
+      $merchantsInArea = Merchant::where('is_approved', 1)
+      ->where('is_open', 1)->where('is_sponsored', 1)
       ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
       ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)]);
 
@@ -186,7 +186,7 @@ class MerchantController extends Controller
 
       $merchantsInArea = MerchantProduct::where('is_promoted', 1)
       ->whereHas('merchantProductCategory.merchant', function ($query) use ($request) {
-          $query->where('taking_order', 1)->where('admin_approval', 1)
+          $query->where('is_open', 1)->where('is_approved', 1)
           ->whereBetween('lat', [intval($request->latitude-1), intval($request->latitude+1)])
           ->whereBetween('lng', [intval($request->longitude-1), intval($request->longitude+1)]);
       });

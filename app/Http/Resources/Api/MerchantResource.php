@@ -17,6 +17,8 @@ class MerchantResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'user_name' => $this->user_name,
+            'email' => $this->email,
             'mobile' => $this->mobile,
             'address' => $this->address,
             'lat' => $this->lat,
@@ -27,12 +29,10 @@ class MerchantResource extends JsonResource
             'is_post_paid' => $this->is_post_paid,
             'is_self_service' => $this->is_self_service,
             'has_parking' => $this->has_parking,
-            
-            'delivery_charge_per_kilometer' => $this->delivery_charge_per_kilometer,
-            'min_delivery_charge' => $this->min_delivery_charge,
-            'max_delivery_charge' => $this->max_delivery_charge,
+            'is_sponsored' => $this->is_sponsored,
+            'is_open' => $this->is_open,
 
-            'discount' => $this->deal->net_discount ?? 0,
+            'discount' => $this->discount ?? 0,
             'service_schedule' => json_decode($this->service_schedule),
             'booking_break_schedule' => json_decode($this->booking_break_schedule),
             

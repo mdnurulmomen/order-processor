@@ -380,8 +380,7 @@
 									              	
 								              	</div>
 
-								              	<div class="form-group row">
-									              		
+								              	<div class="form-group row">	
 								              		<label 
 								              			for="inputProductName3" 
 								              			class="col-sm-4 col-form-label text-right"
@@ -405,9 +404,7 @@
 												        		errors.merchantProduct.name 
 												        	}}
 												  		</div>
-
 									                </div>	
-									              	
 								              	</div>
 
 								              	<div class="form-group row">
@@ -430,8 +427,7 @@
 									              	
 								              	</div>
 
-								              	<div class="form-group row">
-									              		
+								              	<div class="form-group row">	
 								              		<label 
 								              			for="inputProductName3" 
 								              			class="col-sm-4 col-form-label text-right"
@@ -534,7 +530,6 @@
 											        	</i>
 
 								              		</div>
-
 								              	</div>
 
 								              	<div 
@@ -567,9 +562,34 @@
 												        		errors.merchantProduct.price 
 												        	}}
 												  		</div>
-
 									                </div>	
-									              	
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label 
+								              			for="inputProductName3" 
+								              			class="col-sm-4 col-form-label text-right"
+								              		>
+								              			Discount
+								              		</label>
+
+									                <div class="col-sm-8">
+									                  	
+									                  	<input 
+															type="text" 
+															class="form-control" 
+															v-model="singleMerchantProductData.merchantProduct.discount" 
+															placeholder="Discount" 
+															required="true"
+															:class="!errors.merchantProduct.discount  ? 'is-valid' : 'is-invalid'" 
+															@keyup="validateFormInput('merchantProduct.discount')"
+									                	>
+									                	<div class="invalid-feedback">
+												        	{{ 
+												        		errors.merchantProduct.discount 
+												        	}}
+												  		</div>
+									                </div>	
 								              	</div>
 
 								              	<div class="form-group row">
@@ -1677,6 +1697,18 @@
 						else {
 							this.submitForm = true;
 							this.$delete(this.errors.merchantProduct, 'price');
+						}
+
+						break;
+
+					case 'merchantProduct.discount' :
+
+						if (this.singleMerchantProductData.merchantProduct.discount < 0 || this.singleMerchantProductData.merchantProduct.discount > 100) {
+							this.errors.merchantProduct.discount = 'Value should be between 0 to 100';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors.merchantProduct, 'discount');
 						}
 
 						break;

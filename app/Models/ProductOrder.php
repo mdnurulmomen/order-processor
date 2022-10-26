@@ -12,6 +12,10 @@ class ProductOrder extends Model
 
 	public $timestamps = false;
 
+	protected $casts = [
+		'is_addon_added' => 'boolean',
+	];
+
 	public function variation()
 	{
 		return $this->hasOne(ProductVariationOrder::class, 'product_order_id', 'id');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
 use App\Models\Merchant;
+use App\Jobs\NotifyRiders;
 use App\Events\UpdateAdmin;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
@@ -25,11 +26,6 @@ class OrderController extends Controller
     {        
         $newOrder = Order::create([
             'type' => $request->order->type,
-            'price' => $request->order->price,
-            'vat' => $request->order->vat,
-            'discount' => $request->order->discount,
-            'delivery_fee' => $request->order->delivery_fee,
-            'net_payable' => $request->order->net_payable,
             'payment_method' => $request->payment->method,
             'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
             'orderer_id' => $request->order->orderer_id,
@@ -56,23 +52,34 @@ class OrderController extends Controller
 
         foreach ($request->merchants as $merchantOrder) {
             
+            $merchant = Merchant::find($merchantOrder->id);
+
             $merchantNewOrder = $newOrder->merchants()->create([
                 'merchant_id' => $merchantOrder->id,
-                'has_delivery_support' => Merchant::find($merchantOrder->id)->need_delivery_support,
+                'has_delivery_support' => ($newOrder=='delivery' && ! $merchant->has_self_delivery_support) ? true : false,
+                'is_free_delivery' => ($newOrder=='delivery' && ! $merchant->has_self_delivery_support && ! $merchant->has_free_delivery) ? 1 : 0,
+                'net_price' => $merchantOrder->net_price,
+
+                'applied_sale_percentage' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support) ? $merchant->supported_delivery_order_sale_percentage : $merchant->general_order_sale_percentage,
+                
+                'is_payment_settled' => NULL,
             ]);
 
             $request->products = json_decode(json_encode($merchantOrder->products));
 
             foreach ($request->products as $product) {
 
+                $merchantProductToAdd = MerchantProduct::find($product->id);
+
                 $orderedNewProduct = $merchantNewOrder->products()->create([
                      'merchant_product_id' => $product->id,
+                     'price' => $product->price,
+                     'discount' => $product->discount,
                      'quantity' => $product->quantity,
+                     'is_addon_added' => ($merchantProductToAdd->has_addon && count($product->addons)) ? true : false,
                 ]);
 
-                $addedProduct = MerchantProduct::find($product->id);
-
-                if ($addedProduct->has_variation && !empty($product->variation) && !empty($product->variation->id)) {
+                if ($merchantProductToAdd->has_variation && !empty($product->variation) && !empty($product->variation->id)) {
                     
                     $orderedNewProduct->variation()->create([
                         'merchant_product_variation_id'=>$product->variation->id
@@ -80,12 +87,13 @@ class OrderController extends Controller
 
                 }
 
-                if ($addedProduct->has_addon && !empty($product->addons)) {
+                if ($merchantProductToAdd->has_addon && !empty($product->addons)) {
                     
                     foreach ($product->addons as $merchantProductAddon) {
 
                         $orderedNewProduct->addons()->create([
                             'merchant_product_addon_id'=>$merchantProductAddon->id,
+                            'price'=>$merchantProductAddon->price,
                             'quantity'=>$merchantProductAddon->quantity,
                         ]);
 
@@ -93,7 +101,7 @@ class OrderController extends Controller
 
                 }
 
-                if ($addedProduct->customizable && !empty($product->customization)) {
+                if ($merchantProductToAdd->customizable && !empty($product->customization)) {
                     
                     $orderedNewProduct->customization()->create([
                         'custom_instruction'=>$product->customization,
@@ -157,7 +165,8 @@ class OrderController extends Controller
         
         if ($newOrder->customer_confirmation==1) {
 
-            $this->makeMerchantOrderCalls($newOrder);
+            // $this->makeMerchantOrderCalls($newOrder);
+            $this->makeRiderOrderCall($newOrder);
 
         }
 
@@ -265,17 +274,12 @@ class OrderController extends Controller
     {
         return Order::create([
             'type' => $request->order->type,
-            'price' => $request->order->price,
-            'vat' => $request->order->vat,
-            'discount' => $request->order->discount,
-            'delivery_fee' => 0,
-            'net_payable' => $request->order->net_payable,
+            'is_asap_order' => false,
             'payment_method' => $request->payment->method,
+            'has_cutlery' => $request->order->has_cutlery ? true : false, 
             'orderer_type' => "App\Models\Customer",
             'orderer_id' => $request->order->orderer_id,
             'customer_confirmation' => ($request->payment->method !== 'cash' && $request->payment->id) ? 1 : -1, 
-            'has_cutlery' => $request->order->has_cutlery ? true : false, 
-            'is_asap_order' => /*$request->order->is_asap_order ? true : */ false,
             'in_progress' => ($request->payment->method !== 'cash' && $request->payment->id) ? 1 : -1,
         ]);
     }
@@ -300,10 +304,7 @@ class OrderController extends Controller
 
     private function updateMerchantBookingStatus(Merchant $merchant, $reservation)
     {
-        $merchant->booking()->update([
-            'engaged_seat' => ($merchant->booking->engaged_seat + $reservation->guest_number),
-            'seat_left' => ($merchant->booking->seat_left - $reservation->guest_number),
-        ]);
+        $merchant->booking()->increment('engaged_seat', $reservation->guest_number);
     }
 
     private function saveNewPayment(Order $order, $paymentId)
@@ -316,7 +317,7 @@ class OrderController extends Controller
     private function createMerchantOrderRecord(Order $order, $merchantId)
     {
         return  $merchantOrder = $order->merchants()->create([
-            'merchant_id' => $merchantId,
+            'merchant_id' => $merchantId, 
         ]); 
     }
 
@@ -328,25 +329,29 @@ class OrderController extends Controller
 
             foreach ($products as $product) {
 
+                $merchantProductToAdd = MerchantProduct::find($product->id);
+
                 $orderedNewProduct = $merchantOrder->products()->create([
                      'merchant_product_id' => $product->id,
+                     'price' => $product->price,
+                     'discount' => $product->discount,
                      'quantity' => $product->quantity,
+                     'is_addon_added' => ($merchantProductToAdd->has_addon && count($product->addons)) ? true : false,
                 ]);
 
-                $addedProduct = MerchantProduct::find($product->id);
-
-                if ($addedProduct->has_variation && !empty($product->variation) && !empty($product->variation->id)) {
+                if ($merchantProductToAdd->has_variation && !empty($product->variation) && !empty($product->variation->id)) {
                     $orderedNewProduct->variation()->create([
                         'merchant_product_variation_id'=>$product->variation->id
                     ]);
                 }
 
-                if ($addedProduct->has_addon && !empty($product->addons)) {
+                if ($merchantProductToAdd->has_addon && ! empty($product->addons)) {
 
                     foreach ($product->addons as $merchantProductAddon) {
 
                         $orderedNewProduct->addons()->create([
                             'merchant_product_addon_id'=>$merchantProductAddon->id,
+                            'price'=>$merchantProductAddon->price,
                             'quantity'=>$merchantProductAddon->quantity,
                         ]);
 
@@ -354,7 +359,7 @@ class OrderController extends Controller
 
                 }
 
-                if ($addedProduct->customizable && !empty($product->customization)) {
+                if ($merchantProductToAdd->customizable && !empty($product->customization)) {
 
                     $orderedNewProduct->customization()->create([
                         'custom_instruction'=>$product->customization,
@@ -374,6 +379,44 @@ class OrderController extends Controller
             'is_accepted' => -1, // ringing
             // 'merchant_id' => $merchantId,
         ]); 
+    }
+
+    // broadcasting for riders
+    private function makeRiderOrderCall(Order $order)
+    {   
+        // to calculate the nearest rider laterly
+        $allNearestAvailableRiders = $this->findNearestAvailableRiders($order);
+        
+        $delay = 0;
+
+        foreach ($allNearestAvailableRiders as $rider) {
+            
+            NotifyRiders::dispatch($order, $rider)->delay(now()->addSeconds($delay));
+
+            $delay += 30;   // 30 seconds
+
+        }
+
+    }
+
+    // should calculate the nearest rider and snoozing time laterly (now 1 minute)
+    private function findNearestAvailableRiders(Order $order) 
+    {
+        $alreadyRequestedRiders = $order->riders->pluck('id')->toArray();
+
+        return Rider::whereNull('current_lat')
+        ->whereNull('current_lang')
+        ->where('admin_approval', true)
+        ->where('is_available', true)
+        ->where('is_engaged', false)
+        ->where(function ($query) {
+            $query->whereNull('paused_at')
+            ->orWhere('paused_at', '<=', now()->subMinutes(1)->toDateTimeString());
+        })
+        ->whereNotIn('id', $alreadyRequestedRiders)
+        // ->orderBy('evaluation.order_acceptance_percentage', 'desc')
+        // ->take(10)
+        ->get();
     }
 
     private function makeMerchantOrderCalls(Order $order)

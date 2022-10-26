@@ -10,7 +10,7 @@
   <title>Qupaid | Admin</title>
 
   <!-- Favicon Icon -->
-  <link rel="icon" type="image/gif" href="uploads/application/favicon.png" sizes="16x16">
+  <link rel="icon" type="image/gif" href="system/favicon.png" sizes="16x16">
   <!-- Theme style -->
   {{-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> --}}
   <!-- Font Awesome Icons -->
@@ -50,8 +50,8 @@
       <!-- Brand Logo -->
       <a class="navbar-brand ml-1" onclick="showHomeComponent()">
         <img 
-            src="{{ asset('uploads/application/logo.png') }}" 
-            alt="Qupaid Logo" 
+            src="{{ asset('system/logo.png') }}" 
+            alt="{{ env('APP_NAME') }} Logo" 
             class="brand-image img-circle elevation-3" 
             width="30" height="30"  
             style="opacity: .8"

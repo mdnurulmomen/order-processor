@@ -17,7 +17,6 @@ class Authenticate extends Middleware
     {
         if (! $request->expectsJson()) {        // for non-json request
             
-            // $url = $request->url();
             $name = \Route::currentRouteName();
 
             if (Str::contains($name, 'admin.')) {
@@ -34,6 +33,7 @@ class Authenticate extends Middleware
             
             else
                 return route('login');
+            
         }
     }
 }

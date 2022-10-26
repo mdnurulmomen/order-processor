@@ -62,7 +62,7 @@ class LoginController extends Controller
     // Customer Login
     protected function attemptLogin(Request $request) 
     {
-        if ($this->attemptCustomerLoginWithMobile($request) || $this->attemptCustomerLoginWithUsername($request) || $this->attemptCustomerLoginWithEmail($request)) {
+        if ($this->attemptCustomerLoginWithUsername($request) || $this->attemptCustomerLoginWithEmail($request) || $this->attemptCustomerLoginWithMobile($request)) {
             return true;
         }
     }
@@ -82,7 +82,7 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($request);
         }
 
-        if ($this->attemptAdminLoginWithEmail($request) || $this->attemptAdminLoginWithMobile($request)) {
+        if ($this->attemptAdminLoginWithUsername($request) || $this->attemptAdminLoginWithEmail($request) || $this->attemptAdminLoginWithMobile($request)) {
 
             return $this->sendAdminLoginResponse($request);
         }
@@ -110,7 +110,7 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($request);
         }
 
-        if ($this->attemptOwnerLoginWithMobile($request) || $this->attemptOwnerLoginWithUsername($request)) {
+        if ($this->attemptOwnerLoginWithUsername($request) || $this->attemptOwnerLoginWithEmail($request) || $this->attemptOwnerLoginWithMobile($request)) {
 
             return $this->sendOwnerLoginResponse($request);
         }
@@ -138,7 +138,7 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($request);
         }
 
-        if ($this->attemptMerchantLoginWithMobile($request) || $this->attemptMerchantLoginWithUsername($request)) {
+        if ($this->attemptMerchantLoginWithUsername($request) || $this->attemptMerchantLoginWithEmail($request) || $this->attemptMerchantLoginWithMobile($request)) {
 
             return $this->sendMerchantLoginResponse($request);
         }
@@ -181,13 +181,7 @@ class LoginController extends Controller
         return $this->loggedOut($request) ?: redirect('/');
     }
 
-    protected function attemptCustomerLoginWithMobile(Request $request)
-    {
-        return $this->guard()->attempt(
-            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
-        );   
-    }
-
+    // Customer
     protected function attemptCustomerLoginWithUsername(Request $request)
     {
         return $this->guard()->attempt(
@@ -199,6 +193,21 @@ class LoginController extends Controller
     {
         return $this->guard()->attempt(
             ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+        );   
+    }
+
+    protected function attemptCustomerLoginWithMobile(Request $request)
+    {
+        return $this->guard()->attempt(
+            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+        );   
+    }
+
+    // Admin
+    protected function attemptAdminLoginWithUsername(Request $request)
+    {
+        return $this->guard('admin')->attempt(
+            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
         );   
     }
 
@@ -215,13 +224,7 @@ class LoginController extends Controller
             ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember'));
     }
 
-    protected function attemptOwnerLoginWithMobile(Request $request)
-    {
-        return Auth::guard('owner')->attempt(
-            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
-        );   
-    }
-
+    // Owner
     protected function attemptOwnerLoginWithUsername(Request $request)
     {
         return Auth::guard('owner')->attempt(
@@ -229,17 +232,40 @@ class LoginController extends Controller
         );   
     }
 
-    protected function attemptMerchantLoginWithMobile(Request $request)
+    protected function attemptOwnerLoginWithEmail(Request $request)
     {
-        return Auth::guard('merchant')->attempt(
+        return Auth::guard('owner')->attempt(
+            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+        );
+    }
+
+    protected function attemptOwnerLoginWithMobile(Request $request)
+    {
+        return Auth::guard('owner')->attempt(
             ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
         );   
     }
 
+
+    // Merchant
     protected function attemptMerchantLoginWithUsername(Request $request)
     {
         return Auth::guard('merchant')->attempt(
             ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
+        );   
+    }
+
+    protected function attemptMerchantLoginWithEmail(Request $request)
+    {
+        return Auth::guard('merchant')->attempt(
+            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+        );
+    }
+
+    protected function attemptMerchantLoginWithMobile(Request $request)
+    {
+        return Auth::guard('merchant')->attempt(
+            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
         );   
     }
 

@@ -18,7 +18,7 @@ class Kitchen extends Model
      * @var array
      */
     protected $casts = [
-        'admin_approval' => 'boolean',
+        'is_approved' => 'boolean',
     ];
 
    	/**

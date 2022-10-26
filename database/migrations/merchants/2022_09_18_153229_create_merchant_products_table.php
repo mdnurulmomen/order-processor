@@ -18,13 +18,14 @@ class CreateMerchantProductsTable extends Migration
             $table->string('name');
             $table->string('sku');
             $table->text('detail')->nullable(); // A short description / quantity / half, full
+            $table->float('discount', 5, 2)->default(0);            // individual discount
+            $table->unsignedSmallInteger('price'); // price / if variation exists, then price of minimum-one
             $table->boolean('has_variation')->default(false);
             $table->boolean('has_addon')->default(false);
             $table->boolean('is_sponsored')->default(false);
-            $table->unsignedSmallInteger('price'); // price / if variation exists, then price of minimum-one
-            $table->boolean('customizable')->default(true);
+            $table->boolean('is_customizable')->default(true);
             $table->boolean('is_promoted')->default(false);
-            $table->boolean('available')->default(true);
+            $table->boolean('is_available')->default(true);
             $table->unsignedMediumInteger('merchant_product_category_id');
             $table->softDeletes();
         });

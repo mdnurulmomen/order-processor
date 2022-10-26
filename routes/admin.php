@@ -25,7 +25,7 @@ Route::name('admin.')->group(function () {
 		});
 
 		// For all other routes coming from vue
-    	Route::get('/{any}/{id?}', 'HomeController@showAdminHome')->where('id', '[0-9]+');	
+    	Route::get('/{any}', 'HomeController@showAdminHome');	
 	});
 
 
@@ -102,6 +102,7 @@ Route::name('admin.')->group(function () {
 		    Route::delete('/cancellation-reasons/{reason}/{perPage}', 'CancellationController@deleteCancellationReason');
 		    Route::patch('/cancellation-reasons/{reason}/{perPage}', 'CancellationController@restoreCancellationReason');
 
+		    /*
 		    // Merchant-Deals
 		    Route::get('/api/merchant-deals/{perPage?}', 'MerchantController@showAllMerchantDeals');
 		    Route::get('/api/merchant-deals/search/{search}/{perPage}', 'MerchantController@searchAllMerchantDeals');
@@ -109,6 +110,7 @@ Route::name('admin.')->group(function () {
 		    Route::put('/merchant-deals/{deal}/{perPage}', 'MerchantController@updateMerchantDeal');
 		    Route::delete('/merchant-deals/{deal}/{perPage}', 'MerchantController@deleteMerchantDeal');
 		    Route::patch('/merchant-deals/{deal}/{perPage}', 'MerchantController@restoreMerchantDeal');
+		    */
 
 		    // Merchant-Agents
 		    Route::get('/api/merchant-agents/{perPage?}', 'MerchantController@showAllMerchantAgents');

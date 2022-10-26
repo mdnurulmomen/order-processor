@@ -15,14 +15,9 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('type');
+            $table->string('type');     // delivery / take-away / serving / reservation
             $table->boolean('is_asap_order')->default(true);
-            $table->unsignedMediumInteger('price');
-            $table->unsignedTinyInteger('vat');
-            $table->unsignedTinyInteger('discount')->default(0);
-            $table->unsignedTinyInteger('delivery_fee')->default(0);
-            $table->unsignedMediumInteger('net_payable');
-            $table->string('payment_method');
+            $table->string('payment_method');       // cash / bkash
             $table->boolean('has_cutlery')->default(false);
             $table->string('orderer_type'); // Merchant / Waiter / Customer
             $table->unsignedInteger('orderer_id');

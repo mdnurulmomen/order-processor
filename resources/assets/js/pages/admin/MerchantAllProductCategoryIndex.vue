@@ -93,7 +93,7 @@
 											<th scope="col">Category Name</th>
 											<th scope="col">Serving From</th>
 											<th scope="col">Serving To</th>
-											<th scope="col"># Products</th>
+											<th scope="col">Discount</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -107,6 +107,8 @@
 								    			{{ 
 								    				merchantProductCategory.product_category ? merchantProductCategory.product_category.name : 'Trashed Product-Category' | capitalize 
 								    			}}
+
+								    			<span class="badge badge-info">{{ merchantProductCategory.merchant_products.length }}</span>
 								    		</td>
 								    		<td>
 								    			{{ merchantProductCategory.serving_from }}
@@ -115,9 +117,7 @@
 								    			{{ merchantProductCategory.serving_to }}
 								    		</td>
 								    		<td>
-								    			{{ 
-								    				merchantProductCategory.merchant_products.length 
-								    			}}
+								    			{{ merchantProductCategory.discount || 0 }} %
 								    		</td>
 								    		<td>
 										      	 
@@ -257,7 +257,6 @@
 								              	</div>
 
 								              	<div class="form-group row">
-									              		
 								              		<label 
 								              			for="inputProductName3" 
 								              			class="col-sm-4 col-form-label text-right"
@@ -291,11 +290,9 @@
 												        	}}
 												  		</div>
 									                </div>	
-									              	
 								              	</div>
 
 								              	<div class="form-group row">
-									              		
 								              		<label for="inputProductName3" class="col-sm-4 col-form-label text-right">
 								              			Serving From
 								              		</label>
@@ -327,6 +324,33 @@
 				                                  		>
 					                                	</multiselect>
 									                </div>
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label 
+								              			for="inputProductName3" 
+								              			class="col-sm-4 col-form-label text-right"
+								              		>
+								              			Discount
+								              		</label>
+
+									                <div class="col-sm-8">
+									                  	
+									                  	<input 
+															type="text" 
+															class="form-control" 
+															v-model="singleMerchantProductCategoryData.discount" 
+															placeholder="Discount" 
+															:class="!errors.discount  ? 'is-valid' : 'is-invalid'" 
+															@keyup="validateFormInput('discount')"
+															required="true"
+									                	>
+									                	<div class="invalid-feedback">
+												        	{{ 
+												        		errors.discount 
+												        	}}
+												  		</div>
+									                </div>	
 								              	</div>
 								            </div>
 								            <!-- /.card-body -->
@@ -462,11 +486,8 @@
 				<!-- /.modal-dialog -->
 			</div>
 			<!-- /.modal-merchantProductCategory-restore-confirmation-->
-
 	    </section>
-
 	</div>
-    
 </template>
 
 <script type="text/javascript">
@@ -865,6 +886,18 @@
 						else {
 							this.submitForm = true;
 							this.$delete(this.errors, 'productCategory');
+						}
+
+						break;
+
+					case 'discount' :
+
+						if (this.singleMerchantProductData.discount < 0 || this.singleMerchantProductData.discount > 100) {
+							this.errors.discount = 'Value should be between 0 to 100';
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors, 'discount');
 						}
 
 						break;

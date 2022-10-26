@@ -43,11 +43,6 @@ class OrderRequest extends FormRequest
             'order.type'=>'required|in:delivery,serving,collection',
             'order.is_asap_order'=>'required_without:order.schedule|boolean',
             'order.schedule'=>'required_if:order.is_asap_order,0|date|date_format:Y-m-d H:i:s|after:'.now()->subMinutes(3),
-            'order.price'=>'required|numeric',
-            'order.vat'=>'required|numeric',
-            'order.discount'=>'required|numeric',
-            'order.delivery_fee'=>'required|numeric',
-            'order.net_payable'=>'required|numeric',
             'order.has_cutlery'=>'boolean',
             'order.orderer_type'=>'required|in:customer,merchant_agent',
             'order.orderer_id'=>[
@@ -123,12 +118,21 @@ class OrderRequest extends FormRequest
                     }
                 },
             ],
-            'merchants.*.id' => 'required|exists:merchants,id',
+            'merchants.*.id' => [
+                'required', 
+                Rule::exists('merchants', 'id')->where(function ($query) {
+                    return $query->where('is_open', 1)->where('is_approved', 1);
+                })
+            ],
+            'merchants.*.net_price' => 'required|numeric|min:0',
 
             'merchants.*.products' => 'required|array|min:1',
             'merchants.*.products.*.id' => [
-                'bail', 'required', 'exists:merchant_products,id', 
-        /*
+                'bail', 'required', 
+                Rule::exists('merchant_products', 'id')->where(function ($query) {
+                    return $query->where('is_available', 1);
+                })
+            /*
                 function ($attribute, $value, $fail) {
                     
                     $productMerchantId = MerchantProduct::find($value)->merchantProductCategory->id;
@@ -141,9 +145,11 @@ class OrderRequest extends FormRequest
                         $fail($attribute.' is invalid.');
                     }
                 },
-        */
+            */
             ],
-            'merchants.*.products.*.quantity' => 'required|numeric',
+            'merchants.*.products.*.price'=>'required|numeric|min:0',
+            'merchants.*.products.*.discount'=>'required|numeric|min:0|max:100',
+            'merchants.*.products.*.quantity' => 'required|numeric|min:1',
 
             // 'merchants.*.products.*.variation' => 'required',
             // 'merchants.*.products.*.variation.id' => [
@@ -174,15 +180,15 @@ class OrderRequest extends FormRequest
             'merchants.*.products.*.addons.*.id' => [
                 'required_unless:merchants.*.products.*.addons.*,', 
                 'numeric', 
-                'exists:merchant_product_addons,id'
-                /*
-                    Rule::exists('merchant_product_addons', 'id')->where(function ($query) {
-                        $query->where('merchant_product_id', $this->input('merchants.*.products.*.id'));
-                    }),
-                */
+                Rule::exists('merchant_product_addons', 'id')->where(function ($query) {
+                    $query->where('is_available', true);
+                }),
+                
             ],
+            'merchants.*.products.*.addons.*.price' => 'required_unless:merchants.*.products.*.addons.*,|
+                numeric|min:0',
             'merchants.*.products.*.addons.*.quantity' => 'required_unless:merchants.*.products.*.addons.*,|
-                numeric',
+                numeric|min:1',
 
             'merchants.*.products.*.customization' => 'nullable|string',
             
@@ -212,48 +218,82 @@ class OrderRequest extends FormRequest
 
                 foreach ($this->merchants as $merchantOrderKey => $merchantOrder) {
 
-                    foreach ($merchantOrder->products as $productKey => $merchantProduct) {
+                    $productsPriceTotal = 0;
+                    $addonsPriceTotal = 0;
 
-                        $expectedMerchantProduct = MerchantProduct::findOrFail($merchantProduct->id);
+                    $net_price = array_reduce($merchantOrder->products, function($productsPriceTotal, $merchantProduct)
+                    {
+                        return $productsPriceTotal + round(($merchantProduct->price * (1 - $merchantProduct->discount / 100)) * $merchantProduct->quantity) + 
+                        array_reduce($merchantProduct->addons, function($addonsPriceTotal, $merchantProductAddon){
+                            return $addonsPriceTotal + round($merchantProductAddon->price * $merchantProductAddon->quantity);
+                        });
+                    });
 
-                        /*
-                        // as already has been checked previously
-                        if (empty($expectedMerchantProduct)) {
-                            
-                            $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey", 'Product id is invalid');
+                    if ($merchantOrder->net_price != $net_price) {      // checking merchant-product net price
+                        
+                        $validator->errors()->add("merchants.$merchantOrderKey.net_price", 'Net price is invalid');
 
-                        }
-                        */
+                    }
 
-                        if ($expectedMerchantProduct->merchantProductCategory->merchant_id == $merchantOrder->id) { // checking merchant
-                            
-                            if ($expectedMerchantProduct->has_variation && empty($merchantProduct->variation)) {
+                    else {
+                        
+                        foreach ($merchantOrder->products as $productKey => $merchantProduct) {
+
+                            $expectedMerchantProduct = MerchantProduct::findOrFail($merchantProduct->id);
+
+                            /*
+                            // as already has been checked previously
+                            if (empty($expectedMerchantProduct)) {
                                 
-                                $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey", 'Product has variation');
+                                $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey", 'Product id is invalid');
 
                             }
+                            */
 
-                            else if ($expectedMerchantProduct->has_variation && ! empty($merchantProduct->variation)) {
+                            // checking merchant
+                            if ($expectedMerchantProduct->merchantProductCategory->merchant_id == $merchantOrder->id) {
                                 
-                                $expectedMerchantVariation = MerchantProductVariation::findOrFail($merchantProduct->variation->id);
-
-                                if (empty($expectedMerchantVariation) || $expectedMerchantVariation->merchant_product_id != $expectedMerchantProduct->id) {
+                                if ($expectedMerchantProduct->price != $merchantProduct->price) {
                                     
-                                    $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey.variation", 'Product variation id is invalid');
+                                    $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey.price", 'Product price is invalid');
 
                                 }
 
-                            }
-
-                            if ($expectedMerchantProduct->has_addon && ! empty($merchantProduct->addons)) {
-
-                                foreach ($merchantProduct->addons as $productAddonKey => $productAddon) {
+                                else if ($expectedMerchantProduct->discount != $merchantProduct->discount) {
                                     
-                                    $expectedMerchantProductAddon = MerchantProductAddon::findOrFail($productAddon->id);
+                                    $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey.discount", 'Product discount is invalid');
 
-                                    if (empty($expectedMerchantProductAddon) || $expectedMerchantProductAddon->merchant_product_id != $expectedMerchantProduct->id) {
+                                }
+
+                                else if ($expectedMerchantProduct->has_variation && empty($merchantProduct->variation)) {
+                                    
+                                    $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey", 'Product has variation');
+
+                                }
+
+                                else if ($expectedMerchantProduct->has_variation && ! empty($merchantProduct->variation)) {
+                                    
+                                    $expectedMerchantVariation = MerchantProductVariation::findOrFail($merchantProduct->variation->id);
+
+                                    if (empty($expectedMerchantVariation) || $expectedMerchantVariation->merchant_product_id != $expectedMerchantProduct->id) {
                                         
-                                        $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey.addons.$productAddonKey", 'Product has no such addon');
+                                        $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey.variation", 'Product variation id is invalid');
+
+                                    }
+
+                                }
+
+                                if ($expectedMerchantProduct->has_addon && ! empty($merchantProduct->addons)) {
+
+                                    foreach ($merchantProduct->addons as $productAddonKey => $productAddon) {
+                                        
+                                        $expectedMerchantProductAddon = MerchantProductAddon::findOrFail($productAddon->id);
+
+                                        if (empty($expectedMerchantProductAddon) || $expectedMerchantProductAddon->merchant_product_id != $expectedMerchantProduct->id) {
+                                            
+                                            $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey.addons.$productAddonKey.id", 'Product has no such addon');
+
+                                        }
 
                                     }
 
@@ -261,14 +301,15 @@ class OrderRequest extends FormRequest
 
                             }
 
-                        }
+                            else {
+                                
+                                $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey", "Product id doesn't belong to merchant");
+                            }
 
-                        else {
-                            
-                            $validator->errors()->add("merchants.$merchantOrderKey.products.$productKey", "Product id doesn't belong to merchant");
                         }
 
                     }
+
 
                 }
 
@@ -294,10 +335,6 @@ class OrderRequest extends FormRequest
             // 'order.type.required' => 'Order type is required',
             'order.is_asap_order.*'  => 'Order schedule is required',
             'order.schedule.*'  => 'Order schedule is not a valid',
-            'order.price.required'  => 'Order price is required',
-            'order.vat.required'  => 'Vat amount is required',
-            'order.discount.required'  => 'Discount amount is required',
-            'order.delivery_fee.required'  => 'Delivery fee amount is required',
             'order.net_payable.required'  => 'Net payable amount is required',
             'order.has_cutlery.boolean'  => 'Cutlery addion value is invalid',
             // 'order.orderer_type.required'  => 'Orderer type should be customer or merchant-agent',
@@ -318,12 +355,24 @@ class OrderRequest extends FormRequest
             // 'payment.method.required'  => 'Payment method is required',
 
             'merchants.*.id.required'  => 'Merchant id is required',
+            'merchants.*.id.exists'  => 'Merchant is either not open or not disapproved',
             'merchants.*.id.*'  => 'Merchant id is invalid',
 
+            'merchants.*.net_price.required'  => 'Net price for each Merchant is required',
+            'merchants.*.net_price.*'  => 'Net price is invalid',
+            
             'merchants.*.products.*.id.required'  => 'Product id is required',
-            // 'merchants.*.products.*.id.exists'  => 'Product id is invalid',
+            'merchants.*.products.*.id.exists'  => 'Product is unavailable',
+            'merchants.*.products.*.id.*'  => 'Product id is invalid',
+            
+            'merchants.*.products.*.price.required'  => 'Product price is required',
+            'merchants.*.products.*.price.*'  => 'Product price is invalid',
+            
+            'merchants.*.products.*.discount.required'  => 'Discount amount is required',
+            'merchants.*.products.*.discount.*'  => 'Discount amount is invalid',
+            
             'merchants.*.products.*.quantity.required'  => 'Product quantity is required',
-            'merchants.*.products.*.quantity.numeric'  => 'Product quantity is invalid',
+            'merchants.*.products.*.quantity.*'  => 'Product quantity is invalid',
 
             // 'merchants.*.products.*.variation.required'  => 'Product variation is required',
             // 'merchants.*.products.*.variation.id.required'  => 'Product variation id is required',
@@ -332,7 +381,10 @@ class OrderRequest extends FormRequest
             'merchants.*.products.*.addons.present' => 'Product addons is required',
             'merchants.*.products.*.addons.array' => 'Product addons must be an array',
             'merchants.*.products.*.addons.*.id.required'  => 'Addon item id is required',
+            'merchants.*.products.*.addons.*.id.exists'  => 'Addon item is unavailable now',
             'merchants.*.products.*.addons.*.id.*'  => 'Addon item id is invalid',
+            'merchants.*.products.*.addons.*.price.required'  => 'Addon price is required',
+            'merchants.*.products.*.addons.*.price.*'  => 'Addon price is invalid',
             'merchants.*.products.*.addons.*.quantity.required'  => 'Addon quantity is required',
             'merchants.*.products.*.addons.*.quantity.*'  => 'Addon quantity is invalid',
 

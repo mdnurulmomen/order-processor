@@ -15,6 +15,7 @@ class CreateRiderDeliveriesTable extends Migration
     {
         Schema::create('rider_deliveries', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedTinyInteger('delivery_fee')->default(0);
             $table->tinyInteger('is_accepted')->default(0); // -1 for ringing, 1 for confirm, 0 for cancel, default 0 as may not receive
             $table->timestamp('accepted_at')->nullable();
             $table->tinyInteger('is_delivered')->nullable(); // -1 for pending, 1 for dropped, 2 for dropped at office, 0 for cancel

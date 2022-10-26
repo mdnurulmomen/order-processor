@@ -15,7 +15,7 @@ use App\Models\MerchantProductVariation;
 
 class ProductController extends Controller
 {
-    // All Merchant-Meals
+   // All Merchant-Meals
    public function showAllMerchantMeals($perPage = false)
    {
       if ($perPage) {
@@ -177,6 +177,7 @@ class ProductController extends Controller
          'promoted'=>'boolean',
          'customizable'=>'boolean',
          'price'=>'numeric|min:0|max:65535',
+         'discount' => 'numeric|min:0|max:100',
          'merchant_product_category_id'=>'required|numeric|exists:merchant_product_categories,id',
          'merchant_id'=>'required|numeric|exists:merchants,id',
          'idVariations' => 'exclude_if:has_variation,false,0,|required_if:has_variation,true,1|array',
@@ -194,6 +195,7 @@ class ProductController extends Controller
          'has_variation' => $request->has_variation ?? false,
          'has_addon' => $request->has_addon ?? false,
          'price' => $request->has_variation ? min($request->priceVariations) : $request->price,
+         'discount' => $request->discount ?? 0,
          'customizable' => $request->customizable ?? false,
          'promoted' => $request->promoted ?? false,
          'merchant_product_category_id' => $request->merchant_product_category_id,
@@ -255,7 +257,8 @@ class ProductController extends Controller
          'has_addon'=>'boolean',
          'promoted'=>'boolean',
          'customizable'=>'boolean',
-         'price'=>'numeric|min:0|max:65535',
+         'price'=>'numeric|min:0|max:65535', 
+         'discount' => 'numeric|min:0|max:100',
          'merchant_product_category_id'=>'required|numeric|exists:merchant_product_categories,id',
          'merchant_id'=>'required|numeric|exists:merchants,id',
          'idVariations' => 'exclude_if:has_variation,false,0,|required_if:has_variation,true,1|array',
@@ -274,6 +277,7 @@ class ProductController extends Controller
          'has_variation' => $request->has_variation ?? false,
          'has_addon' => $request->has_addon ?? false,
          'price' => $request->has_variation ? min($request->priceVariations) : $request->price,
+         'discount' => $request->discount ?? 0,
          'customizable' => $request->customizable ?? false,
          'promoted' => $request->promoted ?? false,
          'merchant_product_category_id' => $request->merchant_product_category_id,
@@ -536,6 +540,7 @@ class ProductController extends Controller
          'productCategoriesId.*'  => "required|numeric|exists:product_categories,id",
          'serving_from'=>'nullable|string|max:20',
          'serving_to'=>'nullable|string|max:20',
+         'discount'=>'numeric|min:0|max:100',
          'merchant_id'=>'required|numeric|exists:merchants,id',
       ]);
 
@@ -551,6 +556,7 @@ class ProductController extends Controller
             [
                'serving_from' => $request->serving_from,
                'serving_to' => $request->serving_to,
+               'discount' => $request->discount,
                'deleted_at' => NULL
             ]
          );
@@ -612,6 +618,7 @@ class ProductController extends Controller
                                   ->ignore($merchantProductCategoryToUpdate->id),
          'serving_from'=>'nullable|string|max:20',
          'serving_to'=>'nullable|string|max:20',
+         'discount'=>'numeric|min:0|max:100',
          'merchant_id'=>'required|numeric|exists:merchants,id',
       ]);
 
@@ -619,6 +626,7 @@ class ProductController extends Controller
       $merchantProductCategoryToUpdate->product_category_id = $request->productCategoriesId[0];
       $merchantProductCategoryToUpdate->serving_from = $request->serving_from;
       $merchantProductCategoryToUpdate->serving_to = $request->serving_to;
+      $merchantProductCategoryToUpdate->discount = $request->discount;
 
       $merchantProductCategoryToUpdate->save();
 

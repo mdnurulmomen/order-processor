@@ -101,9 +101,9 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Name</th>
+											<th scope="col">Type</th>
 											<!-- <th scope="col">Email</th> -->
-											<th scope="col">Phone</th>
-											<th scope="col">Sponsored</th>
+											<th scope="col">Mobile</th>
 											<th scope="col">Status</th>
 											<th scope="col">Action</th>
 										</tr>
@@ -114,21 +114,22 @@
 									    	:key="merchant.id"
 									  	>
 									    	<td scope="row">{{ index + 1 }}</td>
-								    		<td>{{ merchant.name | capitalize }}</td>
-								    		<td>{{ merchant.mobile }}</td>
 								    		<td>
+								    			{{ merchant.name | capitalize }}
 								    			<span :class="[merchant.is_sponsored ? 'badge-danger' : 'badge-default', 'right badge']"
 								    			>
 								    				{{ 
 								    					merchant.is_sponsored ? 'Sponsored' : 'Not-Sponsored' 
 								    				}}
-								    			</span>	
+								    			</span>
 								    		</td>
+								    		<td>{{ merchant.type | capitalize }}</td>
+								    		<td>{{ merchant.mobile }}</td>
 								    		<td>
-								    			<span :class="[merchant.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
+								    			<span :class="[merchant.is_approved ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>
 								    				{{ 
-								    					merchant.admin_approval ? 'Approved' : 'Not-approved' 
+								    					merchant.is_approved ? 'Approved' : 'Not-approved' 
 								    				}}
 								    			</span>		
 								    		</td>
@@ -258,11 +259,19 @@
 										Profile
 									</a>
 								</li>
+								
+								<li class="nav-item">
+									<a class="nav-link" data-toggle="tab" href="#setting">
+										Setting
+									</a>
+								</li>
+
 								<li class="nav-item">
 									<a class="nav-link" data-toggle="tab" href="#address">
 										Address
 									</a>
 								</li>
+
 								<li class="nav-item">
 									<a class="nav-link" data-toggle="tab" href="#service">
 										Service & Schedule
@@ -278,18 +287,28 @@
 					            			<div class="row">
 					            				<div class="col-sm-12">
 								                	<div class="text-center">
-								                  		<img class="img-fluid " :src="singleMerchantData.merchant.banner_preview" alt="Merchant Banner">
+								                  		<img class="img-fluid " :src="singleMerchantData.banner_preview" alt="Merchant Banner">
 								                	</div>
 								                	<h3 class="profile-username text-center">
-								                		{{ singleMerchantData.merchant.name | eachcapitalize }}
+								                		{{ singleMerchantData.name | eachcapitalize }}
 								                	</h3>
+
+								                	<p class="text-center mb-0">
+								                		<i class="fa fa-star checked" style="color: orange;"></i>
+								                		{{ singleMerchantData.mean_rating }}
+								                	</p>
+
+								                	<p class="text-center">
+								                		<i class="fa fa-check-square"></i>
+								                		{{ singleMerchantData.order_acceptance_percentage }}%
+								                	</p>
 					            				</div>
 					            			</div>
 						              	</div>
 						              	
 					            		<div class="col-sm-12">
 					            			<div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Owner :
 							              		</label>
 								                <div 
@@ -298,93 +317,127 @@
 								                >
 								                  	{{ !singleMerchantData.merchantOwnerObject ? 
 								                  		'Owner has been trashed' : 
-								                  		singleMerchantData.merchantOwnerObject.user_name 
+								                  		singleMerchantData.merchantOwnerObject.user_name | capitalize
 								                  	}}
 								                </div>
 								            </div>
 
 								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Type :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleMerchantData.merchant.type | capitalize }}
+								                  	{{ singleMerchantData.type | capitalize }}
 								                </div>
 								            </div>
 
 								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Username :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{ singleMerchantData.merchant.user_name | capitalize }}
+								                  	{{ singleMerchantData.user_name | capitalize }}
 								                </div>
 								            </div>
 
 								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
-							              			Mobile :
-							              		</label>
-
-								                <div 
-								                	class="col-sm-6"
-								                	:class="!singleMerchantData.merchantOwnerObject ? 'text-danger small' : ''"
-								                >
-								                	{{ !singleMerchantData.merchantOwnerObject ? 
-								                  		'Owner has been trashed' : 
-								                  		singleMerchantData.merchantOwnerObject.mobile 
-								                  	}}
-								                </div>
-								            </div>
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Mobile :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleMerchantData.merchant.mobile}}
+								                  	{{singleMerchantData.mobile}}
+								                </div>	
+								            </div>
+
+								            <div class="form-group form-row">		
+							              		<label class="col-sm-6 text-md-right">
+							              			Email :
+							              		</label>
+								                <div class="col-sm-6">
+								                  	{{singleMerchantData.email}}
 								                </div>	
 								            </div> 
+
 								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Website :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleMerchantData.merchant.website ? singleMerchantData.merchant.website : 'No website'}}
+								                  	{{singleMerchantData.website ? singleMerchantData.website : 'No website'}}
 								                </div>	
 								            </div>
+					            		</div>
+					            	</div>
+								</div>
 
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
-							              			Approval :
+								<div id="setting" class="container tab-pane">
+									<div class="row">
+					            		<div class="card card-body">
+					            			<div class="row">
+					            				<div class="col-sm-12">
+								                	<div class="form-group form-row">		
+									              		<label class="col-sm-6 text-md-right">
+									              			Approval :
+									              		</label>
+										                <div class="col-sm-6">
+										                	<span :class="[singleMerchantData.is_approved ? 'badge-success' : 'badge-danger', 'badge']">
+										                		{{ singleMerchantData.is_approved ? 'Approved' : 'Not-Approved'}}
+										                	</span>
+										                </div>	
+										            </div>
+
+										            <div class="form-group form-row">		
+									              		<label class="col-sm-6 text-md-right">
+									              			Taking Order :
+									              		</label>
+										                <div class="col-sm-6">
+										                	<span :class="[singleMerchantData.is_open ? 'badge-success' : 'badge-danger', 'badge']">
+										                		{{ singleMerchantData.is_open ? 'Yes' : 'No'}}
+										                	</span>
+										                </div>	
+										            </div> 
+
+										            <div class="form-group form-row">		
+									              		<label class="col-sm-6 text-md-right">
+									              			Sponsored :
+									              		</label>
+										                <div class="col-sm-6">
+										                	<span :class="[singleMerchantData.is_sponsored ? 'badge-danger' : 'badge-success', 'badge']">
+										                		{{ singleMerchantData.is_sponsored ? 'Sponsored' : 'Not-Sponsored'}}
+										                	</span>
+										                </div>	
+										            </div> 
+					            				</div>
+					            			</div>
+						              	</div>
+						              	
+					            		<div class="col-sm-12">
+					            			<div class="form-group form-row">
+					            				<label class="col-sm-6 text-md-right">
+							              			Sale Percantage (incl. delivery):
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span :class="[singleMerchantData.merchant.admin_approval ? 'badge-success' : 'badge-danger', 'badge']">
-								                		{{ singleMerchantData.merchant.admin_approval ? 'Approved' : 'Not-Approved'}}
-								                	</span>
+								                	{{ singleMerchantData.supported_delivery_order_sale_percentage }} %
 								                </div>	
-								            </div>
+					            			</div>
 
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
-							              			Taking Order :
+					            			<div class="form-group form-row">
+					            				<label class="col-sm-6 text-md-right">
+							              			Sale Percantage (general):
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span :class="[singleMerchantData.merchant.taking_order ? 'badge-success' : 'badge-danger', 'badge']">
-								                		{{ singleMerchantData.merchant.taking_order ? 'Yes' : 'No'}}
-								                	</span>
+								                	{{ singleMerchantData.general_order_sale_percentage }} %
 								                </div>	
-								            </div> 
+					            			</div>
 
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
-							              			Sponsored :
+					            			<div class="form-group form-row">
+					            				<label class="col-sm-6 text-md-right">
+							              			Promotional Discount (all products):
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span :class="[singleMerchantData.merchant.is_sponsored ? 'badge-danger' : 'badge-success', 'badge']">
-								                		{{ singleMerchantData.merchant.is_sponsored ? 'Sponsored' : 'Not-Sponsored'}}
-								                	</span>
+								                	{{ singleMerchantData.discount }} %
 								                </div>	
-								            </div>  
+					            			</div>
 					            		</div>
 					            	</div>
 								</div>
@@ -393,15 +446,15 @@
 									<div class="row">
 					            		<div class="col-sm-12">
 					            			<div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Merchant Address :
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span v-html="singleMerchantData.merchant.address"></span>
+								                	<span v-html="singleMerchantData.address"></span>
 								                </div>	
 								            </div>
 								            <div class="form-group form-row">
-								            	<label class="col-sm-6 text-right">
+								            	<label class="col-sm-6 text-md-right">
 							              			Map :
 							              		</label>		
 								                <div class="col-sm-6">
@@ -416,91 +469,64 @@
 									<div class="row">
 					            		<div class="col-sm-12">
 					            			<div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Maximum Booking Seats :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleMerchantData.merchant.max_booking || 'No Booking'}}
+								                  	{{singleMerchantData.max_booking || 'No Booking'}}
 								                </div>	
 								            </div>
 
 								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Minimum Order :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleMerchantData.merchant.min_order}} tk
+								                  	{{singleMerchantData.min_order}} tk
 								                </div>	
 								            </div>
 
 								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Delivery Support :
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span :class="[singleMerchantData.merchant.has_delivery_support ? 'badge-success' : 'badge-danger', 'badge']">
-								                		{{ singleMerchantData.merchant.has_delivery_support ? 'Supported' : 'Not-Supported'}}
+								                	<span :class="[singleMerchantData.has_self_delivery_support ? 'badge-success' : 'badge-danger', 'badge']">
+								                		{{ singleMerchantData.has_self_delivery_support ? 'Self Delivery' : 'Supported Delivery' }}
 								                	</span>
 								                </div>	
 								            </div>
 
-								            <div 
-								            	class="form-group form-row" 
-								            	v-show="singleMerchantData.merchant.has_delivery_support"
-								            >		
-							              		<label class="col-sm-6 text-right">
-							              			Delivery Charge:
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleMerchantData.merchant.delivery_charge_per_kilometer }} {{ $application_settings.official_currency || 'BDT' | capitalize }}/KM
-								                </div>	
-								            </div>
-
-								            <div 
-								            	class="form-group form-row" 
-								            	v-show="singleMerchantData.merchant.has_delivery_support"
-								            >		
-							              		<label class="col-sm-6 text-right">
-							              			Min Delivery Charge:
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleMerchantData.merchant.min_delivery_charge }} {{ $application_settings.official_currency || 'BDT' | capitalize }}
-								                </div>	
-								            </div>
-
-								            <div 
-								            	class="form-group form-row" 
-								            	v-show="singleMerchantData.merchant.has_delivery_support"
-								            >		
-							              		<label class="col-sm-6 text-right">
-							              			Max Delivery Charge:
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleMerchantData.merchant.max_delivery_charge }} {{ $application_settings.official_currency || 'BDT' | capitalize }}
-								                </div>	
-								            </div>
 					            			<div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Payment :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleMerchantData.merchant.is_post_paid ? 'Post-paid' : 'Pre-paid'}}
+								                  	{{singleMerchantData.is_post_paid ? 'Post-paid' : 'Pre-paid'}}
 								                </div>	
 								            </div>
 								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Service :
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleMerchantData.merchant.is_self_service ? 'Self-service' : 'Agent service'}}
+								                  	{{singleMerchantData.is_self_service ? 'Self-service' : 'Agent service'}}
 								                </div>	
 								            </div>
 								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-right">
+							              		<label class="col-sm-6 text-md-right">
 							              			Parking Facility:
 							              		</label>
 								                <div class="col-sm-6">
-								                  	{{singleMerchantData.merchant.has_parking ? 'Available' : 'Not-available'}}
+								                  	{{singleMerchantData.has_parking ? 'Available' : 'Not-available'}}
+								                </div>	
+								            </div>
+								            <div class="form-group form-row">		
+							              		<label class="col-sm-6 text-md-right">
+							              			Free Delivery:
+							              		</label>
+								                <div class="col-sm-6">
+								                  	{{singleMerchantData.has_free_delivery ? 'Available' : 'Not-available'}}
 								                </div>	
 								            </div>
 					            		</div>
@@ -550,13 +576,19 @@
 										    <div class="card-header text-center">
 
 										      	<div class="progress">
-										        	<div class="progress-bar bg-success w-50" v-show="step>=1">
+										        	<div class="progress-bar bg-success w-25" v-show="step>=1">
 										          		Profile
 										        	</div>
+
 										        	<div class="progress-bar bg-info w-25" v-show="step>=2">
+										          		Setting
+										        	</div>
+
+										        	<div class="progress-bar bg-warning w-25" v-show="step>=3">
 										          		Address
 										        	</div>
-										        	<div class="progress-bar bg-danger w-25" v-show="step>=3">
+
+										        	<div class="progress-bar bg-danger w-25" v-show="step>=4">
 										          		Service & Schedule
 										        	</div>
 										      	</div>
@@ -573,13 +605,11 @@
 										v-show="!loading && step==1"
 									>
 									  	<div class="col-sm-12">
-	  
 									        <h2 class="text-center mb-4 lead">
 									        	Merchant Profile
 									        </h2>
 									      
 									        <div class="row">
-
 									          	<div class="col-sm-12">
 									            	<div class="card">
 									                    <div class="card-body">
@@ -592,7 +622,7 @@
 													                        		<picture>
 													                                	<img 
 													                                		class="img-fluid" 
-													                                		:src="singleMerchantData.merchant.banner_preview" 
+													                                		:src="singleMerchantData.banner_preview" 
 													                                		alt="Merchant Banner" 
 													                                		style="max-height: 200px;"
 													                                	>
@@ -622,74 +652,12 @@
 									                      		</div>
 									                        </div>
 
-									                        <div class="form-group form-row text-center">
-									                        	<div class="col-sm-4">
-									                        		<div class="form-group">
-																  		<label for="inputOwnerApproval3">
-																  			Owner Approval
-																  		</label>
-																  		<div>
-																			<toggle-button 
-									                                  			:sync="true" 
-									                                  			v-model="singleMerchantData.merchant.admin_approval" 
-									                                  			value="true" 
-									                                  			:width="140"  
-									                                  			:height="30" 
-									                                  			:font-size="15" 
-									                                  			:color="{checked: 'green', unchecked: 'red'}" 
-									                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
-								                                  			/>		
-																  		</div>
-									                        		</div>
-									                        	</div>
-
-									                        	<div class="col-sm-4">
-									                        		<div class="form-group">
-																  		<label for="inputOwnerApproval3">
-																  			Taking Order
-																  		</label>
-																  		<div>
-																			<toggle-button 
-									                                  			:sync="true" 
-									                                  			v-model="singleMerchantData.merchant.taking_order" 
-									                                  			value="true" 
-									                                  			:width="140"  
-									                                  			:height="30" 
-									                                  			:font-size="15" 
-									                                  			:color="{checked: 'green', unchecked: 'red'}" 
-									                                  			:labels="{checked: 'Yes', unchecked: 'No' }"
-								                                  			/>		
-																  		</div>
-									                        		</div>
-									                        	</div>
-
-									                        	<div class="col-sm-4">
-									                        		<div class="form-group">
-																  		<label for="inputOwnerApproval3">
-																  			Sponsored
-																  		</label>
-																  		<div>
-																			<toggle-button 
-									                                  			:sync="true" 
-									                                  			v-model="singleMerchantData.merchant.is_sponsored" 
-									                                  			value="true" 
-									                                  			:width="140"  
-									                                  			:height="30" 
-									                                  			:font-size="15" 
-									                                  			:color="{checked: 'red', unchecked: 'green'}" 
-									                                  			:labels="{checked: 'Sponsored', unchecked: 'Not-Sponsored' }"
-								                                  			/>		
-																  		</div>
-									                        		</div>
-									                        	</div>
-															</div>
-
 									                        <hr class="mt-1">
 
 									                        <div class="form-group form-row">
 									                        	<div class="col-6">
 									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">
+									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-md-right">
 									                              			Owner
 									                              		</label>
 									                              		<div class="col-sm-6">
@@ -705,7 +673,7 @@
 										                                  		:allow-empty="false"
 										                                  		selectLabel = "Press/Click"
 										                                  		deselect-label="Can't remove single value"
-										                                  		@close="validateFormInput('merchant.merchantOwnerObject')"
+										                                  		@close="validateFormInput('merchantOwnerObject')"
 									                                  		>
 										                                	</multiselect>
 
@@ -727,12 +695,12 @@
 
 									                          	<div class="col-6">
 									                            	<div class="row d-flex align-items-center">
-									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-right">
+									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-md-right">
 									                              			Type
 									                              		</label>
 									                              		<div class="col-sm-8">
 									                                  		<multiselect 
-									                                  			v-model="singleMerchantData.merchant.type"
+									                                  			v-model="singleMerchantData.type"
 									                                  			placeholder="Merchant Type" 
 										                                  		:options="['shop', 'restaurant']" 
 										                                  		:required="true" 
@@ -741,7 +709,7 @@
 										                                  		:allow-empty="false"
 										                                  		selectLabel = "Press/Click"
 										                                  		deselect-label="Can't remove single value"
-										                                  		@close="validateFormInput('merchant.type')"
+										                                  		@close="validateFormInput('type')"
 									                                  		>
 										                                	</multiselect>
 
@@ -758,17 +726,17 @@
 									                        <div class="form-group form-row">
 									                        	<div class="col-6">
 																	<div class="row">
-									                              		<label for="inputName3" class="col-sm-4 col-form-label text-right">
+									                              		<label for="inputName3" class="col-sm-4 col-form-label text-md-right">
 									                              			Name
 									                              		</label>
 									                              		<div class="col-sm-8">
 									                                  		<input 
 										                                  		type="text" 
 										                                  		class="form-control" 
-										                                  		v-model="singleMerchantData.merchant.name"  
+										                                  		v-model="singleMerchantData.name"  
 										                                  		placeholder="Merchant Name" 
 										                                  		:class="!errors.merchant.name  ? 'is-valid' : 'is-invalid'"
-										                                  		@keyup="validateFormInput('merchant.name')" 
+										                                  		@keyup="validateFormInput('name')" 
 									                                  		>
 									                                  		<div class="invalid-feedback">
 																		        {{ errors.merchant.name  }}
@@ -779,17 +747,17 @@
 
 																<div class="col-6">
 																	<div class="row">
-									                              		<label for="inputName3" class="col-sm-4 col-form-label text-right">
+									                              		<label for="inputName3" class="col-sm-4 col-form-label text-md-right">
 									                              			User Name
 									                              		</label>
 									                              		<div class="col-sm-8">
 									                                  		<input 
 										                                  		type="text" 
 										                                  		class="form-control" 
-										                                  		v-model="singleMerchantData.merchant.user_name"  
+										                                  		v-model="singleMerchantData.user_name"  
 										                                  		placeholder="User Name" 
 										                                  		:class="!errors.merchant.user_name  ? 'is-valid' : 'is-invalid'"
-										                                  		@keyup="validateFormInput('merchant.user_name')" 
+										                                  		@keyup="validateFormInput('user_name')" 
 									                                  		>
 									                                  		<div class="invalid-feedback">
 																		        {{ errors.merchant.user_name  }}
@@ -802,17 +770,18 @@
 									                        <div class="form-group form-row">
 									                        	<div class="col-6">
 										                        	<div class="form-row">
-													              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+													              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 													              			Password
 													              		</label>
 														                <div class="col-sm-8">
 														                  	<input 
 															                  	type="password" class="form-control" 
-															                  	v-model="singleMerchantData.merchant.password"
+															                  	v-model="singleMerchantData.password"
 															                  	placeholder="Password" 
 															                  	required="true" 
+															                  	autocomplete="false"
 															                  	:class="!errors.merchant.password  ? 'is-valid' : 'is-invalid'"
-															                  	@keyup="validateFormInput('merchant.password')"
+															                  	@keyup="validateFormInput('password')"
 														                  	>
 														                  	
 														                  	<div class="invalid-feedback">
@@ -824,17 +793,17 @@
 
 									                        	<div class="col-6">
 													              	<div class="form-row">
-													              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+													              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 													              			Repeat Password
 													              		</label>
 														                <div class="col-sm-8">
 														                  	<input 
 															                  	type="password" class="form-control" 
-															                  	v-model="singleMerchantData.merchant.password_confirmation"
+															                  	v-model="singleMerchantData.password_confirmation"
 															                  	placeholder="Confirm Password" 
 															                  	required="true" 
 															                  	:class="!errors.merchant.password_confirmation  ? 'is-valid' : 'is-invalid'"
-															                  	@keyup="validateFormInput('merchant.password_confirmation')"
+															                  	@keyup="validateFormInput('password_confirmation')"
 														                  	>
 														                  	
 														                  	<div class="invalid-feedback">
@@ -848,17 +817,17 @@
 									                        <div class="form-group form-row">
 									                        	<div class="col-6">
 										                            <div class="row">
-										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-right">
+										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-md-right">
 										                              		Mobile
 										                              	</label>
 										                              	<div class="col-sm-8">
 									                                  		<input 
 										                                  		type="tel" 
 										                                  		class="form-control" 
-										                                  		v-model="singleMerchantData.merchant.mobile" 
+										                                  		v-model="singleMerchantData.mobile" 
 										                                  		placeholder="Mobile No." 
 										                                  		:class="!errors.merchant.mobile  ? 'is-valid' : 'is-invalid'"
-										                                  		@keyup="validateFormInput('merchant.mobile')"
+										                                  		@keyup="validateFormInput('mobile')"
 									                                  		>
 
 									                                  		<div class="invalid-feedback"
@@ -871,7 +840,7 @@
 
 									                          	<div class="col-6">
 										                            <div class="row">
-										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-right">
+										                              	<label for="inputMinOrder3" class="col-sm-4 col-form-label text-md-right">
 										                              		Min. Order
 										                              	</label>
 										                              	<div class="col-sm-8">
@@ -879,13 +848,13 @@
 									                                  		<input 
 										                                  		type="number" 
 										                                  		class="form-control" 
-										                                  		v-model.number="singleMerchantData.merchant.min_order" 
+										                                  		v-model.number="singleMerchantData.min_order" 
 										                                  		placeholder="Minimum Currency" 
 										                                  		min="100" 
 										                                  		max="5000" 
 										                                  		step="1" 
 										                                  		:class="!errors.merchant.min_order  ? 'is-valid' : 'is-invalid'"
-										                                  		@keyup="validateFormInput('merchant.min_order')"
+										                                  		@keyup="validateFormInput('min_order')"
 										                                  	>
 										                                  		
 										                                  	<div class="invalid-feedback">
@@ -900,7 +869,7 @@
 									                        <div class="form-group form-row">
 									                        	<div class="col-6">
 										                            <div class="row">
-										                              	<label for="inputMaxBooking3" class="col-sm-4 col-form-label text-right">
+										                              	<label for="inputMaxBooking3" class="col-sm-4 col-form-label text-md-right">
 										                              		Max Booking
 										                              	</label>
 										                              	<div class="col-sm-8">
@@ -908,13 +877,13 @@
 									                                  		<input 
 										                                  		type="number" 
 										                                  		class="form-control" 
-										                                  		v-model.number="singleMerchantData.merchant.max_booking" 
+										                                  		v-model.number="singleMerchantData.max_booking" 
 										                                  		placeholder="Max Booking Seats"
 										                                  		min="0" 
 										                                  		max="1000" 
 										                                  		step="1" 
 										                                  		:class="!errors.merchant.max_booking  ? 'is-valid' : 'is-invalid'"
-										                                  		@keyup="validateFormInput('merchant.max_booking')"
+										                                  		@keyup="validateFormInput('max_booking')"
 										                                  	>
 										                                  		
 										                                  	<div class="invalid-feedback">
@@ -937,10 +906,10 @@
 										                                  	<input 
 											                                  	type="url" 
 											                                  	class="form-control" 
-											                                  	v-model="singleMerchantData.merchant.website" 
+											                                  	v-model="singleMerchantData.website" 
 											                                  	placeholder="Merchant Website" 
 											                                  	:class="!errors.merchant.website  ? 'is-valid' : 'is-invalid'"
-											                                  	@keyup="validateFormInput('merchant.website')"
+											                                  	@keyup="validateFormInput('website')"
 											                                >
 										                                  	<div 
 											                                  	class="invalid-feedback"
@@ -958,13 +927,24 @@
 									          	</div>  
 									        </div>
 
-									        <div class="row mb-2">
-									          	<div class="col-sm-12 text-right">
-									          		<div class="text-danger small" v-show="!submitForm">
+									        <div class="row mb-2 mt-2">
+									          	<div class="col-6">
+								                  	<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+												  		Close
+												  	</button>
+								                </div>
+
+								                <div class="col-6 text-right">
+								                	<div class="text-danger small" 
+								                		v-show="!submitForm"
+								                	>
 												  		Please input required fields
 										          	</div>
-								                  	<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" v-on:click="nextPage">
-								                    	<i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
+								                  	<button type="button" 
+								                  		class="btn btn-outline-secondary btn-sm rounded-pill" 
+								                  		v-on:click="nextPage"
+								                  	>
+									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
 								                  	</button>
 									          	</div>
 								            </div>
@@ -973,8 +953,202 @@
 
 									<div 
 										class="row" 
-										v-bind:key="2" 
+										:key="2" 
 										v-show="step==2"
+									>
+										<div class="col-sm-12">
+											<h2 class="text-center  mb-4 lead">Merchant Setting</h2>
+
+											<div class="row">
+												<div class="card card-body">
+							            			<div class="form-group form-row text-center">
+							                        	<div class="col-sm-4">
+							                        		<div class="form-group">
+														  		<label for="inputOwnerApproval3">
+														  			Owner Approval
+														  		</label>
+														  		<div>
+																	<toggle-button 
+							                                  			:sync="true" 
+							                                  			v-model="singleMerchantData.is_approved" 
+							                                  			value="true" 
+							                                  			:width="140"  
+							                                  			:height="30" 
+							                                  			:font-size="15" 
+							                                  			:color="{checked: 'green', unchecked: 'red'}" 
+							                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
+						                                  			/>		
+														  		</div>
+							                        		</div>
+							                        	</div>
+
+							                        	<div class="col-sm-4">
+							                        		<div class="form-group">
+														  		<label for="inputOwnerApproval3">
+														  			Taking Order
+														  		</label>
+														  		<div>
+																	<toggle-button 
+							                                  			:sync="true" 
+							                                  			v-model="singleMerchantData.is_open" 
+							                                  			value="true" 
+							                                  			:width="140"  
+							                                  			:height="30" 
+							                                  			:font-size="15" 
+							                                  			:color="{checked: 'green', unchecked: 'red'}" 
+							                                  			:labels="{checked: 'Yes', unchecked: 'No' }"
+						                                  			/>		
+														  		</div>
+							                        		</div>
+							                        	</div>
+
+							                        	<div class="col-sm-4">
+							                        		<div class="form-group">
+														  		<label for="inputOwnerApproval3">
+														  			Sponsored
+														  		</label>
+														  		<div>
+																	<toggle-button 
+							                                  			:sync="true" 
+							                                  			v-model="singleMerchantData.is_sponsored" 
+							                                  			value="true" 
+							                                  			:width="140"  
+							                                  			:height="30" 
+							                                  			:font-size="15" 
+							                                  			:color="{checked: 'red', unchecked: 'green'}" 
+							                                  			:labels="{checked: 'Sponsored', unchecked: 'Not-Sponsored' }"
+						                                  			/>		
+														  		</div>
+							                        		</div>
+							                        	</div>
+													</div>
+								              	</div>
+
+												<div class="col-sm-12">
+													<div class="card">
+														<div class="card-body">
+															<div class="form-group form-row">	
+											              		<label for="inputDealName3" class="col-sm-4 col-form-label text-md-right">
+											              			Discount
+											              		</label>
+												                <div class="col-sm-8">
+												                	<div class="input-group mb-3">
+													                	<input 
+																			type="number" 
+																			class="form-control" 
+																			v-model.number="singleMerchantData.discount" 
+																			placeholder="Discount Rate" 
+																			:class="!errors.merchant.discount  ? 'is-valid' : 'is-invalid'" 
+																			@keyup="validateFormInput('discount')" 
+																			min="0" 
+																			step=".1" 
+																			max="100" 
+													                	>
+																		<div class="input-group-append">
+																			<span class="input-group-text">
+																				%
+																			</span>
+																		</div>
+													                	<div class="invalid-feedback">
+																        	{{ errors.merchant.discount }}
+																  		</div>
+												                	</div>
+												                </div>	
+											              	</div>
+
+											              	<div class="form-group form-row">	
+											              		<label for="inputDealName3" class="col-sm-4 col-form-label text-md-right">
+											              			Sale Percentage (Delivery)
+											              		</label>
+												                <div class="col-sm-8">
+												                  	<div class="input-group mb-3">
+																		<input 
+																			type="number" 
+																			class="form-control" 
+																			v-model.number="singleMerchantData.supported_delivery_order_sale_percentage" 
+																			placeholder="Sale Percentage" 
+																			:class="!errors.merchant.supported_delivery_order_sale_percentage ? 'is-valid' : 'is-invalid'"
+																			@change="validateFormInput('supported_delivery_order_sale_percentage')"
+																			min="0" 
+																			max="100" 
+																			step=".1" 
+													                	>
+																		<div class="input-group-append">
+																			<span class="input-group-text">
+																				%
+																			</span>
+																		</div>
+													                	<div class="invalid-feedback">
+																        	{{ errors.merchant.supported_delivery_order_sale_percentage }}
+																  		</div>
+																	</div>
+												                </div> 	
+											              	</div>
+
+											              	<div class="form-group form-row">	
+											              		<label for="inputDealName3" class="col-sm-4 col-form-label text-md-right">
+											              			General Sale Percentage
+											              		</label>
+												                <div class="col-sm-8">
+												                  	<div class="input-group mb-3">
+																		<input 
+																			type="number" 
+																			class="form-control" 
+																			v-model.number="singleMerchantData.general_order_sale_percentage" 
+																			placeholder="Sale Percentage" 
+																			:class="!errors.merchant.general_order_sale_percentage ? 'is-valid' : 'is-invalid'"
+																			@change="validateFormInput('general_order_sale_percentage')"
+																			min="0" 
+																			max="100" 
+																			step=".1" 
+													                	>
+																		<div class="input-group-append">
+																			<span class="input-group-text">
+																				%
+																			</span>
+																		</div>
+													                	<div class="invalid-feedback">
+																        	{{ errors.merchant.general_order_sale_percentage }}
+																  		</div>
+																	</div>
+												                </div> 	
+											              	</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="row mb-2 mt-2">
+									          	<div class="col-6">
+								                  	<button type="button" 
+								                  		class="btn btn-outline-secondary btn-sm rounded-pill" 
+								                  		v-on:click="step-=1"
+								                  	>
+									                    <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
+								                  	</button>
+								                </div>
+
+								                <div class="col-6 text-right">
+								                	<div class="text-danger small" 
+								                		v-show="!submitForm"
+								                	>
+												  		Please input required fields
+										          	</div>
+								                  	<button type="button" 
+								                  		class="btn btn-outline-secondary btn-sm rounded-pill" 
+								                  		v-on:click="nextPage"
+								                  	>
+									                    <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
+								                  	</button>
+									          	</div>
+								            </div>
+										</div>
+									</div>
+
+									<div 
+										class="row" 
+										v-bind:key="3" 
+										v-show="step==3"
 									> 
 									  	<div class="col-sm-12">
 									        
@@ -985,7 +1159,7 @@
 									            	<div class="card">
 									                    <div class="card-body">
 									                        <div class="form-group form-row">    
-									                          <label for="inputLocation3" class="col-sm-4 col-form-label text-right">
+									                          <label for="inputLocation3" class="col-sm-4 col-form-label text-md-right">
 									                          	Location
 									                          </label>
 									                          	<div class="col-sm-8">
@@ -1006,7 +1180,7 @@
 									                        </div>
 									                          
 									                        <div class="form-group form-row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
+									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-md-right">
 									                          		Address Detail
 									                          	</label>
 									                          	<div class="col-sm-8">
@@ -1014,9 +1188,9 @@
 									                              	<ckeditor 
 										                              	class="form-control" 
 										                              	:editor="editor" 
-										                              	v-model="singleMerchantData.merchant.address"
+										                              	v-model="singleMerchantData.address"
 										                              	:class="!errors.merchant.address  ? 'is-valid' : 'is-invalid'"
-										                              	@blur="validateFormInput('merchant.address')"
+										                              	@blur="validateFormInput('address')"
 										                            >
 									                              	</ckeditor>
 
@@ -1028,182 +1202,109 @@
 									                          	</div>  
 									                        </div>
 
-									                        <div class="form-group form-row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
-									                          		Delivery Support
-									                          	</label>
-									                          	<div class="col-sm-8">
-									                          		<toggle-button 
-							                                  			:sync="true" 
-							                                  			v-model="singleMerchantData.merchant.has_delivery_support" 
-							                                  			value="true" 
-							                                  			:width="140"  
-							                                  			:height="30" 
-							                                  			:font-size="15" 
-							                                  			:color="{checked: 'green', unchecked: 'red'}" 
-							                                  			:labels="{checked: 'Supported', unchecked: 'Not Supported' }"
-						                                  			/>
-									                          	</div> 
-									                        </div>
+									                        <div class="card card-body">
+										            			<div class="form-group form-row text-center">
+										                        	<div class="col-sm-4">
+										                        		<div class="form-group">
+																	  		<label for="inputOwnerApproval3">
+																	  			Payment (cash)
+																	  		</label>
+																	  		<div>
+																				<toggle-button 
+											                                    	:sync="true" 
+											                                    	v-model="singleMerchantData.is_post_paid" 
+											                                    	value="true" 
+											                                    	:width="120"  
+											                                    	:height="30" 
+											                                    	:font-size="15" 
+											                                    	:color="{checked: 'green', unchecked: '#17a2b8'}" 
+											                                    	:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"
+											                                    />		
+																	  		</div>
+										                        		</div>
+										                        	</div>
 
-									                        <div class="form-group form-row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
-									                          		Delivery Charge
-									                          	</label>
-									                          	<div class="col-sm-8">
-									                          		<div class="input-group mb-0">
-									                          			<input 
-									                                  		type="number" 
-									                                  		class="form-control" 
-									                                  		v-model.number="singleMerchantData.merchant.delivery_charge_per_kilometer" 
-									                                  		placeholder="Min Delivery Charge"
-									                                  		:class="!errors.merchant.delivery_charge_per_kilometer  ? 'is-valid' : 'is-invalid'"
-									                                  		@keyup="validateFormInput('merchant.delivery_charge_per_kilometer')" 
-									                                  		:disabled="! singleMerchantData.merchant.has_delivery_support" 
-									                                  		min="0" 
-									                                  		max="100" 
-									                                  		step="1" 
-									                                  	>
-									                          			<div class="input-group-append">
-									                          				<span class="input-group-text">{{ $application_settings.official_currency || 'BDT' | capitalize }}/KM</span>
-									                          			</div>
-									                          		</div>
+										                        	<div class="col-sm-4">
+										                        		<div class="form-group">
+																	  		<label for="inputOwnerApproval3">
+																	  			Parking
+																	  		</label>
+																	  		<div>
+																				<toggle-button 
+										                                    		value="true" 
+										                                    		:sync="true" 
+										                                    		v-model="singleMerchantData.has_parking" 
+										                                    		:width="120"  
+										                                    		:height="30" 
+										                                    		:font-size="15" 
+										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
+										                                    		:labels="{checked: 'Available', unchecked: 'NA' }"
+									                                    		/>		
+																	  		</div>
+										                        		</div>
+										                        	</div>
 
-									                              	<div 
-									                                  	class="invalid-feedback" 
-									                                  	style="display: block;" 
-									                                  	v-show="errors.merchant.delivery_charge_per_kilometer"
-									                                >
-																        {{ errors.merchant.delivery_charge_per_kilometer }}
-																  	</div> 	
-									                          	</div> 
-									                        </div>
+										                        	<div class="col-sm-4">
+										                        		<div class="form-group">
+																	  		<label for="inputOwnerApproval3">
+																	  			Delivery Support
+																	  		</label>
+																	  		<div>
+																				<toggle-button 
+										                                    		value="true" 
+										                                    		:sync="true" 
+										                                    		v-model="singleMerchantData.has_self_delivery_support" 
+										                                    		:width="120"  
+										                                    		:height="30" 
+										                                    		:font-size="15" 
+										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
+										                                    		:labels="{checked: 'Available', unchecked: 'NA' }"
+									                                    		/>		
+																	  		</div>
+										                        		</div>
+										                        	</div>
 
-									                        <div class="form-group form-row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
-									                          		Max Delivery Charge
-									                          	</label>
-									                          	<div class="col-sm-8">
-									                          		<div class="input-group mb-0">
-									                          			<input 
-									                                  		type="number" 
-									                                  		class="form-control" 
-									                                  		v-model.number="singleMerchantData.merchant.max_delivery_charge" 
-									                                  		placeholder="Max Delivery Charge"
-									                                  		:class="!errors.merchant.max_delivery_charge  ? 'is-valid' : 'is-invalid'"
-									                                  		@keyup="validateFormInput('merchant.max_delivery_charge')" 
-									                                  		:disabled="! singleMerchantData.merchant.has_delivery_support" 
-									                                  		min="0" 
-									                                  		max="100" 
-									                                  		step="1" 
-									                                  	>
-									                          			<div class="input-group-append">
-									                          				<span class="input-group-text">{{ $application_settings.official_currency || 'BDT' | capitalize }}</span>
-									                          			</div>
-									                          		</div>
+										                        	<div class="col-sm-4">
+										                        		<div class="form-group">
+																	  		<label for="inputOwnerApproval3">
+																	  			Free Delivery
+																	  		</label>
+																	  		<div>
+																				<toggle-button 
+										                                    		value="true" 
+										                                    		:sync="true" 
+										                                    		v-model="singleMerchantData.has_free_delivery" 
+										                                    		:width="120"  
+										                                    		:height="30" 
+										                                    		:font-size="15" 
+										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
+										                                    		:labels="{checked: 'Available', unchecked: 'NA' }"
+									                                    		/>		
+																	  		</div>
+										                        		</div>
+										                        	</div>
 
-									                              	<div 
-									                                  	class="invalid-feedback" 
-									                                  	style="display: block;" 
-									                                  	v-show="errors.merchant.max_delivery_charge"
-									                                >
-																        {{ errors.merchant.max_delivery_charge }}
-																  	</div> 	
-									                          	</div>  
-									                        </div>
-
-									                        <div class="form-group form-row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
-									                          		Min Delivery Charge
-									                          	</label>
-									                          	<div class="col-sm-8">
-									                          		<div class="input-group mb-0">
-									                          			<input 
-									                                  		type="number" 
-									                                  		class="form-control" 
-									                                  		v-model.number="singleMerchantData.merchant.min_delivery_charge" 
-									                                  		placeholder="Min Delivery Charge"
-									                                  		:class="!errors.merchant.min_delivery_charge ? 'is-valid' : 'is-invalid'"
-									                                  		@keyup="validateFormInput('merchant.min_delivery_charge')" 
-									                                  		:disabled="! singleMerchantData.merchant.has_delivery_support" 
-									                                  		min="0" 
-									                                  		max="100" 
-									                                  		step="1" 
-									                                  	>
-									                          			<div class="input-group-append">
-									                          				<span class="input-group-text">{{ $application_settings.official_currency || 'BDT' | capitalize }}</span>
-									                          			</div>
-									                          		</div>
-
-									                              	<div 
-									                                  	class="invalid-feedback" 
-									                                  	style="display: block;" 
-									                                  	v-show="errors.merchant.min_delivery_charge"
-									                                >
-																        {{ errors.merchant.min_delivery_charge }}
-																  	</div> 	
-									                          	</div>  
-									                        </div>
-
-									                        <div class="form-group form-row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
-									                          		Payment (cash)
-									                          	</label>
-									                          	<div class="col-sm-8 align-self-center">
-									                              	<div class="checkbox">
-								                                    	<toggle-button 
-									                                    	:sync="true" 
-									                                    	v-model="singleMerchantData.merchant.is_post_paid" 
-									                                    	value="true" 
-									                                    	:width="120"  
-									                                    	:height="30" 
-									                                    	:font-size="15" 
-									                                    	:color="{checked: 'green', unchecked: '#17a2b8'}" 
-									                                    	:labels="{checked: 'Post-paid', unchecked: 'Pre-paid' }"
-									                                    />
-								                                	</div>	
-									                          	</div>  
-									                        </div>
-
-									                        <div class="form-group form-row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
-									                          		Parking
-									                          	</label>
-									                          	<div class="col-sm-8 align-self-center">
-									                              	<div class="checkbox">
-								                                    	<toggle-button 
-								                                    		value="true" 
-								                                    		:sync="true" 
-								                                    		v-model="singleMerchantData.merchant.has_parking" 
-								                                    		:width="120"  
-								                                    		:height="30" 
-								                                    		:font-size="15" 
-								                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
-								                                    		:labels="{checked: 'Available', unchecked: 'No Parking' }"
-							                                    		/>
-								                                	</div>	
-									                          	</div>  
-									                        </div>
-
-									                        <div class="form-group form-row">
-									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-right">
-									                          		Self Service
-									                          	</label>
-									                          	<div class="col-sm-8 align-self-center">
-									                              	<div class="checkbox">
-								                                    	<toggle-button 
-								                                    		value ="true" 
-								                                    		:sync="true" 
-								                                    		v-model="singleMerchantData.merchant.is_self_service" 
-								                                    		:width="120"  
-								                                    		:height="30" 
-								                                    		:font-size="15" 
-								                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
-								                                    		:labels="{checked: 'Yes', unchecked: 'No' }"
-								                                    	/>
-								                                	</div>	
-									                          	</div>  
-									                        </div>
+										                        	<div class="col-sm-4">
+										                        		<div class="form-group">
+																	  		<label for="inputOwnerApproval3">
+																	  			Self Service
+																	  		</label>
+																	  		<div>
+																				<toggle-button 
+										                                    		value ="true" 
+										                                    		:sync="true" 
+										                                    		v-model="singleMerchantData.is_self_service" 
+										                                    		:width="120"  
+										                                    		:height="30" 
+										                                    		:font-size="15" 
+										                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+										                                    		:labels="{checked: 'Yes', unchecked: 'No' }"
+										                                    	/>		
+																	  		</div>
+										                        		</div>
+										                        	</div>
+																</div>
+											              	</div>
 									                    </div>
 									                    <!-- /.card-body -->
 									              	</div>
@@ -1212,7 +1313,7 @@
 									        </div>
 
 									        <div class="row mb-2 mt-2">
-									          	<div class="col-6 text-left">
+									          	<div class="col-6">
 								                  	<button type="button" 
 								                  		class="btn btn-outline-secondary btn-sm rounded-pill" 
 								                  		v-on:click="step-=1"
@@ -1240,8 +1341,8 @@
 
 									<div 
 										class="row" 
-										v-bind:key="3" 
-										v-show="step==3"
+										v-bind:key="4" 
+										v-show="step==4"
 									> 
 									  	<div class="col-sm-12">
 
@@ -1429,7 +1530,7 @@
 									        </div>
 
 									        <div class="row mb-2 mt-2">
-									          	<div class="col-6 text-left">
+									          	<div class="col-6">
 								                  	<button 
 									                  	type="button" 
 									                  	class="btn btn-outline-secondary btn-sm rounded-pill" 
@@ -1476,7 +1577,7 @@
 							</button>
 						</div>
 					  	<!-- form start -->
-					  	<form class="form-horizontal" v-on:submit.prevent="storeMerchantOwner" autocomplete="off">
+					  	<form class="form-horizontal" v-on:submit.prevent="storeMerchantOwner()" autocomplete="off">
 							<div class="modal-body text-dark">
 
 					      		<input type="hidden" name="_token" :value="csrf">
@@ -1485,9 +1586,38 @@
 									<div class="col-sm-12">
 										<div class="card card-outline">
 								            <div class="card-body">
-									              		
+									            <div class="form-group form-row">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
+								              			First Name
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<input 
+										                  	type="text" 
+										                  	class="form-control is-valid" 
+										                  	v-model="merchantNewOwner.first_name"
+										                  	placeholder="First Name" 
+										                  	
+									                  	>
+									                </div>	
+								              	</div>
+
 								              	<div class="form-group form-row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
+								              			Last Name
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<input 
+										                  	type="text" 
+										                  	class="form-control is-valid" 
+										                  	v-model="merchantNewOwner.last_name"
+										                  	placeholder="Last Name" 
+										                  	
+									                  	>
+									                </div>	
+								              	</div>  		
+								              	
+								              	<div class="form-group form-row">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			User Name
 								              		</label>
 									                <div class="col-sm-8">
@@ -1507,7 +1637,7 @@
 								              	</div>
 
 								              	<div class="form-group form-row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Mobile
 								              		</label>
 									                <div class="col-sm-8">
@@ -1527,7 +1657,7 @@
 								              	</div>
 
 								              	<div class="form-group form-row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Email
 								              		</label>
 									                <div class="col-sm-8">
@@ -1547,7 +1677,7 @@
 								              	</div>
 
 								              	<div class="form-group form-row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Password
 								              		</label>
 									                <div class="col-sm-8">
@@ -1556,6 +1686,7 @@
 										                  	v-model="merchantNewOwner.password"
 										                  	placeholder="Password" 
 										                  	required="true" 
+										                  	autocomplete="false" 
 										                  	:class="!errors.merchantNewOwner.password  ? 'is-valid' : 'is-invalid'"
 										                  	@keyup="validateFormInput('merchantNewOwner.password')"
 									                  	>
@@ -1567,7 +1698,7 @@
 								              	</div>
 
 								              	<div class="form-group form-row">
-								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Repeat Password
 								              		</label>
 									                <div class="col-sm-8">
@@ -1730,26 +1861,29 @@
 
 	var singleMerchantData = {
 
-    	merchant : {
-    		banner_preview : null,
-			name : null,
-			mobile : null,
-			website : null,
+		banner_preview : null,
+		name : null,
+		mobile : null,
+		website : null,
 
-			address : null,
-			lat : null,
-			lng : null,
+		address : null,
+		lat : null,
+		lng : null,
 
-			min_order : 100,
-			is_post_paid : false,
-			
-			merchant_owner_id : null,
+		min_order : 100,
 
-			has_parking : false,
-			is_self_service : false,
+		is_post_paid : false,
+		is_self_service : false,
+		is_sponsored : false,
+		
+		merchant_owner_id : null,
 
-			admin_approval : false,
-    	},
+		has_parking : false,
+		has_free_delivery : false,
+		
+		has_self_delivery_support : true,
+
+		is_approved : false,
 
 		merchantOwnerObject : {},
     	merchantProductObjectTags : [],
@@ -1942,9 +2076,9 @@
 			'singleMerchantData.merchantOwnerObject' : function(merchantOwnerObject){
 
 				if (merchantOwnerObject) {
-					this.singleMerchantData.merchant.merchant_owner_id = merchantOwnerObject.id;
+					this.singleMerchantData.merchant_owner_id = merchantOwnerObject.id;
 				}else
-					this.singleMerchantData.merchant.merchant_owner_id = null;
+					this.singleMerchantData.merchant_owner_id = null;
 			},
 			query : function(val){
 				if (val==='') {
@@ -2047,10 +2181,12 @@
     		},
     		showMerchantDetailModal(merchant) {
 
-				this.singleMerchantData.merchant = merchant;
-				this.singleMerchantData.merchant.max_booking = merchant.booking ? merchant.booking.total_seat : 0;
-
+				this.singleMerchantData = merchant;
+				this.singleMerchantData.max_booking = merchant.booking ? merchant.booking.total_seat : 0;
 				this.singleMerchantData.merchantOwnerObject = merchant.owner;
+
+				this.service_schedule  = merchant.service_schedule;
+				this.booking_break_schedule = merchant.booking_break_schedule;
 
 				$("#modal-show-merchant").modal("show");
 			},
@@ -2061,8 +2197,11 @@
     			this.submitForm = true;
     			this.errors.merchant = {};
 
-				this.singleMerchantData.merchant = {};
-				this.singleMerchantData.merchantOwnerObject = {};
+				this.singleMerchantData = {
+
+					merchantOwnerObject : {},
+
+				};
 
 				this.service_schedule = {
 					sat : {
@@ -2186,29 +2325,32 @@
 			},
 		    storeMerchant() {
 
-		    	if (this.step < 3) {
+		    	if (this.step < 4) {
 
 		    		this.nextPage();
 		    		return;
 
 		    	}
 
-				this.singleMerchantData.merchant.banner_preview = this.merchantNewBanner;
+				this.singleMerchantData.banner_preview = this.merchantNewBanner;
 
-				this.singleMerchantData.merchant.service_schedule = this.service_schedule;
-				this.singleMerchantData.merchant.booking_break_schedule = this.booking_break_schedule;
+				this.singleMerchantData.service_schedule = this.service_schedule;
+				this.singleMerchantData.booking_break_schedule = this.booking_break_schedule;
 				
 				// this.merchant.lat : null,
 				// this.merchant.lng : null,
 
 				axios
-					.post('/merchants/'+ this.perPage, this.singleMerchantData.merchant)
+					.post('/merchants/'+ this.perPage, this.singleMerchantData)
 					.then(response => {
 
 						if (response.status == 200) {
 
-							this.singleMerchantData.merchant = {};
-							this.singleMerchantData.merchantOwnerObject = {};
+							this.singleMerchantData = {
+
+								merchantOwnerObject : {},
+
+							};
 
 							this.query = '';
 
@@ -2238,33 +2380,43 @@
 				this.submitForm = true;
 				this.errors.merchant = {};
 
-				this.singleMerchantData.merchant = merchant;
-				this.singleMerchantData.merchant.max_booking = merchant.booking ? merchant.booking.total_seat : 0;
+				/*
+				this.singleMerchantData = {
+					merchant,
+					max_booking : merchant.booking ? merchant.booking.total_seat : 0,
+					merchantOwnerObject : merchant.owner
+				};
+				*/
 
-				this.service_schedule  = JSON.parse(merchant.service_schedule);
-				this.booking_break_schedule = JSON.parse(merchant.booking_break_schedule);
-
+				this.singleMerchantData = merchant;
+				this.singleMerchantData.max_booking = merchant.booking ? merchant.booking.total_seat : 0;
 				this.singleMerchantData.merchantOwnerObject = merchant.owner;
+
+				this.service_schedule  = merchant.service_schedule;
+				this.booking_break_schedule = merchant.booking_break_schedule;
 		    	
 				$("#modal-createOrEdit-merchant").modal("show");
 			},
 			updateMerchant() {
 
-				this.singleMerchantData.merchant.banner_preview = this.merchantNewBanner;
+				this.singleMerchantData.banner_preview = this.merchantNewBanner;
 				
-				this.singleMerchantData.merchant.service_schedule = this.service_schedule;
-				this.singleMerchantData.merchant.booking_break_schedule = this.booking_break_schedule;
+				this.singleMerchantData.service_schedule = this.service_schedule;
+				this.singleMerchantData.booking_break_schedule = this.booking_break_schedule;
 
 				// this.merchant.lat : null,
 				// this.merchant.lng : null,
 
 				axios
-					.put('/merchants/'+this.singleMerchantData.merchant.id+'/'+this.perPage, this.singleMerchantData.merchant)
+					.put('/merchants/' + this.singleMerchantData.id + '/' + this.perPage, this.singleMerchantData)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleMerchantData.merchant = {};
-							this.singleMerchantData.merchantOwnerObject = {};
+							this.singleMerchantData = {
+
+								merchantOwnerObject : {},
+
+							};
 
 							if (this.query === '') {
 								this.allMerchants = response.data;
@@ -2288,17 +2440,21 @@
 					});
 			},
 			showMerchantDeletionModal(merchant) {
-				this.singleMerchantData.merchant = merchant;
+				this.singleMerchantData = merchant;
 				$("#modal-merchant-delete-confirmation").modal("show");
 			},
 			destroyMerchant() {
 
 				axios
-					.delete('/merchants/'+this.singleMerchantData.merchant.id+'/'+this.perPage)
+					.delete('/merchants/' + this.singleMerchantData.id + '/' +this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
-							this.singleMerchantData.merchant = {};
+							this.singleMerchantData = {
+
+								merchantOwnerObject : {},
+
+							};
 
 							if (this.query === '') {
 								this.allMerchants = response.data;
@@ -2323,17 +2479,21 @@
 
 			},
 			showMerchantRestoreModal(merchant) {
-				this.singleMerchantData.merchant = merchant;
+				this.singleMerchantData = merchant;
 				$("#modal-merchant-restore-confirmation").modal("show");
 			},
 			restoreMerchant() {
 
 				axios
-					.patch('/merchants/'+this.singleMerchantData.merchant.id+'/'+this.perPage)
+					.patch('/merchants/' + this.singleMerchantData.id + '/' +this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 
-							this.singleMerchantData.merchant = {};
+							this.singleMerchantData = {
+
+								merchantOwnerObject : {},
+								
+							};
 
 							if (this.query === '') {
 								this.allMerchants = response.data;
@@ -2424,20 +2584,26 @@
 
 				if (this.step===1) {
 
-					this.validateFormInput ('merchant.merchantOwnerObject');
-					this.validateFormInput ('merchant.type');
-					this.validateFormInput ('merchant.name');
-					this.validateFormInput ('merchant.user_name');
-					this.validateFormInput ('merchant.password');
-					this.validateFormInput ('merchant.password_confirmation');
-					this.validateFormInput ('merchant.mobile');
-					this.validateFormInput ('merchant.min_order');
-					this.validateFormInput ('merchant.max_booking');
-					this.validateFormInput ('merchant.website');
+					this.validateFormInput ('merchantOwnerObject');
+					this.validateFormInput ('type');
+					this.validateFormInput ('name');
+					this.validateFormInput ('user_name');
+					this.validateFormInput ('password');
+					this.validateFormInput ('password_confirmation');
+					this.validateFormInput ('mobile');
+					this.validateFormInput ('min_order');
+					this.validateFormInput ('max_booking');
+					this.validateFormInput ('website');
 				
-				}else {
+				}
+				else if (this.step===2) {
+					this.validateFormInput('discount');
+					this.validateFormInput('general_order_sale_percentage');
+					this.validateFormInput('supported_delivery_order_sale_percentage');
+				}
+				else {
 
-					this.validateFormInput ('merchant.address');
+					this.validateFormInput ('address');
 				
 				}
 
@@ -2456,7 +2622,7 @@
 
 				switch(formInputName) {
 
-					case 'merchant.merchantOwnerObject' :
+					case 'merchantOwnerObject' :
 
 						if (Object.keys(this.singleMerchantData.merchantOwnerObject).length === 0) {
 							this.errors.merchant.merchantOwnerObject = 'Merchant owner is required';
@@ -2468,9 +2634,9 @@
 
 						break;
 
-					case 'merchant.type' :
+					case 'type' :
 
-						if (! this.singleMerchantData.merchant.type) {
+						if (! this.singleMerchantData.type) {
 							this.errors.merchant.type = 'Merchant type is required';
 						}
 						else {
@@ -2480,12 +2646,12 @@
 
 						break;
 
-					case 'merchant.name' :
+					case 'name' :
 
-						if (!this.singleMerchantData.merchant.name) {
+						if (!this.singleMerchantData.name) {
 							this.errors.merchant.name = 'Name is required';
 						}
-						else if (!this.singleMerchantData.merchant.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
+						else if (!this.singleMerchantData.name.match(/^[_A-z0-9]*((-|&|\s)*[_A-z0-9])*$/g)) {
 							this.errors.merchant.name = 'No special character or space';
 						}
 						else {
@@ -2495,12 +2661,12 @@
 
 						break;
 
-					case 'merchant.user_name' :
+					case 'user_name' :
 
-						if (!this.singleMerchantData.merchant.user_name) {
+						if (!this.singleMerchantData.user_name) {
 							this.errors.merchant.user_name = 'Username is required';
 						}
-						else if (!this.singleMerchantData.merchant.user_name.match(/^[_A-z0-9]*((-|_|\w)*[_A-z0-9])*$/g)) {
+						else if (!this.singleMerchantData.user_name.match(/^[_A-z0-9]*((-|_|\w)*[_A-z0-9])*$/g)) {
 							this.errors.merchant.user_name = 'No special character or space';
 						}
 						else {
@@ -2510,9 +2676,9 @@
 
 						break;
 
-					case 'merchant.password' :
+					case 'password' :
 
-						if ((! this.editMode && ! this.singleMerchantData.merchant.password) || (this.singleMerchantData.merchant.password && this.singleMerchantData.merchant.password.length < 8)) {
+						if ((! this.editMode && ! this.singleMerchantData.password) || (this.singleMerchantData.password && this.singleMerchantData.password.length < 8)) {
 							this.errors.merchant.password = 'Password length has to be 8';
 						}
 						else{
@@ -2522,9 +2688,9 @@
 
 						break;
 
-					case 'merchant.password_confirmation' :
+					case 'password_confirmation' :
 
-						if (this.singleMerchantData.merchant.password && this.singleMerchantData.merchant.password !== this.singleMerchantData.merchant.password_confirmation) {
+						if (this.singleMerchantData.password && this.singleMerchantData.password !== this.singleMerchantData.password_confirmation) {
 							this.errors.merchant.password_confirmation = "Password doesn't match" ;
 						}
 						else{
@@ -2534,12 +2700,12 @@
 
 						break;
 
-					case 'merchant.mobile' :
+					case 'mobile' :
 
-						if (!this.singleMerchantData.merchant.mobile) {
+						if (!this.singleMerchantData.mobile) {
 							this.errors.merchant.mobile = 'Mobile is required';
 						}
-						else if (!this.singleMerchantData.merchant.mobile.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
+						else if (!this.singleMerchantData.mobile.match(/\+?(88)?0?1[123456789][0-9]{8}\b/g)) {
 							this.errors.merchant.mobile = 'Invalid mobile number';
 						}
 						else {
@@ -2549,12 +2715,12 @@
 
 						break;
 
-					case 'merchant.min_order' :
+					case 'min_order' :
 
-						if (!this.singleMerchantData.merchant.min_order) {
+						if (!this.singleMerchantData.min_order) {
 							this.errors.merchant.min_order = 'Minimum order is required';
 						}
-						else if (this.singleMerchantData.merchant.min_order < 100 || this.singleMerchantData.merchant.min_order > 5000) {
+						else if (this.singleMerchantData.min_order < 100 || this.singleMerchantData.min_order > 5000) {
 							this.errors.merchant.min_order = 'Value should be between 100 and 5000';
 						}
 						else {
@@ -2564,12 +2730,12 @@
 
 						break;
 
-					case 'merchant.max_booking' :
+					case 'max_booking' :
 
-						if (!this.singleMerchantData.merchant.max_booking) {
+						if (!this.singleMerchantData.max_booking) {
 							this.errors.merchant.max_booking = 'Number Seats is required';
 						}
-						else if (this.singleMerchantData.merchant.max_booking < 0 || this.singleMerchantData.merchant.max_booking > 1000) {
+						else if (this.singleMerchantData.max_booking < 0 || this.singleMerchantData.max_booking > 1000) {
 							this.errors.merchant.max_booking = 'Value should be between 0 and 1000';
 						}
 						else {
@@ -2579,9 +2745,9 @@
 
 						break;
 
-					case 'merchant.website' :
+					case 'website' :
 
-						if (this.singleMerchantData.merchant.website && !this.singleMerchantData.merchant.website.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)) {
+						if (this.singleMerchantData.website && !this.singleMerchantData.website.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)) {
 							this.errors.merchant.website = 'Invalid url';
 						}
 						else {
@@ -2591,9 +2757,54 @@
 
 						break;
 
-					case 'merchant.address' :
+					case 'discount' :
 
-						if (!this.singleMerchantData.merchant.address) {
+						if (!this.singleMerchantData.discount) {
+							this.errors.merchant.discount = 'Discount rate is required';
+						}
+						else if (this.singleMerchantData.discount < 0 || this.singleMerchantData.discount > 100) {
+							this.errors.merchant.discount = 'Discount rate is invalid';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.merchant, 'discount');
+						}
+
+						break;
+
+					case 'supported_delivery_order_sale_percentage' :
+
+						if (! this.singleMerchantData.supported_delivery_order_sale_percentage) {
+							this.errors.merchant.supported_delivery_order_sale_percentage = 'Sale % is required';
+						}
+						else if (this.singleMerchantData.supported_delivery_order_sale_percentage < 0 || this.singleMerchantData.supported_delivery_order_sale_percentage > 100) {
+							this.errors.merchant.supported_delivery_order_sale_percentage = 'Value should be between 0 and 100';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.merchant, 'supported_delivery_order_sale_percentage');
+						}
+
+						break;
+
+					case 'general_order_sale_percentage' :
+
+						if (! this.singleMerchantData.general_order_sale_percentage) {
+							this.errors.merchant.general_order_sale_percentage = 'Sale % is required';
+						}
+						else if (this.singleMerchantData.general_order_sale_percentage < 0 || this.singleMerchantData.general_order_sale_percentage > 100) {
+							this.errors.merchant.general_order_sale_percentage = 'Value should be between 0 and 100';
+						}
+						else{
+							this.submitForm = true;
+							this.$delete(this.errors.merchant, 'general_order_sale_percentage');
+						}
+
+						break;
+
+					case 'address' :
+
+						if (!this.singleMerchantData.address) {
 							this.errors.merchant.address = 'Address is required';
 						}
 						else {
@@ -2672,57 +2883,6 @@
 
 						break;
 
-					case 'merchant.delivery_charge_per_kilometer' :
-
-						if (this.singleMerchantData.merchant.has_delivery_support && ! this.singleMerchantData.merchant.delivery_charge_per_kilometer) {
-							this.errors.merchant.delivery_charge_per_kilometer = 'Delivery charge is required';
-						}
-						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.delivery_charge_per_kilometer < 0) {
-							this.errors.merchant.delivery_charge_per_kilometer = 'Value should be positive';
-						}
-						else {
-							this.submitForm = true;
-							this.$delete(this.errors.merchant, 'delivery_charge_per_kilometer');
-						}
-
-						break;
-
-					case 'merchant.min_delivery_charge' :
-
-						if (this.singleMerchantData.merchant.has_delivery_support && !this.singleMerchantData.merchant.min_delivery_charge) {
-							this.errors.merchant.min_delivery_charge = 'Delivery min charge is required';
-						}
-						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.min_delivery_charge < 0) {
-							this.errors.merchant.min_delivery_charge = 'Value should be positive';
-						}
-						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.max_delivery_charge && this.singleMerchantData.merchant.max_delivery_charge < this.singleMerchantData.merchant.min_delivery_charge) {
-							this.errors.merchant.min_delivery_charge = 'Value should be smaller than max value';
-						}
-						else {
-							this.submitForm = true;
-							this.$delete(this.errors.merchant, 'min_delivery_charge');
-						}
-
-						break;
-
-					case 'merchant.max_delivery_charge' :
-
-						if (this.singleMerchantData.merchant.has_delivery_support && !this.singleMerchantData.merchant.max_delivery_charge) {
-							this.errors.merchant.max_delivery_charge = 'Delivery max charge is required';
-						}
-						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.max_delivery_charge < 0) {
-							this.errors.merchant.max_delivery_charge = 'Value should be positive';
-						}
-						else if (this.singleMerchantData.merchant.has_delivery_support && this.singleMerchantData.merchant.min_delivery_charge && this.singleMerchantData.merchant.max_delivery_charge < this.singleMerchantData.merchant.min_delivery_charge) {
-							this.errors.merchant.max_delivery_charge = 'Value should be greater than min value';
-						}
-						else {
-							this.submitForm = true;
-							this.$delete(this.errors.merchant, 'max_delivery_charge');
-						}
-
-						break;
-
 				}
 					 
 			},
@@ -2741,7 +2901,7 @@
 			createImage(file) {
                 let reader = new FileReader();
                 reader.onload = (evnt) => {
-                    this.singleMerchantData.merchant.banner_preview = this.merchantNewBanner = evnt.target.result;
+                    this.singleMerchantData.banner_preview = this.merchantNewBanner = evnt.target.result;
                 };
                 reader.readAsDataURL(file);
             }

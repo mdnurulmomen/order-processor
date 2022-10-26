@@ -38,6 +38,9 @@ class DeliveryController extends Controller
 			'nid_number'=>'required|numeric|unique:riders,nid_number',
 			// 'nid_front_preview'=>'required|string|min:8|max:100|confirmed',
 			// 'nid_back_preview'=>'required|string|min:8|max:100|confirmed',
+			'delivery_rate_per_kilometer'=>'required|numeric|min:0|max:1000',
+         	'min_delivery_charge'=>'required|numeric|min:0|max:1000',
+			'max_delivery_charge'=>'required|numeric|min:0|max:1000|gte:min_delivery_charge',
 			'payment_method'=>'required|string|max:50',
 			'payment_account_number'=>'required|string|min:6|max:100',
 			// 'available'=>'required|boolean',
@@ -71,6 +74,9 @@ class DeliveryController extends Controller
 			$newDeliveryMan->nid_back_preview = $request->nid_back_preview;
 		}
 
+		$newDeliveryMan->delivery_rate_per_kilometer = $request->has_self_delivery_support ? $request->delivery_rate_per_kilometer : 0;
+      	$newDeliveryMan->min_delivery_charge = $request->has_self_delivery_support ? $request->min_delivery_charge : 0;
+      	$newDeliveryMan->max_delivery_charge = $request->has_self_delivery_support ? $request->max_delivery_charge : 0;
 		$newDeliveryMan->payment_method = strtolower($request->payment_method);
 		$newDeliveryMan->payment_account_number = $request->payment_account_number;
 		$newDeliveryMan->admin_approval = $request->admin_approval ?? false;
@@ -98,6 +104,9 @@ class DeliveryController extends Controller
 			'nid_number'=>'required|numeric|unique:riders,nid_number,'.$deliveryManToUpdate->id,
 			// 'nid_front_preview'=>'required|string|min:8|max:100|confirmed',
 			// 'nid_back_preview'=>'required|string|min:8|max:100|confirmed',
+			'delivery_rate_per_kilometer'=>'required|numeric|min:0|max:1000',
+         	'min_delivery_charge'=>'required|numeric|min:0|max:1000',
+         	'max_delivery_charge'=>'required|numeric|min:0|max:1000|gte:min_delivery_charge',
 			'payment_method'=>'required|string|max:50',
 			'payment_account_number'=>'required|string|min:6|max:100',
 			// 'available'=>'required|boolean',
@@ -122,6 +131,9 @@ class DeliveryController extends Controller
 		$deliveryManToUpdate->nid_number = $request->nid_number;
 		$deliveryManToUpdate->nid_front_preview = $request->nid_front_preview;
 		$deliveryManToUpdate->nid_back_preview = $request->nid_back_preview;
+		$deliveryManToUpdate->delivery_rate_per_kilometer = $request->has_self_delivery_support ? $request->delivery_rate_per_kilometer : 0;
+      	$deliveryManToUpdate->min_delivery_charge = $request->has_self_delivery_support ? $request->min_delivery_charge : 0;
+      	$deliveryManToUpdate->max_delivery_charge = $request->has_self_delivery_support ? $request->max_delivery_charge : 0;
 		$deliveryManToUpdate->payment_method = strtolower($request->payment_method);
 		$deliveryManToUpdate->payment_account_number = $request->payment_account_number;
 		$deliveryManToUpdate->admin_approval = $request->admin_approval ?? false;

@@ -38,17 +38,17 @@ const router = new VueRouter({
 		{
 			path: '/home',
             name: 'home',
-            component: () => import(/* webpackChunkName : "js/home-component" */ './pages/owner/Home.vue')
+            component: () => import(/* webpackChunkName : "js/home-component" */ './pages/owner/HomeComponent.vue')
 		},
 		{
 			path: '/profile',
             name: 'profile',
-            component: () => import(/* webpackChunkName : "js/profile" */ './pages/owner/Profile.vue')
+            component: () => import(/* webpackChunkName : "js/profile" */ './pages/owner/ProfileComponent.vue')
 		},
 		{
 			path: '/settings',
             name: 'setting',
-            component: () => import(/* webpackChunkName : "js/settings" */ './pages/owner/Setting.vue')
+            component: () => import(/* webpackChunkName : "js/settings" */ './pages/owner/SettingComponent.vue')
 		},
 
 		{
@@ -97,7 +97,7 @@ const router = new VueRouter({
 		{
 			path: '/404',
             name: 'routeNotFound',
-            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFound.vue')
+            component: () => import(/* webpackChunkName : "js/not-found-component" */ './pages/NotFoundComponent.vue')
 		},
 	],
 });

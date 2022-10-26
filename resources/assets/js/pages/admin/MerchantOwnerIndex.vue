@@ -71,7 +71,7 @@
 											<th scope="col">Username</th>
 											<th scope="col">Mobile</th>
 											<th scope="col">Email</th>
-											<th scope="col">Number Merchants</th>
+											<th scope="col"># Merchants</th>
 											<th scope="col">Action</th>
 										</tr>
 									</thead>
@@ -84,7 +84,7 @@
 									    		{{ index + 1 }}
 									    	</td>
 								    		<td>
-								    			{{ merchantOwner.name | eachcapitalize }}
+								    			{{ merchantOwner.user_name | eachcapitalize }}
 								    		</td>
 								    		<td>
 								    			{{ merchantOwner.mobile }}

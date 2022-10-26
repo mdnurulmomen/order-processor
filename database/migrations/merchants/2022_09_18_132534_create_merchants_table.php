@@ -26,21 +26,22 @@ class CreateMerchantsTable extends Migration
             $table->float('lng', 10, 6); // from area name / map
             $table->string('website')->nullable();
             $table->string('banner_preview')->nullable();
-            $table->unsignedMediumInteger('min_order')->default(150);
-            $table->boolean('need_delivery_support')->default(false);
+            $table->unsignedMediumInteger('min_order')->default(100);
             $table->boolean('is_post_paid')->default(false);
             $table->boolean('is_self_service')->default(true);
-            $table->boolean('has_parking')->default(false);
             $table->boolean('is_sponsored')->default(false);
-            $table->unsignedTinyInteger('delivery_charge_per_kilometer')->default(0);
-            $table->unsignedTinyInteger('min_delivery_charge')->default(0);
-            $table->unsignedTinyInteger('max_delivery_charge')->default(0);
-            $table->unsignedTinyInteger('order_acceptance_percentage')->default(0);
-            $table->unsignedTinyInteger('mean_rating')->default(0);     // From Customers
+            $table->boolean('has_parking')->default(false);
+            $table->boolean('has_free_delivery')->default(true);
+            $table->boolean('has_self_delivery_support')->default(true);
             $table->json('service_schedule')->nullable(); // service hour for whole week
             $table->json('booking_break_schedule')->nullable(); // break hour for whole week
-            $table->boolean('taking_order')->default(false);
-            $table->boolean('admin_approval')->default(false);
+            $table->float('supported_delivery_order_sale_percentage', 5, 2)->default(0);
+            $table->float('general_order_sale_percentage', 5, 2)->default(0);   // all other orders except supported delivery order
+            $table->float('discount', 5, 2)->default(0);            // global discount
+            $table->unsignedTinyInteger('order_acceptance_percentage')->default(0);
+            $table->unsignedTinyInteger('mean_rating')->default(0);     // From Customers
+            $table->boolean('is_open')->default(false);
+            $table->boolean('is_approved')->default(false);
             $table->unsignedInteger('merchant_owner_id');
 
             $table->softDeletes();

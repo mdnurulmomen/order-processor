@@ -17,6 +17,7 @@ class CreateMerchantProductAddonsTable extends Migration
             $table->mediumIncrements('id');
             $table->unsignedSmallInteger('addon_id');
             $table->unsignedSmallInteger('price');
+            $table->boolean('is_available')->default(true);
             $table->unsignedMediumInteger('merchant_product_id');
             $table->softDeletes();
         });
