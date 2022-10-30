@@ -63,7 +63,7 @@ class MerchantController extends Controller
 			'booking_break_schedule'=>'required',
          'supported_delivery_order_sale_percentage' => 'required|numeric|min:0|max:100',
          'general_order_sale_percentage' => 'required|numeric|min:0|max:100',
-         'discount' => 'required|integer|min:0|max:100',
+         'discount' => 'nullable|integer|min:0|max:100',
 		]);
 
       // return $request;
@@ -94,7 +94,7 @@ class MerchantController extends Controller
       $newMerchant->is_sponsored = $request->is_sponsored ?? 0;
       $newMerchant->is_self_service = $request->is_self_service ?? 0;
       $newMerchant->has_parking = $request->has_parking ?? 0;
-      $newMerchant->has_free_delivery = $request->has_self_delivery_support ? 0 : $request->has_free_delivery ?? 0;
+      $newMerchant->has_free_delivery = $request->has_self_delivery_support ? 1 : $request->has_free_delivery ?? 0;
       $newMerchant->service_schedule = $request->service_schedule;
       $newMerchant->booking_break_schedule = $request->booking_break_schedule;
       $newMerchant->supported_delivery_order_sale_percentage = $request->supported_delivery_order_sale_percentage;
@@ -147,7 +147,7 @@ class MerchantController extends Controller
          'booking_break_schedule'=>'required',
          'supported_delivery_order_sale_percentage' => 'required|numeric|min:0|max:100',
          'general_order_sale_percentage' => 'required|numeric|min:0|max:100',
-         'discount' => 'required|integer|min:0|max:100',
+         'discount' => 'nullable|integer|min:0|max:100',
       ]);
 
       $merchantToUpdate->is_approved = $request->is_approved ?? 0;
@@ -176,7 +176,7 @@ class MerchantController extends Controller
       $merchantToUpdate->is_sponsored = $request->is_sponsored ?? 0;
       $merchantToUpdate->is_post_paid = $request->is_post_paid;
       $merchantToUpdate->has_parking = $request->has_parking;
-      $merchantToUpdate->has_free_delivery = $request->has_self_delivery_support ? 0 : $request->has_free_delivery ?? 0;
+      $merchantToUpdate->has_free_delivery = $request->has_self_delivery_support ? 1 : $request->has_free_delivery ?? 0;
       $merchantToUpdate->is_self_service = $request->is_self_service;
 
       $merchantToUpdate->service_schedule = $request->service_schedule;

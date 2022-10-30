@@ -185,21 +185,21 @@ class LoginController extends Controller
     protected function attemptCustomerLoginWithUsername(Request $request)
     {
         return $this->guard()->attempt(
-            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );   
     }
 
     protected function attemptCustomerLoginWithEmail(Request $request)
     {
         return $this->guard()->attempt(
-            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );   
     }
 
     protected function attemptCustomerLoginWithMobile(Request $request)
     {
         return $this->guard()->attempt(
-            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );   
     }
 
@@ -207,42 +207,42 @@ class LoginController extends Controller
     protected function attemptAdminLoginWithUsername(Request $request)
     {
         return $this->guard('admin')->attempt(
-            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );   
     }
 
     protected function attemptAdminLoginWithEmail(Request $request)
     {
         return Auth::guard('admin')->attempt(
-            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );
     }
 
     protected function attemptAdminLoginWithMobile(Request $request)
     {
         return Auth::guard('admin')->attempt(
-            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember'));
+            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember'));
     }
 
     // Owner
     protected function attemptOwnerLoginWithUsername(Request $request)
     {
         return Auth::guard('owner')->attempt(
-            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
+            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );   
     }
 
     protected function attemptOwnerLoginWithEmail(Request $request)
     {
         return Auth::guard('owner')->attempt(
-            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );
     }
 
     protected function attemptOwnerLoginWithMobile(Request $request)
     {
         return Auth::guard('owner')->attempt(
-            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
+            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );   
     }
 
@@ -251,21 +251,21 @@ class LoginController extends Controller
     protected function attemptMerchantLoginWithUsername(Request $request)
     {
         return Auth::guard('merchant')->attempt(
-            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
+            ['user_name'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );   
     }
 
     protected function attemptMerchantLoginWithEmail(Request $request)
     {
         return Auth::guard('merchant')->attempt(
-            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'active'=>1], $request->filled('remember')
+            ['email'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );
     }
 
     protected function attemptMerchantLoginWithMobile(Request $request)
     {
         return Auth::guard('merchant')->attempt(
-            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password], $request->filled('remember')
+            ['mobile'=>$request->usernameOrEmailOrMobile, 'password'=>$request->password, 'is_approved'=>1], $request->filled('remember')
         );   
     }
 

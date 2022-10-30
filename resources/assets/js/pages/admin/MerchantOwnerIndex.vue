@@ -13,7 +13,6 @@
 		
 			<div class="row" v-show="!loading">
 				<div class="col-sm-12">
-
 					<div class="card">
 						<div class="card-header">
 							<h2 class="lead float-left mt-1">Merchant Owner List</h2>
@@ -192,8 +191,36 @@
 									<div class="col-sm-12">
 										<div class="card card-outline">
 								            <div class="card-body">
+								            	<div class="form-group row">	
+								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-md-right">
+								              			First name
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<input 
+															type="text" 
+															class="form-control is-valid" 
+															v-model="singleMerchantOwnerData.merchantOwner.first_name" 
+															placeholder="First Name" 
+									                	>
+									                </div>	
+								              	</div>
+
 								              	<div class="form-group row">	
-								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-md-right">
+								              			Last name
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<input 
+															type="text" 
+															class="form-control is-valid" 
+															v-model="singleMerchantOwnerData.merchantOwner.last_name" 
+															placeholder="Last Name" 
+									                	>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-md-right">
 								              			Username
 								              		</label>
 									                <div class="col-sm-8">
@@ -212,11 +239,10 @@
 												        	}}
 												  		</div>
 									                </div>	
-									              	
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-md-right">
 								              			Mobile
 								              		</label>
 									                <div class="col-sm-8">
@@ -233,11 +259,10 @@
 												        	{{ errors.merchantOwner.mobile }}
 												  		</div>
 									                </div>	
-									              	
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-md-right">
 								              			Email
 								              		</label>
 									                <div class="col-sm-8">
@@ -259,7 +284,7 @@
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-md-right">
 								              			Password
 								              		</label>
 									                <div class="col-sm-8">
@@ -279,7 +304,7 @@
 								              	</div>
 
 								              	<div class="form-group row">	
-								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-right">
+								              		<label for="inputOwnerName3" class="col-sm-4 col-form-label text-md-right">
 								              			Confirm Password
 								              		</label>
 									                <div class="col-sm-8">

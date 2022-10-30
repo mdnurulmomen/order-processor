@@ -6,7 +6,7 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
+import Vue from 'vue'
 
 require('./custom');
 
@@ -28,6 +28,9 @@ import App from './pages/MerchantSideMenuBar.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
+
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
 
 // Registering component globally
 Vue.component('pagination', require('./pages/Pagination.vue').default);
@@ -69,7 +72,7 @@ const router = new VueRouter({
 		{
 			path: '/my-product-categories',
             name: 'my-product-categories',
-            component: () => import(/* webpackChunkName : "js/my-product-categories-list" */ './pages/owner/ProductCategoryIndex')
+            component: () => import(/* webpackChunkName : "js/my-product-categories-list" */ './pages/owner/ProductCategoryIndex.vue')
 		},
 		
 

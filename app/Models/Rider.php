@@ -30,6 +30,7 @@ class Rider extends Model
      * @var array
      */
     protected $casts = [
+        'is_engaged' => 'boolean',
         'is_approved' => 'boolean',
         'is_available' => 'boolean',
     ];

@@ -6,7 +6,7 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
+import Vue from 'vue'
 
 require('./custom');
 
@@ -57,6 +57,9 @@ Vue.component('pagination', require('./pages/Pagination.vue').default);
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
+
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
 
 // import mixin
 // import ApplicationSetting from './mixins/ApplicationSetting';

@@ -24,7 +24,7 @@ class CreateCustomersTable extends Migration
             $table->rememberToken();
             $table->boolean('app_notification')->default(true);
             $table->boolean('email_notification')->default(true);
-            $table->boolean('active')->default(true);
+            $table->boolean('is_approved')->default(true);
             $table->timestamps();
         });
     }

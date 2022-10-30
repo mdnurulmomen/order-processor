@@ -21,9 +21,9 @@ class CreateMerchantOwnersTable extends Migration
             $table->char('mobile')->unique();
             $table->string('email')->unique();
             $table->string('password'); // Login with username / mobile
-
+            $table->string('profile_picture')->nullable();
+            $table->boolean('is_approved')->default(true);
             $table->rememberToken();
-            
             $table->softDeletes();
             $table->timestamps();
         });

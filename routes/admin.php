@@ -25,7 +25,7 @@ Route::name('admin.')->group(function () {
 		});
 
 		// For all other routes coming from vue
-    	Route::get('/{any}', 'HomeController@showAdminHome');	
+    	Route::get('/{any}/{id?}', 'HomeController@showAdminHome')->where('id', '[0-9]+');	
 	});
 
 

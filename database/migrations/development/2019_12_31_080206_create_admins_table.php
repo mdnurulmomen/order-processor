@@ -22,7 +22,7 @@ class CreateAdminsTable extends Migration
             $table->string('email')->unique();
             $table->string('password'); // Login with email / mobile with OTP
             $table->string('profile_picture')->nullable();
-            $table->boolean('active')->default(true);
+            $table->boolean('is_approved')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

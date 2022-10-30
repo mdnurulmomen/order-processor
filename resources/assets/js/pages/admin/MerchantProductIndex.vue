@@ -70,7 +70,7 @@
 								  			<td colspan="8">
 									    		<p class="font-weight-bold font-italic">
 									    			{{ 
-									    				merchantProductCategory.product_category ? merchantProductCategory.product_category.name : 'Trashed Product Category' 
+									    				merchantProductCategory.product_category ? merchantProductCategory.product_category.name : 'Trashed Product Category' | eachcapitalize
 									    			}}
 										    		<span 
 											    		class="badge badge-danger" 
@@ -201,7 +201,7 @@
 												    			}}
 												    		</td>
 												    		<td>
-												    			{{ merchantProduct.customizable ? 'Customizable' : 'Not-Customizable' }}
+												    			{{ merchantProduct.is_customizable ? 'Customizable' : 'Not-Customizable' }}
 												    		</td>
 
 												    		<td>
@@ -340,7 +340,7 @@
 								              			for="inputProductName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Product-Category
+								              			Category
 								              		</label>
 
 									                <div class="col-sm-5">  	
@@ -385,7 +385,7 @@
 								              			for="inputProductName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Product Name 
+								              			Name 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -407,13 +407,32 @@
 									                </div>	
 								              	</div>
 
+								              	<div class="form-group row" v-show="editMode">	
+								              		<label 
+								              			for="inputProductName3" 
+								              			class="col-sm-4 col-form-label text-right"
+								              		>
+								              			SKU 
+								              		</label>
+
+									                <div class="col-sm-8">
+									                  	<input 
+															type="text" 
+															class="form-control" 
+															v-model="singleMerchantProductData.merchantProduct.sku" 
+															placeholder="Auto Generated" 
+															:disabled="true"
+									                	>
+									                </div>	
+								              	</div>
+
 								              	<div class="form-group row">
 									              		
 								              		<label 
 								              			for="inputProductName3" 
 								              			class="col-sm-4 col-form-label text-right"
 								              		>
-								              			Product Detail 
+								              			Detail 
 								              		</label>
 
 									                <div class="col-sm-8">
@@ -573,22 +592,28 @@
 								              			Discount
 								              		</label>
 
-									                <div class="col-sm-8">
-									                  	
-									                  	<input 
-															type="text" 
-															class="form-control" 
-															v-model="singleMerchantProductData.merchantProduct.discount" 
-															placeholder="Discount" 
-															required="true"
-															:class="!errors.merchantProduct.discount  ? 'is-valid' : 'is-invalid'" 
-															@keyup="validateFormInput('merchantProduct.discount')"
-									                	>
-									                	<div class="invalid-feedback">
-												        	{{ 
-												        		errors.merchantProduct.discount 
-												        	}}
-												  		</div>
+								              		<div class="col-sm-8">
+									                	<div class="input-group mb-3">
+										                	<input 
+																type="number" 
+																class="form-control" 
+																v-model.number="singleMerchantProductData.merchantProduct.discount" 
+																placeholder="Discount Rate" 
+																:class="!errors.merchantProduct.discount  ? 'is-valid' : 'is-invalid'" 
+																@keyup="validateFormInput('merchantProduct.discount')"
+																min="0" 
+																step=".1" 
+																max="100" 
+										                	>
+															<div class="input-group-append">
+																<span class="input-group-text">
+																	%
+																</span>
+															</div>
+										                	<div class="invalid-feedback">
+													        	{{ errors.merchantProduct.discount  }}
+													  		</div>
+									                	</div>
 									                </div>	
 								              	</div>
 
@@ -711,7 +736,7 @@
 									                  	<toggle-button 
 				                                    		value ="true" 
 				                                    		:sync="true" 
-				                                    		v-model="singleMerchantProductData.merchantProduct.customizable" 
+				                                    		v-model="singleMerchantProductData.merchantProduct.is_customizable" 
 				                                    		:width="140"  
 				                                    		:height="30" 
 				                                    		:font-size="15" 
@@ -733,12 +758,34 @@
 									                  	<toggle-button 
 				                                    		value ="true" 
 				                                    		:sync="true" 
-				                                    		v-model="singleMerchantProductData.merchantProduct.promoted" 
+				                                    		v-model="singleMerchantProductData.merchantProduct.is_promoted" 
 				                                    		:width="140"  
 				                                    		:height="30" 
 				                                    		:font-size="15" 
 				                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
 				                                    		:labels="{checked: 'Promoted', unchecked: 'No' }"
+				                                    	/>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label 
+								              			for="inputProductName3" 
+								              			class="col-sm-4 col-form-label text-right"
+								              		>
+								              			Availability 
+								              		</label>
+
+									                <div class="col-sm-8">
+									                  	<toggle-button 
+				                                    		value ="true" 
+				                                    		:sync="true" 
+				                                    		v-model="singleMerchantProductData.merchantProduct.is_available" 
+				                                    		:width="140"  
+				                                    		:height="30" 
+				                                    		:font-size="15" 
+				                                    		:color="{checked: 'green', unchecked: '#17a2b8'}" 
+				                                    		:labels="{checked: 'Available', unchecked: 'NA' }"
 				                                    	/>
 									                </div>	
 								              	</div>
@@ -1064,7 +1111,7 @@
 			price : 0,
 			has_variation : false,
 			has_addon : false,
-			customizable : false,
+			is_customizable : false,
 			merchant_product_category_id : null,
 
 			idVariations : [],

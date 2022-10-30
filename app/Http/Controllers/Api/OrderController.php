@@ -56,8 +56,8 @@ class OrderController extends Controller
 
             $merchantNewOrder = $newOrder->merchants()->create([
                 'merchant_id' => $merchantOrder->id,
-                'has_delivery_support' => ($newOrder=='delivery' && ! $merchant->has_self_delivery_support) ? true : false,
-                'is_free_delivery' => ($newOrder=='delivery' && ! $merchant->has_self_delivery_support && ! $merchant->has_free_delivery) ? 1 : 0,
+                'has_delivery_support' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support) ? true : false,
+                'is_free_delivery' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support && ! $merchant->has_free_delivery) ? 1 : 0,
                 'net_price' => $merchantOrder->net_price,
 
                 'applied_sale_percentage' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support) ? $merchant->supported_delivery_order_sale_percentage : $merchant->general_order_sale_percentage,
@@ -250,7 +250,7 @@ class OrderController extends Controller
 
     public function getOrderDetails($order)
     {
-        return new OrderResource(Order::with(['schedule', 'payment', 'address', 'riderAssigned', 'collections', 'serve', 'customerOrderCancelation', 'merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.merchant'])->findOrFail($order));
+        return new OrderResource(Order::with(['schedule', 'payment', 'address', 'riderAssigned', 'collections', 'serve', 'customerOrderCancellation', 'merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.merchant'])->findOrFail($order));
     }
 
     /*
@@ -446,7 +446,7 @@ class OrderController extends Controller
     private function notifyAdmin(Order $order) 
     {
         // Log::info('UpdateAdmin');
-        event(new UpdateAdmin(Order::with(['merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.products.customization', 'riderAssigned', 'collections.merchant', 'serve', 'merchantOrderCancelations.canceller'])->find($order->id)));
+        event(new UpdateAdmin(Order::with(['merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.products.customization', 'riderAssigned', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller'])->find($order->id)));
 
     }
 

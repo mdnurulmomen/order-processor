@@ -174,10 +174,11 @@ class ProductController extends Controller
          'detail'=>'nullable|string|max:255',
          'has_variation'=>'boolean',
          'has_addon'=>'boolean',
-         'promoted'=>'boolean',
-         'customizable'=>'boolean',
+         'is_promoted'=>'boolean',
+         'is_customizable'=>'boolean',
+         'is_available'=>'boolean',
          'price'=>'numeric|min:0|max:65535',
-         'discount' => 'numeric|min:0|max:100',
+         'discount' => 'nullable|numeric|min:0|max:100',
          'merchant_product_category_id'=>'required|numeric|exists:merchant_product_categories,id',
          'merchant_id'=>'required|numeric|exists:merchants,id',
          'idVariations' => 'exclude_if:has_variation,false,0,|required_if:has_variation,true,1|array',
@@ -195,9 +196,10 @@ class ProductController extends Controller
          'has_variation' => $request->has_variation ?? false,
          'has_addon' => $request->has_addon ?? false,
          'price' => $request->has_variation ? min($request->priceVariations) : $request->price,
-         'discount' => $request->discount ?? 0,
-         'customizable' => $request->customizable ?? false,
-         'promoted' => $request->promoted ?? false,
+         'discount' => $request->discount,
+         'is_customizable' => $request->is_customizable ?? false,
+         'is_promoted' => $request->is_promoted ?? false, 
+         'is_available' => $request->is_available ?? false, 
          'merchant_product_category_id' => $request->merchant_product_category_id,
       ]);
 
@@ -255,10 +257,11 @@ class ProductController extends Controller
          'detail'=>'nullable|string|max:255',
          'has_variation'=>'boolean',
          'has_addon'=>'boolean',
-         'promoted'=>'boolean',
-         'customizable'=>'boolean',
+         'is_promoted'=>'boolean',
+         'is_customizable'=>'boolean',
+         'is_available'=>'boolean',
          'price'=>'numeric|min:0|max:65535', 
-         'discount' => 'numeric|min:0|max:100',
+         'discount' => 'nullable|numeric|min:0|max:100',
          'merchant_product_category_id'=>'required|numeric|exists:merchant_product_categories,id',
          'merchant_id'=>'required|numeric|exists:merchants,id',
          'idVariations' => 'exclude_if:has_variation,false,0,|required_if:has_variation,true,1|array',
@@ -277,9 +280,10 @@ class ProductController extends Controller
          'has_variation' => $request->has_variation ?? false,
          'has_addon' => $request->has_addon ?? false,
          'price' => $request->has_variation ? min($request->priceVariations) : $request->price,
-         'discount' => $request->discount ?? 0,
-         'customizable' => $request->customizable ?? false,
-         'promoted' => $request->promoted ?? false,
+         'discount' => $request->discount,
+         'is_customizable' => $request->is_customizable ?? false,
+         'is_promoted' => $request->is_promoted ?? false, 
+         'is_available' => $request->is_available ?? false, 
          'merchant_product_category_id' => $request->merchant_product_category_id,
       ]);
 
@@ -452,7 +456,7 @@ class ProductController extends Controller
 
    public function searchMerchantAllProducts($merchant, $search, $perPage)
    {
-      $query = MerchantProductCategory::with(['merchant', 'productCategory', 'merchantProducts.merchantProductVariations', 'merchantProducts.addons']);
+      $query = MerchantProductCategory::withTrashed()->with(['merchant', 'productCategory', 'merchantProducts.variations', 'merchantProducts.addons']);
 
       $query->where( function( $subquery )use ($search){
 
@@ -540,7 +544,7 @@ class ProductController extends Controller
          'productCategoriesId.*'  => "required|numeric|exists:product_categories,id",
          'serving_from'=>'nullable|string|max:20',
          'serving_to'=>'nullable|string|max:20',
-         'discount'=>'numeric|min:0|max:100',
+         'discount'=>'nullable|numeric|min:0|max:100',
          'merchant_id'=>'required|numeric|exists:merchants,id',
       ]);
 
@@ -618,7 +622,7 @@ class ProductController extends Controller
                                   ->ignore($merchantProductCategoryToUpdate->id),
          'serving_from'=>'nullable|string|max:20',
          'serving_to'=>'nullable|string|max:20',
-         'discount'=>'numeric|min:0|max:100',
+         'discount'=>'nullable|numeric|min:0|max:100',
          'merchant_id'=>'required|numeric|exists:merchants,id',
       ]);
 

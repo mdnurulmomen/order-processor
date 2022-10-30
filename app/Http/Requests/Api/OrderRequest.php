@@ -273,7 +273,7 @@ class OrderRequest extends FormRequest
 
                                 else if ($expectedMerchantProduct->has_variation && ! empty($merchantProduct->variation)) {
                                     
-                                    $expectedMerchantVariation = MerchantProductVariation::findOrFail($merchantProduct->variation->id);
+                                    $expectedMerchantVariation = MerchantProductVariation::find($merchantProduct->variation->id);
 
                                     if (empty($expectedMerchantVariation) || $expectedMerchantVariation->merchant_product_id != $expectedMerchantProduct->id) {
                                         
@@ -287,7 +287,7 @@ class OrderRequest extends FormRequest
 
                                     foreach ($merchantProduct->addons as $productAddonKey => $productAddon) {
                                         
-                                        $expectedMerchantProductAddon = MerchantProductAddon::findOrFail($productAddon->id);
+                                        $expectedMerchantProductAddon = MerchantProductAddon::find($productAddon->id);
 
                                         if (empty($expectedMerchantProductAddon) || $expectedMerchantProductAddon->merchant_product_id != $expectedMerchantProduct->id) {
                                             
@@ -362,7 +362,7 @@ class OrderRequest extends FormRequest
             'merchants.*.net_price.*'  => 'Net price is invalid',
             
             'merchants.*.products.*.id.required'  => 'Product id is required',
-            'merchants.*.products.*.id.exists'  => 'Product is unavailable',
+            'merchants.*.products.*.id.exists'  => 'Product is invalid or unavailable now',
             'merchants.*.products.*.id.*'  => 'Product id is invalid',
             
             'merchants.*.products.*.price.required'  => 'Product price is required',
@@ -380,9 +380,9 @@ class OrderRequest extends FormRequest
 
             'merchants.*.products.*.addons.present' => 'Product addons is required',
             'merchants.*.products.*.addons.array' => 'Product addons must be an array',
-            'merchants.*.products.*.addons.*.id.required'  => 'Addon item id is required',
-            'merchants.*.products.*.addons.*.id.exists'  => 'Addon item is unavailable now',
-            'merchants.*.products.*.addons.*.id.*'  => 'Addon item id is invalid',
+            'merchants.*.products.*.addons.*.id.required'  => 'Addon id is required',
+            'merchants.*.products.*.addons.*.id.exists'  => 'Addon is invalid or unavailable now',
+            'merchants.*.products.*.addons.*.id.*'  => 'Addon id is invalid',
             'merchants.*.products.*.addons.*.price.required'  => 'Addon price is required',
             'merchants.*.products.*.addons.*.price.*'  => 'Addon price is invalid',
             'merchants.*.products.*.addons.*.quantity.required'  => 'Addon quantity is required',

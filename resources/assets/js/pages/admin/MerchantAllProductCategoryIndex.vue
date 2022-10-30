@@ -108,7 +108,7 @@
 								    				merchantProductCategory.product_category ? merchantProductCategory.product_category.name : 'Trashed Product-Category' | capitalize 
 								    			}}
 
-								    			<span class="badge badge-info">{{ merchantProductCategory.merchant_products.length }}</span>
+								    			<span class="badge badge-info" v-tooltip="'This category has ' + merchantProductCategory.merchant_products.length + ' products.'">{{ merchantProductCategory.merchant_products.length }}</span>
 								    		</td>
 								    		<td>
 								    			{{ merchantProductCategory.serving_from }}
@@ -334,22 +334,28 @@
 								              			Discount
 								              		</label>
 
-									                <div class="col-sm-8">
-									                  	
-									                  	<input 
-															type="text" 
-															class="form-control" 
-															v-model="singleMerchantProductCategoryData.discount" 
-															placeholder="Discount" 
-															:class="!errors.discount  ? 'is-valid' : 'is-invalid'" 
-															@keyup="validateFormInput('discount')"
-															required="true"
-									                	>
-									                	<div class="invalid-feedback">
-												        	{{ 
-												        		errors.discount 
-												        	}}
-												  		</div>
+								              		<div class="col-sm-8">
+									                	<div class="input-group mb-3">
+										                	<input 
+																type="number" 
+																class="form-control" 
+																v-model.number="singleMerchantProductCategoryData.discount" 
+																placeholder="Discount Rate" 
+																:class="!errors.discount  ? 'is-valid' : 'is-invalid'" 
+																@keyup="validateFormInput('discount')" 
+																min="0" 
+																step=".1" 
+																max="100" 
+										                	>
+															<div class="input-group-append">
+																<span class="input-group-text">
+																	%
+																</span>
+															</div>
+										                	<div class="invalid-feedback">
+													        	{{ errors.discount }}
+													  		</div>
+									                	</div>
 									                </div>	
 								              	</div>
 								            </div>
@@ -892,7 +898,7 @@
 
 					case 'discount' :
 
-						if (this.singleMerchantProductData.discount < 0 || this.singleMerchantProductData.discount > 100) {
+						if (this.singleMerchantProductCategoryData.discount < 0 || this.singleMerchantProductCategoryData.discount > 100) {
 							this.errors.discount = 'Value should be between 0 to 100';
 						}
 						else {

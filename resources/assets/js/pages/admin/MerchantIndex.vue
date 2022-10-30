@@ -116,10 +116,11 @@
 									    	<td scope="row">{{ index + 1 }}</td>
 								    		<td>
 								    			{{ merchant.name | capitalize }}
-								    			<span :class="[merchant.is_sponsored ? 'badge-danger' : 'badge-default', 'right badge']"
+
+								    			<span :class="[merchant.is_sponsored ? 'badge-danger' : '', 'right badge']"
 								    			>
 								    				{{ 
-								    					merchant.is_sponsored ? 'Sponsored' : 'Not-Sponsored' 
+								    					merchant.is_sponsored ? 'Sponsored' : '' 
 								    				}}
 								    			</span>
 								    		</td>
@@ -402,7 +403,7 @@
 									              			Sponsored :
 									              		</label>
 										                <div class="col-sm-6">
-										                	<span :class="[singleMerchantData.is_sponsored ? 'badge-danger' : 'badge-success', 'badge']">
+										                	<span :class="[singleMerchantData.is_sponsored ? 'badge-danger' : 'badge-default', 'badge']">
 										                		{{ singleMerchantData.is_sponsored ? 'Sponsored' : 'Not-Sponsored'}}
 										                	</span>
 										                </div>	
@@ -488,7 +489,7 @@
 
 								            <div class="form-group form-row">		
 							              		<label class="col-sm-6 text-md-right">
-							              			Delivery Support :
+							              			Self Delivery :
 							              		</label>
 								                <div class="col-sm-6">
 								                	<span :class="[singleMerchantData.has_self_delivery_support ? 'badge-success' : 'badge-danger', 'badge']">
@@ -1247,7 +1248,7 @@
 										                        	<div class="col-sm-4">
 										                        		<div class="form-group">
 																	  		<label for="inputOwnerApproval3">
-																	  			Delivery Support
+																	  			Self Delivery
 																	  		</label>
 																	  		<div>
 																				<toggle-button 
@@ -1258,7 +1259,8 @@
 										                                    		:height="30" 
 										                                    		:font-size="15" 
 										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
-										                                    		:labels="{checked: 'Available', unchecked: 'NA' }"
+										                                    		:labels="{checked: 'Available', unchecked: 'NA' }" 
+										                                    		@change="changeFreeDelivery()" 
 									                                    		/>		
 																	  		</div>
 										                        		</div>
@@ -1278,7 +1280,8 @@
 										                                    		:height="30" 
 										                                    		:font-size="15" 
 										                                    		:color="{checked: 'green', unchecked: '#FF0000'}" 
-										                                    		:labels="{checked: 'Available', unchecked: 'NA' }"
+										                                    		:labels="{checked: 'Available', unchecked: 'NA' }" 
+										                                    		:disabled="singleMerchantData.has_self_delivery_support" 
 									                                    		/>		
 																	  		</div>
 										                        		</div>
@@ -2614,6 +2617,13 @@
 				}
 				
 				return;
+
+			},
+			changeFreeDelivery() {
+
+				if (this.singleMerchantData.has_self_delivery_support) {
+					this.singleMerchantData.has_free_delivery = true;
+				}
 
 			},
 			validateFormInput (formInputName) {

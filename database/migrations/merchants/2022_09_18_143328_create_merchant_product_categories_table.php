@@ -19,7 +19,7 @@ class CreateMerchantProductCategoriesTable extends Migration
             $table->string('serving_from')->nullable();
             $table->string('serving_to')->nullable();
             // $table->float('vat_rate', 5, 2)->default(0);
-            $table->float('discount', 5, 2)->default(0);            // global discount
+            $table->float('discount', 5, 2)->nullable()->default(0);            // global discount
             $table->unsignedMediumInteger('merchant_id');
             $table->softDeletes();
         });

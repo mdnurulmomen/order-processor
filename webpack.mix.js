@@ -27,7 +27,7 @@ mix.webpackConfig(webpack => {
     };
 });
 
-mix.js('resources/assets/js/admin.js', 'public/js')
-   .js('resources/assets/js/owner.js', 'public/js')
-   .js('resources/assets/js/merchant.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+mix.sass('resources/assets/sass/app.scss', 'public/css')
+.js('resources/assets/js/admin.js', 'public/js')
+.js('resources/assets/js/owner.js', 'public/js')
+.js('resources/assets/js/merchant.js', 'public/js').vue({ version: 2 });

@@ -78,7 +78,7 @@
 										<tr>
 											<th scope="col">#</th>
 											<th scope="col">Username</th>
-											<th scope="col">Email</th>
+											<!-- <th scope="col">Email</th> -->
 											<th scope="col">Mobile</th>
 											<th scope="col">Picture</th>
 											<th scope="col">Approval</th>
@@ -94,19 +94,15 @@
 									    		{{ index + 1 }}
 									    	</td>
 								    		<td>
-								    			{{ 
-								    				user_name
-								    			}}
+								    			{{ deliveryMan.user_name | capitalize }}
 								    		</td>
-								    		<td>
+								    		<!-- <td>
 								    			{{ 
 								    				email
 								    			}}
-								    		</td>
+								    		</td> -->
 								    		<td>
-								    			{{ 
-								    				mobile
-								    			}}
+								    			{{ deliveryMan.mobile }}
 								    		</td>
 								    		<td>
 								    			<img 
@@ -117,10 +113,10 @@
 								    		<td>
 								    			
 								    			<span 
-								    				  :class="[deliveryMan.admin_approval ? 'badge-success' : 'badge-danger', 'right badge']"
+								    				  :class="[deliveryMan.is_approved ? 'badge-success' : 'badge-danger', 'right badge']"
 								    			>
 								    				{{ 
-								    					deliveryMan.admin_approval ? 'Approved' : 'Not-approved'
+								    					deliveryMan.is_approved ? 'Approved' : 'Not-approved'
 								    				}}
 								    			</span>
 
@@ -391,7 +387,6 @@
 								              			Gender
 								              		</label>
 									                <div class="col-sm-8">
-
 									                  	<div class="custom-control custom-radio">
 															<input 
 																type="radio" 
@@ -703,18 +698,54 @@
 
 								              	<div class="form-group row">	
 								              		<label for="inputDeliveryManName3" class="col-sm-4 col-form-label text-right">
-								              			Admin Approval
+								              			Approval
 								              		</label>
 									                <div class="col-sm-8">
 									                  	<toggle-button 
 				                                  			:sync="true" 
-				                                  			v-model="singleDeliveryManData.admin_approval" 
+				                                  			v-model="singleDeliveryManData.is_approved" 
 				                                  			value="true" 
 				                                  			:width="140"  
 				                                  			:height="30" 
 				                                  			:font-size="15" 
 				                                  			:color="{checked: 'green', unchecked: 'red'}" 
 				                                  			:labels="{checked: 'Approved', unchecked: 'Not-approved' }"
+			                                  			/>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label for="inputDeliveryManName3" class="col-sm-4 col-form-label text-right">
+								              			Availability
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<toggle-button 
+				                                  			:sync="true" 
+				                                  			v-model="singleDeliveryManData.is_available" 
+				                                  			value="true" 
+				                                  			:width="140"  
+				                                  			:height="30" 
+				                                  			:font-size="15" 
+				                                  			:color="{checked: 'green', unchecked: 'red'}" 
+				                                  			:labels="{checked: 'Available', unchecked: 'Not-available' }"
+			                                  			/>
+									                </div>	
+								              	</div>
+
+								              	<div class="form-group row">	
+								              		<label for="inputDeliveryManName3" class="col-sm-4 col-form-label text-right">
+								              			Status
+								              		</label>
+									                <div class="col-sm-8">
+									                  	<toggle-button 
+				                                  			:sync="true" 
+				                                  			v-model="singleDeliveryManData.is_engaged" 
+				                                  			value="true" 
+				                                  			:width="140"  
+				                                  			:height="30" 
+				                                  			:font-size="15" 
+				                                  			:color="{checked: 'green', unchecked: 'red'}" 
+				                                  			:labels="{checked: 'Available', unchecked: 'Not-available' }"
 			                                  			/>
 									                </div>	
 								              	</div>
@@ -874,7 +905,9 @@
 		payment_method : null,
 		payment_account_number : null,
 
-		admin_approval : false,
+		is_engaged : false,
+		is_approved : false,
+		is_available : false,
 
     };
 
@@ -1415,10 +1448,10 @@
 
 					case 'delivery_rate_per_kilometer' :
 
-						if (this.singleMerchantData.has_self_delivery_support && ! this.singleMerchantData.delivery_rate_per_kilometer) {
+						if (! this.singleDeliveryManData.delivery_rate_per_kilometer) {
 							this.errors.delivery_rate_per_kilometer = 'Delivery rate is required';
 						}
-						else if (this.singleMerchantData.has_self_delivery_support && this.singleMerchantData.delivery_rate_per_kilometer < 0) {
+						else if (this.singleDeliveryManData.delivery_rate_per_kilometer < 0) {
 							this.errors.delivery_rate_per_kilometer = 'Value should be positive';
 						}
 						else {
@@ -1430,13 +1463,13 @@
 
 					case 'min_delivery_charge' :
 
-						if (this.singleMerchantData.has_self_delivery_support && !this.singleMerchantData.min_delivery_charge) {
+						if (!this.singleDeliveryManData.min_delivery_charge) {
 							this.errors.min_delivery_charge = 'Delivery min charge is required';
 						}
-						else if (this.singleMerchantData.has_self_delivery_support && this.singleMerchantData.min_delivery_charge < 0) {
+						else if (this.singleDeliveryManData.min_delivery_charge < 0) {
 							this.errors.min_delivery_charge = 'Value should be positive';
 						}
-						else if (this.singleMerchantData.has_self_delivery_support && this.singleMerchantData.max_delivery_charge && this.singleMerchantData.max_delivery_charge < this.singleMerchantData.min_delivery_charge) {
+						else if (this.singleDeliveryManData.max_delivery_charge && this.singleDeliveryManData.max_delivery_charge < this.singleDeliveryManData.min_delivery_charge) {
 							this.errors.min_delivery_charge = 'Value should be smaller than max value';
 						}
 						else {
@@ -1448,13 +1481,13 @@
 
 					case 'max_delivery_charge' :
 
-						if (this.singleMerchantData.has_self_delivery_support && !this.singleMerchantData.max_delivery_charge) {
+						if (!this.singleDeliveryManData.max_delivery_charge) {
 							this.errors.max_delivery_charge = 'Delivery max charge is required';
 						}
-						else if (this.singleMerchantData.has_self_delivery_support && this.singleMerchantData.max_delivery_charge < 0) {
+						else if (this.singleDeliveryManData.max_delivery_charge < 0) {
 							this.errors.max_delivery_charge = 'Value should be positive';
 						}
-						else if (this.singleMerchantData.has_self_delivery_support && this.singleMerchantData.min_delivery_charge && this.singleMerchantData.max_delivery_charge < this.singleMerchantData.min_delivery_charge) {
+						else if (this.singleDeliveryManData.min_delivery_charge && this.singleDeliveryManData.max_delivery_charge < this.singleDeliveryManData.min_delivery_charge) {
 							this.errors.max_delivery_charge = 'Value should be greater than min value';
 						}
 						else {

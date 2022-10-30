@@ -922,7 +922,7 @@ class OrderController extends Controller
 	private function notifyMerchantAgents(MerchantOrder $merchantOrder, $merchantId)
 	{
 		// checking if merchant has any approved agent
-		if (Merchant::find($merchantId)->agents()->where('admin_approval', 1)->exists()) {
+		if (Merchant::find($merchantId)->agents()->where('is_approved', 1)->exists()) {
 			
 			// broadcast for agent with MerchantOrder
 			event(new UpdateAgents($merchantOrder));
@@ -937,7 +937,7 @@ class OrderController extends Controller
 
 		return Rider::whereNull('current_lat')
 		->whereNull('current_lang')
-		->where('admin_approval', true)
+		->where('is_approved', true)
 		->where('is_available', true)
 		->where('is_engaged', false)
 		->where(function ($query) {

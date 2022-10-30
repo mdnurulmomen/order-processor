@@ -44,7 +44,9 @@ class DeliveryController extends Controller
 			'payment_method'=>'required|string|max:50',
 			'payment_account_number'=>'required|string|min:6|max:100',
 			// 'available'=>'required|boolean',
-			'admin_approval'=>'nullable|boolean',
+			'is_approved'=>'nullable|boolean',
+			'is_available'=>'nullable|boolean',
+			'is_engaged'=>'nullable|boolean',
 
 		]);
 
@@ -74,12 +76,14 @@ class DeliveryController extends Controller
 			$newDeliveryMan->nid_back_preview = $request->nid_back_preview;
 		}
 
-		$newDeliveryMan->delivery_rate_per_kilometer = $request->has_self_delivery_support ? $request->delivery_rate_per_kilometer : 0;
-      	$newDeliveryMan->min_delivery_charge = $request->has_self_delivery_support ? $request->min_delivery_charge : 0;
-      	$newDeliveryMan->max_delivery_charge = $request->has_self_delivery_support ? $request->max_delivery_charge : 0;
+		$newDeliveryMan->delivery_rate_per_kilometer = $request->delivery_rate_per_kilometer;
+      	$newDeliveryMan->min_delivery_charge = $request->min_delivery_charge;
+      	$newDeliveryMan->max_delivery_charge = $request->max_delivery_charge;
 		$newDeliveryMan->payment_method = strtolower($request->payment_method);
 		$newDeliveryMan->payment_account_number = $request->payment_account_number;
-		$newDeliveryMan->admin_approval = $request->admin_approval ?? false;
+		$newDeliveryMan->is_approved = $request->is_approved ?? false;
+		$newDeliveryMan->is_available = $request->is_available ?? false;
+		$newDeliveryMan->is_engaged = $request->is_engaged ?? false;
 
 		$newDeliveryMan->save();
 
@@ -110,8 +114,9 @@ class DeliveryController extends Controller
 			'payment_method'=>'required|string|max:50',
 			'payment_account_number'=>'required|string|min:6|max:100',
 			// 'available'=>'required|boolean',
-			'admin_approval'=>'nullable|boolean',
-
+			'is_approved'=>'nullable|boolean',
+			'is_available'=>'nullable|boolean',
+			'is_engaged'=>'nullable|boolean',
 		]);
 
 		$deliveryManToUpdate->first_name = strtolower($request->first_name);
@@ -131,12 +136,14 @@ class DeliveryController extends Controller
 		$deliveryManToUpdate->nid_number = $request->nid_number;
 		$deliveryManToUpdate->nid_front_preview = $request->nid_front_preview;
 		$deliveryManToUpdate->nid_back_preview = $request->nid_back_preview;
-		$deliveryManToUpdate->delivery_rate_per_kilometer = $request->has_self_delivery_support ? $request->delivery_rate_per_kilometer : 0;
-      	$deliveryManToUpdate->min_delivery_charge = $request->has_self_delivery_support ? $request->min_delivery_charge : 0;
-      	$deliveryManToUpdate->max_delivery_charge = $request->has_self_delivery_support ? $request->max_delivery_charge : 0;
+		$deliveryManToUpdate->delivery_rate_per_kilometer = $request->delivery_rate_per_kilometer;
+      	$deliveryManToUpdate->min_delivery_charge = $request->min_delivery_charge;
+      	$deliveryManToUpdate->max_delivery_charge = $request->max_delivery_charge;
 		$deliveryManToUpdate->payment_method = strtolower($request->payment_method);
 		$deliveryManToUpdate->payment_account_number = $request->payment_account_number;
-		$deliveryManToUpdate->admin_approval = $request->admin_approval ?? false;
+		$deliveryManToUpdate->is_approved = $request->is_approved ?? false;
+		$deliveryManToUpdate->is_available = $request->is_available ?? false;
+		$deliveryManToUpdate->is_engaged = $request->is_engaged ?? false;
 
 		$deliveryManToUpdate->save();
 

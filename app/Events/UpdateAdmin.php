@@ -14,7 +14,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use App\Http\Resources\Web\MerchantOrderResource;
 use App\Http\Resources\Web\OrderCollectionResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\Http\Resources\Web\MerchantCancelationResource;
+use App\Http\Resources\Web\MerchantCancellationResource;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class UpdateAdmin implements ShouldBroadcast
@@ -49,7 +49,7 @@ class UpdateAdmin implements ShouldBroadcast
             'rider_assigned' => $this->order->riderAssigned()->exists() ? new RiderDeliveryResource($this->order->riderAssigned) : null,
             'collections' => OrderCollectionResource::collection($this->order->collections),
             'order_serve_confirmation' => $this->order->serve()->exists() ? new ServingOrderResource($this->order->serve) : null,
-            'merchant_order_cancelations' => MerchantCancelationResource::collection($this->order->merchantOrderCancelations),
+            'merchant_order_cancellations' => MerchantCancellationResource::collection($this->order->merchantOrderCancellations),
             
             /*
             'restaurant_acceptances' => RestaurantAcceptanceResource::collection($this->order->restaurantAcceptances),
@@ -58,7 +58,7 @@ class UpdateAdmin implements ShouldBroadcast
             'rider_food_pick_confirmations' => OrderPickUpProgressionResource::collection($this->order->riderFoodPickConfirmations),
             'rider_delivery_confirmation' => $this->order->riderDeliveryConfirmation ? new RiderDeliveryResource($this->order->riderDeliveryConfirmation) : null,
             'order_serve_confirmation' => $this->order->orderServeConfirmation,
-            'restaurant_order_cancelations' => RestaurantCancelationResource::collection($this->order->restaurantOrderCancelations),
+            'restaurant_order_cancellations' => RestaurantCancellationResource::collection($this->order->restaurantOrderCancellations),
              */
             
             /*
