@@ -143,10 +143,10 @@
 													no option should be shown without picking/cancelling every merchant orders 
 												-->
 								    			<span 
-								    				v-else-if="orderIsDeliveredOrServed(order)" 
+								    				v-else-if="orderIsServedOrDelivered(order)" 
 								    				:class="[orderIsReturned(order) ? 'badge-primary' : 'badge-success', 'badge d-block']"
 								    			>	
-								    				{{ orderIsDeliveredOrServed(order)  | capitalize }}
+								    				{{ orderServingOrDeliveringStatus(order)  | capitalize }}
 								    			</span>
 
 								    			<!-- 
@@ -161,13 +161,13 @@
 								    					v-for="merchantOrderRecord in order.merchants" 
 								    					:class="[secondaryOrderClass(order, merchantOrderRecord.merchant_id), 'badge d-block']"
 								    				>
-									    				{{ secondaryOrder(order, merchantOrderRecord.merchant_id) | capitalize }}
+									    				{{ secondaryOrderStatus(order, merchantOrderRecord.merchant_id) | capitalize }}
 								    				</span>
 							    				</span>	
 
 							    				<!-- new order before call confirmation -->
-								    			<span :class="[initialOrderClass(order), 'badge d-block']" v-else>	
-								    				{{ initialOrder(order) | capitalize }}
+								    			<span :class="[primaryOrderClass(order), 'badge d-block']" v-else>	
+								    				{{ primaryOrderStatus(order) | capitalize }}
 								    			</span>
 								    		</td>
 								    		<td>
@@ -252,12 +252,12 @@
 			    					new order before call confirmation
 			    				-->
 			    				<div 
+									v-if="orderIsPrimary(singleOrderData.order)" 
 									class="progress-bar progress-bar-striped progress-bar-animated" 
 									style="width:25%" 
-									v-if="initialOrder(singleOrderData.order)" 
-				    				:class="[initialOrderClass(singleOrderData.order)]"
+				    				:class="[primaryOrderClass(singleOrderData.order)]"
 								>
-									{{ initialOrder(singleOrderData.order) | capitalize }}
+									{{ primaryOrderStatus(singleOrderData.order) | capitalize }}
 								</div>
 								
 				    			<!-- 
@@ -273,16 +273,16 @@
 				    				:class="[secondaryOrderClass(singleOrderData.order, merchantOrderRecord.merchant_id)]" 
 									:style="{ width: (60/singleOrderData.order.merchants.length) + '%' }"
 								>
-									{{ secondaryOrder(singleOrderData.order, merchantOrderRecord.merchant_id) | capitalize }}
+									{{ secondaryOrderStatus(singleOrderData.order, merchantOrderRecord.merchant_id) | capitalize }}
 								</div>
 
 								<!-- no option should be shown without picking/cancelling every merchant orders -->
 								<div 
+									v-if="orderIsServedOrDelivered(singleOrderData.order)" 
 				    				:class="[orderIsReturned(singleOrderData.order) ? 'bg-primary' : 'bg-success', 'progress-bar progress-bar-striped progress-bar-animated']"
 									style="width:15%"
-									v-if="orderIsDeliveredOrServed(singleOrderData.order)" 
 								>
-									{{ orderIsDeliveredOrServed(singleOrderData.order) | capitalize }}
+									{{ orderServingOrDeliveringStatus(singleOrderData.order) | capitalize }}
 								</div>
 
 								<div 
@@ -420,54 +420,6 @@
 
 								            <div class="form-group form-row">		
 							              		<label class="col-sm-6 text-md-right">
-							              			Price:
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.price }} 
-								                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
-								                </div>	
-								            </div>
-
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-md-right">
-							              			Vat:
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.vat }} %
-								                </div>	
-								            </div>
-
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-md-right">
-							              			Discount:
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.discount }} %
-								                </div>	
-								            </div>
-
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-md-right">
-							              			Delivery-fee:
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.delivery_fee }}
-								                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
-								                </div>	
-								            </div> 
-
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-md-right">
-							              			Payable Price:
-							              		</label>
-								                <div class="col-sm-6">
-								                  	{{ singleOrderData.order.net_payable }}
-								                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
-								                </div>	
-								            </div> 
-
-								            <div class="form-group form-row">		
-							              		<label class="col-sm-6 text-md-right">
 							              			Payment type:
 							              		</label>
 								                <div class="col-sm-6">
@@ -486,18 +438,30 @@
 								                  	{{ singleOrderData.order.has_cutlery ? 'Added' : 'None' }}
 								                </div>	
 								            </div> 
-								            
-								            <div class="form-group form-row">		
+
+								            <div class="form-group form-row" v-show="singleOrderData.order.customer_confirmation==1">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Status:
 							              		</label>
 								                <div class="col-sm-6">
+								                	<span :class="[singleOrderData.order.is_completed==1 ? 'badge-success' : singleOrderData.order.is_progress==1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+									    			>	
+									    				{{ singleOrderData.order.is_completed==1 ? 'Completed' : singleOrderData.order.is_progress==1 ? 'Progressive' : 'Failed' }}
+									    			</span>
+								                </div>	
+								            </div> 
+								            
+								            <div class="form-group form-row">		
+							              		<label class="col-sm-6 text-md-right">
+							              			Steps:
+							              		</label>
+								                <div class="col-sm-6">
 								                	<!-- <div v-show="order.payment_method==='cash'"> -->
 									    			<span 
-									    				v-if="initialOrder(singleOrderData.order)" 
-									    				:class="[initialOrderClass(singleOrderData.order), 'badge d-block']"
+									    				v-if="orderIsPrimary(singleOrderData.order)" 
+									    				:class="[primaryOrderClass(singleOrderData.order), 'badge d-block']"
 									    			>
-									    				{{ initialOrder(singleOrderData.order) | capitalize }}
+									    				{{ primaryOrderStatus(singleOrderData.order) | capitalize }}
 									    			</span>
 
 									    			<span v-if="orderIsConfirmed(singleOrderData.order) && singleOrderData.order.merchants && singleOrderData.order.merchants.length">
@@ -547,14 +511,14 @@
  													-->
 									    			
 									    			<span 
-									    				v-if="riderDeliveryStatus(singleOrderData.order.rider_assigned)" 
+									    				v-if="orderIsDelivered(singleOrderData.order) || orderIsReturned(singleOrderData.order)" 
 									    				:class="[riderDeliveryClass(singleOrderData.order.rider_assigned), 'badge d-block']"
 									    			>
 									    				{{ riderDeliveryStatus(singleOrderData.order.rider_assigned) | capitalize }}
 									    			</span>
 
 									    			<span 
-									    				v-else-if="orderServingStatus(singleOrderData.order.order_serve_confirmation)"
+									    				v-else-if="orderIsServed(singleOrderData.order)"
 									    				:class="[orderServingClass(singleOrderData.order.order_serve_confirmation), 'badge d-block']"
 									    			>
 									    				{{ orderServingStatus(singleOrderData.order.order_serve_confirmation) | capitalize }}
@@ -782,7 +746,7 @@
 									type="button" 
 									class="btn btn-danger dropdown-toggle" 
 									data-toggle="dropdown" 
-									v-if="! orderIsReturned(singleOrderData.order) && ! orderIsDeliveredOrServed(singleOrderData.order) && ! customerCancelledOrder(singleOrderData.order) && ! orderIsStopped(singleOrderData.order) && ! orderIsPicked(singleOrderData.order) && ! allMerchantsCancelledOrder(singleOrderData.order) " 
+									v-if="! orderIsReturned(singleOrderData.order) && ! orderIsServedOrDelivered(singleOrderData.order) && ! customerCancelledOrder(singleOrderData.order) && ! orderIsStopped(singleOrderData.order) && ! orderIsPicked(singleOrderData.order) && ! allMerchantsCancelledOrder(singleOrderData.order) " 
 								>
 									<i class="fas fa-times"></i>
 									Cancel
@@ -1407,6 +1371,16 @@
 			orderToBeConfirmed(order){
 				return order.customer_confirmation===-1 ? true : false;
 			},
+			orderIsWaitingForRider(order) {
+
+				if (Array.isArray(order.merchants) && order.merchants.length) {
+
+					return this.orderIsConfirmed(order) && order.merchants.some(merchantOrder => merchantOrder.is_accepted==null);
+				}
+
+				return false;
+
+			},
 			customerCancelledOrder(order){
 				return order.customer_confirmation===0 ? true : false;
 			},
@@ -1414,46 +1388,60 @@
 				return order.in_progress==0 ? true : false;
 			},
 			orderIsFailed(order){
-				return ! this.customerCancelledOrder(this.singleOrderData.order) && order.in_progress===0 && order.is_completed===0 ? true : false;
+				return this.orderIsConfirmed(order) && this.orderIsStopped(order) && order.is_completed===0 ? true : false;
 			},
 			orderIsPicked(order) {
 
 				if (Array.isArray(order.collections)) {
 					
-					return order.collections.filter(
+					return order.collections.some(
 						orderPickUpProgression => orderPickUpProgression.is_collected==1
-					).length;
+					);
 
 				}
 
 				return false;
 
 			},
-			// completed order
-			orderIsDeliveredOrServed(order) {
+			orderIsDelivered(order){
 
-				if (order.rider_assigned && order.rider_assigned.is_delivered==1) {
-					return 'Deliverd';
-				}
-				else if (order.order_serve_confirmation && order.order_serve_confirmation.is_served==1) {
-					return 'Served';
-				}
-				else if (order.rider_assigned && order.rider_assigned.is_delivered==2) {
-					return 'Returned';
-				}
-				else
-					return false;
+				return Boolean(order.rider_assigned && order.rider_assigned.is_delivered==1);
+
+			},
+			orderIsServed(order){
+
+				return Boolean(order.order_serve_confirmation && order.order_serve_confirmation.is_served==1);
+
 			},
 			orderIsReturned(order){
-				
-				/*
-				if (order.rider_delivery_return!=null && order.rider_delivery_return.rider_return_confirmation==1) {
-					return 'Order Returned';
+
+				return Boolean(order.rider_assigned && order.rider_assigned.is_delivered==2);
+
+			},
+			// completed order
+			orderIsServedOrDelivered(order) {
+
+				return Boolean((order.rider_assigned && order.rider_assigned.is_delivered==1) || (order.order_serve_confirmation && order.order_serve_confirmation.is_served==1) || this.orderIsReturned(order));
+
+			},
+			orderServingOrDeliveringStatus() {
+
+				if (this.orderIsDelivered(order)) {
+					return 'Deliverd';
 				}
-				*/
+				else if (this.orderIsServed(order)) {
+					return 'Served';
+				}
+				else if (this.orderIsReturned(order)) {
+					return 'Returned';
+				}
 
-				return Boolean(order.is_delivered && order.is_delivered.is_delivered==2);
-
+			},
+			riderIsAssigned(order) {
+				if (order.rider_assigned) {
+					return true;
+				}
+				return false;
 			},
 			orderAcceptanceClass(merchantOrderRecord) {
 				if (merchantOrderRecord.is_accepted==-1) {
@@ -1485,14 +1473,6 @@
 				}else if (orderServeConfirmation && orderServeConfirmation.is_served===-1) {
 					'Not served yet';
 				}
-				else
-					return false;
-			},
-			riderIsAssigned(order) {
-				if (order.rider_assigned) {
-					return true;
-				}
-				return false;
 			},
 			riderCollectionClass(riderCollection) {
 				if (riderCollection.is_collected==1) {
@@ -1541,8 +1521,6 @@
 				}else if (riderIsAssigned && riderIsAssigned.is_delivered==2) {
 					return 'Dropped at office';
 				}
-				else
-					return false;
 
 			},
 			// current merchant cancelled this order
@@ -1552,15 +1530,9 @@
 					cancellation => (cancellation.merchant_id === merchantId)
 				);
 
-				/*
-					return merchantOrderCancellations.some(
-						cancellation => (cancellation.merchant_id === merchant)
-					);
-				*/
-
 			},
 			// current merchant has been picked Up
-			merchantIsCollected(collections, merchantId) {
+			merchantOrderIsCollected(collections, merchantId) {
 				
 				return collections.find(
 					collection => (collection.merchant_id == merchantId && collection.is_collected==1)
@@ -1587,6 +1559,13 @@
 			merchantIsRinging(merchantOrderAcceptances, merchantId) {
 				
 				return merchantOrderAcceptances.find(
+					merchantOrderRecord => (merchantOrderRecord.merchant_id === merchantId && merchantOrderRecord.is_accepted==-1)
+				);
+
+			},
+			merchantLostOrder(merchantOrders, merchantId) {
+
+				return merchantOrders.find(
 					merchantOrderRecord => (merchantOrderRecord.merchant_id === merchantId && merchantOrderRecord.is_accepted==-1)
 				);
 
@@ -1626,16 +1605,12 @@
 
 			},
 			allMerchantsCancelledOrder(order) {
-				// if (Object.keys(order).length) {
 
 				return order.hasOwnProperty('merchant_order_cancellations') && order.merchants.length == order.merchant_order_cancellations.length ? true : false;
-				
-				// }
 
-				// return false;
 			},
 			// initial class for every order
-			initialOrderClass(order) {
+			primaryOrderClass(order) {
 
 				if (this.orderToBeConfirmed(order) && ! this.orderIsFailed(order)) {
 					return 'badge-dark bg-dark'
@@ -1649,7 +1624,12 @@
 				
 			},
 			// before confirmation / cancelled confirmation
-			initialOrder(order) {
+			orderIsPrimary(order) {
+
+				return Boolean((this.orderToBeConfirmed(order) && ! this.orderIsFailed(order)) || this.customerCancelledOrder(order) || this.orderIsConfirmed(order));
+
+			},
+			primaryOrderStatus(order) {
 
 				if (this.orderToBeConfirmed(order) && ! this.orderIsFailed(order)) {
 					return "Unconfirmed " + (this.reservationOrder(order) ? 'Reservation' : 'Order');
@@ -1667,27 +1647,23 @@
 			// secondary order class definer
 			secondaryOrderClass(order, merchantId) {
 
-				// console.log('Secondary value is : ' + this.secondaryOrder(order, merchant));
+				let secondaryOrderStatus = this.secondaryOrderStatus(order, merchantId);
 
-				let secondaryOrder = this.secondaryOrder(order, merchantId);
-
-				if (secondaryOrder.includes("cancelled")) {
+				if (secondaryOrderStatus.includes("cancelled") || secondaryOrderStatus.includes("not found")) {
 					return 'badge-secondary bg-secondary';
-				}else if (secondaryOrder.includes("collected")) {
+				}else if (secondaryOrderStatus.includes("collected")) {
 					return 'badge-warning bg-warning';
-				}else if (secondaryOrder.includes("ready")) {
+				}else if (secondaryOrderStatus.includes("ready")) {
 					return 'badge-success bg-success';
-				}else if (secondaryOrder.includes("accepted")) {
+				}else if (secondaryOrderStatus.includes("accepted") || secondaryOrderStatus.includes("Searching")) {
 					return 'badge-info bg-info';
-				}else if (secondaryOrder.includes("ringing")) {
+				}else if (secondaryOrderStatus.includes("ringing")) {
 					return 'badge-danger bg-danger';
 				}
 
 			},
 			// after call confirmation
-			secondaryOrder(order, merchantId) {
-				
-				// console.log(this.merchantCancelledOrder(order.merchant_order_cancellations, merchantId));
+			secondaryOrderStatus(order, merchantId) {
 
 				// if current merchant cancelled
 				if (order.hasOwnProperty('merchant_order_cancellations') && order.merchant_order_cancellations.length && typeof this.merchantCancelledOrder(order.merchant_order_cancellations, merchantId) !== 'undefined') {
@@ -1695,10 +1671,20 @@
 					return this.merchantCancelledOrder(order.merchant_order_cancellations, merchantId).merchant_name + ' cancelled order';
 
 				}
-				// if current merchant picked up
-				else if (order.collections.length && typeof this.merchantIsCollected(order.collections, merchantId) !== 'undefined') {
+				else if (this.deliveryRiderNotFound(order, merchantId)) {
 
-					return 'Collected from ' + this.merchantIsCollected(order.collections, merchantId).merchant_name;
+					return 'Rider not found for ' + this.merchantLostOrder(order.merchants, merchantId).merchant_name;
+
+				}
+				else if (this.orderIsWaitingForRider(order)) {
+
+					return 'Searching for rider';
+
+				}
+				// if current merchant picked up
+				else if (order.collections.length && typeof this.merchantOrderIsCollected(order.collections, merchantId) !== 'undefined') {
+
+					return 'Collected from ' + this.merchantOrderIsCollected(order.collections, merchantId).merchant_name;
 
 				}
 				// if current merchant order is ready
@@ -1719,37 +1705,17 @@
 					return this.merchantIsRinging(order.merchants, merchantId).merchant_name + ' is ringing';
 
 				}
-				else {
 
-					return false;
+			},
+			deliveryRiderNotFound(order, merchantId) {
+
+				if (Array.isArray(order.merchants) && order.merchants.length) {
+
+					return order.merchants.some(merchantOrder => merchantOrder.is_rider_available == 0);
 
 				}
-			
-			/*
-				// this merchant cancelled the order ?
-				if(order.merchant_order_cancellations.length >= index && order.merchant_order_cancellations[index].hasOwnProperty('cancellation_reason_id')) {
-					return order.merchant_order_cancellations[index].merchant_name + ' cancelled order';
-				}
-				// if picked up
-				else if (order.collections >= index && order.collections[index].is_collected==1) {
-					return 'Order collected from ' + order.collections[index].merchant_name;	
-				}
-				// ready ?
-				else if (order.merchants >= index && order.merchants[index].is_ready==1) {
-					return order.merchants[index].merchant_name + ' is ready';
-				}
-				// merchant ringing or accepted ?
-				else {
-					if (order.merchants[index].is_accepted==1) {
-						return order.merchants[index].merchant_name +' has accepted';
-					}else if (order.merchants[index].is_accepted==-1) {
-						return order.merchants[index].merchant_name +' is ringing';
-					}
-					else
-						return false;
-						// 	return order.merchants[index].merchant_name +' has cancelled';
-				}
-			*/
+
+				return false;
 
 			},
 			setApplicableCancellers() {
@@ -1777,7 +1743,7 @@
 
 					}
 
-					if (this.orderIsConfirmed(this.singleOrderData.order) && ! this.orderIsDeliveredOrServed(this.singleOrderData.order)) {
+					if (this.orderIsConfirmed(this.singleOrderData.order) && ! this.orderIsServedOrDelivered(this.singleOrderData.order)) {
 
 						this.cancellers.push('admin');
 

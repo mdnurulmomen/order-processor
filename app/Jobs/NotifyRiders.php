@@ -73,15 +73,17 @@ class NotifyRiders implements ShouldQueue
         if ($this->order->in_progress==1 && ! $this->order->riderAssigned()->exists()) {
             
             // initially cancelling order delivery request
-            $riderNewDeliveryRecord = $this->order->riderAssigned()->create([
-                'is_accepted' => 0,
+            $riderNewDeliveryRecord = $this->order->riders()->create([
+                // 'is_accepted' => 0,
                 'rider_id' => $this->rider->id
             ]);
 
             // setting paused time to related rider for this cancelled delivery request
+            /*
             $riderNewDeliveryRecord->rider()->update([
                 'paused_at' => now()
             ]);
+            */
 
             // Notify Riders
             // Log::warning('NotifyRiders to Rider id : '.$this->rider->id.', at : '.date("h:i:sa"));

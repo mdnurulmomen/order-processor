@@ -10,7 +10,7 @@ class RiderDelivery extends Model
 		'id'
 	];
 
-	// public $timestamps = false;
+	public $timestamps = false;
 
 	/**
      * The attributes that should be mutated to dates.
@@ -48,7 +48,10 @@ class RiderDelivery extends Model
 
 	public function merchantOrderCancellations()
    	{
-      return $this->orderCancellations()->where('canceller_type', 'App\Models\Merchant');
+      	return $this->orderCancellations()->where('canceller_type', 'App\Models\Merchant')
+      	->whereHas('order.merchants', function ($query) {
+		 	$query->where('is_self_delivery', 0);
+		});;
    	}
 
    	public function riderOrderCancellations()

@@ -27,7 +27,7 @@ class OrderController extends Controller
         $newOrder = Order::create([
             'type' => $request->order->type,
             'payment_method' => $request->payment->method,
-            'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\Waiter",
+            'orderer_type' => $request->order->orderer_type=='customer' ? "App\Models\Customer" : "App\Models\MerchantAgent",
             'orderer_id' => $request->order->orderer_id,
             'has_cutlery' => $request->order->has_cutlery ? true : false, 
             'is_asap_order' => $request->order->is_asap_order ? true : false, 
@@ -56,8 +56,8 @@ class OrderController extends Controller
 
             $merchantNewOrder = $newOrder->merchants()->create([
                 'merchant_id' => $merchantOrder->id,
-                'has_delivery_support' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support) ? true : false,
-                'is_free_delivery' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support && ! $merchant->has_free_delivery) ? 1 : 0,
+                'is_self_delivery' => $newOrder->type=='delivery' ? ($merchant->has_self_delivery_support ? true : false) : NULL,
+                'is_free_delivery' => $newOrder->type=='delivery' ? ($merchant->has_self_delivery_support || $merchant->has_free_delivery ? 1 : 0) : NULL,
                 'net_price' => $merchantOrder->net_price,
 
                 'applied_sale_percentage' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support) ? $merchant->supported_delivery_order_sale_percentage : $merchant->general_order_sale_percentage,
@@ -165,8 +165,14 @@ class OrderController extends Controller
         
         if ($newOrder->customer_confirmation==1) {
 
-            // $this->makeMerchantOrderCalls($newOrder);
-            $this->makeRiderOrderCall($newOrder);
+            // order type is other than delivery / merchant has own delivery 
+            $this->makeMerchantOrderCalls($newOrder, $newOrder->merchants()->where('is_self_delivery', 1)->get());
+
+            if ($newOrder->type=='delivery' && $newOrder->merchants()->where('is_self_delivery', 0)->count()) {
+                
+                $this->makeRiderOrderCall($newOrder);
+            
+            }
 
         }
 
@@ -241,7 +247,7 @@ class OrderController extends Controller
         // Broadcast for admin
         $this->notifyAdmin($expectedOrder);
         // Broadcast for merchant
-        $this->makeMerchantOrderCalls($expectedOrder);
+        $this->makeMerchantOrderCalls($expectedOrder, $expectedOrder->merchants);
 
         return response()->json([
             'success' => 'Reservation has been confirmed'
@@ -384,49 +390,74 @@ class OrderController extends Controller
     // broadcasting for riders
     private function makeRiderOrderCall(Order $order)
     {   
-        // to calculate the nearest rider laterly
-        $allNearestAvailableRiders = $this->findNearestAvailableRiders($order);
+        $applicationSettings = ApplicationSetting::firstOrCreate();
+        $riderNumberToCall = $applicationSettings->rider_searching_time / $applicationSettings->rider_call_receiving_time;
         
-        $delay = 0;
-
-        foreach ($allNearestAvailableRiders as $rider) {
+        // to calculate the nearest rider laterly
+        $allNearestAvailableRiders = $this->findNearestAvailableRiders($order, $riderNumberToCall);
+        
+        if ($allNearestAvailableRiders->isEmpty()) {        // no rider found
             
-            NotifyRiders::dispatch($order, $rider)->delay(now()->addSeconds($delay));
+            foreach ($order->merchants()->where('is_self_delivery', 0)->get() as $merchantOrder) {
+                
+                $merchantOrder->update([
+                    'is_rider_available' => 0
+                ]);
 
-            $delay += 30;   // 30 seconds
+                // UpdateCustomer();
+
+            }
+
+        }
+        else {
+
+            $delay = 0;
+
+            foreach ($allNearestAvailableRiders as $rider) {
+                
+                NotifyRiders::dispatch($order, $rider)->delay(now()->addSeconds($delay));
+
+                $delay += $applicationSettings->rider_call_receiving_time;  // 30 seconds
+
+            }
 
         }
 
     }
 
     // should calculate the nearest rider and snoozing time laterly (now 1 minute)
-    private function findNearestAvailableRiders(Order $order) 
+    private function findNearestAvailableRiders(Order $order, $riderNumberToCall) 
     {
         $alreadyRequestedRiders = $order->riders->pluck('id')->toArray();
+        
+        // finding required merchant locations
+        // $requiredMerchantOrders = $order->merchants()->where('is_self_delivery', 0)->get();
+        // $locationsToSearch = $requiredMerchantOrders->map(function ($merchantOrder, $key) {
+        //     return $merchantOrder->lat;
+        // });
 
-        return Rider::whereNull('current_lat')
+        return Rider::whereNull('current_lat')  // is gonna compare nearest locations among merchants
         ->whereNull('current_lang')
-        ->where('admin_approval', true)
+        ->where('is_approved', true)
         ->where('is_available', true)
         ->where('is_engaged', false)
-        ->where(function ($query) {
-            $query->whereNull('paused_at')
-            ->orWhere('paused_at', '<=', now()->subMinutes(1)->toDateTimeString());
-        })
+        // ->where(function ($query) {
+        //     $query->whereNull('paused_at')
+        //     ->orWhere('paused_at', '<=', now()->subMinutes(1)->toDateTimeString());
+        // })
         ->whereNotIn('id', $alreadyRequestedRiders)
-        // ->orderBy('evaluation.order_acceptance_percentage', 'desc')
-        // ->take(10)
+        ->orderBy('order_acceptance_percentage', 'desc')
+        ->take($riderNumberToCall)
         ->get();
     }
 
-    private function makeMerchantOrderCalls(Order $order)
+    private function makeMerchantOrderCalls(Order $order, \Illuminate\Database\Eloquent\Collection $merchantOrders)
     {
-        // checking if already has made
-        // if (! $order->merchantAcceptances()->exists()) {
+        // checking for order confirmation and if already has made
+        if ($order->customer_confirmation===1 && ! $merchantOrders->isEmpty()) {
            
-            foreach ($order->merchants as $merchantOrder) {
+            foreach ($merchantOrders as $merchantOrder) {
 
-                // make merchant new order record
                 $this->updateMerchantOrderRecord($merchantOrder);
               
                 // Broadcast for merchant
@@ -434,7 +465,7 @@ class OrderController extends Controller
 
             }
 
-        // }
+        }
     }
 
     private function notifyMerchant(MerchantOrder $merchantOrder)

@@ -744,8 +744,8 @@
 				                                  			:width="140"  
 				                                  			:height="30" 
 				                                  			:font-size="15" 
-				                                  			:color="{checked: 'green', unchecked: 'red'}" 
-				                                  			:labels="{checked: 'Available', unchecked: 'Not-available' }"
+				                                  			:color="{checked: 'red', unchecked: 'green'}" 
+				                                  			:labels="{checked: 'Engaged', unchecked: 'Available' }"
 			                                  			/>
 									                </div>	
 								              	</div>

@@ -23,14 +23,16 @@ class CreateApplicationSettingsTable extends Migration
             $table->string('official_contact_address')->default('House : XX, Road : XX, Area : XXXX, Dhaka-XXX');
             $table->char('official_customer_care_number', 13)->default('880XXXXXXXXX');
             $table->float('vat_rate')->default(0);
-            $table->float('searching_radius')->default(0);
+            $table->float('searching_radius')->default(1000);
+            $table->unsignedTinyInteger('rider_call_receiving_time')->default(30);
+            $table->unsignedTinyInteger('rider_searching_time')->default(120);
             $table->string('official_bank')->default('XXXXX Bank');
             $table->string('official_bank_account_holder_name')->default('Mr./Mrs. XXXX');
             $table->string('official_bank_account_number')->default('XXXXXXXXXXXX');
             $table->char('merchant_number',13)->default('8801XXXXXXXXX');
             $table->string('logo')->default('logo.png');
             $table->string('favicon')->default('favicon.png');
-            $table->unsignedSmallInteger('admin_id')->default(1);
+            // $table->unsignedSmallInteger('admin_id')->default(1);
             $table->timestamps();
         });
     }

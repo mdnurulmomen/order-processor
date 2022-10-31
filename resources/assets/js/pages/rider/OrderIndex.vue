@@ -103,7 +103,7 @@
 									      			</div>
 
 									      			<!-- accept button -->
-									      			<div v-if="! timeOutDeliveryOrder(riderDelivery) && !acceptedDeliveryOrder(riderDelivery)">
+									      			<div v-if="/*! timeOutDeliveryOrder(riderDelivery) && */!acceptedDeliveryOrder(riderDelivery)">
 										      			<button
 										      				type="button" 
 											      			class="btn btn-primary btn-sm" 
@@ -683,14 +683,18 @@
 			},
 			allMerchantOrderIsCollected(riderDelivery) {
 
-				let totalMerchantPickedUp = riderDelivery.collections.filter(
-													orderPickUp => orderPickUp.is_collected == 1
-												).length;
+				if (Array.isArray(riderDelivery.collections) && Array.isArray(riderDelivery.merchants) && Array.isArray(riderDelivery.merchant_order_cancellations)) {
 
-				let netMerchantsToBePicked = riderDelivery.merchants.length - riderDelivery.merchant_order_cancellations.length;
+					let totalMerchantPickedUp = riderDelivery.collections.filter(
+														orderPickUp => orderPickUp.is_collected == 1
+													).length;
 
-				if ((totalMerchantPickedUp===netMerchantsToBePicked) && this.acceptedDeliveryOrder(riderDelivery)) {
-					return true;
+					let netMerchantsToBePicked = riderDelivery.merchants.length - riderDelivery.merchant_order_cancellations.length;
+
+					if ((totalMerchantPickedUp===netMerchantsToBePicked) && this.acceptedDeliveryOrder(riderDelivery)) {
+						return true;
+					}
+
 				}
 
 				return false;

@@ -47,7 +47,7 @@ class UpdateRider implements ShouldBroadcast
             'order' => new RiderOrderResource($this->riderNewDeliveryRecord->order),
             'rider_order_cancellations' => $this->riderNewDeliveryRecord->riderOrderCancellations,
             'merchant_order_cancellations' => $this->riderNewDeliveryRecord->merchantOrderCancellations,
-            'merchants' => MerchantOrderResource::collection($this->riderNewDeliveryRecord->merchants),
+            'merchants' => MerchantOrderResource::collection($this->riderNewDeliveryRecord->merchants()->where('is_self_delivery', 0)->get()),
 
         ];
     }

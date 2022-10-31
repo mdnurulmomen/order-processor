@@ -108,6 +108,8 @@ class GeneralSettingResource extends JsonResource
             'official_customer_care_number' => $this->official_customer_care_number,
             'vat_rate' => $this->vat_rate, 
             'searching_radius' => $this->searching_radius, 
+            'rider_call_receiving_time' => $this->rider_call_receiving_time, 
+            'rider_searching_time' => $this->rider_searching_time, 
             'official_bank' => $this->official_bank,
             'official_bank_account_holder_name' => $this->official_bank_account_holder_name,
             'official_bank_account_number' => $this->official_bank_account_number,

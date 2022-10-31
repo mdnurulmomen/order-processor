@@ -24,6 +24,11 @@
 					</a>
 				</li>
 				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#order">
+						Order
+					</a>
+				</li>
+				<li class="nav-item">
 					<a class="nav-link" data-toggle="tab" href="#payment">
 						Payment
 					</a>
@@ -79,69 +84,6 @@
 										  		</div>
 							                </div>
 						              	</div>
-
-						              	<div class="form-group row">
-						              		<label class="col-sm-3 col-form-label text-right">
-						              			Searching Radius
-						              		</label>
-							                <div class="col-sm-9">
-							                  	<div class="input-group mb-0">
-													<input 
-														type="number" 
-														class="form-control" 
-														v-model="applicationSettings.searching_radius" 
-														min="1" 
-														max="100" 
-														step=".1" 
-														placeholder="Radius for Restaurant & Rider" 
-														:class="! errors.searching_radius  ? 'is-valid' : 'is-invalid'"
-														@keyup="validateFormInput('searching_radius')"
-								                	>
-													<div class="input-group-append">
-														<span class="input-group-text">
-															Meter
-														</span>
-													</div>
-												</div>
-
-							                  	<div 
-							                  		class="invalid-feedback"
-							                  		style="display: block;"
-							                  		v-show="errors.searching_radius" 
-							                  	>
-										        	{{ errors.searching_radius }}
-										  		</div>
-							                </div>
-						              	</div>
-
-						              	<div class="form-group row">
-						              		<label for="inputLastName3" class="col-sm-3 col-form-label text-right">
-						              		 	Delivery Fee Percentage (for multiple)
-						              		</label>
-							                <div class="col-sm-9">
-							                	<div class="input-group mb-0">
-													<input 
-														type="number" 
-														class="form-control" 
-														v-model="applicationSettings.multiple_delivery_charge_percentage" 
-														min="1" 
-														max="100" 
-														step=".1" 
-														placeholder="For Multiple Delivery" 
-														:class="!errors.multiple_delivery_charge_percentage  ? 'is-valid' : 'is-invalid'"
-														@keyup="validateFormInput('multiple_delivery_charge_percentage')"
-								                	>
-													<div class="input-group-append">
-														<span class="input-group-text">
-															%
-														</span>
-													</div>
-								                	<div class="invalid-feedback">
-											        	{{ errors.multiple_delivery_charge_percentage }}
-											  		</div>
-												</div>
-							                </div>
-					                	</div>
 
 						              	<div class="form-group row">
 						              		<label class="col-sm-3 col-form-label text-right">
@@ -726,6 +668,201 @@
 							              	class="btn btn-primary"
 						              	>
 						              		Update Service Settings
+						              	</button>
+						            </div>
+						        	<!-- /.card-footer -->
+						      	</form>
+						    </div>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane fade show fade" id="order">	
+					<div class="row">
+						<div  
+							v-show="!loading" 
+							class="col-sm-12"
+						>
+							<div class="card card-primary card-outline">
+								<!-- form start -->
+						      	<form 
+							      	class="form-horizontal" 
+							      	v-on:submit.prevent="updateOrderSetting"
+						      	>	
+						      		<input 
+							      		type="hidden" 
+							      		name="_token" 
+							      		:value="csrf"
+						      		>
+						            
+						            <div class="card-body box-profile">
+						            	<div class="form-group row">
+						              		<label class="col-sm-3 col-form-label text-right">
+						              			Searching Radius
+						              		</label>
+							                <div class="col-sm-9">
+							                  	<div class="input-group mb-0">
+													<input 
+														type="number" 
+														class="form-control" 
+														v-model="applicationSettings.searching_radius" 
+														min="1" 
+														max="100" 
+														step=".1" 
+														placeholder="Radius for Restaurant & Rider" 
+														:class="! errors.searching_radius  ? 'is-valid' : 'is-invalid'"
+														@keyup="validateFormInput('searching_radius')"
+								                	>
+													<div class="input-group-append">
+														<span class="input-group-text">
+															Meter
+														</span>
+													</div>
+												</div>
+
+							                  	<div 
+							                  		class="invalid-feedback"
+							                  		style="display: block;"
+							                  		v-show="errors.searching_radius" 
+							                  	>
+										        	{{ errors.searching_radius }}
+										  		</div>
+							                </div>
+						              	</div>
+
+						              	<div class="form-group row">
+						              		<label for="inputLastName3" class="col-sm-3 col-form-label text-right">
+						              		 	Multiple Delivery Fee Percentage
+						              		</label>
+							                <div class="col-sm-9">
+							                	<div class="input-group mb-0">
+													<input 
+														type="number" 
+														class="form-control" 
+														v-model="applicationSettings.multiple_delivery_charge_percentage" 
+														min="1" 
+														max="100" 
+														step=".1" 
+														placeholder="For Multiple Delivery" 
+														:class="!errors.multiple_delivery_charge_percentage  ? 'is-valid' : 'is-invalid'"
+														@keyup="validateFormInput('multiple_delivery_charge_percentage')"
+								                	>
+													<div class="input-group-append">
+														<span class="input-group-text">
+															%
+														</span>
+													</div>
+								                	<div class="invalid-feedback">
+											        	{{ errors.multiple_delivery_charge_percentage }}
+											  		</div>
+												</div>
+							                </div>
+					                	</div>
+						             
+						              	<div class="form-group row">
+							              	<div class="col-6">
+							              		<div class="row">
+								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">
+								              			Rider Call Receiving Time
+								              		</label>
+									                <div class="col-sm-8">
+									                	<div class="input-group mb-0">
+															<input 
+																type="number" 
+																class="form-control" 
+																v-model="applicationSettings.rider_call_receiving_time" 
+																placeholder="Call Receiving Time" 
+																:class="! errors.rider_call_receiving_time ? 'is-valid' : 'is-invalid'"
+																@keyup="validateFormInput('rider_call_receiving_time')" 
+																min="30" 
+																step="30" 
+										                	>
+															<div class="input-group-append">
+																<span class="input-group-text">
+																	Seconds
+																</span>
+															</div>
+														</div>
+
+														<div 
+															style="display: block;" 
+															class="invalid-feedback" 
+															v-show="errors.rider_call_receiving_time"
+														>
+												        	{{ errors.rider_call_receiving_time }}
+												  	  	</div>
+									                </div>
+							              		</div>
+							              	</div>
+							                <div class="col-6">
+							              		<div class="row">
+								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">
+								              			Rider Searching Time (Max)
+								              		</label>
+
+								              		<div class="col-sm-8">
+									                	<div class="input-group mb-0">
+															<input 
+																type="number" 
+																class="form-control" 
+																v-model="applicationSettings.rider_searching_time" 
+																placeholder="Max Searching Time" 
+																:class="! errors.rider_searching_time ? 'is-valid' : 'is-invalid'"
+																@keyup="validateFormInput('rider_searching_time')" 
+																min="30" 
+																step="30" 
+										                	>
+															<div class="input-group-append">
+																<span class="input-group-text">
+																	Seconds
+																</span>
+															</div>
+														</div>
+
+														<div 
+															style="display: block;" 
+															class="invalid-feedback" 
+															v-show="errors.rider_searching_time"
+														>
+												        	{{ errors.rider_searching_time }}
+												  	  	</div>
+									                </div>
+							              		</div>
+							              	</div>
+
+							              	<div class="col-6">
+							              		<div class="row">
+								              		<label for="inputFirstName3" class="col-sm-4 col-form-label text-right">
+								              			Total Requestable Riders
+								              		</label>
+									                <div class="col-sm-8">
+									                  <input 
+								                  		type="number" 
+									                  	class="form-control" 
+									                  	:value="applicationSettings.rider_searching_time / applicationSettings.rider_call_receiving_time" 
+									                  	:disabled="true" 
+									                  >
+									                </div>
+							              		</div>
+							              	</div>
+						              	</div>
+						            </div>
+						            <!-- /.card-body -->
+						            <div class="card-footer text-center">
+						            	<div class="col-sm-12">
+											<span 
+												class="text-danger p-0 m-0 small" 
+												v-show="!submitForm"
+											>
+										  		Please input all required fields
+										  	</span>
+										</div>
+						              	<button 
+							              	type="submit" 
+							              	:disabled="loading || ! submitForm || formSubmitted" 
+							              	class="btn btn-primary"
+						              	>
+						              		Update Order Setting
 						              	</button>
 						            </div>
 						        	<!-- /.card-footer -->
@@ -1414,8 +1551,6 @@
 			updateAppSetting() {
 
 				this.validateFormInput('app_name');
-				this.validateFormInput('searching_radius');
-				this.validateFormInput('multiple_delivery_charge_percentage');
 				
 				this.validateFormInput('welcome_title');
 				this.validateFormInput('welcome_paragraph');
@@ -1427,7 +1562,7 @@
 
 				this.validateFormInput('promotional_sliders');
 
-				if (this.errors.app_name || this.errors.searching_radius || this.errors.multiple_delivery_charge_percentage || this.errorInWelcomegreetings() || this.errorInThanksGreeting() || this.errorInPromotionalSliders()) {
+				if (this.errors.app_name || this.errorInWelcomegreetings() || this.errorInThanksGreeting() || this.errorInPromotionalSliders()) {
 
 					this.submitForm = false;
 					return false;
@@ -1472,6 +1607,42 @@
 
 				axios
 					.post('/service-settings', this.applicationSettings)
+					.then(response => {
+						if (response.status == 200) {
+							toastr.success(response.data.success, "Success");
+						}
+					})
+					.catch(error => {
+
+						if (error.response.status == 422) {
+
+							for (var x in error.response.data.errors) {
+								toastr.warning(error.response.data.errors[x], "Warning");
+							}
+				      	}
+
+					})
+					.finally(()=> {
+					   this.formSubmitted = false;
+					});
+			},
+			updateOrderSetting() {
+				
+				this.validateFormInput('searching_radius');
+				this.validateFormInput('multiple_delivery_charge_percentage');
+				this.validateFormInput('rider_call_receiving_time');
+				this.validateFormInput('rider_searching_time');
+
+				if (this.errors.searching_radius || this.errors.multiple_delivery_charge_percentage || this.errors.rider_call_receiving_time || this.errors.rider_searching_time) {
+
+					this.submitForm = false;
+					return false;
+				}
+
+				this.formSubmitted = true;
+
+				axios
+					.post('/order-settings', this.applicationSettings)
 					.then(response => {
 						if (response.status == 200) {
 							toastr.success(response.data.success, "Success");
@@ -1977,6 +2148,45 @@
 						else {
 							this.submitForm = true;
 							this.$delete(this.errors, 'multiple_delivery_charge_percentage');
+						}
+
+						break;
+
+					case 'rider_call_receiving_time' :
+
+						if (! this.applicationSettings.rider_call_receiving_time) {
+							this.errors.rider_call_receiving_time = 'Receiving time is required';
+						}
+						else if (this.applicationSettings.rider_call_receiving_time <= 0 || this.applicationSettings.rider_call_receiving_time % 30 != 0) {
+
+							this.errors.rider_call_receiving_time = 'Invalid receiving time';
+
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors, 'rider_call_receiving_time');
+						}
+
+						break;
+
+					case 'rider_searching_time' :
+
+						if (! this.applicationSettings.rider_searching_time) {
+							this.errors.rider_searching_time = 'Searching time is required';
+						}
+						else if (this.applicationSettings.rider_searching_time <= 0 || this.applicationSettings.rider_searching_time % 30 != 0) {
+
+							this.errors.rider_searching_time = 'Invalid searching time';
+
+						}
+						else if (this.applicationSettings.rider_searching_time < this.applicationSettings.rider_call_receiving_time) {
+
+							this.errors.rider_searching_time = 'Valud should be bigger than receiving time';
+
+						}
+						else {
+							this.submitForm = true;
+							this.$delete(this.errors, 'rider_searching_time');
 						}
 
 						break;

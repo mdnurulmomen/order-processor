@@ -21,7 +21,8 @@ class CreateMerchantOrdersTable extends Migration
             $table->boolean('is_ready')->nullable();  // 1 for confirm, 0 for cancel
             $table->timestamp('ready_at')->nullable();
             $table->boolean('is_free_delivery')->nullable();
-            $table->boolean('has_delivery_support')->nullable();        // if self-delivery or system delivery
+            $table->boolean('is_self_delivery')->nullable();        // if self-delivery or system delivery
+            $table->boolean('is_rider_available')->nullable();        // if self-delivery or system delivery
             $table->unsignedMediumInteger('net_price')->default(0);     // total payable price including addons and applying discounts
             // $table->unsignedTinyInteger('total_vat');         // applied vat % when ordering
             $table->float('applied_sale_percentage', 5, 2)->default(0);     // applied on price (excluding vat)

@@ -15,6 +15,7 @@ class RiderDeliveryResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'delivery_fee' => $this->delivery_fee,
             'is_accepted' => $this->is_accepted,
             'accepted_at' => $this->accepted_at,
             'is_delivered' => $this->is_delivered,

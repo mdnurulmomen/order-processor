@@ -41,6 +41,7 @@ Route::name('admin.')->group(function () {
 		    Route::post('/contact-settings', 'SettingController@updateContactSettings');
 		    Route::post('/application-settings', 'SettingController@updateApplicationSettings');
 		    Route::post('/service-settings', 'SettingController@updateServiceSettings');
+		    Route::post('/order-settings', 'SettingController@updateOrderSettings');
 		    Route::post('/other-settings', 'SettingController@updateOtherSettings');
 
 		    Route::post('/password', 'PasswordController@updateAdminPassword');

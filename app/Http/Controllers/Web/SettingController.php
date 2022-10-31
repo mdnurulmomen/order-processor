@@ -30,8 +30,6 @@ class SettingController extends Controller
     {   
         $request->validate([
             'app_name'=>'required|string|max:255',
-            'searching_radius'=>'required|numeric',
-            'multiple_delivery_charge_percentage'=>'required|numeric|max:100',
 
             'welcome_greetings'=>'required|array|min:1',
             'welcome_greetings.*.title'=>'required|string|max:255',
@@ -52,9 +50,7 @@ class SettingController extends Controller
         $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
 
         $settings->app_name = strtolower($request->app_name);
-        $settings->searching_radius = $request->searching_radius;
-        $settings->multiple_delivery_charge_percentage = $request->multiple_delivery_charge_percentage;
-        $settings->admin_id = \Auth::guard('admin')->user()->id;
+        // $settings->admin_id = \Auth::guard('admin')->user()->id;
 
         $settings->save();
 
@@ -107,6 +103,30 @@ class SettingController extends Controller
         ], 200);
     }
 
+    public function updateOrderSettings(Request $request)
+    {
+        $request->validate([
+            'searching_radius'=>'required|numeric',
+            'multiple_delivery_charge_percentage'=>'required|numeric|min:0|max:100',
+            'rider_call_receiving_time'=>'required|numeric|min:30',
+            'rider_searching_time'=>'required|numeric|min:60',
+        ]);
+
+        $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
+
+        $settings->searching_radius = $request->searching_radius;
+        $settings->multiple_delivery_charge_percentage = $request->multiple_delivery_charge_percentage;
+        $settings->rider_call_receiving_time = $request->rider_call_receiving_time;
+        $settings->rider_searching_time = $request->rider_searching_time;
+        // $settings->admin_id = \Auth::guard('admin')->user()->id;
+
+        $settings->save();
+
+        return response()->json([
+            'success' => "Order settings has been updated"
+        ], 200);
+    }
+
     /**
      * Update Settings.
      *
@@ -136,7 +156,7 @@ class SettingController extends Controller
         $settings->official_bank_account_holder_name = strtolower($request->official_bank_account_holder_name);
         $settings->official_bank_account_number = strtolower($request->official_bank_account_number);
         $settings->merchant_number = $request->merchant_number;
-        $settings->admin_id = \Auth::guard('admin')->user()->id;
+        // $settings->admin_id = \Auth::guard('admin')->user()->id;
 
         $settings->save();
 
@@ -161,7 +181,7 @@ class SettingController extends Controller
         $settings->official_contact_address = strtolower($request->official_contact_address);
         $settings->official_mail_address = strtolower($request->official_mail_address);
         $settings->official_customer_care_number = $request->official_customer_care_number;
-        $settings->admin_id = \Auth::guard('admin')->user()->id;
+        // $settings->admin_id = \Auth::guard('admin')->user()->id;
 
         $settings->save();
 
@@ -197,7 +217,7 @@ class SettingController extends Controller
         $settings = ApplicationSetting::firstOrCreate(['id' => 1]);
         $settings->logo_icon = $request->logo;
         $settings->favicon_icon = $request->favicon;
-        $settings->admin_id = \Auth::guard('admin')->user()->id;
+        // $settings->admin_id = \Auth::guard('admin')->user()->id;
         $settings->save();
 
         return response()->json([
