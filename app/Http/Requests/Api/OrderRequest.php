@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\MerchantAgent;
 use Illuminate\Validation\Rule;
 use App\Models\MerchantProduct;
+use App\Models\ApplicationService;
 use Illuminate\Support\Facades\Log;
 use App\Models\MerchantProductAddon;
 use App\Models\MerchantProductVariation;
@@ -40,7 +41,18 @@ class OrderRequest extends FormRequest
         return [
 
             'order'=>'required',
-            'order.type'=>'required|in:delivery,serving,collection',
+            'order.type'=>[
+                'required', 'in:delivery,serving,collection', 
+                function($attribute, $value, $fail) {
+
+                    if (ApplicationService::firstOrCreate(['code' => $value],['name' => $value])->status != 1) {
+
+                        return $fail($attribute.' support is disabled now');
+
+                    }
+
+                }
+            ],
             'order.is_asap_order'=>'required_without:order.schedule|boolean',
             'order.schedule'=>'required_if:order.is_asap_order,0|date|date_format:Y-m-d H:i:s|after:'.now()->subMinutes(3),
             'order.has_cutlery'=>'boolean',

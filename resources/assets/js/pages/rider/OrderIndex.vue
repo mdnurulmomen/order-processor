@@ -103,7 +103,7 @@
 									      			</div>
 
 									      			<!-- accept button -->
-									      			<div v-if="/*! timeOutDeliveryOrder(riderDelivery) && */!acceptedDeliveryOrder(riderDelivery)">
+									      			<div v-if="! timeOutDeliveryOrder(riderDelivery) && ! acceptedDeliveryOrder(riderDelivery)">
 										      			<button
 										      				type="button" 
 											      			class="btn btn-primary btn-sm" 
@@ -604,7 +604,6 @@
 							this.allDeliveryOrders = response.data;
 							this.showListDataForSelectedTab();
 
-							this.formSubmitionMode = false;
 							toastr.success(response.data.success, "Success");
 						}
 					})
@@ -615,7 +614,10 @@
 								toastr.error(error.response.data.errors[x], "Wrong Input");
 							}
 				      	}
-					});
+					})
+					.finally(() => {
+					    this.formSubmitionMode = false;
+				  	});
 			},
 			failedOrder(order){
 				return order.in_progress===0 && order.is_completed===0 ? true : false;
@@ -631,10 +633,7 @@
 			},
 			timeOutDeliveryOrder(riderDelivery) {
 
-			    // console.log(Date.now() - new Date(riderDelivery.created_at) > 1000 * 60);
-
-			    // 30 seconds ago
-			    return Date.now() - new Date(riderDelivery.created_at) > 1000 * 30 ; 	/* ms */
+			    return riderDelivery.acceptance_timeout;
 
 			},
 			riderCancelledOrder(riderDelivery){

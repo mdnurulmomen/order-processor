@@ -16,6 +16,7 @@ use App\Models\RiderDelivery;
 use App\Events\UpdateMerchant;
 use App\Models\DeliveryAddress;
 use App\Models\ApplicationSetting;
+use App\Jobs\MonitorOrderProgression;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Web\OrderResource;
 use App\Http\Resources\Web\OrderCollection;
@@ -171,7 +172,7 @@ class OrderController extends Controller
 			}
 
 			// inform rider on merchant-cancellation if any rider has been assigned and rider is to pick from the merchant
-			if ($orderToCancel->riderAssigned()->exists() && $orderToCancel->merchants()->where('merchant_id', $request->merchant_id)->('is_self_delivery', 0)->exists()) {
+			if ($orderToCancel->riderAssigned()->exists() && $orderToCancel->merchants()->where('merchant_id', $request->merchant_id)->where('is_self_delivery', 0)->exists()) {
 				
 				$this->notifyRider($orderToCancel->riderAssigned);
 
@@ -448,10 +449,6 @@ class OrderController extends Controller
 		
 		// evaluating merchant
 		$this->updateMerchantEvaluation($request->merchant_id);
-
-		// Broadcast to admin for merchant order cancellation
- 		$this->notifyAdmin($orderToCancel);
-
  		
  		// if all restauraant cancelled this order
 		if ($orderToCancel->merchants->count() == $orderToCancel->merchantOrderCancellations->count()) {
@@ -461,11 +458,14 @@ class OrderController extends Controller
 		}
 
 		// inform rider on merchant-cancellation if any rider has been assigned
- 		if ($orderToCancel->riderAssigned()->exists() &&  && $orderToCancel->merchants()->where('merchant_id', $request->merchant_id)->where('is_self_delivery', 0)->exists()) {
+ 		if ($orderToCancel->riderAssigned()->exists() && $orderToCancel->merchants()->where('merchant_id', $request->merchant_id)->where('is_self_delivery', 0)->exists()) {
  			
  			$this->notifyRider($orderToCancel->riderAssigned);
 
  		}
+
+		// Broadcast to admin for merchant order cancellation
+ 		$this->notifyAdmin($orderToCancel);
 
  		return $this->showMerchantAllOrders($request->merchant_id, $perPage);
 		
@@ -513,7 +513,15 @@ class OrderController extends Controller
     {
         // validation
         $request->validate([
-        	'orderReturned' => 'boolean',
+        		'orderReturned' => [
+        			'boolean',
+        			function ($attribute, $value, $fail) use ($request) {
+		            if (empty($value) && empty($request->input('orderDropped')) && empty($request->input('orderPicked')) && empty($request->input('orderAccepted'))) {
+		               $fail('Invalid request');
+		            }
+		        },
+
+        		],
             'orderDropped' => 'boolean',
             'orderPicked' => 'boolean',
             'orderAccepted' => 'boolean',
@@ -536,14 +544,29 @@ class OrderController extends Controller
         // if already cancelled order by merchants or customer
         if ($this->cancelledOrder($orderToConfirm)) {
         	
-        	return $this->showAllRiderOrders($request->rider_id, $perPage);
+        	// return $this->showAllRiderOrders($request->rider_id, $perPage);
+        	return response()->json(
+	 			[
+	 				'errors' => ['cancelledOrder' => ['Order is already cancelled.']]
+	 			], 422
+	 		);
 
         }
 
         $deliveryToConfirm = RiderDelivery::where('rider_id', $request->rider_id)->where('order_id', $order)->first();
 
+        if ($deliveryToConfirm->acceptance_timeout) {
+        			
+        		return response()->json(
+		 			[
+		 				'errors' => ['timeOut' => ['Accepting time is over.']]
+		 			], 422
+		 		);
+
+        }
+
         // if already not accepted
-        if ($request->orderAccepted && $deliveryToConfirm->is_accepted==0 && ! $this->timeOutDeliveryOrder($deliveryToConfirm)) {
+        else if ($request->orderAccepted && $deliveryToConfirm->is_accepted == 0) {
                 
             // accepting rider-delivery-order
             $deliveryToConfirm->update([
@@ -705,11 +728,13 @@ class OrderController extends Controller
     	return $order->serve()->exists();
     }
 
+    /*
     private function timeOutDeliveryOrder(RiderDelivery $riderDelivery)
     {
-    	$timeToDelay = ApplicationSetting::firstOrCreate()->rider_call_receiving_time;
+    	$timeToDelay = ApplicationSetting::firstOrCreate(['id' => 1])->rider_call_receiving_time;
     	return $riderDelivery->created_at->diffInSeconds(now()) > $timeToDelay ? true : false;
     }
+    */
 
     private function allOrderCollected(RiderDelivery $deliveryToConfirm)
     {
@@ -910,7 +935,7 @@ class OrderController extends Controller
 	// broadcasting for riders
 	private function makeRiderOrderCall(Order $order)
 	{	
-		$applicationSettings = ApplicationSetting::firstOrCreate();
+		$applicationSettings = ApplicationSetting::firstOrCreate(["id" => 1]);
 		$riderNumberToCall = $applicationSettings->rider_searching_time / $applicationSettings->rider_call_receiving_time;
 		
 		// to calculate the nearest rider laterly
@@ -920,11 +945,18 @@ class OrderController extends Controller
 			
 			foreach ($order->merchants()->where('is_self_delivery', 0)->get() as $merchantOrder) {
 				
-				$merchantOrder->update([
-					'is_rider_available' => 0
-				]);
+				$this->updateMerchantOrder($merchantOrder);
 
 				// UpdateCustomer();
+
+			}
+
+			if (! $order->merchants()->where('is_self_delivery', 1)->exists()) {		// no other merchant left
+				
+				$this->disableOrderStatus($order);
+				
+				// Broadcast to admin for merchant order cancellation
+ 				$this->notifyAdmin($order);
 
 			}
 
@@ -940,6 +972,9 @@ class OrderController extends Controller
 				$delay += $applicationSettings->rider_call_receiving_time;	// 30 seconds
 
 			}
+
+			// Setting a job to check if riders found after certain period
+			MonitorOrderProgression::dispatch($order)->delay(now()->addSeconds($applicationSettings->rider_searching_time));
 
 		}
 
@@ -1034,6 +1069,13 @@ class OrderController extends Controller
     	$order->update([
 			'in_progress' => 0,
 			'is_completed' => 0		// -1 (pending) / 1 (complete) / 0 (incomplete)
+		]);
+    }
+
+    private function updateMerchantOrder(MerchantOrder $merchantOrder)
+    {
+    	$merchantOrder->update([
+			'is_rider_available' => 0
 		]);
     }
     
