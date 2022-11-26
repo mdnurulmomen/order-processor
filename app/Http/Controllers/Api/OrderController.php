@@ -57,7 +57,7 @@ class OrderController extends Controller
             $merchantNewOrder = $newOrder->merchants()->create([
                 'merchant_id' => $merchantOrder->id,
                 'is_self_delivery' => $newOrder->type=='delivery' ? ($merchant->has_self_delivery_support ? true : false) : NULL,
-                'is_free_delivery' => $newOrder->type=='delivery' ? ($merchant->has_self_delivery_support || $merchant->has_free_delivery ? 1 : 0) : NULL,
+                'is_free_delivery' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support) ? ($merchant->has_free_delivery ? 1 : 0) : NULL,
                 'net_price' => $merchantOrder->net_price,
 
                 'applied_sale_percentage' => ($newOrder->type=='delivery' && ! $merchant->has_self_delivery_support) ? $merchant->supported_delivery_order_sale_percentage : $merchant->general_order_sale_percentage,
@@ -165,10 +165,17 @@ class OrderController extends Controller
         
         if ($newOrder->customer_confirmation==1) {
 
-            // order type is other than delivery / merchant has own delivery 
-            $this->makeMerchantOrderCalls($newOrder, $newOrder->merchants()->where('is_self_delivery', 1)->get());
+            // merchant call for all orders 
+            $this->makeMerchantOrderCalls(
+                $newOrder, 
+                $newOrder->merchants()->where(function ($query) {
+                    $query->where('is_self_delivery', 1)        // for delivery orders
+                          ->orWhereNull('is_self_delivery');    // for non-delivery order
+                })
+                ->get()
+            );
 
-            if ($newOrder->type=='delivery' && $newOrder->merchants()->where('is_self_delivery', 0)->count()) {
+            if ($newOrder->type=='delivery' && $newOrder->merchants()->where('is_self_delivery', 0)->exists()) {
                 
                 $this->makeRiderOrderCall($newOrder);
             

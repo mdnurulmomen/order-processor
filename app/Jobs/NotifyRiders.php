@@ -17,7 +17,7 @@ class NotifyRiders implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $order, $rider;
+    protected $order, $rider, $riderCallReceivingTime;
 
     /**
      * Delete the job if its models no longer exist.
@@ -45,10 +45,11 @@ class NotifyRiders implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Order $order, Rider $rider)
+    public function __construct(Order $order, Rider $rider, $riderCallReceivingTime)
     {
        $this->order = $order; 
        $this->rider = $rider; 
+       $this->riderCallReceivingTime = $riderCallReceivingTime; 
     }
 
     /**
@@ -56,12 +57,12 @@ class NotifyRiders implements ShouldQueue
      *
      * @return \DateTime
      */
-/*
+    /*
     public function retryUntil()
     {
         return now()->addSeconds(30);
     }
-*/
+    */
 
     /**
      * Execute the job.
@@ -75,6 +76,7 @@ class NotifyRiders implements ShouldQueue
             // initially cancelling order delivery request
             $riderNewDeliveryRecord = $this->order->riders()->create([
                 // 'is_accepted' => 0,
+                'rider_call_receiving_time' => $this->riderCallReceivingTime,
                 'rider_id' => $this->rider->id
             ]);
 

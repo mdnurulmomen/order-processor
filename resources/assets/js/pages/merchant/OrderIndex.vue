@@ -97,7 +97,7 @@
 								    		<td>{{ merchantOrder.order.type | capitalize }}</td>
 								    		<td>
 								    			<span 
-								    				v-if="failedOrder(merchantOrder.order) || cancelledOrder(merchantOrder)" 
+								    				v-if="orderIsFailed(merchantOrder.order) || orderIsCancelled(merchantOrder)" 
 								    				class="badge badge-secondary d-block"
 								    			>	
 								    				Cancelled
@@ -105,7 +105,7 @@
 
 												<!-- no option should be shown without picking/cancelling every merchant orders -->
 								    			<span 
-								    				v-else-if="(servingOrder(merchantOrder.order) && servedOrder(merchantOrder)) || (! servingOrder(merchantOrder.order) && readyOrder(merchantOrder))" 
+								    				v-else-if="(isServingOrder(merchantOrder.order) && orderIsServed(merchantOrder)) || (isSelfDeliveryOrder(merchantOrder) && orderIsSelfDelivered(merchantOrder)) || (! isServingOrder(merchantOrder.order) && ! isSelfDeliveryOrder(merchantOrder) && orderIsReady(merchantOrder))" 
 								    				class='badge badge-success d-block'
 								    			>	
 								    				Success
@@ -117,9 +117,9 @@
 								    				// for each merchants in order
 								    			-->
 							    				<span 
-							    					v-else-if="acceptedOrder(merchantOrder)"
+							    					v-else-if="orderIsAccepted(merchantOrder)"
 							    				>
-								    				<span class='badge badge-warning d-block'>
+								    				<span class='badge badge-info d-block'>
 									    				Pending
 								    				</span>
 							    				</span>	
@@ -127,10 +127,13 @@
 							    				<!-- 
 							    					new order before call confirmation
 							    				-->
-								    			<span class='badge badge-danger d-block' v-else>	
+								    			<span 
+								    				class='badge badge-danger d-block' 
+								    				v-else-if="orderIsRinging(merchantOrder)">	
 								    				Ringing
 								    			</span>
 								    		</td>
+
 								    		<td>
 								      			<button 
 									      			type="button" 
@@ -145,9 +148,9 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="!cancelledOrder(merchantOrder) && orderToServe(merchantOrder) && confirmedReservationOrder(merchantOrder.order) && ! stoppedOrder(merchantOrder.order)" 
+									      			v-if="!orderIsCancelled(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order) && orderIsYetToServe(merchantOrder)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order=merchantOrder.order;singleOrderData.order.serveOrder=true;confirmOrder()" 
+									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.serveOrder=true; confirmOrder()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 							        				Serve-Order
@@ -156,10 +159,22 @@
 								      			<!-- disabled if merchant already confirmed as ready-->
 								      			<button 
 									      			type="button" 
-									      			class="btn btn-primary btn-sm" 
-									      			v-if="!cancelledOrder(merchantOrder) && !readyOrder(merchantOrder) && confirmedReservationOrder(merchantOrder.order) && ! stoppedOrder(merchantOrder.order)" 
+									      			class="btn btn-success btn-sm" 
+									      			v-if="!orderIsCancelled(merchantOrder) && ! orderIsStopped(merchantOrder.order) && orderIsYetToDeliver(merchantOrder)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order=merchantOrder.order;singleOrderData.order.orderReady=true;confirmOrder()" 
+									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.deliverOrder=true; confirmOrder()" 
+								      			>
+								        			<i class="fas fa-bell"></i>
+							        				Deliver-Order
+								      			</button>
+
+								      			<!-- disabled if merchant already confirmed as ready-->
+								      			<button 
+									      			type="button" 
+									      			class="btn btn-primary btn-sm" 
+									      			v-if="!orderIsCancelled(merchantOrder) && !orderIsReady(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
+									      			:disabled="formSubmitionMode" 
+									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.orderReady=true; confirmOrder()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 							        				Order-Ready
@@ -169,9 +184,9 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-warning btn-sm" 
-									      			v-if="!cancelledOrder(merchantOrder) && !readyOrder(merchantOrder) && !acceptedOrder(merchantOrder) && confirmedReservationOrder(merchantOrder.order) && ! stoppedOrder(merchantOrder.order)" 
+									      			v-if="!orderIsCancelled(merchantOrder) && !orderIsReady(merchantOrder) && !orderIsAccepted(merchantOrder) && orderIsRinging(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
 									      			:disabled="formSubmitionMode" 
-									      			@click="singleOrderData.order=merchantOrder.order;singleOrderData.order.orderReady=false;confirmOrder()" 
+									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.orderReady=false; confirmOrder()" 
 								      			>
 								        			<i class="fas fa-bell"></i>
 								        			Accept-Order
@@ -181,7 +196,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-secondary btn-sm" 
-									      			v-if="!cancelledOrder(merchantOrder) && !acceptedOrder(merchantOrder) && confirmedReservationOrder(merchantOrder.order) && ! stoppedOrder(merchantOrder.order)" 
+									      			v-if="!orderIsCancelled(merchantOrder) && !orderIsAccepted(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
 									      			@click="showOrderCancellationModal(merchantOrder.order)" 
 								      			>
 								        			<i class="fas fa-times"></i>
@@ -298,6 +313,7 @@
 						                  	}}
 						                </div>	
 						            </div> 
+						            <!-- 
 						            <div class="form-group row">		
 					              		<label class="col-sm-6 text-right">
 					              			Price
@@ -305,14 +321,6 @@
 						                <div class="col-sm-6">
 						                  	{{ singleOrderData.order.price }}
 						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
-						                </div>	
-						            </div>
-						            <div class="form-group row">		
-					              		<label class="col-sm-6 text-right">
-					              			Vat
-					              		</label>
-						                <div class="col-sm-6">
-						                  	{{ singleOrderData.order.vat }} %
 						                </div>	
 						            </div>
 						            <div class="form-group row">		
@@ -340,7 +348,8 @@
 						                  	{{ singleOrderData.order.net_payable }}
 						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 						                </div>	
-						            </div> 
+						            </div>  
+						        	-->
 						            <div class="form-group row" v-show="singleOrderData.order.has_cutlery">		
 					              		<label class="col-sm-6 text-right">
 					              			Cutlery
@@ -790,21 +799,27 @@
 				});
 
 			},
-			cancelledOrder(merchantOrder) {
+			orderIsCancelled(merchantOrder) {
 				
 				return Boolean(merchantOrder.is_accepted==0);
-			},
-			acceptedOrder(merchantOrder) {
-
-				return merchantOrder.is_accepted == 0 ? true : false;
 
 			},
-			readyOrder(merchantOrder) {
+			orderIsRinging(merchantOrder) {
+
+				return merchantOrder.is_accepted == -1 ? true : false;
+
+			},
+			orderIsAccepted(merchantOrder) {
+
+				return merchantOrder.is_accepted == 1 ? true : false;
+
+			},
+			orderIsReady(merchantOrder) {
 
 				return merchantOrder.is_ready == 1 ? true : false;
 
 			},
-			confirmedReservationOrder(order) {
+			reservationOrderIsConfirmed(order) {
 
 				if (this.defineOrderType(order)=='reservation' && order.customer_confirmation==-1) {
 
@@ -814,21 +829,55 @@
 
 				// paid reservation or not even a reservation order
 				return true;
+
 			}, 
 			defineOrderType(order) {
 
 				return order.type;
 
 			},
-			stoppedOrder(order){
-				return order.in_progress==0 ? true : false;
+			orderIsStopped(order){
+
+				return order.in_progress==0 ? true : false;		// delivered / served / 
 			},
-			failedOrder(order){
+			orderIsFailed(order){
+
 				return order.in_progress===0 && order.is_completed===0 ? true : false;
 			},
-			orderToServe(merchantOrder) {
+			orderIsYetToDeliver(merchantOrder) {
 
-				if (this.servingOrder(merchantOrder.order) && !this.servedOrder(merchantOrder)) {
+				if (this.isSelfDeliveryOrder(merchantOrder) && !this.orderIsSelfDelivered(merchantOrder)) {
+
+					return true;
+
+				}
+
+				return false;
+
+			},
+			isSelfDeliveryOrder(merchantOrder) {
+
+				if (this.defineOrderType(merchantOrder.order)==='delivery' && merchantOrder.is_self_delivery == 1) {
+					return true;
+				}
+
+				return false;
+
+			},
+			// completed order
+			orderIsSelfDelivered(merchantOrder) {
+
+				if (merchantOrder.is_delivered==1) {
+
+					return true;
+				}
+				else{
+					return false;
+				}
+			},
+			orderIsYetToServe(merchantOrder) {
+
+				if (this.isServingOrder(merchantOrder.order) && !this.orderIsServed(merchantOrder)) {
 
 					return true;
 
@@ -838,7 +887,7 @@
 
 			},
 			// order is for serve 
-			servingOrder(order) {
+			isServingOrder(order) {
 
 				if (this.defineOrderType(order)==='reservation' || this.defineOrderType(order)==='serving' ) {
 
@@ -850,7 +899,7 @@
 
 			},
 			// completed order
-			servedOrder(merchantOrder) {
+			orderIsServed(merchantOrder) {
 
 				if (merchantOrder.order_serve_confirmation && merchantOrder.order_serve_confirmation.is_served==1) {
 
@@ -862,25 +911,29 @@
 			},
 			orderRowClass(merchantOrder) {
 
-				if (this.failedOrder(merchantOrder.order) || this.cancelledOrder(merchantOrder) || ! this.confirmedReservationOrder(merchantOrder.order)) {
+				if (this.orderIsFailed(merchantOrder.order) || this.orderIsCancelled(merchantOrder) || ! this.reservationOrderIsConfirmed(merchantOrder.order)) {
 
 					return 'bg-secondary';
 				}
-				else if (this.servingOrder(merchantOrder.order) && this.servedOrder(merchantOrder)) {
+				else if (this.isServingOrder(merchantOrder.order) && this.orderIsServed(merchantOrder)) {
 					
 					return 'bg-success';
 				}
-				else if (this.servingOrder(merchantOrder.order) && this.readyOrder(merchantOrder)) {
+				else if (this.isSelfDeliveryOrder(merchantOrder) && this.orderIsSelfDelivered(merchantOrder)) {
+					
+					return 'bg-success';
+				}
+				else if ((this.isServingOrder(merchantOrder.order) || this.isSelfDeliveryOrder(merchantOrder)) && this.orderIsReady(merchantOrder)) {
 					
 					return 'bg-primary';
 				}
-				else if (! this.servingOrder(merchantOrder.order) && this.readyOrder(merchantOrder)) {
+				else if (! this.isServingOrder(merchantOrder.order) && ! this.isSelfDeliveryOrder(merchantOrder) && this.orderIsReady(merchantOrder)) {
 					
 					return 'bg-success';
 				}
-				else if (this.acceptedOrder(merchantOrder)) {
+				else if (this.orderIsAccepted(merchantOrder)) {
 
-					return 'bg-warning';
+					return 'bg-info';
 				}
 				else
 					return 'bg-danger';

@@ -24,7 +24,7 @@ class CreateApplicationSettingsTable extends Migration
             $table->char('official_customer_care_number', 13)->default('880XXXXXXXXX');
             $table->float('vat_rate')->default(0);
             $table->float('searching_radius')->default(1000);
-            $table->unsignedTinyInteger('rider_call_receiving_time')->default(30);
+            $table->unsignedTinyInteger('rider_call_receiving_time')->default(30);      // seconds
             $table->unsignedTinyInteger('rider_searching_time')->default(120);
             $table->string('official_bank')->default('XXXXX Bank');
             $table->string('official_bank_account_holder_name')->default('Mr./Mrs. XXXX');

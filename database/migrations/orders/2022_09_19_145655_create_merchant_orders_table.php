@@ -20,6 +20,10 @@ class CreateMerchantOrdersTable extends Migration
             $table->timestamp('accepted_at')->nullable();
             $table->boolean('is_ready')->nullable();  // 1 for confirm, 0 for cancel
             $table->timestamp('ready_at')->nullable();
+            $table->boolean('is_delivered')->nullable();  // 1 for confirm, 0 for cancel
+            $table->timestamp('delivered_at')->nullable();
+            $table->unsignedInteger('confirmer_id')->nullable();    // who delivered can be merchant / merchant-agent
+            $table->string('confirmer_type')->nullable();       // can be Waiter as well
             $table->boolean('is_free_delivery')->nullable();
             $table->boolean('is_self_delivery')->nullable();        // if self-delivery or system delivery
             $table->boolean('is_rider_available')->nullable();        // if self-delivery or system delivery

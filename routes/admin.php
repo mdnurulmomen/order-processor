@@ -88,7 +88,7 @@ Route::name('admin.')->group(function () {
 		    Route::get('/api/orders/search/{search}/{perPage}', 'OrderController@searchAllOrders');
 
 		    // Rider-Orders
-		    Route::get('/api/rider-orders/{rider?}/{perPage?}', 'OrderController@showAllRiderOrders');
+		    Route::get('/api/riders/{rider?}/orders/{perPage?}', 'OrderController@showAllRiderOrders');
 		    Route::post('/delivery-order-confirmations/{order}/{perPage?}', 'OrderController@confirmRiderDeliveryOrder');
 
 		    // Agent-Orders

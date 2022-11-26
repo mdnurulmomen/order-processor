@@ -58,7 +58,7 @@ class MonitorOrderProgression implements ShouldQueue
             
             foreach ($this->order->merchants()->where('is_self_delivery', 0)->get() as $merchantOrder) {
                 
-                $this->updateMerchantOrder($merchantOrder);
+                $this->disableMerchantOrder($merchantOrder);
 
             }
 
@@ -74,14 +74,14 @@ class MonitorOrderProgression implements ShouldQueue
         }
     }
 
-    private function updateMerchantOrder(MerchantOrder $merchantOrder)
+    private function disableMerchantOrder($merchantOrder)
     {
         $merchantOrder->update([
             'is_rider_available' => 0
         ]);
     }
 
-    private function disableOrderStatus(Order $order)
+    private function disableOrderStatus($order)
     {
         $order->update([
             'in_progress' => 0,

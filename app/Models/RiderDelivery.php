@@ -12,7 +12,7 @@ class RiderDelivery extends Model
 
 	public $timestamps = false;
 
-	protected $appends = ['acceptance_timeout'];
+	// protected $appends = ['acceptance_timeout'];
 
 	/**
      * The attributes that should be mutated to dates.
@@ -48,11 +48,13 @@ class RiderDelivery extends Model
 		return $this->hasMany(OrderCancellation::class, 'order_id', 'order_id');
 	}
 
+	/*
 	public function getAcceptanceTimeoutAttribute()
 	{
 	    $timeToDelay = ApplicationSetting::firstOrCreate(['id' => 1])->rider_call_receiving_time;
     	return $this->created_at->diffInSeconds(now()) > $timeToDelay ? true : false;
 	}
+	*/
 
 	public function merchantOrderCancellations()
    	{

@@ -94,7 +94,8 @@
 										      				type="button" 
 											      			class="btn btn-warning btn-sm" 
 											      			v-for="merchantOrder in riderDelivery.merchants_accepted" 
-											      			:disabled="Boolean(formSubmitionMode || pickedUp(riderDelivery, merchantOrder))" 
+											      			v-show="! pickedUp(riderDelivery, merchantOrder)"
+											      			:disabled="formSubmitionMode" 
 											      			:key="merchantOrder.id" 
 											      			@click="orderPickUpConfirmation(riderDelivery, merchantOrder)" 
 										      			>
@@ -103,7 +104,7 @@
 									      			</div>
 
 									      			<!-- accept button -->
-									      			<div v-if="! timeOutDeliveryOrder(riderDelivery) && ! acceptedDeliveryOrder(riderDelivery)">
+									      			<div v-if="! callReceivingTimeIsOver(riderDelivery) && ! acceptedDeliveryOrder(riderDelivery)">
 										      			<button
 										      				type="button" 
 											      			class="btn btn-primary btn-sm" 
@@ -232,6 +233,7 @@
 								                  	{{ singleOrderData.order.has_cutlery ? 'Added' : 'None' }}
 								                </div>	
 								            </div> 
+								            <!-- 
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Price:
@@ -265,7 +267,8 @@
 								                  	{{ singleOrderData.order.net_payable }}
 								                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 								                </div>	
-								            </div>
+								            </div> 
+								        	-->
 								            <div class="form-group row">		
 							              		<label class="col-sm-6 text-right">
 							              			Payment:
@@ -484,7 +487,7 @@
 			fetchAllDeliveryOrders(){
 				this.loading = true;
 				axios
-					.get('/api/rider-orders/' + this.rider_id + '/' + this.perPage +'?page='+ this.pagination.current_page)
+					.get('/api/riders/' + false + '/orders/' + this.perPage +'?page='+ this.pagination.current_page)
 					.then(response => {		
 						if (response.status == 200) {
 							this.allDeliveryOrders = response.data;
@@ -536,7 +539,7 @@
 				this.singleOrderData.rider.orderPicked = false;
 				this.singleOrderData.rider.orderDropped = false;
 				this.singleOrderData.rider.orderAccepted = false;
-				this.singleOrderData.rider.rider_id = this.rider_id;
+				this.singleOrderData.rider.rider_id = riderDelivery.rider_id;
 
 				this.singleOrderData.order = riderDelivery.order;
 				this.submitConfirmation();
@@ -550,7 +553,7 @@
 				this.singleOrderData.rider.orderPicked = false;
 				this.singleOrderData.rider.orderDropped = true;
 				this.singleOrderData.rider.orderAccepted = false;
-				this.singleOrderData.rider.rider_id = this.rider_id;
+				this.singleOrderData.rider.rider_id = riderDelivery.rider_id;
 
 				this.singleOrderData.order = riderDelivery.order;
 				this.submitConfirmation();
@@ -567,7 +570,7 @@
 				this.singleOrderData.rider.orderPicked = true;
 				this.singleOrderData.rider.orderDropped = false;
 				this.singleOrderData.rider.orderAccepted = false;
-				this.singleOrderData.rider.rider_id = this.rider_id;
+				this.singleOrderData.rider.rider_id = riderDelivery.rider_id;
 
 				this.singleOrderData.rider.merchant_id = merchantOrder.merchant.id;
 
@@ -583,7 +586,7 @@
 				this.singleOrderData.rider.orderPicked = false;
 				this.singleOrderData.rider.orderDropped = false;
 				this.singleOrderData.rider.orderAccepted = true;
-				this.singleOrderData.rider.rider_id = this.rider_id;
+				this.singleOrderData.rider.rider_id = riderDelivery.rider_id;
 
 				this.singleOrderData.order = riderDelivery.order;
 				this.submitConfirmation();
@@ -631,9 +634,9 @@
 				return false;
 
 			},
-			timeOutDeliveryOrder(riderDelivery) {
+			callReceivingTimeIsOver(riderDelivery) {
 
-			    return riderDelivery.acceptance_timeout;
+			    return (((new Date() - new Date(riderDelivery.created_at)) / 1000) > riderDelivery.rider_call_receiving_time);
 
 			},
 			riderCancelledOrder(riderDelivery){
