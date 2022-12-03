@@ -148,7 +148,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="!orderIsCancelled(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order) && orderIsYetToServe(merchantOrder)" 
+									      			v-if="! orderIsCancelled(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order) && orderIsYetToServe(merchantOrder)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.serveOrder=true; confirmOrder()" 
 								      			>
@@ -160,7 +160,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="!orderIsCancelled(merchantOrder) && ! orderIsStopped(merchantOrder.order) && orderIsYetToDeliver(merchantOrder)" 
+									      			v-if="! orderIsCancelled(merchantOrder) && ! orderIsStopped(merchantOrder.order) && isSelfDeliveryOrder(merchantOrder) && ! orderIsSelfDelivered(merchantOrder)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.deliverOrder=true; confirmOrder()" 
 								      			>
@@ -172,7 +172,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="!orderIsCancelled(merchantOrder) && !orderIsReady(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
+									      			v-if="! orderIsCancelled(merchantOrder) && !orderIsReady(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.orderReady=true; confirmOrder()" 
 								      			>
@@ -184,7 +184,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-warning btn-sm" 
-									      			v-if="!orderIsCancelled(merchantOrder) && !orderIsReady(merchantOrder) && !orderIsAccepted(merchantOrder) && orderIsRinging(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
+									      			v-if="! orderIsCancelled(merchantOrder) && !orderIsReady(merchantOrder) && !orderIsAccepted(merchantOrder) && orderIsRinging(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.orderReady=false; confirmOrder()" 
 								      			>
@@ -196,7 +196,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-secondary btn-sm" 
-									      			v-if="!orderIsCancelled(merchantOrder) && !orderIsAccepted(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
+									      			v-if="! orderIsCancelled(merchantOrder) && !orderIsAccepted(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
 									      			@click="showOrderCancellationModal(merchantOrder.order)" 
 								      			>
 								        			<i class="fas fa-times"></i>
@@ -844,36 +844,16 @@
 
 				return order.in_progress===0 && order.is_completed===0 ? true : false;
 			},
-			orderIsYetToDeliver(merchantOrder) {
-
-				if (this.isSelfDeliveryOrder(merchantOrder) && !this.orderIsSelfDelivered(merchantOrder)) {
-
-					return true;
-
-				}
-
-				return false;
-
-			},
 			isSelfDeliveryOrder(merchantOrder) {
 
-				if (this.defineOrderType(merchantOrder.order)==='delivery' && merchantOrder.is_self_delivery == 1) {
-					return true;
-				}
-
-				return false;
+				return merchantOrder.is_self_delivery == 1;
 
 			},
 			// completed order
 			orderIsSelfDelivered(merchantOrder) {
 
-				if (merchantOrder.is_delivered==1) {
+				return Boolean(merchantOrder.self_delivery && merchantOrder.self_delivery.is_delivered==1);
 
-					return true;
-				}
-				else{
-					return false;
-				}
 			},
 			orderIsYetToServe(merchantOrder) {
 

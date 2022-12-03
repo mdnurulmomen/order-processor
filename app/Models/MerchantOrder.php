@@ -14,21 +14,27 @@ class MerchantOrder extends Model
 
 	protected $casts = [
 		// 'is_accepted' => 'boolean',
-		'is_delivered' => 'boolean',
+		// 'is_delivered' => 'boolean',
 		'is_ready' => 'boolean',
 		'is_free_delivery' => 'boolean',
-		'has_delivery_support' => 'boolean',
+		// 'is_self_delivery' => 'boolean',
+		'is_rider_available' => 'boolean',
 		'is_payment_settled' => 'boolean'
 	];
-
-	public function products()
-	{
-		return $this->hasMany(ProductOrder::class, 'merchant_order_id', 'id');
-	}
 
 	public function serve()
 	{
 		return $this->hasOne(ServingOrder::class, 'order_id', 'order_id');
+	}
+
+	public function selfDelivery()
+	{
+		return $this->hasOne(MerchantSelfDelivery::class, 'order_id', 'order_id');
+	}
+
+	public function products()
+	{
+		return $this->hasMany(ProductOrder::class, 'merchant_order_id', 'id');
 	} 
 
 	public function orderCancellations()
@@ -50,6 +56,11 @@ class MerchantOrder extends Model
 	{
 		return $this->hasOne(OrderCancellation::class, 'order_id', 'id')->where('canceller_type', 'App\Models\Admin');
 	}
+
+	public function riderAssigned()   // rider who accepted request for this order
+   	{
+      	return $this->hasOne(RiderDelivery::class, 'order_id', 'order_id')->where('is_accepted', 1);
+   	}
 
 	public function order()
 	{

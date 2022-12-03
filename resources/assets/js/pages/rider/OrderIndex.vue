@@ -68,7 +68,7 @@
 									      			<div v-if="allMerchantOrderIsCollected(riderDelivery)">
 										      			<button 
 											      			type="button" 
-											      			class="btn btn-info btn-sm" 
+											      			class="btn btn-warning btn-sm" 
 											      			:disabled="formSubmitionMode" 
 											      			@click="orderReturnConfirmation(riderDelivery)" 
 										      			>
@@ -462,7 +462,7 @@
 				    		currentDeliveryOrder => (currentDeliveryOrder.id==riderDeliveryOrder.id && currentDeliveryOrder.order_id==riderDeliveryOrder.order_id)
 				    	);
 
-				    Vue.set(this.deliveriesToShow, index, riderDeliveryOrder)
+				    this.$set(this.deliveriesToShow, index, riderDeliveryOrder)
 				    toastr.info("Delivery-order update arrives");
 				    // console.log(index);
 			    }

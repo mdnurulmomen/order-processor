@@ -30,6 +30,7 @@ class MerchantOrderResource extends JsonResource
             'is_rider_available' => $this->is_rider_available,
             'applied_sale_percentage' => $this->applied_sale_percentage,
             'is_payment_settled' => $this->is_payment_settled,
+            'self_delivery' => $this->whenLoaded('selfDelivery'),
             'order' => new OrderResource($this->whenLoaded('order')),
             'products' => ProductOrderResource::collection($this->whenLoaded('products')),
             'order_serve_confirmation' => /*$this->when($this->serve, $this->serve)*/ $this->whenLoaded('serve'),

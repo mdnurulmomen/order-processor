@@ -27,7 +27,7 @@ class OrderController extends Controller
 	// Admin
 	public function showOrderDetail($order)
 	{
-		return new OrderResource(Order::with(['orderer', 'schedule', 'merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.merchant', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'collections.rider', 'serve', 'merchantOrderCancellations.canceller', 'merchantOrderCancellations.cancellationReason', 'adminOrderCancellation.canceller', 'adminOrderCancellation.cancellationReason', 'payment', 'address.customerAddress'])->find($order));
+		return new OrderResource(Order::with(['orderer', 'schedule', 'merchants.products.merchantProduct', 'merchants.products.variation.merchantProductVariation.variation', 'merchants.products.addons.merchantProductAddon.addon', 'merchants.merchant', 'merchants.selfDelivery', 'riderAssigned', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'merchantOrderCancellations.cancellationReason', 'adminOrderCancellation.canceller', 'adminOrderCancellation.cancellationReason', 'payment', 'address.customerAddress'])->find($order));
 	}
 
 	public function showAllOrders($perPage = false)
@@ -36,17 +36,17 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => new OrderCollection(Order::with(['merchants.merchant', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->latest()->paginate($perPage)),
+               'all' => new OrderCollection(Order::with(['merchants.merchant', 'merchants.selfDelivery', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->latest()->paginate($perPage)),
 
-               'unconfirmed' => new OrderCollection(Order::where('customer_confirmation', -1)->with(['merchants.merchant', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->latest()->paginate($perPage)),
+               'unconfirmed' => new OrderCollection(Order::where('customer_confirmation', -1)->with(['merchants.merchant', 'merchants.selfDelivery', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->latest()->paginate($perPage)),
 
-               'active' => new OrderCollection(Order::where('customer_confirmation', 1)->where('in_progress', 1)->with(['merchants.merchant', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->latest()->paginate($perPage)),
+               'active' => new OrderCollection(Order::where('customer_confirmation', 1)->where('in_progress', 1)->with(['merchants.merchant', 'merchants.selfDelivery', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->latest()->paginate($perPage)),
 
-               'prepaid' => new OrderCollection(Order::with(['merchants.merchant', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->has('payment')->latest()->paginate($perPage)),
+               'prepaid' => new OrderCollection(Order::with(['merchants.merchant', 'merchants.selfDelivery', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->has('payment')->latest()->paginate($perPage)),
                			
-               'postpaid' => new OrderCollection(Order::with(['merchants.merchant', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->doesntHave('payment')->latest()->paginate($perPage)),
+               'postpaid' => new OrderCollection(Order::with(['merchants.merchant', 'merchants.selfDelivery', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])->doesntHave('payment')->latest()->paginate($perPage)),
 
-               'deliveredOrServed' => new OrderCollection(Order::where('is_completed', 1)->with(['merchants.merchant', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])
+               'deliveredOrServed' => new OrderCollection(Order::where('is_completed', 1)->with(['merchants.merchant', 'merchants.selfDelivery', 'riderAssigned', 'readyMerchants.merchant', 'collections.merchant', 'serve', 'merchantOrderCancellations.canceller', 'adminOrderCancellation.canceller'])
 				/*
 				->whereHas('riderDeliveryConfirmation', function($q){
    					$q->where('is_delivered', 1);
@@ -320,7 +320,7 @@ class OrderController extends Controller
 		 	
             return response()->json([
 
-               'all' => new MerchantOrderCollection(MerchantOrder::where('merchant_id', $merchant)->with(['products.merchantProduct', 'products.variation.merchantProductVariation.variation', 'products.addons.merchantProductAddon.addon', 'products.customization', 'order.orderer', 'serve'])
+               'all' => new MerchantOrderCollection(MerchantOrder::where('merchant_id', $merchant)->with(['selfDelivery', 'products.merchantProduct', 'products.variation.merchantProductVariation.variation', 'products.addons.merchantProductAddon.addon', 'products.customization', 'order.orderer', 'serve'])
            		->with(['merchantOrderCancellations' => function ($query) use ($merchant) {
 				    	$query->where('canceller_id', $merchant);
 					}])
@@ -377,6 +377,7 @@ class OrderController extends Controller
 	 	]);
 
 	 	$orderToConfirm = Order::findOrFail($order);
+	 	$merchantOrderToUpdate = $orderToConfirm->merchants()->where('merchant_id', $request->merchant_id)->firstOrFail();
 
 	 	// already customer or same merchant cancelled this order or order is stopped or completed
 		if (! $this->confirmedOrder($orderToConfirm) || $orderToConfirm->merchantOrderCancellations()->where('canceller_id', $request->merchant_id)->exists() || $orderToConfirm->in_progress === 0 || $orderToConfirm->is_completed === 1) {
@@ -386,32 +387,39 @@ class OrderController extends Controller
 		}
  		else if ($request->deliverOrder) {
 
- 			$orderServed = $this->makeMerchantOrderDelivered($orderToConfirm, $request->merchant_id, 'App\Models\Merchant', $request->merchant_id);
- 			$orderConfirmed = $this->makeMerchantOrderReady($orderToConfirm, $request->merchant_id);
- 			$orderAccepted = $this->acceptMerchantOrder($orderToConfirm, $request->merchant_id);
+ 			$this->updateMerchantOrderSelfDeliveryStatus($merchantOrderToUpdate, 'App\Models\Merchant', $request->merchant_id);
+ 			$this->updateMerchantOrderReadyStatus($merchantOrderToUpdate);
+ 			$this->updateMerchantOrderAcceptanceStatus($merchantOrderToUpdate);
 
- 			$this->accomplishOrderStatus($orderToConfirm);
+ 			$this->updateMerchantOrderAccomplishmentStatus($merchantOrderToUpdate);
 
  		}
  		else if ($request->serveOrder) {
 
  			$orderServed = $this->makeMerchantOrderServed($orderToConfirm, 'App\Models\Merchant', $request->merchant_id);
- 			$orderConfirmed = $this->makeMerchantOrderReady($orderToConfirm, $request->merchant_id);
- 			$orderAccepted = $this->acceptMerchantOrder($orderToConfirm, $request->merchant_id);
+ 			$this->updateMerchantOrderReadyStatus($merchantOrderToUpdate);
+ 			$this->updateMerchantOrderAcceptanceStatus($merchantOrderToUpdate);
 
- 			$this->accomplishOrderStatus($orderToConfirm);
+ 			$this->updateMerchantOrderAccomplishmentStatus($merchantOrderToUpdate);
 
  		}
  		else if ($request->orderReady) {
  			
- 			$orderConfirmed = $this->makeMerchantOrderReady($orderToConfirm, $request->merchant_id);
- 			$orderAccepted = $this->acceptMerchantOrder($orderToConfirm, $request->merchant_id);
+ 			$this->updateMerchantOrderReadyStatus($merchantOrderToUpdate);
+ 			$this->updateMerchantOrderAcceptanceStatus($merchantOrderToUpdate);
 
  		}
  		else {
 
- 			$orderAccepted = $this->acceptMerchantOrder($orderToConfirm, $request->merchant_id);
+ 			$this->updateMerchantOrderAcceptanceStatus($merchantOrderToUpdate);
  		
+ 		}
+
+ 		// update main order according to all merchant order accomplished or stoped progression
+ 		if ($this->allMerchantOrderIsAccomplished($orderToConfirm)) {
+ 			
+ 			$this->updateOrderAccomplishmentStatus($orderToConfirm);
+
  		}
 
  		// checking if order is for delivery and order is from customer and any rider notification is already broadcasted
@@ -607,7 +615,8 @@ class OrderController extends Controller
                 
             // accepting rider-delivery-order
             $deliveryToConfirm->update([
-                'is_accepted' => 1
+                'is_accepted' => 1,
+                'answered_at' => now(),
             ]);
 
             // Nullifying rider paused-time 
@@ -617,7 +626,7 @@ class OrderController extends Controller
             ]);
             */
 
-            $this->updateMerchantOrders($orderToConfirm->merchants()->where('is_self_delivery', 0)->get());
+            $this->updateAllMerchantRiderAvailablityStatus($orderToConfirm->merchants()->where('is_self_delivery', 0)->get());
             $this->makeMerchantCalls($orderToConfirm, $orderToConfirm->merchants()->where('is_self_delivery', 0)->get());
 
         }
@@ -642,18 +651,18 @@ class OrderController extends Controller
 
         }
         // confirming delivery
-        else if ($request->orderDropped && $this->allOrderCollected($deliveryToConfirm) /*&& $deliveryToConfirm->is_accepted==1*/) {
+        else if ($this->allOrderIsCollected($deliveryToConfirm) && $request->orderDropped /*&& $deliveryToConfirm->is_accepted==1*/) {
                 
             $deliveryToConfirm->update([
                 'is_delivered' => 1,
             ]);
 
-            $this->accomplishOrderStatus($deliveryToConfirm->order);
+            $this->updateAllMerchantRiderDeliveryOrders($deliveryToConfirm->order->merchants()->where('is_self_delivery', 0)->get());
 
         }
         // food returning
         // if delivery record was created
-        else if ($request->orderReturned && $this->allOrderCollected($deliveryToConfirm) /*&& $deliveryToConfirm->is_accepted==1*/) {
+        else if ($this->allOrderIsCollected($deliveryToConfirm) && $request->orderReturned /*&& $deliveryToConfirm->is_accepted==1*/) {
 
             // deleting delivery record as not deliverd
             $deliveryToConfirm->update([
@@ -722,20 +731,21 @@ class OrderController extends Controller
         ]);
 
         $orderToConfirm = Order::findOrFail($order);
+        $merchantOrderToUpdate = $orderToConfirm->merchants()->where('merchant_id', $request->merchant_id)->firstOrFail();
 
         // if already cancelled order or delivery-order is more than 30 seconds ago 
-        if ($this->cancelledOrder($orderToConfirm) || $this->orderIsRiderDeliverable($orderToConfirm, $request->merchant_id) || $this->orderIsSelfDelivered($orderToConfirm, $request->merchant_id) || $this->orderIsServed($orderToConfirm)) {
+        if ($this->cancelledOrder($orderToConfirm) || $this->orderIsRiderDeliverable($merchantOrderToUpdate) || $this->orderIsSelfDelivered($merchantOrderToUpdate) || $this->orderIsServed($orderToConfirm)) {
         	
-        	return $this->showAgentAllOrders($request->merchant_id, $perPage);
+        		return $this->showAgentAllOrders($request->merchant_id, $perPage);
 
         }
 
         // if order is ready and not already delivered
-        else if ($request->orderDelivered && $this->orderIsReady($orderToConfirm, $request->merchant_id) && ! $this->orderIsSelfDelivered($orderToConfirm, $request->merchant_id)) {
+        else if ($request->orderDelivered && $this->orderIsReady($merchantOrderToUpdate) /*&& ! $this->orderIsSelfDelivered($merchantOrderToUpdate)*/) {
 
-            $this->makeMerchantOrderDelivered($orderToConfirm, $request->merchant_id, 'App\Models\MerchantAgent', $request->merchant_agent_id);
+            $this->updateMerchantOrderSelfDeliveryStatus($merchantOrderToUpdate, 'App\Models\MerchantAgent', $request->merchant_agent_id);
 
-            $this->accomplishOrderStatus($orderToConfirm);
+            $this->updateMerchantOrderAccomplishmentStatus($merchantOrderToUpdate);
 
 	        // Broadcast to admin for merchant order ready confirmation
 	        $this->notifyAdmin($orderToConfirm);
@@ -746,11 +756,11 @@ class OrderController extends Controller
         }
 
         // if order is ready and not already served
-        else if ($request->orderServed && $this->orderIsReady($orderToConfirm, $request->merchant_id) && ! $this->orderIsServed($orderToConfirm)) {
+        else if ($request->orderServed && $this->orderIsReady($merchantOrderToUpdate) && ! $this->orderIsServed($orderToConfirm)) {
 
             $this->makeMerchantOrderServed($orderToConfirm, 'App\Models\MerchantAgent', $request->merchant_agent_id);
 
-            $this->accomplishOrderStatus($orderToConfirm);
+            $this->updateMerchantOrderAccomplishmentStatus($merchantOrderToUpdate);
 
 	        // Broadcast to admin for merchant order ready confirmation
 	        $this->notifyAdmin($orderToConfirm);
@@ -759,6 +769,13 @@ class OrderController extends Controller
 	        $this->notifyMerchant($orderToConfirm->merchants()->where('merchant_id', $request->merchant_id)->first());
         
         }
+
+        	// update main order according to all merchant order accomplished or stoped progression
+	 		if ($this->allMerchantOrderIsAccomplished($orderToConfirm)) {
+	 			
+	 			$this->updateOrderAccomplishmentStatus($orderToConfirm);
+
+	 		}
 
         return $this->showAgentAllOrders($request->merchant_id, $perPage);
 
@@ -771,10 +788,7 @@ class OrderController extends Controller
 
     private function cancelledOrder(Order $order)
     {
-    	$netMerchantInOrder = $order->merchants->count();
-    	$numberCancelledMerchants = $order->merchantOrderCancellations->count();
-
-    	return $netMerchantInOrder == $numberCancelledMerchants || $order->in_progress===0 || $order->customer_confirmation===0 ? true : false;
+    	return $order->in_progress===0 || $order->customer_confirmation===0 || $order->merchants->count()===$order->merchantOrderCancellations->count() ? true : false;
     }
 
     private function orderIsServed(Order $order)
@@ -782,14 +796,14 @@ class OrderController extends Controller
     	return $order->serve()->exists();
     }
 
-    private function orderIsSelfDelivered(Order $order, $merchant)
+    private function orderIsSelfDelivered(MerchantOrder $merchantOrder)
     {
-    	return $order->merchants()->where('merchant_id', $merchant)->where('is_delivered', 1)->where('is_self_delivery', 1)->exists();
+    	return $merchantOrder->is_self_delivery == 1 && $merchantOrder->selfDelivery()->where('is_delivered', 1)->exists();
     }
 
-    private function orderIsRiderDeliverable(Order $order, $merchant)		// rider-delivery
+    private function orderIsRiderDeliverable(MerchantOrder $merchantOrder)		// rider-delivery
     {
-    	return $order->merchants()->where('merchant_id', $merchant)->where('is_self_delivery', 0)->exists();
+    	return $merchantOrder->is_self_delivery==0;
     }
 
     /*
@@ -800,7 +814,7 @@ class OrderController extends Controller
     }
     */
 
-    private function allOrderCollected(RiderDelivery $deliveryToConfirm)
+    private function allOrderIsCollected(RiderDelivery $deliveryToConfirm)
     {
     	$netMerchantsToPick = $deliveryToConfirm->merchants()->where('is_self_delivery', 0)->count() - $deliveryToConfirm->merchantOrderCancellations->count();
 
@@ -881,6 +895,7 @@ class OrderController extends Controller
 
               	$merchantOrder->update([
                  	'is_accepted' => -1, // ringing
+                 	'ringing_started_at' => now(),
                  	// 'merchant_id' => $merchantOrder->merchant_id,
               	]);
               
@@ -913,7 +928,8 @@ class OrderController extends Controller
 		$merchantCancelledAcceptance = $orderToCancel->merchants()
 		->where('merchant_id', $merchant)
 		->update([
-	 		'is_accepted' => 0
+	 		'is_accepted' => 0,
+	 		'answered_at' => now(),
 	 	]);
 	}
 
@@ -951,49 +967,54 @@ class OrderController extends Controller
 		}
 	}
 
-	private function acceptMerchantOrder(Order $order, $merchant)
+	private function updateMerchantOrderAcceptanceStatus(MerchantOrder $merchantOrderToAccept)
 	{
-		// created when confirmed
-		$merchantOrderToAccept = $order->merchants()->where('merchant_id', $merchant)->first();
-
 		// if exists & not accepted yet
- 		if ($merchantOrderToAccept && $merchantOrderToAccept->is_accepted==-1) {
+ 		// if ($merchantOrderToAccept->is_accepted==-1) {
 
-			$merchantOrderToAccept->update(['is_accepted' => 1]);
+			$merchantOrderToAccept->update([
+				'is_accepted' => 1,
+				'answered_at' => now(),
+			]);
 
-		}
-
-		return $merchantOrderToAccept;
+		// }
 	}
 
-	private function orderIsReady(Order $order, $merchantId)
+	private function orderIsReady(MerchantOrder $merchantOrder)
 	{
-		return $order->readyMerchants()->where('merchant_id', $merchantId)->where('is_ready', 1)->exists();
+		return $merchantOrder->is_ready==1;
 	}
 
-	private function makeMerchantOrderReady(Order $order, $merchant)
+	private function updateMerchantOrderReadyStatus(MerchantOrder $merchantOrder)
 	{
 		// if not already entered for this order & merchant
-		// if (! $order->readyMerchants()->where('merchant_id', $merchant)->exists()) {
+		// if ($merchantOrder->is_ready != 1) {
 			
-			return $order->merchants()->where('merchant_id', $merchant)->update([
+			$merchantOrder->update([
 	 			'is_ready' => 1,
+	 			'ready_at' => now()
 	 		]);
 
 		// }
 	}
 
-	private function makeMerchantOrderDelivered(Order $order, $merchantId, $confirmerClassName, $confirmerId)
+	private function updateMerchantOrderSelfDeliveryStatus(MerchantOrder $merchantOrder, $confirmerClassName, $confirmerId)
 	{
-		// if not already entered for this order & merchant
-		if (! $order->merchants()->where('merchant_id', $merchantId)->where('is_self_delivery', 1)->exists()) {
+		// if this is self delivery order
+		if ($merchantOrder->is_self_delivery == 1) {
 			
-			$order->merchants()->where('merchant_id', $merchantId)->where('is_self_delivery', 1)->update([
-	 			'is_delivered' => 1,
-	 			'delivered_at' => now(),
-	 			'confirmer_id' => $confirmerId,
-	 			'confirmer_type' => $confirmerClassName,
-	 		]);
+			$merchantOrder->selfDelivery()->firstOrCreate(
+				[
+					'merchant_id' => $merchantOrder->merchant_id,
+					// 'order_id' => $merchantOrder->order_id,
+				],
+				[
+		 			'is_delivered' => 1,
+		 			'delivered_at' => now(),
+		 			'confirmer_id' => $confirmerId,
+		 			'confirmer_type' => $confirmerClassName,
+		 		]
+	 		);
 		}
 	}
 
@@ -1001,7 +1022,6 @@ class OrderController extends Controller
 	{
 		// if not already entered for this order & merchant
 		if (! $order->serve()->exists()) {
-			
 			$order->serve()->create([
 	 			'is_served' => 1,
 	 			'confirmer_id' => $id,
@@ -1135,40 +1155,82 @@ class OrderController extends Controller
 	 	]);
 	}
 
-	private function accomplishOrderStatus(Order $order)
+	private function updateMerchantOrderAccomplishmentStatus(MerchantOrder $merchantOrder)
 	{
-		// Confirming order accomplishment
+		// Confirming merchant-order accomplishment
+		$merchantOrder->update([
+			'in_progress' => 0,
+    		'is_completed' => 1,		// -1 (pending) / 1 (complete) / 0 (incomplete)
+		]);
+	}
+
+	private function updateAllMerchantRiderDeliveryOrders($merchantOrders)
+	{
+		foreach ($merchantOrders as $merchantOrder) {
+			
+			$this->updateMerchantOrderAccomplishmentStatus($merchantOrder);
+
+		}
+
+	}
+
+	private function updateOrderAccomplishmentStatus(Order $order)
+	{
+		// Confirming merchant-order accomplishment
 	 	$order->update([
     		'in_progress' => 0,
     		'is_completed' => 1,		// -1 (pending) / 1 (complete) / 0 (incomplete)
     	]);
 	}
 
-    private function disableOrderStatus(Order $order)
-    {
-    	$order->update([
-			'in_progress' => 0,
-			'is_completed' => 0		// -1 (pending) / 1 (complete) / 0 (incomplete)
+	private function allMerchantOrderIsAccomplished(Order $order)
+	{
+		$totalAvailableMerchants = $order->merchants->count() - $order->orderCancellations->count();
+
+		$nonDeliveryOrderMerchants = $order->merchants()->whereNull('is_self_delivery')->count();		// for non-delivery orders
+		
+		$selfDeliveryOrderMerchants = $order->merchants()
+		->where('is_self_delivery', 1)
+		->whereHas('selfDelivery', function ($query) {
+		   $query->where('is_delivered', 1);
+		})
+		->count();		// for self-delivery orders
+
+		$riderDeliveryOrderMerchants = $order->merchants()
+		->where('is_self_delivery', 0)
+		->whereHas('riderAssigned', function ($query) {
+		   $query->where('is_delivered', 1);
+		})
+		->count();		// for rider-delivery orders
+
+		return $totalAvailableMerchants === ($nonDeliveryOrderMerchants + $selfDeliveryOrderMerchants + $riderDeliveryOrderMerchants);
+	}
+
+	private function disableOrderStatus(Order $order)
+	{
+		$order->update([
+		'in_progress' => 0,
+		'is_completed' => 0		// -1 (pending) / 1 (complete) / 0 (incomplete)
+	]);
+	}
+
+	private function disableMerchantOrder(MerchantOrder $merchantOrder)
+	{
+		$merchantOrder->update([
+		'is_rider_available' => 0
+	]);
+	}
+
+	private function updateAllMerchantRiderAvailablityStatus(\Illuminate\Database\Eloquent\Collection $merchantOrders)
+	{
+		foreach ($merchantOrders as $merchantOrder) {
+			
+	 	$merchantOrder->update([
+			'is_rider_available' => 1
 		]);
-    }
 
-    private function disableMerchantOrder(MerchantOrder $merchantOrder)
-    {
-    	$merchantOrder->update([
-			'is_rider_available' => 0
-		]);
-    }
+		}
 
-    private function updateMerchantOrders(\Illuminate\Database\Eloquent\Collection $merchantOrders)
-    {
-    	foreach ($merchantOrders as $merchantOrder) {
-    		
-	    	$merchantOrder->update([
-				'is_rider_available' => 1
-			]);
-
-    	}
-
-    }
+	}
     
 }

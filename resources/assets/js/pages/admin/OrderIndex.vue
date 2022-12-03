@@ -132,43 +132,75 @@
 								    		<td>{{ order.id }}</td>
 								    		<td>{{ order.type | capitalize }}</td>
 								    		<td>
-												<span 
-								    				v-if="orderIsFailed(order)" 
-								    				class="badge badge-secondary d-block"
-								    			>	
-								    				Failed
-								    			</span>
+												<div v-if="orderIsFailed(order)">
+													<span class="badge badge-secondary d-block"
+									    			>	
+									    				Failed
+									    			</span>
+												</div>
 
-												<!-- 
-													no option should be shown without picking/cancelling every merchant orders 
-												-->
-								    			<span 
-								    				v-else-if="orderIsServedOrDelivered(order)" 
-								    				:class="[orderIsReturned(order) ? 'badge-primary' : 'badge-success', 'badge d-block']"
-								    			>	
-								    				{{ orderServingOrDeliveringStatus(order)  | capitalize }}
-								    			</span>
+												<div v-else-if="orderIsConfirmed(order)">
+													<div v-for="merchantOrder in order.merchants">
+										    			<!-- Non-deliverable Or Self-Deliverable Order -->
+										    			<div 
+										    				v-if="merchantOrderIsNonDeliverable(merchantOrder) || merchantOrderIsSelfDeliverable(merchantOrder)"
+										    			>
+											    			<span 
+											    				v-if="merchantOrderIsSelfDelivered(merchantOrder)" 
+											    				class='badge badge-success d-block'
+											    			>	
+											    				{{ (merchantOrder.merchant_name + ' Self-Delivered')  | eachcapitalize }}
+											    			</span>
 
-								    			<!-- 
-								    				- after call confirmation
-								    				- if rider has been assigned (riderFoodPickConfirmations is auto set after assignment)  
-								    				- for each merchants in order
-								    			-->
-							    				<span 
-							    					v-else-if="orderIsConfirmed(order)"
-							    				>
-								    				<span
-								    					v-for="merchantOrderRecord in order.merchants" 
-								    					:class="[secondaryOrderClass(order, merchantOrderRecord.merchant_id), 'badge d-block']"
-								    				>
-									    				{{ secondaryOrderStatus(order, merchantOrderRecord.merchant_id) | capitalize }}
-								    				</span>
-							    				</span>	
+											    			<span 
+											    				v-else-if="orderIsServed(order)" 
+											    				class='badge badge-success d-block'
+											    			>	
+											    				{{ (merchantOrder.merchant_name + ' Served')  | eachcapitalize }}
+											    			</span>
+
+											    			<span 
+											    				v-else 
+											    				:class="[secondaryOrderClass(order, merchantOrder.merchant_id), 'badge d-block']"
+										    				>
+											    				{{ secondaryOrderStatus(order, merchantOrder.merchant_id) | capitalize }}
+										    				</span>
+										    			</div>
+
+										    			<!-- Rider Deliverable Order -->
+										    			<div v-else>
+															<div v-if="orderIsRiderDelivered(order) || orderIsRiderReturned(order)">
+												    			<span 
+												    				v-if="orderIsRiderDelivered(order)"
+												    				class='badge badge-success d-block'
+												    			>	
+												    				{{ merchantOrder.merchant_name + ' is Rider-Delivered'  | capitalize }}
+												    			</span>
+																
+																<span 
+												    				v-else
+												    				class='badge badge-primary d-block'
+												    			>	
+												    				{{ merchantOrder.merchant_name + ' order is returned'  | capitalize }}
+												    			</span>
+															</div>
+
+										    				<div v-else>
+											    				<span :class="[secondaryOrderClass(order, merchantOrder.merchant_id), 'badge d-block']"
+											    				>
+												    				{{ secondaryOrderStatus(order, merchantOrder.merchant_id) | capitalize }}
+											    				</span>
+										    				</div>
+										    			</div>
+													</div>
+												</div>
 
 							    				<!-- new order before call confirmation -->
-								    			<span :class="[primaryOrderClass(order), 'badge d-block']" v-else>	
-								    				{{ primaryOrderStatus(order) | capitalize }}
-								    			</span>
+							    				<div v-else>
+									    			<span :class="[primaryOrderClass(order), 'badge d-block']">	
+									    				{{ primaryOrderStatus(order) | capitalize }}
+									    			</span>
+							    				</div>
 								    		</td>
 								    		<td>
 								      			<button 
@@ -260,15 +292,15 @@
 				    			<div 
 				    				class="progress-bar progress-bar-striped progress-bar-animated" 
 				    				v-if="singleOrderData.order.merchants.length && orderIsConfirmed(singleOrderData.order)" 
-				    				v-for="merchantOrderRecord in singleOrderData.order.merchants" 
-				    				:class="[secondaryOrderClass(singleOrderData.order, merchantOrderRecord.merchant_id)]" 
+				    				v-for="merchantOrder in singleOrderData.order.merchants" 
+				    				:class="[secondaryOrderClass(singleOrderData.order, merchantOrder.merchant_id)]" 
 									:style="{ width: (60/singleOrderData.order.merchants.length) + '%' }"
 								>
-									{{ secondaryOrderStatus(singleOrderData.order, merchantOrderRecord.merchant_id) | capitalize }}
+									{{ secondaryOrderStatus(singleOrderData.order, merchantOrder.merchant_id) | capitalize }}
 								</div>
 
 								<div 
-									v-if="orderIsServedOrDelivered(singleOrderData.order)" 
+									v-if="deliveryOrServingOrderIsCompleted(singleOrderData.order)" 
 				    				:class="[orderIsReturned(singleOrderData.order) ? 'bg-primary' : 'bg-success', 'progress-bar progress-bar-striped progress-bar-animated']"
 									style="width:15%"
 								>
@@ -435,9 +467,9 @@
 							              			Status:
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span :class="[singleOrderData.order.is_completed==1 ? 'badge-success' : singleOrderData.order.is_progress==1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+								                	<span :class="[singleOrderData.order.is_completed==1 ? 'badge-success' : singleOrderData.order.in_progress==1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
 									    			>	
-									    				{{ singleOrderData.order.is_completed==1 ? 'Completed' : singleOrderData.order.is_progress==1 ? 'Progressive' : 'Failed' }}
+									    				{{ singleOrderData.order.is_completed==1 ? 'Completed' : singleOrderData.order.in_progress==1 ? 'Progressive' : 'Failed' }}
 									    			</span>
 								                </div>	
 								            </div> 
@@ -459,54 +491,120 @@
 
 							                <div 
 							                	class="form-group form-row" 
-							                	v-if="orderIsConfirmed(singleOrderData.order) && singleOrderData.order.merchants && singleOrderData.order.merchants.length"
+							                	v-if="orderIsConfirmed(singleOrderData.order) && orderHasMerchants(singleOrderData.order)"
 							                >
 							                	<div 
 						                			class="col-sm-6" 
-						                			v-for="merchantOrderRecord in singleOrderData.order.merchants"
+						                			v-for="merchantOrder in singleOrderData.order.merchants"
 						                		>
-								                	<!-- <div v-show="order.payment_method==='cash'"> -->
-									    			<p class="text-center mb-0">
-									    				{{ merchantOrderRecord.merchant_name | eachcapitalize }}
+									    			<div class="text-center">
+									    				{{ merchantOrder.merchant_name | eachcapitalize }}
 
-									    				<span  
-										    				:class="[merchantOrderRecord.is_self_delivery==1 ? 'badge-success' : 'badge-danger' , 'badge']"
+									    				<span 
+									    					class="badge badge-info"
+										    				v-show="! merchantOrderIsNonDeliverable(merchantOrder)"
 										    			>	
-										    				{{ merchantOrderRecord.is_self_delivery==1 ? 'Self-Delivery' : 'Rider-Delivery' }}
+										    				{{ merchantOrder.is_self_delivery==1 ? 'Self-Delivery' : 'Rider-Delivery' }}
 										    			</span>
-									    			</p>
+									    			</div>
 
-									    			<span 
-									    				v-if="! merchantOrderIsSelfDeliverable(merchantOrderRecord) && riderIsAssigned(singleOrderData.order)"
-									    				:class="[riderIsAssigned(singleOrderData.order) ? 'badge-info' : 'badge-danger', 'badge d-block']"
+									    			<!-- Non Delivery Or Self Delivery Order -->
+									    			<div 
+									    				v-if="merchantOrderIsNonDeliverable(merchantOrder) || merchantOrderIsSelfDeliverable(merchantOrder)"
 									    			>
-									    				{{ riderIsAssigned(singleOrderData.order) ? 'Rider Assigned' : 'Not Assigned' }}
-									    			</span>
-
-									    			<span v-if="singleOrderData.order.merchant_order_cancellations && singleOrderData.order.merchant_order_cancellations.length">
 										    			<span 
-										    				class="badge badge-secondary d-block" 
-										    				v-for="merchantOrderCancellation in singleOrderData.order.merchant_order_cancellations" 
-										    				v-if="typeof merchantAcceptedOrder(singleOrderData.order.merchants, merchantOrderCancellation.merchant_id) !== 'undefined' && merchantCancelledOrder(singleOrderData.order.merchant_order_cancellations, merchantOrderCancellation.merchant_id)" 
+										    				:class="[merchantOrderIsRejected(merchantOrder) ? 'badge-secondary' : merchantOrderIsAccepted(merchantOrder) ? 'badge-info' : 'badge-danger', 'badge d-block']"
 										    			>
-										    				{{ merchantOrderCancellation.merchant_name + ' has cancelled' | capitalize}} 
+										    				{{ merchantOrderIsRejected(merchantOrder) ? 'Rejected' : merchantOrderIsAccepted(merchantOrder) ? 'Accepted' : 'Ringing' }}
 										    			</span>
-									    			</span>
 
-									    			<span 
-									    				:class="[merchantOrderIsReady(singleOrderData.order.merchants, merchantOrderRecord.merchant_id) ? 'badge-success' : orderAcceptanceClass(merchantOrderRecord), 'badge d-block']"
-									    			>	
-									    				{{ merchantOrderIsReady(singleOrderData.order.merchants, merchantOrderRecord.merchant_id) ? (merchantOrderRecord.merchant_name + ' is ready') : orderAcceptanceStatus(merchantOrderRecord) | capitalize }}
-									    			</span>
-
-									    			<span v-if="! merchantOrderIsSelfDeliverable(merchantOrderRecord) && singleOrderData.order.collections && singleOrderData.order.collections.length">
 										    			<span 
-											    			v-for="riderCollection in singleOrderData.order.collections" 
-										    				:class="[riderCollectionClass(riderCollection), 'badge d-block']"
+										    				v-if="merchantOrderIsAccepted(merchantOrder)" 
+										    				:class="[merchantIsReady(merchantOrder) ? 'badge-primary' : 'badge-warning', 'badge d-block']"
 										    			>
-										    				{{ riderCollectionStatus(riderCollection) | capitalize }}
+										    				{{ merchantIsReady(merchantOrder) ? 'Ready' : 'Processing' }}
 										    			</span>
-									    			</span>
+
+										    			<span
+	 														v-if="merchantOrderIsSelfDelivered(merchantOrder)" 
+	 														class="badge badge-success d-block"
+	 													>
+	 														Delivered
+	 													</span>
+
+	 													<span 
+										    				v-if="orderIsServed(singleOrderData.order)" 
+										    				class="badge badge-success d-block"
+										    			>
+										    				{{ orderServingStatus(singleOrderData.order.order_serve_confirmation) | capitalize }}
+										    			</span>
+
+										    			<!-- 
+										    			<span v-if="singleOrderData.order.merchant_order_cancellations && singleOrderData.order.merchant_order_cancellations.length">
+											    			<span 
+											    				class="badge badge-secondary d-block" 
+											    				v-for="merchantOrderCancellation in singleOrderData.order.merchant_order_cancellations" 
+											    				v-if="typeof merchantAcceptedOrder(singleOrderData.order.merchants, merchantOrderCancellation.merchant_id) !== 'undefined' && merchantCancelledOrder(singleOrderData.order.merchant_order_cancellations, merchantOrderCancellation.merchant_id)" 
+											    			>
+											    				{{ merchantOrderCancellation.merchant_name + ' has cancelled' | capitalize}} 
+											    			</span>
+										    			</span> 
+										    			
+										    			<span 
+										    				:class="[merchantOrderIsReady(singleOrderData.order.merchants, merchantOrder.merchant_id) ? 'badge-success' : orderAcceptanceClass(merchantOrder), 'badge d-block']"
+										    			>	
+										    				{{ merchantOrderIsReady(singleOrderData.order.merchants, merchantOrder.merchant_id) ? (merchantOrder.merchant_name + ' is ready') : orderAcceptanceStatus(merchantOrder) | capitalize }}
+										    			</span>
+										    			-->
+									    			</div>
+
+									    			<!-- Rider Delivery Orders -->
+									    			<div
+									    				v-else-if="! merchantOrderIsNonDeliverable(merchantOrder) && ! merchantOrderIsSelfDeliverable(merchantOrder)"
+									    			>
+										    			<span 
+										    				:class="[riderIsAssigned(singleOrderData.order) ? 'badge-info' : merchantLostOrder(singleOrderData.order.merchants, merchantOrder.merchant_id) ? 'badge-secondary' : 'badge-danger', 'badge d-block']"
+										    			>
+										    				{{ riderIsAssigned(singleOrderData.order) ? 'Rider Assigned' : merchantLostOrder(singleOrderData.order.merchants, merchantOrder.merchant_id) ? 'No Rider Found' : 'Searching For Rider' }}
+										    			</span>
+									    				
+									    				<span 
+									    					v-if="riderIsAssigned(singleOrderData.order)" 
+										    				:class="[merchantOrderIsRejected(merchantOrder) ? 'badge-secondary' : merchantOrderIsAccepted(merchantOrder) ? 'badge-info' : 'badge-danger', 'badge d-block']"
+										    			>
+										    				{{ merchantOrderIsRejected(merchantOrder) ? 'Rejected' : merchantOrderIsAccepted(merchantOrder) ? 'Accepted' : 'Ringing' }}
+										    			</span>
+
+										    			<span 
+										    				v-if="merchantOrderIsAccepted(merchantOrder) && ! merchantOrderIsRejected(merchantOrder)" 
+										    				:class="[merchantIsReady(merchantOrder) ? 'badge-primary' : 'badge-warning', 'badge d-block']"
+										    			>
+										    				{{ merchantIsReady(merchantOrder) ? 'Ready' : 'Processing' }}
+										    			</span>
+
+										    			<span 
+										    				v-if="merchantOrderIsAccepted(merchantOrder) && merchantIsReady(merchantOrder) && ! merchantOrderIsRejected(merchantOrder)" 
+										    				:class="[merchantOrderIsCollected(singleOrderData.order.collections, merchantOrder.merchant_id) ? 'badge-primary' : 'badge-warning', 'badge d-block']"
+										    			>
+										    				{{ merchantOrderIsCollected(singleOrderData.order.collections, merchantOrder.merchant_id) ? 'Collected' : 'Yet to Collect' }}
+										    			</span>
+
+										    			<span 
+										    				v-if="orderIsRiderDelivered(singleOrderData.order) || orderIsRiderReturned(singleOrderData.order)" 
+										    				:class="[orderIsRiderDelivered(singleOrderData.order) ? 'badge-success' : 'badge-primary', 'badge d-block']"
+										    			>
+										    				{{ orderIsRiderDelivered(singleOrderData.order) ? 'Delivered' : 'Returned' | capitalize }}
+										    			</span>
+
+										    			<!-- 
+										    			<span 
+										    				v-show="orderIsFailed(singleOrderData.order)" 
+										    				class="badge badge-secondary d-block"
+										    			>	
+										    				Failed
+										    			</span> 
+										    			-->
+									    			</div>
 									    			
 								    				<!-- 
 									    			<span 
@@ -518,33 +616,6 @@
 									    				}}
 									    			</span>
  													-->
-
- 													<span
- 														v-show="orderIsSelfDelivered(merchantOrderRecord)"
- 													>
- 														{{ (merchantOrderRecord.merchant_name + 'Delivered') | eachcapitalize }}
- 													</span>
-									    			
-									    			<span 
-									    				v-if="! merchantOrderIsSelfDeliverable(merchantOrderRecord) && (orderIsDelivered(singleOrderData.order) || orderIsReturned(singleOrderData.order))" 
-									    				:class="[riderDeliveryClass(singleOrderData.order.rider_assigned), 'badge d-block']"
-									    			>
-									    				{{ riderDeliveryStatus(singleOrderData.order.rider_assigned) | capitalize }}
-									    			</span>
-
-									    			<span 
-									    				v-else-if="orderIsServed(singleOrderData.order)"
-									    				:class="[orderServingClass(singleOrderData.order.order_serve_confirmation), 'badge d-block']"
-									    			>
-									    				{{ orderServingStatus(singleOrderData.order.order_serve_confirmation) | capitalize }}
-									    			</span>
-
-									    			<span 
-									    				v-else-if="orderIsFailed(singleOrderData.order)" 
-									    				class="badge badge-secondary d-block"
-									    			>	
-									    				Failed
-									    			</span>
 								                	<!-- </div> -->
 						                		</div>	
 							                </div>	
@@ -766,7 +837,7 @@
 									type="button" 
 									class="btn btn-danger dropdown-toggle" 
 									data-toggle="dropdown" 
-									v-if="! orderIsReturned(singleOrderData.order) && ! orderIsServedOrDelivered(singleOrderData.order) && ! customerCancelledOrder(singleOrderData.order) && ! orderIsStopped(singleOrderData.order) && ! orderIsPicked(singleOrderData.order) && ! allMerchantsCancelledOrder(singleOrderData.order) " 
+									v-if="! orderIsCompleted(singleOrderData.order) && ! customerCancelledOrder(singleOrderData.order) && ! orderIsStopped(singleOrderData.order)" 
 								>
 									<i class="fas fa-times"></i>
 									Cancel
@@ -777,7 +848,7 @@
 						      			type="button" 
 						      			class="btn btn-outline-danger btn-sm dropdown-product" 
 						      			@click="showRiderCancellationModal()" 
-						      			:disabled="Boolean(formSubmitionMode || ! riderIsAssigned(singleOrderData.order) /*|| orderIsPicked(singleOrderData.order)*/ || orderToBeConfirmed(singleOrderData.order))"
+						      			:disabled="Boolean(formSubmitionMode || ! riderIsAssigned(singleOrderData.order) || orderIsPicked(singleOrderData.order) || orderToBeConfirmed(singleOrderData.order))"
 					      			>
 					        			<i class="fas fa-times text-danger"></i>
 					        			By Rider
@@ -798,7 +869,7 @@
 						      			type="button" 
 						      			class="btn btn-outline-danger btn-sm dropdown-product" 
 						      			@click="showMerchantCancellationModal()" 
-						      			:disabled="Boolean(formSubmitionMode || allMerchantOrderIsReady(singleOrderData.order) || allMerchantOrderIsPicked(singleOrderData.order) /*|| allMerchantsCancelledOrder(singleOrderData.order)*/ || orderToBeConfirmed(singleOrderData.order))"
+						      			:disabled="Boolean(formSubmitionMode || allMerchantOrderIsReady(singleOrderData.order) || allMerchantOrderIsPicked(singleOrderData.order) || allMerchantsCancelledOrder(singleOrderData.order) || orderToBeConfirmed(singleOrderData.order))"
 					      			>
 					        			<i class="fas fa-times text-danger"></i>
 					        			By Merchant
@@ -809,7 +880,7 @@
 						      			type="button" 
 						      			class="btn btn-outline-danger btn-sm dropdown-product" 
 						      			@click="showAdminCancellationModal()" 
-						      			:disabled="Boolean(formSubmitionMode /*|| allMerchantsCancelledOrder(singleOrderData.order)*/ || orderToBeConfirmed(singleOrderData.order))"
+						      			:disabled="Boolean(formSubmitionMode/* || orderToBeConfirmed(singleOrderData.order)*/)"
 					      			>
 					        			<i class="fas fa-times text-danger"></i>
 					        			By Admin
@@ -910,7 +981,7 @@
 											<option 
 												v-for="merchantOrder in singleOrderData.order.merchants" 
 												:value="merchantOrder.merchant_id" 
-												:disabled="typeof merchantCancelledOrder(singleOrderData.order.merchant_order_cancellations, merchantOrder.merchant_id) !== 'undefined'"
+												:disabled="Boolean(merchantOrderIsNonDeliverable(merchantOrder) && merchantOrderIsReady([merchantOrder], merchantOrder.merchant_id)) || merchantOrderIsCollected(singleOrderData.order.collections, merchantOrder.merchant_id) || typeof merchantCancelledOrder(singleOrderData.order.merchant_order_cancellations, merchantOrder.merchant_id) !== 'undefined'"
 											>
 												{{ merchantOrder.merchant_name | capitalize }}
 											</option>
@@ -1069,7 +1140,7 @@
 			    const objectExist = (orderObject) => orderObject.id==broadcastedOrder.id;
 
 			    // if the order is paid and already ringing merchant end
-			    const merchantRinging = (merchantOrderRecord) => merchantOrderRecord.is_accepted==-1;
+			    const merchantRinging = (merchantOrder) => merchantOrder.is_accepted==-1;
 
 			    // now showing the broadcastedOrder in this page
 			    if (this.ordersToShow.some(objectExist)) {
@@ -1385,8 +1456,20 @@
 
 				return false;
 			},
+			customerCancelledOrder(order){
+				return order.customer_confirmation===0 ? true : false;
+			},
 			orderIsConfirmed(order){
 				return order.customer_confirmation===1 ? true : false;
+			},
+			orderHasMerchants(order) {
+				return order.merchants && order.merchants.length;
+			},
+			// before confirmation / cancelled confirmation
+			orderIsPrimary(order) {
+
+				return Boolean((this.orderToBeConfirmed(order) && ! this.orderIsFailed(order)) || this.customerCancelledOrder(order));
+
 			},
 			orderToBeConfirmed(order){
 				return order.customer_confirmation===-1 ? true : false;
@@ -1401,14 +1484,14 @@
 				return false;
 
 			},
-			customerCancelledOrder(order){
-				return order.customer_confirmation===0 ? true : false;
-			},
 			orderIsStopped(order){
 				return order.in_progress==0 ? true : false;
 			},
+			orderIsCompleted(order){
+				return order.is_completed==1 ? true : false;
+			},
 			orderIsFailed(order){
-				return this.orderIsConfirmed(order) && this.orderIsStopped(order) && order.is_completed===0 ? true : false;
+				return Boolean(this.orderIsConfirmed(order) && this.orderIsStopped(order) && ! this.orderIsCompleted(order));
 			},
 			orderIsPicked(order) {
 
@@ -1423,72 +1506,12 @@
 				return false;
 
 			},
-			orderIsDelivered(order){
-
-				return Boolean(order.rider_assigned && order.rider_assigned.is_delivered==1);
-
-			},
-			orderIsSelfDelivered(merchantOrder){
-
-				return merchantOrder.is_delivered;
-
-			},
 			orderIsServed(order){
 
 				return Boolean(order.order_serve_confirmation && order.order_serve_confirmation.is_served==1);
 
 			},
-			orderIsReturned(order){
-
-				return Boolean(order.rider_assigned && order.rider_assigned.is_delivered==2);
-
-			},
-			// completed order
-			orderIsServedOrDelivered(order) {
-
-				return Boolean((order.rider_assigned && order.rider_assigned.is_delivered==1) || (order.order_serve_confirmation && order.order_serve_confirmation.is_served==1) || this.orderIsReturned(order));
-
-			},
-			merchantOrderIsSelfDeliverable(merchantOrder) {
-
-				return merchantOrder.is_self_delivery == 1;
-
-			},
-			orderServingOrDeliveringStatus() {
-
-				if (this.orderIsDelivered(order)) {
-					return 'Deliverd';
-				}
-				else if (this.orderIsServed(order)) {
-					return 'Served';
-				}
-				else if (this.orderIsReturned(order)) {
-					return 'Returned';
-				}
-
-			},
-			riderIsAssigned(order) {
-				if (order.rider_assigned) {
-					return true;
-				}
-				return false;
-			},
-			orderAcceptanceClass(merchantOrderRecord) {
-				if (merchantOrderRecord.is_accepted==-1) {
-					return 'badge-danger';
-				}else if (merchantOrderRecord.is_accepted==1) {
-					return 'badge-info';
-				}else 
-					return 'badge-secondary';		
-			},
-			orderAcceptanceStatus(merchantOrderRecord) {
-				if (merchantOrderRecord.is_accepted==-1) {
-					return merchantOrderRecord.merchant_name + ' is ringing';
-				}else if (merchantOrderRecord.is_accepted==1) {
-					return merchantOrderRecord.merchant_name + ' has accepted';
-				}else 
-					return merchantOrderRecord.merchant_name + ' has cancelled';
-			},
+			/*
 			orderServingClass(orderServeConfirmation) {
 				if (orderServeConfirmation && orderServeConfirmation.is_served==1) {
 					return 'badge-success';
@@ -1497,6 +1520,7 @@
 					return 'badge-warning';
 				}
 			},
+			*/
 			orderServingStatus(orderServeConfirmation) {
 				if (orderServeConfirmation && orderServeConfirmation.is_served==1) {
 					return 'Served';
@@ -1504,53 +1528,25 @@
 					'Not served yet';
 				}
 			},
-			riderCollectionClass(riderCollection) {
-				if (riderCollection.is_collected==1) {
-					return 'badge-warning';
-				}else if (riderCollection.is_collected==-1) {
-					return 'badge-info';
-				}else
-					return 'badge-secondary';
+			riderIsAssigned(order) {
+				if (order.rider_assigned) {
+					return true;
+				}
+				return false;
 			},
-			//  cancelled by rider
-			riderCollectionStatus(riderCollection) {
+			merchantOrderIsSelfDelivered(merchantOrder) {
 
-				if (riderCollection.is_collected==1) {
-					return 'Collected from ' + riderCollection.merchant_name;
-					// return riderCollection.rider.user_name +' collected from ' + riderCollection.merchant_name;
-				}else if (riderCollection.is_collected==-1){
-					return 'Not collected yet';
-					// return riderCollection.rider.user_name +' not collected yet from '+riderCollection.merchant_name;
-				}else {
-					return 'Rider cancelled ' + riderCollection.merchant_name;
-					// return riderCollection.rider.user_name +' has cancelled order of '+riderCollection.merchant_name;
-				}
-					
-			},
-			riderDeliveryClass(riderAssigned) {
-				
-				if (riderAssigned && riderAssigned.is_delivered==1) { 
-					return 'badge-success'; 
-				}
-				else if (riderAssigned && riderAssigned.is_delivered==2) { 
-					return 'badge-primary'; 
-				} 
-				else {
-					return 'badge-warning';
-				}
+				return Boolean(merchantOrder.self_delivery && merchantOrder.self_delivery.is_delivered === 1);
 
 			},
-			riderDeliveryStatus(riderAssigned) {
+			orderIsRiderDelivered(order){
 
-				if (riderAssigned && riderAssigned.is_delivered==1) {
-					return 'Delivered';
-					// return 'Delivered by ' + rider_assigned.rider.user_name;
-				}else if (riderAssigned && riderAssigned.is_delivered===-1) {
-					return 'On the way';
-					// return rider_assigned.rider.user_name + ' is on the way';
-				}else if (riderAssigned && riderAssigned.is_delivered==2) {
-					return 'Dropped at office';
-				}
+				return Boolean(order.rider_assigned && order.rider_assigned.is_delivered==1);
+
+			},
+			orderIsRiderReturned(order){
+
+				return Boolean(order.rider_assigned && order.rider_assigned.is_delivered==2);
 
 			},
 			// current merchant cancelled this order
@@ -1577,11 +1573,17 @@
 				);
 
 			},
+			// current merchant is ready
+			merchantIsReady(merchantOrder) {
+				
+				return merchantOrder.is_ready==1;
+
+			},
 			// current merchant has accepted
 			merchantAcceptedOrder(merchantOrderAcceptances, merchantId) {
 				
 				return merchantOrderAcceptances.find(
-					merchantOrderRecord => (merchantOrderRecord.merchant_id === merchantId && merchantOrderRecord.is_accepted==1)
+					merchantOrder => (merchantOrder.merchant_id === merchantId && merchantOrder.is_accepted==1)
 				);
 
 			},
@@ -1589,16 +1591,32 @@
 			merchantIsRinging(merchantOrderAcceptances, merchantId) {
 				
 				return merchantOrderAcceptances.find(
-					merchantOrderRecord => (merchantOrderRecord.merchant_id === merchantId && merchantOrderRecord.is_accepted==-1)
+					merchantOrder => (merchantOrder.merchant_id === merchantId && merchantOrder.is_accepted==-1)
 				);
 
 			},
 			merchantLostOrder(merchantOrders, merchantId) {
 
 				return merchantOrders.find(
-					merchantOrderRecord => (merchantOrderRecord.merchant_id === merchantId && merchantOrderRecord.is_self_delivery==0 && merchantOrderRecord.is_rider_available==0)
+					merchantOrder => (merchantOrder.merchant_id === merchantId && merchantOrder.is_self_delivery==0 && merchantOrder.is_rider_available==0)
 				);
 
+			},
+			merchantOrderIsNonDeliverable(merchantOrder) {
+
+    			return merchantOrder.is_self_delivery == null;
+
+    		},
+			merchantOrderIsSelfDeliverable(merchantOrder) {
+
+				return merchantOrder.is_self_delivery === 1;
+
+			},
+			merchantOrderIsAccepted(merchantOrder) {
+				return merchantOrder.is_accepted==1;
+			},
+			merchantOrderIsRejected(merchantOrder) {
+				return merchantOrder.is_accepted==0;
 			},
 			allMerchantOrderIsPicked(order){
 
@@ -1653,12 +1671,6 @@
 				}
 				
 			},
-			// before confirmation / cancelled confirmation
-			orderIsPrimary(order) {
-
-				return Boolean((this.orderToBeConfirmed(order) && ! this.orderIsFailed(order)) || this.customerCancelledOrder(order) || this.orderIsConfirmed(order));
-
-			},
 			primaryOrderStatus(order) {
 
 				if (this.orderToBeConfirmed(order) && ! this.orderIsFailed(order)) {
@@ -1666,9 +1678,6 @@
 				}
 				else if(this.customerCancelledOrder(order)) {
 					return 'Cancelled';
-				}
-				else if(this.orderIsConfirmed(order)) {
-					return 'Customer Confirmed';
 				}
 				else
 					return false; // required
@@ -1689,6 +1698,8 @@
 					return 'badge-info bg-info';
 				}else if (secondaryOrderStatus.includes("ringing")) {
 					return 'badge-danger bg-danger';
+				}else if (secondaryOrderStatus.includes("searching")) {
+					return 'badge-warning bg-warning';
 				}
 
 			},
@@ -1703,7 +1714,7 @@
 				}
 				else if (typeof this.merchantLostOrder(order.merchants, merchantId) !== 'undefined') {
 
-					return 'Rider not found for ' + this.merchantLostOrder(order.merchants, merchantId).merchant_name;
+					return 'No rider for ' + this.merchantLostOrder(order.merchants, merchantId).merchant_name;
 
 				}
 				// if current merchant picked up
@@ -1756,13 +1767,13 @@
 					}
 					
 					// Rider is assinged and not picked up any
-					if (this.riderIsAssigned(this.singleOrderData.order) && ! this.singleOrderData.order.collections.some(readyMerchant=>readyMerchant.is_ready==1).length) {
+					if (this.riderIsAssigned(this.singleOrderData.order) && ! this.orderIsPicked(this.singleOrderData.order)) {
 
 						this.cancellers.push('rider');
 
 					}
 
-					if (this.orderIsConfirmed(this.singleOrderData.order) && ! this.orderIsServedOrDelivered(this.singleOrderData.order)) {
+					if (this.orderIsConfirmed(this.singleOrderData.order) && ! this.orderIsStopped(this.singleOrderData.order)) {
 
 						this.cancellers.push('admin');
 

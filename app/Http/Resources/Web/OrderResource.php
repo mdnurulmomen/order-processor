@@ -20,10 +20,10 @@ class OrderResource extends JsonResource
             'is_asap_order' => $this->is_asap_order,
             'payment_method' => $this->payment_method,
             'has_cutlery' => $this->has_cutlery,
+            'orderer' => $this->whenLoaded('orderer'),
             'customer_confirmation' => $this->customer_confirmation,
             'in_progress' => $this->in_progress,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
             'is_completed' => $this->is_completed,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
-            'orderer' => $this->whenLoaded('orderer'),
             'merchants' => MerchantOrderResource::collection($this->whenLoaded('merchants')),
             'payment' => /*$this->when($this->payment_method != 'cash', $this->payment ? $this->payment : 'cash')*/ $this->whenLoaded('payment'),
             'schedule' => $this->whenLoaded('schedule') /*$this->when(! $this->is_asap_order, $this->schedule ? $this->schedule->order_schedule : false)*/,
