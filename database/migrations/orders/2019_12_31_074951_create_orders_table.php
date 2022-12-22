@@ -23,7 +23,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedInteger('orderer_id');
             $table->tinyInteger('customer_confirmation')->default(-1);
             $table->tinyInteger('in_progress')->default(-1);    // after customer confirmation turns to 1
-            $table->tinyInteger('is_completed')->default(-1);    // after customer confirmation turns to 0
+            $table->float('is_completed', 6, 2)->default(-1);    // after customer confirmation turns to 0
             // $table->string('canceller_type')->nullable();     // App/Models/Admin
             // $table->unsignedSmallInteger('canceller_id')->nullable(); // Admin 1
             $table->timestamps();

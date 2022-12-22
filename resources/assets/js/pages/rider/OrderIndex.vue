@@ -521,7 +521,7 @@
 				}
 
 				// if any food is picked
-				if (riderDelivery.collections.length && this.allMerchantOrderIsCollected(riderDelivery)) {
+				if (riderDelivery.collections && riderDelivery.collections.length && this.allMerchantOrderIsCollected(riderDelivery)) {
 					
 					this.singleOrderData.order.orderer = riderDelivery.order.orderer;
 
@@ -688,8 +688,8 @@
 				if (Array.isArray(riderDelivery.collections) && Array.isArray(riderDelivery.merchants) && Array.isArray(riderDelivery.merchant_order_cancellations)) {
 
 					let totalMerchantPickedUp = riderDelivery.collections.filter(
-														orderPickUp => orderPickUp.is_collected == 1
-													).length;
+						orderPickUp => orderPickUp.is_collected == 1
+					).length;
 
 					let netMerchantsToBePicked = riderDelivery.merchants.length - riderDelivery.merchant_order_cancellations.length;
 

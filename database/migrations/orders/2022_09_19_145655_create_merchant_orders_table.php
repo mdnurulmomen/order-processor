@@ -18,7 +18,7 @@ class CreateMerchantOrdersTable extends Migration
             $table->unsignedInteger('merchant_id');
             $table->boolean('is_accepted')->nullable();  // -1 for ringing, 1 for confirm, 0 for cancel
             $table->timestamp('ringing_started_at')->nullable();
-            $table->timestamp('answered_at')->nullable();
+            $table->timestamp('answered_at')->nullable();       // as receiving time aint fixed
             $table->boolean('is_ready')->nullable();  // 1 for confirm, 0 for cancel
             $table->timestamp('ready_at')->nullable();
             $table->boolean('is_self_delivery')->nullable();        // if self-delivery or rider delivery, null for non-delivery order

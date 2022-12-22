@@ -30,12 +30,15 @@ class RiderDelivery extends Model
 
 	public function merchants()
 	{
-		return $this->hasMany(MerchantOrder::class, 'order_id', 'order_id');
+		return $this->hasMany(MerchantOrder::class, 'order_id', 'order_id')
+		->where('is_self_delivery', 0);
 	}
 
 	public function merchantsAccepted()
 	{
-		return $this->hasMany(MerchantOrder::class, 'order_id', 'order_id')->where('is_accepted', 1);
+		return $this->hasMany(MerchantOrder::class, 'order_id', 'order_id')
+		->where('is_self_delivery', 0)
+		->where('is_accepted', 1);
 	}
 
 	public function collections()
