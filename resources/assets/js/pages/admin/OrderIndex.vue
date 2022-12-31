@@ -149,7 +149,7 @@
 											    				v-if="merchantOrderIsSelfDelivered(merchantOrder)" 
 											    				class='badge badge-success d-block'
 											    			>	
-											    				{{ (merchantOrder.merchant_name + ' Self-Delivered')  | eachcapitalize }}
+											    				{{ (merchantOrder.merchant_name + ' self-delivered')  | eachcapitalize }}
 											    			</span>
 
 											    			<span 
@@ -174,7 +174,7 @@
 												    				v-if="orderIsRiderDelivered(order)"
 												    				class='badge badge-success d-block'
 												    			>	
-												    				{{ merchantOrder.merchant_name + ' is Rider-Delivered'  | capitalize }}
+												    				{{ merchantOrder.merchant_name + ' is rider-delivered'  | capitalize }}
 												    			</span>
 																
 																<span 
@@ -317,7 +317,7 @@
 							</div> 
 							-->
 
-							<ul class="nav nav-tabs justify-content-around mb-4" role="tablist">
+							<ul class="nav nav-tabs mb-4" role="tablist">
 								<li class="nav-product">
 									<a class="nav-link active" data-toggle="tab" href="#orderer">
 										Orderer
@@ -464,19 +464,19 @@
 
 								            <div class="form-group form-row" v-show="singleOrderData.order.customer_confirmation==1">		
 							              		<label class="col-sm-6 text-md-right">
-							              			Status:
+							              			Success Rate:
 							              		</label>
 								                <div class="col-sm-6">
-								                	<span :class="[singleOrderData.order.is_completed==1 ? 'badge-success' : singleOrderData.order.in_progress==1 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
+								                	<span :class="[singleOrderData.order.success_rate==100 ? 'badge-success' : singleOrderData.order.success_rate > 0 ? 'badge-primary' : singleOrderData.order.success_rate < 0 ? 'badge-danger' : 'badge-secondary', 'badge d-block']"
 									    			>	
-									    				{{ singleOrderData.order.is_completed==1 ? 'Completed' : singleOrderData.order.in_progress==1 ? 'Progressive' : 'Failed' }}
+									    				{{ singleOrderData.order.success_rate==-1 ? 'Progressive' : (singleOrderData.order.success_rate + ' %') }}
 									    			</span>
 								                </div>	
 								            </div> 
 								            
 								            <div class="form-group form-row">		
 							              		<label class="col-sm-6 text-md-right">
-							              			Steps:
+							              			Statuses:
 							              		</label>
 
 							              		<div class="col-sm-6">
@@ -533,10 +533,10 @@
 	 													</span>
 
 	 													<span 
-										    				v-if="orderIsServed(singleOrderData.order)" 
+										    				v-else-if="orderIsServed(singleOrderData.order)" 
 										    				class="badge badge-success d-block"
 										    			>
-										    				{{ orderServingStatus(singleOrderData.order.order_serve_confirmation) | capitalize }}
+										    				Served
 										    			</span>
 
 										    			<!-- 
@@ -837,7 +837,7 @@
 									type="button" 
 									class="btn btn-danger dropdown-toggle" 
 									data-toggle="dropdown" 
-									v-if="! orderIsCompleted(singleOrderData.order) && ! customerCancelledOrder(singleOrderData.order) && ! orderIsStopped(singleOrderData.order)" 
+									v-if="/*! orderIsCompleted(singleOrderData.order) && */ ! customerCancelledOrder(singleOrderData.order) && ! orderIsStopped(singleOrderData.order)" 
 								>
 									<i class="fas fa-times"></i>
 									Cancel
@@ -1458,6 +1458,9 @@
 			},
 			customerCancelledOrder(order){
 				return order.customer_confirmation===0 ? true : false;
+			}, 
+			orderToBeConfirmed(order){
+				return order.customer_confirmation===-1 ? true : false;
 			},
 			orderIsConfirmed(order){
 				return order.customer_confirmation===1 ? true : false;
@@ -1467,12 +1470,7 @@
 			},
 			// before confirmation / cancelled confirmation
 			orderIsPrimary(order) {
-
 				return Boolean((this.orderToBeConfirmed(order) && ! this.orderIsFailed(order)) || this.customerCancelledOrder(order));
-
-			},
-			orderToBeConfirmed(order){
-				return order.customer_confirmation===-1 ? true : false;
 			},
 			orderIsWaitingForRider(order) {
 
@@ -1487,11 +1485,14 @@
 			orderIsStopped(order){
 				return order.in_progress==0 ? true : false;
 			},
+			/*
 			orderIsCompleted(order){
-				return order.is_completed==1 ? true : false;
+				return order.success_rate==100 ? true : false;
 			},
+			*/
 			orderIsFailed(order){
-				return Boolean(this.orderIsConfirmed(order) && this.orderIsStopped(order) && ! this.orderIsCompleted(order));
+				// return Boolean(this.orderIsConfirmed(order) && this.orderIsStopped(order) && ! this.orderIsCompleted(order));
+				return order.success_rate==0;
 			},
 			orderIsPicked(order) {
 
@@ -1511,34 +1512,6 @@
 				return Boolean(order.order_serve_confirmation && order.order_serve_confirmation.is_served==1);
 
 			},
-			/*
-			orderServingClass(orderServeConfirmation) {
-				if (orderServeConfirmation && orderServeConfirmation.is_served==1) {
-					return 'badge-success';
-				}
-				else if (orderServeConfirmation && orderServeConfirmation.is_served===-1) {
-					return 'badge-warning';
-				}
-			},
-			*/
-			orderServingStatus(orderServeConfirmation) {
-				if (orderServeConfirmation && orderServeConfirmation.is_served==1) {
-					return 'Served';
-				}else if (orderServeConfirmation && orderServeConfirmation.is_served===-1) {
-					'Not served yet';
-				}
-			},
-			riderIsAssigned(order) {
-				if (order.rider_assigned) {
-					return true;
-				}
-				return false;
-			},
-			merchantOrderIsSelfDelivered(merchantOrder) {
-
-				return Boolean(merchantOrder.self_delivery && merchantOrder.self_delivery.is_delivered === 1);
-
-			},
 			orderIsRiderDelivered(order){
 
 				return Boolean(order.rider_assigned && order.rider_assigned.is_delivered==1);
@@ -1549,27 +1522,34 @@
 				return Boolean(order.rider_assigned && order.rider_assigned.is_delivered==2);
 
 			},
+			/*
+			orderServingClass(orderServeConfirmation) {
+				if (orderServeConfirmation && orderServeConfirmation.is_served==1) {
+					return 'badge-success';
+				}
+				else if (orderServeConfirmation && orderServeConfirmation.is_served===-1) {
+					return 'badge-warning';
+				}
+			},
+			orderServingStatus(orderServeConfirmation) {
+				if (orderServeConfirmation && orderServeConfirmation.is_served==1) {
+					return 'Served';
+				}else if (orderServeConfirmation && orderServeConfirmation.is_served===-1) {
+					'Not served yet';
+				}
+			},
+			*/
+			riderIsAssigned(order) {
+				if (order.rider_assigned) {
+					return true;
+				}
+				return false;
+			},
 			// current merchant cancelled this order
 			merchantCancelledOrder(merchantOrderCancellations, merchantId) {
 				
 				return merchantOrderCancellations.find(
 					cancellation => (cancellation.merchant_id === merchantId)
-				);
-
-			},
-			// current merchant has been picked Up
-			merchantOrderIsCollected(collections, merchantId) {
-				
-				return collections.find(
-					collection => (collection.merchant_id == merchantId && collection.is_collected==1)
-				);
-
-			},
-			// current merchant is ready
-			merchantOrderIsReady(orderReadyConfirmations, merchantId) {
-				
-				return orderReadyConfirmations.find(
-					orderReady => (orderReady.merchant_id === merchantId && orderReady.is_ready==1)
 				);
 
 			},
@@ -1610,6 +1590,27 @@
 			merchantOrderIsSelfDeliverable(merchantOrder) {
 
 				return merchantOrder.is_self_delivery === 1;
+
+			},
+			merchantOrderIsSelfDelivered(merchantOrder) {
+
+				return Boolean(merchantOrder.self_delivery && merchantOrder.self_delivery.is_delivered === 1);
+
+			},
+			// current merchant has been picked Up
+			merchantOrderIsCollected(collections, merchantId) {
+				
+				return collections.find(
+					collection => (collection.merchant_id == merchantId && collection.is_collected==1)
+				);
+
+			},
+			// current merchant is ready
+			merchantOrderIsReady(orderReadyConfirmations, merchantId) {
+				
+				return orderReadyConfirmations.find(
+					orderReady => (orderReady.merchant_id === merchantId && orderReady.is_ready==1)
+				);
 
 			},
 			merchantOrderIsAccepted(merchantOrder) {
@@ -1688,12 +1689,12 @@
 
 				let secondaryOrderStatus = this.secondaryOrderStatus(order, merchantId);
 
-				if (secondaryOrderStatus.includes("cancelled") || secondaryOrderStatus.includes("not found")) {
+				if (secondaryOrderStatus.includes("cancelled") || secondaryOrderStatus.includes("No rider")) {
 					return 'badge-secondary bg-secondary';
 				}else if (secondaryOrderStatus.includes("collected")) {
-					return 'badge-warning bg-warning';
-				}else if (secondaryOrderStatus.includes("ready")) {
-					return 'badge-success bg-success';
+					return 'badge-info bg-info';
+				}else if (secondaryOrderStatus.includes("waiting")) {
+					return 'badge-primary bg-primary';
 				}else if (secondaryOrderStatus.includes("accepted") || secondaryOrderStatus.includes("Searching")) {
 					return 'badge-info bg-info';
 				}else if (secondaryOrderStatus.includes("ringing")) {
@@ -1714,7 +1715,7 @@
 				}
 				else if (typeof this.merchantLostOrder(order.merchants, merchantId) !== 'undefined') {
 
-					return 'No rider for ' + this.merchantLostOrder(order.merchants, merchantId).merchant_name;
+					return 'No rider found for ' + this.merchantLostOrder(order.merchants, merchantId).merchant_name;
 
 				}
 				// if current merchant picked up
@@ -1726,7 +1727,7 @@
 				// if current merchant order is ready
 				else if (order.merchants.length && typeof this.merchantOrderIsReady(order.merchants, merchantId) !== 'undefined') {
 
-					return this.merchantOrderIsReady(order.merchants, merchantId).merchant_name + ' is ready';
+					return this.merchantOrderIsReady(order.merchants, merchantId).merchant_name + ' waiting for rider arrival';
 
 				}
 				// if curent merchant has accepted ?

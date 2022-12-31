@@ -62,10 +62,14 @@ class MonitorOrderProgression implements ShouldQueue
 
             }
 
-            // no other merchant left which has self deliery service
-            if (! $this->order->merchants()->where('is_self_delivery', 1)->exists()) {
+            if (! $this->order->merchants()->where('is_self_delivery', 1)->exists()) {  // no other merchant left which has self deliery service
                 
                 $this->disableOrderStatus($this->order);
+
+            }
+            else if (! $this->order->merchants()->where('in_progress', 1)->exists()) {    // no-other merchant has left which hasn't got status yet
+                
+                $this->stopOrderProgression($this->order);
 
             }
 
@@ -74,10 +78,23 @@ class MonitorOrderProgression implements ShouldQueue
         }
     }
 
+    private function stopOrderProgression($order)
+    {
+        $totalMerchantOrders = $order->merchants()->count();
+        $accomplishedMerchantOrder = $order->merchants()->where('is_completed', 1)->count();
+
+        $order->update([
+            'in_progress' => 0,
+            'success_rate' => $accomplishedMerchantOrder > 0 ? (($accomplishedMerchantOrder / $totalMerchantOrders) * 100) : 0     // -1 (pending) / 1 (complete) / 0 (incomplete)
+        ]);
+    }
+
     private function disableMerchantOrder($merchantOrder)
     {
         $merchantOrder->update([
-            'is_rider_available' => 0
+            'is_rider_available' => 0,
+            'in_progress' => 0,
+            'is_completed' => 0     // -1 (pending) / 1 (complete) / 0 (incomplete)
         ]);
     }
 
@@ -85,7 +102,7 @@ class MonitorOrderProgression implements ShouldQueue
     {
         $order->update([
             'in_progress' => 0,
-            'is_completed' => 0     // -1 (pending) / 1 (complete) / 0 (incomplete)
+            'success_rate' => 0     // -1 (pending) / 1 (complete) / 0 (incomplete)
         ]);
     }
 

@@ -30,7 +30,7 @@ class OrderResource extends JsonResource
             
             'customer_confirmation' => $this->customer_confirmation,
             'in_progress' => $this->in_progress,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
-            'is_completed' => $this->is_completed,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
+            'success_rate' => $this->success_rate,    // -1 for not confirmed, 1 for active orders, 0 for dismissed
             // 'orderer' => $this->whenLoaded('orderer'),
             'merchants' => MerchantOrderResource::collection($this->whenLoaded('merchants')) /*route('api.v1.ordered-merchants.show', ['order' => $this->id])*/,
             // 'payment' => /*$this->when($this->payment_method != 'cash', $this->payment ? $this->payment : 'cash')*/ $this->whenLoaded('payment'),
