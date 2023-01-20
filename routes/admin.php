@@ -48,37 +48,37 @@ Route::name('admin.')->group(function () {
 
 		    // Merchant-Cuisines
 		    Route::get('/api/merchant-cuisines/{perPage?}', 'ProductController@showAllMerchantCuisines');
-		    Route::get('/api/merchant-cuisines/search/{search}/{perPage}', 'ProductController@searchAllMerchantCuisines');
+		    Route::get('/api/search-merchant-cuisines/{search}/{perPage}', 'ProductController@searchAllMerchantCuisines');
 		    Route::post('/merchant-cuisines/{perPage?}', 'ProductController@createMerchantCuisine');
-		    Route::put('/merchant-cuisines/{merchant}/{perPage}', 'ProductController@updateMerchantCuisine');
-		    Route::delete('/merchant-cuisines/{merchant}/{perPage}', 'ProductController@deleteMerchantCuisine');
+		    Route::put('/merchants/{merchant}/cuisines/{perPage}', 'ProductController@updateMerchantCuisine');
+		    Route::delete('/merchants/{merchant}/cuisines/{perPage}', 'ProductController@deleteMerchantCuisine');
 
 		    // Merchant-Meals
 		    Route::get('/api/merchant-meals/{perPage?}', 'ProductController@showAllMerchantMeals');
-		    Route::get('/api/merchant-meals/search/{search}/{perPage}', 'ProductController@searchAllMerchantMeals');
+		    Route::get('/api/search-merchant-meals/{search}/{perPage}', 'ProductController@searchAllMerchantMeals');
 		    Route::post('/merchant-meals/{perPage?}', 'ProductController@createMerchantMeal');
-		    Route::put('/merchant-meals/{merchant}/{perPage}', 'ProductController@updateMerchantMeal');
-		    Route::delete('/merchant-meals/{merchant}/{perPage}', 'ProductController@deleteMerchantMeal');
+		    Route::put('/merchants/{merchant}/meals/{perPage}', 'ProductController@updateMerchantMeal');
+		    Route::delete('/merchants/{merchant}/meals/{perPage}', 'ProductController@deleteMerchantMeal');
 
 		    // Merchant-Product-Categories
 		    Route::get('/api/merchant-product-categories/{perPage?}', 'ProductController@showAllMerchantProductCategories');
 		    Route::get('/api/search-merchant-product-categories/{search}/{perPage}', 'ProductController@searchAllMerchantProductCategories');
 		    
 		    // Merchant-All-Product-Categories
-		    Route::get('/api/merchant-product-categories/{merchant}/{perPage?}', 'ProductController@showMerchantAllProductCategories');
-		    Route::get('/api/search-merchant-product-categories/{merchant}/{search}/{perPage}', 'ProductController@searchMerchantAllProductCategories');
+		    Route::get('/api/merchants/{merchant}/product-categories/{perPage?}', 'ProductController@showMerchantAllProductCategories');
+		    Route::get('/api/search-merchants/{merchant}/product-categories/{search}/{perPage}', 'ProductController@searchMerchantAllProductCategories');
 		    Route::post('/merchant-product-categories/{perPage?}', 'ProductController@createMerchantProductCategory');
 		    Route::put('/merchant-product-categories/{productCategory}/{perPage}', 'ProductController@updateMerchantProductCategory');
 		    Route::delete('/merchant-product-categories/{productCategory}/{perPage}', 'ProductController@deleteMerchantProductCategory');
 		    Route::patch('/merchant-product-categories/{productCategory}/{perPage}', 'ProductController@restoreMerchantProductCategory');
 
 		    // Merchant-Products
-		    Route::get('/api/merchant-products/{merchant}/{perPage?}', 'ProductController@showMerchantAllProducts');
-		    Route::get('/api/merchant-products/search/{merchant}/{search}/{perPage}', 'ProductController@searchMerchantAllProducts');
+		    Route::get('/api/merchants/{merchant}/products/{perPage?}', 'ProductController@showMerchantAllProducts');
+		    Route::get('/api/search-merchants/{merchant}/products/{search}/{perPage}', 'ProductController@searchMerchantAllProducts');
 		    Route::post('/merchant-products/{perPage?}', 'ProductController@createMerchantProduct');
 		    Route::put('/merchant-products/{merchantProduct}/{perPage}', 'ProductController@updateMerchantProduct');
-		    Route::delete('/merchant-products/{merchant}/{merchantProduct}/{perPage}', 'ProductController@deleteMerchantProduct');
-		    Route::patch('/merchant-products/{merchant}/{merchantProduct}/{perPage}', 'ProductController@restoreMerchantProduct');
+		    Route::delete('/merchants/{merchant}/products/{merchantProduct}/{perPage}', 'ProductController@deleteMerchantProduct');
+		    Route::patch('/merchants/{merchant}/products/{merchantProduct}/{perPage}', 'ProductController@restoreMerchantProduct');
 
 		    // Orders
 		    Route::get('/api/orders/{perPage?}', 'OrderController@showAllOrders');

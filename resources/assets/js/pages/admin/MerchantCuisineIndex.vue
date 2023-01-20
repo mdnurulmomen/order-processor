@@ -572,7 +572,7 @@
 				$('#modal-createOrEdit-merchantCuisine').modal('hide');
 				
 				axios
-					.put('/merchant-cuisines/' + this.singleMerchantCuisineData.merchantCuisine.merchant_id + '/' + this.perPage, this.singleMerchantCuisineData.merchantCuisine)
+					.put('/merchants/' + this.singleMerchantCuisineData.merchantCuisine.merchant_id + '/cuisines/' + this.perPage, this.singleMerchantCuisineData.merchantCuisine)
 					.then(response => {
 
 						if (response.status == 200) {
@@ -609,7 +609,7 @@
 				$("#modal-merchantCuisine-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/merchant-cuisines/'+this.singleMerchantCuisineData.merchantObject.id+'/'+this.perPage)
+					.delete('/merchants/' + this.singleMerchantCuisineData.merchantObject.id + '/cuisines/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -640,7 +640,7 @@
 				
 				axios
 				.get(
-					"/api/merchant-cuisines/search/"+ this.query +"/" + this.perPage +
+					"/api/search-merchant-cuisines/"+ this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)

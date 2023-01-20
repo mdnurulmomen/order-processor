@@ -577,7 +577,7 @@
 				$('#modal-createOrEdit-merchantMeal').modal('hide');
 				
 				axios
-					.put('/merchant-meals/' + this.singleMerchantMealData.merchantMeal.merchant_id + '/' + this.perPage, this.singleMerchantMealData.merchantMeal)
+					.put('/merchants/' + this.singleMerchantMealData.merchantMeal.merchant_id + '/meals/' + this.perPage, this.singleMerchantMealData.merchantMeal)
 					.then(response => {
 
 						if (response.status == 200) {
@@ -614,7 +614,7 @@
 				$("#modal-merchantMeal-delete-confirmation").modal("hide");
 
 				axios
-					.delete('/merchant-meals/'+this.singleMerchantMealData.merchantObject.id+'/'+this.perPage)
+					.delete('/merchants/' + this.singleMerchantMealData.merchantObject.id + '/meals/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -645,7 +645,7 @@
 				
 				axios
 				.get(
-					"/api/merchant-meals/search/"+ this.query +"/" + this.perPage +
+					"/api/search-merchant-meals/"+ this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)

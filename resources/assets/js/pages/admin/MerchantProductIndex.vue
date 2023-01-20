@@ -1341,7 +1341,7 @@
 			fetchMerchantAllProducts(){
 				this.loading = true;
 				axios
-					.get('/api/merchant-products/' + this.merchantId + '/' + this.perPage + "?page=" +
+					.get('/api/merchants/' + this.merchantId + '/products/' + this.perPage + "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
@@ -1569,7 +1569,7 @@
 			destroyMerchantProduct(){
 
 				axios
-					.delete('/merchant-products/' + this.merchantId + '/' + this.singleMerchantProductData.merchantProduct.id + '/' + this.perPage)
+					.delete('/merchants/' + this.merchantId + '/products/' + this.singleMerchantProductData.merchantProduct.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1605,7 +1605,7 @@
 			restoreMerchantProduct(){
 
 				axios
-					.patch('/merchant-products/' + this.merchantId + '/' + this.singleMerchantProductData.merchantProduct.id + '/' + this.perPage)
+					.patch('/merchants/' + this.merchantId + '/products/' + this.singleMerchantProductData.merchantProduct.id + '/' + this.perPage)
 					.then(response => {
 						if (response.status == 200) {
 							
@@ -1638,7 +1638,7 @@
 				
 				axios
 				.get(
-					"/api/merchant-products/search/" + this.merchantId +"/"  + this.query +"/" + this.perPage +
+					"/api/search-merchant-products/" + this.merchantId +"/"  + this.query +"/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)

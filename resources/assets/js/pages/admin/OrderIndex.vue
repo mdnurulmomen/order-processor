@@ -139,7 +139,7 @@
 									    			</span>
 												</div>
 
-												<div v-else-if="orderIsConfirmed(order)">
+												<div v-else-if="orderIsConfirmed(order) && orderHasMerchants(order)">
 													<div v-for="merchantOrder in order.merchants">
 										    			<!-- Non-deliverable Or Self-Deliverable Order -->
 										    			<div 
@@ -355,7 +355,7 @@
 								<div id="orderer" class="container tab-pane active">
 									<div class="row">
 					            		<div class="col-sm-12">
-					            			<div class="form-group form-row">		
+					            			<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Name:
 							              		</label>
@@ -370,7 +370,7 @@
 													}})
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Phone:
 							              		</label>
@@ -381,7 +381,7 @@
 								                  	}}
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Email:
 							              		</label>
@@ -392,7 +392,7 @@
 								                  	}}
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Joined on:
 							              		</label>
@@ -410,7 +410,7 @@
 								<div id="order" class="container tab-pane">
 									<div class="row">
 					            		<div class="col-sm-12">
-					            			<div class="form-group form-row">		
+					            			<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Id:
 							              		</label>
@@ -419,7 +419,7 @@
 								                </div>
 								            </div>
 								            
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Type:
 							              		</label>
@@ -429,7 +429,7 @@
 								                </div>
 								            </div>
 
-								            <div class="form-group form-row" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.schedule">		
+								            <div class="form-row" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.schedule">		
 							              		<label class="col-sm-6 text-md-right">
 							              			ASAP/Schedule:
 							              		</label>
@@ -441,7 +441,7 @@
 								                </div>	
 								            </div> 
 
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Payment type:
 							              		</label>
@@ -453,7 +453,7 @@
 								                </div>	
 								            </div>
 
-								            <div class="form-group form-row" v-show="singleOrderData.order.has_cutlery">		
+								            <div class="form-row" v-show="singleOrderData.order.has_cutlery">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Cutlery:
 							              		</label>
@@ -462,7 +462,7 @@
 								                </div>	
 								            </div> 
 
-								            <div class="form-group form-row" v-show="singleOrderData.order.customer_confirmation==1">		
+								            <div class="form-row" v-show="singleOrderData.order.customer_confirmation==1">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Success Rate:
 							              		</label>
@@ -474,7 +474,7 @@
 								                </div>	
 								            </div> 
 								            
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Statuses:
 							              		</label>
@@ -490,7 +490,7 @@
 								            </div>  
 
 							                <div 
-							                	class="form-group form-row" 
+							                	class="form-row" 
 							                	v-if="orderIsConfirmed(singleOrderData.order) && orderHasMerchants(singleOrderData.order)"
 							                >
 							                	<div 
@@ -502,7 +502,7 @@
 
 									    				<span 
 									    					class="badge badge-info"
-										    				v-show="! merchantOrderIsNonDeliverable(merchantOrder)"
+										    				v-show="merchantOrderIsDeliverable(merchantOrder)"
 										    			>	
 										    				{{ merchantOrder.is_self_delivery==1 ? 'Self-Delivery' : 'Rider-Delivery' }}
 										    			</span>
@@ -560,7 +560,7 @@
 
 									    			<!-- Rider Delivery Orders -->
 									    			<div
-									    				v-else-if="! merchantOrderIsNonDeliverable(merchantOrder) && ! merchantOrderIsSelfDeliverable(merchantOrder)"
+									    				v-else-if="merchantOrderIsDeliverable(merchantOrder) && ! merchantOrderIsSelfDeliverable(merchantOrder)"
 									    			>
 										    			<span 
 										    				:class="[riderIsAssigned(singleOrderData.order) ? 'badge-info' : merchantLostOrder(singleOrderData.order.merchants, merchantOrder.merchant_id) ? 'badge-secondary' : 'badge-danger', 'badge d-block']"
@@ -704,7 +704,7 @@
 								<div id="delivery-info" class="container tab-pane fade">
 									<div class="row">
 					            		<div class="col-sm-12">
-					            			<div class="form-group form-row">		
+					            			<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Delivery Address:
 							              		</label>
@@ -774,7 +774,7 @@
 											v-for="(merchantOrderCancellation, cancellerIndex) in singleOrderData.order.merchant_order_cancellations" 
 											:key="'canceller-info-index-' + cancellerIndex + '-canceller-info-' + merchantOrderCancellation.id" 
 										>
-											<div class="form-group form-row">		
+											<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Merchant:
 							              		</label>
@@ -796,7 +796,7 @@
 
 									<div class="row" v-if="singleOrderData.order.admin_order_cancellation">
 										<div class="col-sm-12">
-											<div class="form-group form-row">		
+											<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Admin:
 							              		</label>
@@ -805,7 +805,7 @@
 								                </div>
 								            </div>
 
-								            <div class="form-group form-row" v-if="singleOrderData.order.admin_order_cancellation.cancellation_reason">		
+								            <div class="form-row" v-if="singleOrderData.order.admin_order_cancellation.cancellation_reason">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Reason:
 							              		</label>
@@ -924,7 +924,7 @@
 						      		:value="csrf"
 					      		>
 
-								<div class="form-group form-row">	              		
+								<div class="form-row">	              		
 				              		<label 
 				              			for="inputMenuName3" 
 				              			class="col-sm-4 col-form-label text-right"
@@ -959,7 +959,7 @@
 				              	</div>
 
 				              	<div 
-				              		class="form-group form-row" 
+				              		class="form-row" 
 				              		v-if="singleOrderData.orderCancellation.canceller==='merchants' && singleOrderData.order.merchants && singleOrderData.order.merchants.length" 
 				              	>	
 				              		<label 
@@ -996,7 +996,7 @@
 					                </div>
 				              	</div>
 
-				              	<div class="form-group form-row">	
+				              	<div class="form-row">	
 				              		<label 
 				              			for="inputMenuName3" 
 				              			class="col-sm-4 col-form-label text-right"
@@ -1582,9 +1582,14 @@
 				);
 
 			},
+			merchantOrderIsDeliverable(merchantOrder) {
+
+    			return merchantOrder.is_self_delivery !== null;		// 0 / 1
+
+    		},
 			merchantOrderIsNonDeliverable(merchantOrder) {
 
-    			return merchantOrder.is_self_delivery == null;
+    			return merchantOrder.is_self_delivery === null;
 
     		},
 			merchantOrderIsSelfDeliverable(merchantOrder) {
@@ -1592,6 +1597,13 @@
 				return merchantOrder.is_self_delivery === 1;
 
 			},
+			/*
+			merchantOrderIsRiderDeliverable(merchantOrder) {
+
+				return merchantOrder.is_self_delivery === 0;
+
+			},
+			*/
 			merchantOrderIsSelfDelivered(merchantOrder) {
 
 				return Boolean(merchantOrder.self_delivery && merchantOrder.self_delivery.is_delivered === 1);
@@ -1693,7 +1705,7 @@
 					return 'badge-secondary bg-secondary';
 				}else if (secondaryOrderStatus.includes("collected")) {
 					return 'badge-info bg-info';
-				}else if (secondaryOrderStatus.includes("waiting")) {
+				}else if (secondaryOrderStatus.includes("ready")) {
 					return 'badge-primary bg-primary';
 				}else if (secondaryOrderStatus.includes("accepted") || secondaryOrderStatus.includes("Searching")) {
 					return 'badge-info bg-info';
@@ -1727,7 +1739,7 @@
 				// if current merchant order is ready
 				else if (order.merchants.length && typeof this.merchantOrderIsReady(order.merchants, merchantId) !== 'undefined') {
 
-					return this.merchantOrderIsReady(order.merchants, merchantId).merchant_name + ' waiting for rider arrival';
+					return this.merchantOrderIsReady(order.merchants, merchantId).merchant_name + ' is ready';
 
 				}
 				// if curent merchant has accepted ?

@@ -467,7 +467,7 @@
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<h5>Are you sure want to restore meal ??</h5>
+					      		<h5>Are you sure want to restore category ??</h5>
 							</div>
 							<div class="modal-footer justify-content-between">
 							  	<button 
@@ -608,7 +608,7 @@
 			fetchMerchantAllProductCategories() {
 				this.loading = true;
 				axios
-					.get('/api/merchant-product-categories/' + this.merchantId + '/' + this.perPage + "?page=" +
+					.get('/api/merchants/' + this.merchantId + '/product-categories/' + this.perPage + "?page=" +
 				    this.pagination.current_page)
 					.then(response => {
 						if (response.status == 200) {
@@ -848,7 +848,7 @@
 				
 				axios
 				.get(
-					"/api/search-merchant-product-categories/" + this.merchantId + "/"  + this.query + "/" + this.perPage +
+					"/api/search-merchants/" + this.merchantId + "/product-categories/"  + this.query + "/" + this.perPage +
 				    "?page=" +
 				    this.pagination.current_page
 				)

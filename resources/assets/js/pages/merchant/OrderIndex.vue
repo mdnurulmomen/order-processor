@@ -285,26 +285,26 @@
 							<div class="tab-content">
 								<div id="show-order-details" class="container tab-pane fade">
 									
-			            			<div class="form-group row">		
+			            			<div class="form-row form-group">		
 					              		<label class="col-sm-6 text-right">
-					              			Id
+					              			Id:
 					              		</label>
 						                <div class="col-sm-6" >
 						                  	{{ singleOrderData.order.id }}
 						                </div>
 						            </div>
-						            <div class="form-group row">		
+						            <div class="form-row form-group">		
 					              		<label class="col-sm-6 text-right">
-					              			Type 
+					              			Type:
 					              		</label>
 
 						                <div class="col-sm-6">
 						                	{{ singleOrderData.order.type | capitalize }}
 						                </div>
 						            </div>
-						            <div class="form-group row" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.scheduled">		
+						            <div class="form-row form-group" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.scheduled">		
 					              		<label class="col-sm-6 text-right">
-					              			ASAP/Scheduled
+					              			ASAP/Scheduled:
 					              		</label>
 						                <div class="col-sm-6">
 						                  	{{
@@ -314,7 +314,7 @@
 						                </div>	
 						            </div> 
 						            <!-- 
-						            <div class="form-group row">		
+						            <div class="form-row form-group">		
 					              		<label class="col-sm-6 text-right">
 					              			Price
 					              		</label>
@@ -323,7 +323,7 @@
 						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 						                </div>	
 						            </div>
-						            <div class="form-group row">		
+						            <div class="form-row form-group">		
 					              		<label class="col-sm-6 text-right">
 					              			Discount
 					              		</label>
@@ -331,7 +331,7 @@
 						                  	{{ singleOrderData.order.discount }} %
 						                </div>	
 						            </div>
-						            <div class="form-group row">		
+						            <div class="form-row form-group">		
 					              		<label class="col-sm-6 text-right">
 					              			Delivery-fee
 					              		</label>
@@ -340,7 +340,7 @@
 						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 						                </div>	
 						            </div> 
-						            <div class="form-group row">		
+						            <div class="form-row form-group">		
 					              		<label class="col-sm-6 text-right">
 					              			Payable Price
 					              		</label>
@@ -350,17 +350,17 @@
 						                </div>	
 						            </div>  
 						        	-->
-						            <div class="form-group row" v-show="singleOrderData.order.has_cutlery">		
+						            <div class="form-row form-group" v-show="singleOrderData.order.has_cutlery">		
 					              		<label class="col-sm-6 text-right">
-					              			Cutlery
+					              			Cutlery:
 					              		</label>
 						                <div class="col-sm-6">
 						                  	{{ singleOrderData.order.has_cutlery ? 'Added' : 'None' }}
 						                </div>	
 						            </div> 
-						            <div class="form-group row">		
+						            <div class="form-row form-group">		
 					              		<label class="col-sm-6 text-right">
-					              			Ordered By
+					              			Ordered By:
 					              		</label>
 						                <div class="col-sm-6">
 						                  	{{ 
@@ -394,7 +394,7 @@
 													</span>
 
 													<p class="d-block">
-														<span class="font-weight-bold">- Qty : </span>
+														<span class="font-weight-bold">- Qty: </span>
 														{{ product.quantity }}
 													</p>
 
@@ -402,7 +402,7 @@
 														class="d-block font-weight-bold" 
 														v-if="product.addons.length"
 													>
-														- Addons
+														- Addons:
 													</span>
 
 													<ul 
@@ -412,7 +412,7 @@
 													>
 
 														<li v-for="(additionalOrderedAddon, index) in product.addons">
-															{{ additionalOrderedAddon.merchant_product_addon | capitalize }} ({{ additionalOrderedAddon.quantity }})
+															{{ additionalOrderedAddon.merchant_product_addon | capitalize }} (Qty:{{ additionalOrderedAddon.quantity }})
 														</li>
 													</ul>
 
@@ -467,12 +467,12 @@
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<div class="form-group row">	
+					      		<div class="form-row form-group">	
 				              		<label 
 				              			for="inputMenuName3" 
 				              			class="col-sm-4 col-form-label text-right"
 				              		>
-				              			Cancellation Reason
+				              			Cancellation Reason:
 				              		</label>
 					                <div class="col-sm-8">
 					                  	<select 
