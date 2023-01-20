@@ -16,8 +16,8 @@ use App\Models\RiderDelivery;
 use App\Events\UpdateMerchant;
 use App\Models\DeliveryAddress;
 use App\Models\ApplicationSetting;
-use App\Jobs\MonitorOrderProgression;
 use App\Http\Controllers\Controller;
+use App\Jobs\MonitorOrderProgression;
 use App\Http\Resources\Web\OrderResource;
 use App\Http\Resources\Web\OrderCollection;
 use App\Http\Resources\Web\MerchantOrderCollection;
@@ -114,10 +114,10 @@ class OrderController extends Controller
 	 		// 'rider_id' => 'required_if:canceller,rider',
 	 	]);
 
-		$orderToCancel = Order::findOrFail($order);	 	
+		$orderToCancel = Order::findOrFail($order);
 
 		// already customer or same merchant cancelled this order or order is stopped
-		if ($orderToCancel->customerOrderCancellation()->exists() || $orderToCancel->merchantOrderCancellations()->where('canceller_id', $request->merchant_id)->exists() || $orderToCancel->in_progress === 0 || $orderToCancel->success_rate > -1) {
+		if ($orderToCancel->customerOrderCancellation()->exists() || $orderToCancel->merchantOrderCancellations()->where('canceller_id', $request->merchant_id)->exists() || $orderToCancel->in_progress === 0) {
 			
 			return response()->json(
 	 			[
@@ -170,7 +170,7 @@ class OrderController extends Controller
 	 	}
 
 	 	// if any rider is actually assigned and the food has't been picked up yet 
-	 	else if ($request->canceller==='rider' && $orderToCancel->customer_confirmation===1 && $orderToCancel->riderAssigned()->where('rider_id', $request->rider_id)->exists() && ! $orderToCancel->collections()->where('is_collected', 1)->exists()) {
+	 	else if ($request->canceller==='rider' && $orderToCancel->customer_confirmation===1 && $orderToCancel->riderAssigned()->exists() && ! $orderToCancel->collections()->where('is_collected', 1)->exists()) {
 		
 		 	// deleting related rider food pick records if any
 		 	$orderToCancel->collections()->delete();
@@ -185,7 +185,7 @@ class OrderController extends Controller
 		 	$this->makeRiderDeliveryCancellationReason($orderToCancel, $request->cancellation_reason_id);
 		 	
 		 	// evaluating related rider
-		 	$this->updateRiderEvaluation($request->rider_id);
+		 	$this->updateRiderEvaluation($orderToCancel->riderAssigned->rider_id);
 
 		 	// inform rider about delivery-order cancellation
 			$this->notifyRider($riderDeliveryOrderToCancel);
@@ -942,6 +942,7 @@ class OrderController extends Controller
 		$merchantOrderToAccept->update([
 			'is_accepted' => 1,
 			'answered_at' => now(),
+			'in_progress' => 1,
 		]);
 	}
 
@@ -1186,8 +1187,8 @@ class OrderController extends Controller
 	private function disableMerchantOrder(MerchantOrder $merchantOrder)
 	{
 		$merchantOrder->update([
-		'is_rider_available' => 0
-	]);
+			'is_rider_available' => 0
+		]);
 	}
 
 	private function updateAllMerchantRiderAvailablityStatus(\Illuminate\Database\Eloquent\Collection $merchantOrders)

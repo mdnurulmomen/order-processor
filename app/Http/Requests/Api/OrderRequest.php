@@ -42,7 +42,7 @@ class OrderRequest extends FormRequest
 
             'order'=>'required',
             'order.type'=>[
-                'required', 'in:delivery,serving,collection', 
+                'required', 'in:delivery,serving,take-away', 
                 function($attribute, $value, $fail) {
 
                     if (ApplicationService::firstOrCreate(['code' => $value],['name' => $value])->status != 1) {

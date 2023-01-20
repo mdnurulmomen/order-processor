@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
+use App\Models\Rider;
 use App\Models\Merchant;
 use App\Jobs\NotifyRiders;
 use App\Events\UpdateAdmin;
@@ -12,7 +13,8 @@ use App\Models\MerchantOrder;
 use App\Events\UpdateMerchant;
 use App\Models\MerchantProduct;
 use App\Models\CustomerAddress;
-// use App\Models\RiderDeliveryRecord;
+use App\Models\ApplicationSetting;
+use App\Jobs\MonitorOrderProgression;
 // use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderRequest;
@@ -397,7 +399,10 @@ class OrderController extends Controller
     // broadcasting for riders
     private function makeRiderOrderCall(Order $order)
     {   
-        $applicationSettings = ApplicationSetting::firstOrCreate();
+        $applicationSettings = ApplicationSetting::firstOrCreate([
+            'id' => 1
+        ]);
+
         $riderNumberToCall = $applicationSettings->rider_searching_time / $applicationSettings->rider_call_receiving_time;
         
         // to calculate the nearest rider laterly
@@ -407,11 +412,16 @@ class OrderController extends Controller
             
             foreach ($order->merchants()->where('is_self_delivery', 0)->get() as $merchantOrder) {
                 
-                $merchantOrder->update([
-                    'is_rider_available' => 0
-                ]);
+                $this->disableMerchantOrder($merchantOrder);
 
-                // UpdateCustomer();
+            }
+
+            if (! $order->merchants()->where('is_self_delivery', 1)->exists()) {        // no other merchant left
+                
+                $this->disableOrderStatus($order);
+                
+                // Broadcast to admin for merchant order cancellation
+                $this->notifyAdmin($order);
 
             }
 
@@ -420,13 +430,18 @@ class OrderController extends Controller
 
             $delay = 0;
 
+            $riderCallReceivingTime = $applicationSettings->rider_call_receiving_time;  // 30 seconds
+
             foreach ($allNearestAvailableRiders as $rider) {
                 
-                NotifyRiders::dispatch($order, $rider)->delay(now()->addSeconds($delay));
+                NotifyRiders::dispatch($order, $rider, $riderCallReceivingTime)->delay(now()->addSeconds($delay));
 
                 $delay += $applicationSettings->rider_call_receiving_time;  // 30 seconds
 
             }
+
+            // Setting a job to check if riders found after certain period
+            MonitorOrderProgression::dispatch($order)->delay(now()->addSeconds($delay));
 
         }
 
@@ -473,6 +488,21 @@ class OrderController extends Controller
             }
 
         }
+    }
+
+    private function disableMerchantOrder(MerchantOrder $merchantOrder)
+    {
+        $merchantOrder->update([
+            'is_rider_available' => 0
+        ]);
+    }
+
+    private function disableOrderStatus(Order $order)
+    {
+        $order->update([
+            'in_progress' => 0,
+            'success_rate' => 0     // -1 (pending) / 1 (complete) / 0 (incomplete)
+        ]);
     }
 
     private function notifyMerchant(MerchantOrder $merchantOrder)
