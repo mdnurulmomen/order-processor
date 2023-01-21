@@ -432,7 +432,7 @@ class OrderController extends Controller
 	 	else if ($orderToConfirm->type==='serving' || $orderToConfirm->type==='reservation') {
 
 			// make agent call with MerchantOrder
-	 		$this->notifyMerchantAgents($orderAccepted, $request->merchant_id);
+	 		$this->notifyMerchantAgents($merchantOrderToUpdate, $request->merchant_id);
 
 	 	}
 
@@ -1022,13 +1022,18 @@ private function orderIsSelfDelivered(MerchantOrder $merchantOrder)
     private function makeMerchantOrderServed(Order $order, $className, $id)
     {
 		// if not already entered for this order & merchant
-    	if (! $order->serve()->exists()) {
-    		$order->serve()->create([
-    			'is_served' => 1,
-    			'confirmer_id' => $id,
-    			'confirmer_type' => $className,
-    		]);
-    	}
+    	// if (! $order->serve()->exists()) {
+    		$order->serve()->updateOrCreate(
+    			[
+    				'order_id' => $order->id
+    			],
+    			[
+	    			'is_served' => 1,
+	    			'confirmer_id' => $id,
+	    			'confirmer_type' => $className,
+	    		]
+    		);
+    	// }
     }
 
 	// broadcasting for riders

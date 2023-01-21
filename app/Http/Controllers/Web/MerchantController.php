@@ -20,13 +20,13 @@ class MerchantController extends Controller
 		if ($perPage) {
          return response()->json([
             
-            'all' => Merchant::withTrashed()->with(['owner', 'booking'])->latest()->paginate($perPage),
+            'all' => Merchant::withTrashed()->with(['owner'])->latest()->paginate($perPage),
 
-            'approved' => Merchant::where('is_approved', 1)->with(['owner', 'booking'])->latest()->paginate($perPage),
+            'approved' => Merchant::where('is_approved', 1)->with(['owner'])->latest()->paginate($perPage),
 
-            'nonApproved' => Merchant::where('is_approved', 0)->with(['owner', 'booking'])->latest()->paginate($perPage),
+            'nonApproved' => Merchant::where('is_approved', 0)->with(['owner'])->latest()->paginate($perPage),
 
-            'trashed' => Merchant::onlyTrashed()->with(['owner', 'booking'])->latest()->paginate($perPage),
+            'trashed' => Merchant::onlyTrashed()->with(['owner'])->latest()->paginate($perPage),
             
          ], 200);
       }
@@ -50,7 +50,7 @@ class MerchantController extends Controller
 			'address'=>'required|string|max:255',
 			// 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
          'min_order'=>'required|numeric|min:100|max:65535',
-         'max_booking'=>'required|numeric|min:0|max:1000',
+         // 'max_booking'=>'required|numeric|min:0|max:1000',
          'is_approved'=>'nullable|boolean',
          'is_open'=>'nullable|boolean',
          'is_post_paid'=>'nullable|boolean',
@@ -60,7 +60,7 @@ class MerchantController extends Controller
          'has_free_delivery' => 'boolean',
          'has_self_delivery_support'=>'nullable|boolean',
 			'service_schedule'=>'required',
-			'booking_break_schedule'=>'required',
+			// 'booking_break_schedule'=>'required',
          'supported_delivery_order_sale_percentage' => 'required|numeric|min:0|max:100',
          'general_order_sale_percentage' => 'required|numeric|min:0|max:100',
          'discount' => 'nullable|integer|min:0|max:100',
@@ -96,7 +96,7 @@ class MerchantController extends Controller
       $newMerchant->has_parking = $request->has_parking ?? 0;
       $newMerchant->has_free_delivery = $request->has_self_delivery_support ? 1 : $request->has_free_delivery ?? 0;
       $newMerchant->service_schedule = $request->service_schedule;
-      $newMerchant->booking_break_schedule = $request->booking_break_schedule;
+      // $newMerchant->booking_break_schedule = $request->booking_break_schedule;
       $newMerchant->supported_delivery_order_sale_percentage = $request->supported_delivery_order_sale_percentage;
       $newMerchant->general_order_sale_percentage = $request->general_order_sale_percentage;
       $newMerchant->discount = $request->discount;
@@ -108,10 +108,12 @@ class MerchantController extends Controller
       
       $newMerchant->save();
 
+      /*
       $merchantReservation = $newMerchant->booking()->create([
          'total_seat' => $request->max_booking,
          'engaged_seat' => 0
       ]);
+      */
 
 		return $this->showAllMerchants($perPage);
 	}
@@ -134,7 +136,7 @@ class MerchantController extends Controller
          'address'=>'required|string|max:255',
          // 'banner_preview'=>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
          'min_order'=>'required|numeric|min:100|max:65535',
-         'max_booking'=>'required|numeric|min:0|max:1000',
+         // 'max_booking'=>'required|numeric|min:0|max:1000',
          'is_approved'=>'nullable|boolean',
          'is_open'=>'nullable|boolean',
          'is_post_paid'=>'nullable|boolean',
@@ -144,7 +146,7 @@ class MerchantController extends Controller
          'has_free_delivery' => 'boolean',
          'has_self_delivery_support'=>'nullable|boolean',
          'service_schedule'=>'required',
-         'booking_break_schedule'=>'required',
+         // 'booking_break_schedule'=>'required',
          'supported_delivery_order_sale_percentage' => 'required|numeric|min:0|max:100',
          'general_order_sale_percentage' => 'required|numeric|min:0|max:100',
          'discount' => 'nullable|integer|min:0|max:100',
@@ -180,7 +182,7 @@ class MerchantController extends Controller
       $merchantToUpdate->is_self_service = $request->is_self_service;
 
       $merchantToUpdate->service_schedule = $request->service_schedule;
-      $merchantToUpdate->booking_break_schedule = $request->booking_break_schedule;
+      // $merchantToUpdate->booking_break_schedule = $request->booking_break_schedule;
 
       $merchantToUpdate->supported_delivery_order_sale_percentage = $request->supported_delivery_order_sale_percentage;
       $merchantToUpdate->general_order_sale_percentage = $request->general_order_sale_percentage;
@@ -190,12 +192,14 @@ class MerchantController extends Controller
       
       $merchantToUpdate->save();
 
+      /*
       $merchantUpdatedReservation = $merchantToUpdate->booking()->updateOrCreate(
          ['merchant_id' => $merchantToUpdate->id],
          [
             'total_seat' => $request->max_booking, 
          ]
       );
+      */
 
       return $this->showAllMerchants($perPage);
    }

@@ -96,7 +96,7 @@ class MerchantController extends Controller
 
     public function showMerchantDetails($merchant)
     {
-      return new MerchantResource(Merchant::with(['booking', 'merchantMeals', 'merchantCuisines', 'merchantProductCategories.merchantProducts.variations', 'reviews'])->findOrFail($merchant));
+      return new MerchantResource(Merchant::with(['merchantMeals', 'merchantCuisines', 'merchantProductCategories.merchantProducts.variations', 'reviews'])->findOrFail($merchant));
     }
 
     public function getSponsorMerchants(Request $request)

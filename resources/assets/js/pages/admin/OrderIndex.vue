@@ -340,7 +340,10 @@
 										Products
 									</a>
 								</li>
-								<li class="nav-product">
+								<li 
+									class="nav-product"
+									v-if="singleOrderData.order.delivery && singleOrderData.order.delivery.customer_address"
+								>
 									<a class="nav-link" data-toggle="tab" href="#delivery-info">
 										Delivery Info
 									</a>
@@ -725,7 +728,11 @@
 					            	</div>
 								</div>
 
-								<div id="delivery-info" class="container tab-pane fade">
+								<div 
+									id="delivery-info" 
+									class="container tab-pane fade"
+									v-if="singleOrderData.order.delivery && singleOrderData.order.delivery.customer_address"
+								>
 									<div class="row">
 					            		<div class="col-sm-12">
 					            			<div class="form-row">		
@@ -733,9 +740,7 @@
 							              			Delivery Address:
 							              		</label>
 								                <div class="col-sm-6">
-
-								                  	<address v-if="singleOrderData.order.delivery && singleOrderData.order.delivery.customer_address">
-
+								                  	<address>
 														<dl>
 															<dd>-
 																{{
@@ -767,17 +772,17 @@
 											                  	}}
 															</dd>
 														</dl> 
-									                  	
 								                  	</address>
 
-								                  	<address v-else>
+								                  	<!-- 
+								                  	<address v-show="! singleOrderData.order.delivery || !singleOrderData.order.delivery.customer_address">
 								                  		<dl>
 								                  			<dd>
 								                  				Order for '{{ singleOrderData.order.type | capitalize }}'
 								                  			</dd>
 								                  		</dl>
-								                  	</address>
-								                  	
+								                  	</address> 
+								                  	-->
 								                </div>	
 								            </div>
 					            		</div>

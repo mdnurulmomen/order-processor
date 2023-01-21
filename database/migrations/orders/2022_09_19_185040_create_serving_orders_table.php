@@ -15,9 +15,11 @@ class CreateServingOrdersTable extends Migration
     {
         Schema::create('serving_orders', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedTinyInteger('guest_number')->default(1);
             $table->tinyInteger('is_served')->default(-1); // -1 for pending, 1 for confirm, 0 for cancel
-            $table->unsignedInteger('confirmer_id');
-            $table->string('confirmer_type')->default('App\Models\Merchant');       // can be Waiter as well
+            $table->unsignedInteger('confirmer_id')->nullable();
+            // $table->string('confirmer_type')->default('App\Models\Merchant');       // can be Waiter as well
+            $table->string('confirmer_type')->nullable();       // can be Waiter as well
             $table->unsignedInteger('order_id')->unique();
             // $table->unsignedMediumInteger('restaurant_id');
             // $table->unsignedMediumInteger('waiter_id');

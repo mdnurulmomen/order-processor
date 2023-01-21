@@ -469,6 +469,7 @@
 								<div id="service" class="container tab-pane fade">
 									<div class="row">
 					            		<div class="col-sm-12">
+					            			<!-- 
 					            			<div class="form-group form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Maximum Booking Seats :
@@ -476,7 +477,8 @@
 								                <div class="col-sm-6">
 								                  	{{singleMerchantData.max_booking || 'No Booking'}}
 								                </div>	
-								            </div>
+								            </div> 
+								        	-->
 
 								            <div class="form-group form-row">		
 							              		<label class="col-sm-6 text-md-right">
@@ -868,6 +870,7 @@
 									                        </div>
 
 									                        <div class="form-group form-row">
+									                        	<!-- 
 									                        	<div class="col-6">
 										                            <div class="row">
 										                              	<label for="inputMaxBooking3" class="col-sm-4 col-form-label text-md-right">
@@ -893,7 +896,8 @@
 
 										                              	</div>
 										                          	</div>
-									                          	</div>
+									                          	</div> 
+									                          	-->
 									                          	
 									                        	<div class="col-6">
 									                            	<div class="row">
@@ -1442,6 +1446,7 @@
 									                          	</div> 
 									                        </div>
 
+									                        <!-- 
 									                        <div class="form-group form-row mb-4">      
 									                          	<label for="inputBookingBreak3" class="col-sm-2 col-form-label text-right">
 									                          		Booking Breaks
@@ -1524,7 +1529,8 @@
 														                </div>
 														          	</div>
 									                          	</div>      
-									                        </div>
+									                        </div> 
+									                    	-->
 									                    </div>
 									                    <!-- /.card-body -->
 									              	</div>
@@ -1994,6 +2000,7 @@
 			},
 		},
 
+		/*
 		booking_break_schedule : {
 			sat : {
 				schedules : [
@@ -2052,6 +2059,7 @@
 				]
 			},
 		},
+		*/
 
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     };
@@ -2185,11 +2193,11 @@
     		showMerchantDetailModal(merchant) {
 
 				this.singleMerchantData = merchant;
-				this.singleMerchantData.max_booking = merchant.booking ? merchant.booking.total_seat : 0;
+				// this.singleMerchantData.max_booking = merchant.booking ? merchant.booking.total_seat : 0;
 				this.singleMerchantData.merchantOwnerObject = merchant.owner;
 
 				this.service_schedule  = merchant.service_schedule;
-				this.booking_break_schedule = merchant.booking_break_schedule;
+				// this.booking_break_schedule = merchant.booking_break_schedule;
 
 				$("#modal-show-merchant").modal("show");
 			},
@@ -2265,6 +2273,7 @@
 					},
 				};
 
+				/*
 				this.booking_break_schedule = {
 					sat : {
 						schedules : [
@@ -2323,6 +2332,7 @@
 						]
 					},
 				};
+				*/
 
 				$("#modal-createOrEdit-merchant").modal("show");
 			},
@@ -2338,7 +2348,7 @@
 				this.singleMerchantData.banner_preview = this.merchantNewBanner;
 
 				this.singleMerchantData.service_schedule = this.service_schedule;
-				this.singleMerchantData.booking_break_schedule = this.booking_break_schedule;
+				// this.singleMerchantData.booking_break_schedule = this.booking_break_schedule;
 				
 				// this.merchant.lat : null,
 				// this.merchant.lng : null,
@@ -2392,11 +2402,11 @@
 				*/
 
 				this.singleMerchantData = merchant;
-				this.singleMerchantData.max_booking = merchant.booking ? merchant.booking.total_seat : 0;
+				// this.singleMerchantData.max_booking = merchant.booking ? merchant.booking.total_seat : 0;
 				this.singleMerchantData.merchantOwnerObject = merchant.owner;
 
 				this.service_schedule  = merchant.service_schedule;
-				this.booking_break_schedule = merchant.booking_break_schedule;
+				// this.booking_break_schedule = merchant.booking_break_schedule;
 		    	
 				$("#modal-createOrEdit-merchant").modal("show");
 			},
@@ -2405,7 +2415,7 @@
 				this.singleMerchantData.banner_preview = this.merchantNewBanner;
 				
 				this.singleMerchantData.service_schedule = this.service_schedule;
-				this.singleMerchantData.booking_break_schedule = this.booking_break_schedule;
+				// this.singleMerchantData.booking_break_schedule = this.booking_break_schedule;
 
 				// this.merchant.lat : null,
 				// this.merchant.lng : null,
@@ -2595,7 +2605,7 @@
 					this.validateFormInput ('password_confirmation');
 					this.validateFormInput ('mobile');
 					this.validateFormInput ('min_order');
-					this.validateFormInput ('max_booking');
+					// this.validateFormInput ('max_booking');
 					this.validateFormInput ('website');
 				
 				}
@@ -2740,6 +2750,7 @@
 
 						break;
 
+					/*
 					case 'max_booking' :
 
 						if (!this.singleMerchantData.max_booking) {
@@ -2754,6 +2765,7 @@
 						}
 
 						break;
+					*/
 
 					case 'website' :
 

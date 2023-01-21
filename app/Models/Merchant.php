@@ -51,10 +51,12 @@ class Merchant extends Authenticatable
         return $this->hasOne(Kitchen::class, 'merchant_id', 'id');
     }
 
+    /*
     public function booking()
     {
         return $this->hasOne(MerchantBookingStatus::class, 'merchant_id', 'id');
     }
+    */
 
     public function agents()    // waiters
     {

@@ -34,9 +34,9 @@ class MerchantResource extends JsonResource
 
             'discount' => $this->discount ?? 0,
             'service_schedule' => json_decode($this->service_schedule),
-            'booking_break_schedule' => json_decode($this->booking_break_schedule),
+            // 'booking_break_schedule' => json_decode($this->booking_break_schedule),
             
-            'booking' => new MerchantBookingResource($this->booking),
+            // 'booking' => new MerchantBookingResource($this->booking),
             
             'meals' => MerchantMealResource::collection($this->merchantMeals),
             'cuisines' => MerchantCuisineResource::collection($this->merchantCuisines),
