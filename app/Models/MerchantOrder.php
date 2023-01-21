@@ -32,6 +32,11 @@ class MerchantOrder extends Model
 		return $this->hasOne(MerchantSelfDelivery::class, 'order_id', 'order_id');
 	}
 
+	public function take() // Take-Away Order
+   	{
+      	return $this->hasOne(TakingOrder::class, 'order_id', 'order_id');
+   	}
+
 	public function products()
 	{
 		return $this->hasMany(ProductOrder::class, 'merchant_order_id', 'id');

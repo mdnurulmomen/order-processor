@@ -27,6 +27,11 @@ class Order extends Model
       return $this->hasOne(ServingOrder::class, 'order_id', 'id');
    }
 
+   public function take() // Take-Away Order
+   {
+      return $this->hasMany(TakingOrder::class, 'order_id', 'id');      // as can order multiple merchants
+   }
+
    public function reservation() // Reservation Order
    {
       return $this->hasOne(Reservation::class, 'order_id', 'id');

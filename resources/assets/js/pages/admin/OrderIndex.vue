@@ -153,6 +153,13 @@
 											    			</span>
 
 											    			<span 
+											    				v-else-if="merchantOrderIsTaken(merchantOrder)" 
+											    				class='badge badge-success d-block'
+											    			>	
+											    				{{ ('Taken from ' + merchantOrder.merchant_name)  | eachcapitalize }}
+											    			</span>
+
+											    			<span 
 											    				v-else-if="orderIsServed(order)" 
 											    				class='badge badge-success d-block'
 											    			>	
@@ -431,7 +438,7 @@
 
 								            <div class="form-row" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.schedule">		
 							              		<label class="col-sm-6 text-md-right">
-							              			ASAP/Schedule:
+							              			Schedule:
 							              		</label>
 								                <div class="col-sm-6">
 								                  	{{
@@ -531,6 +538,13 @@
 	 													>
 	 														Delivered
 	 													</span>
+
+	 													<span 
+										    				v-else-if="merchantOrderIsTaken(merchantOrder)" 
+										    				class='badge badge-success d-block'
+										    			>	
+										    				Taken
+										    			</span>
 
 	 													<span 
 										    				v-else-if="orderIsServed(singleOrderData.order)" 
@@ -637,8 +651,18 @@
 												>
 													<p class="font-weight-bold">
 														{{ merchantOrder.merchant_name | capitalize }}
+														
+														<!-- 
 														<span  
 										    				:class="[merchantOrder.is_self_delivery==1 ? 'badge-success' : 'badge-danger' , 'badge']"
+										    			>	
+										    				{{ merchantOrder.is_self_delivery==1 ? 'Self-Delivery' : 'Rider-Delivery' }}
+										    			</span> 
+										    			-->
+
+										    			<span 
+									    					class="badge badge-info"
+										    				v-show="merchantOrderIsDeliverable(merchantOrder)"
 										    			>	
 										    				{{ merchantOrder.is_self_delivery==1 ? 'Self-Delivery' : 'Rider-Delivery' }}
 										    			</span>
@@ -1607,6 +1631,11 @@
 			merchantOrderIsSelfDelivered(merchantOrder) {
 
 				return Boolean(merchantOrder.self_delivery && merchantOrder.self_delivery.is_delivered === 1);
+
+			},
+			merchantOrderIsTaken(merchantOrder) {
+
+				return Boolean(merchantOrder.taking_confirmation && merchantOrder.taking_confirmation.is_taken);
 
 			},
 			// current merchant has been picked Up

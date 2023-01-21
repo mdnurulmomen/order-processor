@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
             $request->wantsJson())
         {
             return response()->json([
-                'data' => 'Resource not found'
+                'data' => 'Record not found'
             ], 404);
         }
 
@@ -68,7 +68,7 @@ class Handler extends ExceptionHandler
             
             return redirect()->back()->withErrors([
                 'sessionExpired' => ['Your session has been expired, please try again'],
-            ]);
+            ], $exception->getStatusCode());
 
         }
 

@@ -97,7 +97,7 @@
 								    		<td>{{ merchantOrder.order.type | capitalize }}</td>
 								    		<td>
 								    			<span 
-								    				v-if="orderIsFailed(merchantOrder.order) || orderIsCancelled(merchantOrder)" 
+								    				v-if="orderIsFailed(merchantOrder.order) || merchantOrderIsCancelled(merchantOrder)" 
 								    				class="badge badge-secondary d-block"
 								    			>	
 								    				Cancelled
@@ -105,7 +105,7 @@
 
 												<!-- no option should be shown without picking/cancelling every merchant orders -->
 								    			<span 
-								    				v-else-if="(isServingOrder(merchantOrder.order) && orderIsServed(merchantOrder)) || (isSelfDeliveryOrder(merchantOrder) && orderIsSelfDelivered(merchantOrder)) || (! isServingOrder(merchantOrder.order) && ! isSelfDeliveryOrder(merchantOrder) && orderIsReady(merchantOrder))" 
+								    				v-else-if="(isServingOrder(merchantOrder.order) && orderIsServed(merchantOrder)) || (isSelfDeliveryOrder(merchantOrder) && orderIsSelfDelivered(merchantOrder)) || (! isServingOrder(merchantOrder.order) && ! isSelfDeliveryOrder(merchantOrder) && merchantOrderIsReady(merchantOrder))" 
 								    				class='badge badge-success d-block'
 								    			>	
 								    				Success
@@ -148,7 +148,19 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="! orderIsCancelled(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order) && orderIsYetToServe(merchantOrder)" 
+									      			v-if="! merchantOrderIsCancelled(merchantOrder) && ! merchantOrderIsStopped(merchantOrder) && isTakeAwayOrder(merchantOrder.order) && ! merchantOrderIsCompleted(merchantOrder)" 
+									      			:disabled="formSubmitionMode" 
+									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.givenOrder=true; confirmOrder()" 
+								      			>
+								        			<i class="fas fa-bell"></i>
+							        				Hand-Over
+								      			</button>
+
+								      			<!-- disabled if merchant already confirmed as ready-->
+								      			<button 
+									      			type="button" 
+									      			class="btn btn-success btn-sm" 
+									      			v-if="! merchantOrderIsCancelled(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order) && orderIsYetToServe(merchantOrder)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.serveOrder=true; confirmOrder()" 
 								      			>
@@ -160,7 +172,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-success btn-sm" 
-									      			v-if="! orderIsCancelled(merchantOrder) && ! orderIsStopped(merchantOrder.order) && isSelfDeliveryOrder(merchantOrder) && ! orderIsSelfDelivered(merchantOrder)" 
+									      			v-if="! merchantOrderIsCancelled(merchantOrder) && ! merchantOrderIsStopped(merchantOrder) && isSelfDeliveryOrder(merchantOrder) && ! orderIsSelfDelivered(merchantOrder)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.deliverOrder=true; confirmOrder()" 
 								      			>
@@ -172,7 +184,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-primary btn-sm" 
-									      			v-if="! orderIsCancelled(merchantOrder) && !orderIsReady(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
+									      			v-if="! merchantOrderIsCancelled(merchantOrder) && ! merchantOrderIsReady(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! merchantOrderIsStopped(merchantOrder)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.orderReady=true; confirmOrder()" 
 								      			>
@@ -184,7 +196,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-warning btn-sm" 
-									      			v-if="! orderIsCancelled(merchantOrder) && !orderIsReady(merchantOrder) && !orderIsAccepted(merchantOrder) && orderIsRinging(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
+									      			v-if="! merchantOrderIsCancelled(merchantOrder) && ! merchantOrderIsReady(merchantOrder) && !orderIsAccepted(merchantOrder) && orderIsRinging(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! merchantOrderIsStopped(merchantOrder)" 
 									      			:disabled="formSubmitionMode" 
 									      			@click="singleOrderData.order=merchantOrder.order; singleOrderData.order.orderReady=false; confirmOrder()" 
 								      			>
@@ -196,7 +208,7 @@
 								      			<button 
 									      			type="button" 
 									      			class="btn btn-secondary btn-sm" 
-									      			v-if="! orderIsCancelled(merchantOrder) && !orderIsAccepted(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
+									      			v-if="! merchantOrderIsCancelled(merchantOrder) && !orderIsAccepted(merchantOrder) && reservationOrderIsConfirmed(merchantOrder.order) && ! orderIsStopped(merchantOrder.order)" 
 									      			@click="showOrderCancellationModal(merchantOrder.order)" 
 								      			>
 								        			<i class="fas fa-times"></i>
@@ -285,7 +297,7 @@
 							<div class="tab-content">
 								<div id="show-order-details" class="container tab-pane fade">
 									
-			            			<div class="form-row form-group">		
+			            			<div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Id:
 					              		</label>
@@ -293,7 +305,7 @@
 						                  	{{ singleOrderData.order.id }}
 						                </div>
 						            </div>
-						            <div class="form-row form-group">		
+						            <div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Type:
 					              		</label>
@@ -302,9 +314,9 @@
 						                	{{ singleOrderData.order.type | capitalize }}
 						                </div>
 						            </div>
-						            <div class="form-row form-group" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.scheduled">		
+						            <div class="form-row" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.scheduled">		
 					              		<label class="col-sm-6 text-right">
-					              			ASAP/Scheduled:
+					              			Scheduled:
 					              		</label>
 						                <div class="col-sm-6">
 						                  	{{
@@ -314,7 +326,7 @@
 						                </div>	
 						            </div> 
 						            <!-- 
-						            <div class="form-row form-group">		
+						            <div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Price
 					              		</label>
@@ -323,7 +335,7 @@
 						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 						                </div>	
 						            </div>
-						            <div class="form-row form-group">		
+						            <div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Discount
 					              		</label>
@@ -331,7 +343,7 @@
 						                  	{{ singleOrderData.order.discount }} %
 						                </div>	
 						            </div>
-						            <div class="form-row form-group">		
+						            <div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Delivery-fee
 					              		</label>
@@ -340,7 +352,7 @@
 						                  	{{ $application_settings.official_currency || 'BDT' | capitalize }}
 						                </div>	
 						            </div> 
-						            <div class="form-row form-group">		
+						            <div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Payable Price
 					              		</label>
@@ -350,7 +362,7 @@
 						                </div>	
 						            </div>  
 						        	-->
-						            <div class="form-row form-group" v-show="singleOrderData.order.has_cutlery">		
+						            <div class="form-row" v-show="singleOrderData.order.has_cutlery">		
 					              		<label class="col-sm-6 text-right">
 					              			Cutlery:
 					              		</label>
@@ -358,7 +370,7 @@
 						                  	{{ singleOrderData.order.has_cutlery ? 'Added' : 'None' }}
 						                </div>	
 						            </div> 
-						            <div class="form-row form-group">		
+						            <div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Ordered By:
 					              		</label>
@@ -467,7 +479,7 @@
 					      			name="_token" 
 					      			:value="csrf"
 					      		>
-					      		<div class="form-row form-group">	
+					      		<div class="form-row">	
 				              		<label 
 				              			for="inputMenuName3" 
 				              			class="col-sm-4 col-form-label text-right"
@@ -799,7 +811,7 @@
 				});
 
 			},
-			orderIsCancelled(merchantOrder) {
+			merchantOrderIsCancelled(merchantOrder) {
 				
 				return Boolean(merchantOrder.is_accepted==0);
 
@@ -814,7 +826,7 @@
 				return merchantOrder.is_accepted == 1 ? true : false;
 
 			},
-			orderIsReady(merchantOrder) {
+			merchantOrderIsReady(merchantOrder) {
 
 				return merchantOrder.is_ready == 1 ? true : false;
 
@@ -836,9 +848,17 @@
 				return order.type;
 
 			},
+			merchantOrderIsStopped(merchantOrder){
+
+				return merchantOrder.in_progress==0 ? true : false;		// delivered / served / 
+			},
 			orderIsStopped(order){
 
 				return order.in_progress==0 ? true : false;		// delivered / served / 
+			},
+			merchantOrderIsCompleted(merchantOrder){
+
+				return merchantOrder.is_completed==1 ? true : false;		// delivered / served / 
 			},
 			orderIsFailed(order){
 
@@ -847,6 +867,11 @@
 			isSelfDeliveryOrder(merchantOrder) {
 
 				return merchantOrder.is_self_delivery == 1;
+
+			},
+			isTakeAwayOrder(order) {
+
+				return order.type == 'take-away';
 
 			},
 			// completed order
@@ -891,7 +916,7 @@
 			},
 			orderRowClass(merchantOrder) {
 
-				if (this.orderIsFailed(merchantOrder.order) || this.orderIsCancelled(merchantOrder) || ! this.reservationOrderIsConfirmed(merchantOrder.order)) {
+				if (this.orderIsFailed(merchantOrder.order) || this.merchantOrderIsCancelled(merchantOrder) || ! this.reservationOrderIsConfirmed(merchantOrder.order)) {
 
 					return 'bg-secondary';
 				}
@@ -903,11 +928,11 @@
 					
 					return 'bg-success';
 				}
-				else if ((this.isServingOrder(merchantOrder.order) || this.isSelfDeliveryOrder(merchantOrder)) && this.orderIsReady(merchantOrder)) {
+				else if ((this.isServingOrder(merchantOrder.order) || this.isSelfDeliveryOrder(merchantOrder)) && this.merchantOrderIsReady(merchantOrder)) {
 					
 					return 'bg-primary';
 				}
-				else if (! this.isServingOrder(merchantOrder.order) && ! this.isSelfDeliveryOrder(merchantOrder) && this.orderIsReady(merchantOrder)) {
+				else if (! this.isServingOrder(merchantOrder.order) && ! this.isSelfDeliveryOrder(merchantOrder) && this.merchantOrderIsReady(merchantOrder)) {
 					
 					return 'bg-success';
 				}

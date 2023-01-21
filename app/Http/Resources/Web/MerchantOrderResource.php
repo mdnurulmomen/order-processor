@@ -26,6 +26,8 @@ class MerchantOrderResource extends JsonResource
             'ready_at' => $this->ready_at,
             'order_id' => $this->order_id,
             'net_price' => $this->net_price,
+            'in_progress' => $this->in_progress,
+            'is_completed' => $this->is_completed,
             'is_free_delivery' => $this->is_free_delivery,
             'is_self_delivery' => $this->is_self_delivery,
             'is_rider_available' => $this->is_rider_available,
@@ -34,6 +36,7 @@ class MerchantOrderResource extends JsonResource
             'self_delivery' => $this->whenLoaded('selfDelivery'),
             'order' => new OrderResource($this->whenLoaded('order')),
             'products' => ProductOrderResource::collection($this->whenLoaded('products')),
+            'taking_confirmation' => /*$this->when($this->serve, $this->serve)*/ $this->whenLoaded('take'),
             'order_serve_confirmation' => /*$this->when($this->serve, $this->serve)*/ $this->whenLoaded('serve'),
             'created_at' => $this->created_at
             

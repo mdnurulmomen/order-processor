@@ -43,6 +43,7 @@
 		                                  		label="name" 
 		                                  		track-by="id" 
 		                                  		:options="allMerchants" 
+		                                  		:custom-label="objectNameWithCapitalized" 
 		                                  		:required="true"
 		                                  		:class="!errors.merchant  ? 'is-valid' : 'is-invalid'"
 		                                  		:allow-empty="false"
@@ -151,6 +152,42 @@
 			 		}, 
 				});
 			},
+			objectNameWithCapitalized ({ name, user_name }) {
+		      	if (name) {
+				    name = name.toString();
+					const words = name.split(" ");
+
+					for (let i = 0; i < words.length; i++) {
+						
+						if (words[i]) {
+
+					    	words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+						
+						}
+						
+					}
+
+					return words.join(" ");
+		      	}
+		      	else if (user_name) {
+				    user_name = user_name.toString();
+					const words = user_name.split(" ");
+
+					for (let i = 0; i < words.length; i++) {
+						
+						if (words[i]) {
+
+					    	words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+						
+						}
+						
+					}
+
+					return words.join(" ");
+		      	}
+		      	else 
+		      		return ''
+		    },
 			validateFormInput () {
 				this.submitForm = false;	
 				if (Object.keys(this.merchant).length === 0) {
