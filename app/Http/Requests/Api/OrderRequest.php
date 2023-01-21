@@ -128,6 +128,9 @@ class OrderRequest extends FormRequest
                     if (count($this->input('merchants.*.id')) > 1 && $this->input('order.type')==='serving') {
                         $fail('Multiple merchant aint allowed for serve order.');
                     }
+                    else if (count($this->input('merchants.*.id')) > 1 && $this->input('order.orderer_type') === 'merchant_agent') {
+                        $fail('Multiple merchant aint allowed for multiple merchant order.');
+                    }
                 },
             ],
             'merchants.*.id' => [
@@ -349,7 +352,7 @@ class OrderRequest extends FormRequest
             'order.schedule.*'  => 'Order schedule is not a valid',
             'order.net_payable.required'  => 'Net payable amount is required',
             'order.has_cutlery.boolean'  => 'Cutlery addion value is invalid',
-            // 'order.orderer_type.required'  => 'Orderer type should be customer or merchant-agent',
+            'order.orderer_type.*'  => 'Invalid value for orderer_type: :input',
             'order.orderer_id.required'  => 'Orderer id is required',
             'order.orderer_id.numeric'  => 'Orderer id is invalid',
 

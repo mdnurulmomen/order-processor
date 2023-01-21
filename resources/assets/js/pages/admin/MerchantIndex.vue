@@ -308,7 +308,7 @@
 						              	</div>
 						              	
 					            		<div class="col-sm-12">
-					            			<div class="form-group form-row">		
+					            			<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Owner :
 							              		</label>
@@ -323,7 +323,7 @@
 								                </div>
 								            </div>
 
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Type :
 							              		</label>
@@ -332,7 +332,7 @@
 								                </div>
 								            </div>
 
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Username :
 							              		</label>
@@ -341,7 +341,7 @@
 								                </div>
 								            </div>
 
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Mobile :
 							              		</label>
@@ -350,7 +350,7 @@
 								                </div>	
 								            </div>
 
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Email :
 							              		</label>
@@ -359,7 +359,7 @@
 								                </div>	
 								            </div> 
 
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Website :
 							              		</label>
@@ -376,7 +376,7 @@
 					            		<div class="card card-body">
 					            			<div class="row">
 					            				<div class="col-sm-12">
-								                	<div class="form-group form-row">		
+								                	<div class="form-row">		
 									              		<label class="col-sm-6 text-md-right">
 									              			Approval :
 									              		</label>
@@ -387,7 +387,7 @@
 										                </div>	
 										            </div>
 
-										            <div class="form-group form-row">		
+										            <div class="form-row">		
 									              		<label class="col-sm-6 text-md-right">
 									              			Taking Order :
 									              		</label>
@@ -398,7 +398,7 @@
 										                </div>	
 										            </div> 
 
-										            <div class="form-group form-row">		
+										            <div class="form-row">		
 									              		<label class="col-sm-6 text-md-right">
 									              			Sponsored :
 									              		</label>
@@ -413,7 +413,7 @@
 						              	</div>
 						              	
 					            		<div class="col-sm-12">
-					            			<div class="form-group form-row">
+					            			<div class="form-row">
 					            				<label class="col-sm-6 text-md-right">
 							              			Sale Percantage (incl. delivery):
 							              		</label>
@@ -422,7 +422,7 @@
 								                </div>	
 					            			</div>
 
-					            			<div class="form-group form-row">
+					            			<div class="form-row">
 					            				<label class="col-sm-6 text-md-right">
 							              			Sale Percantage (general):
 							              		</label>
@@ -431,7 +431,7 @@
 								                </div>	
 					            			</div>
 
-					            			<div class="form-group form-row">
+					            			<div class="form-row">
 					            				<label class="col-sm-6 text-md-right">
 							              			Promotional Discount (all products):
 							              		</label>
@@ -446,7 +446,7 @@
 								<div id="address" class="container tab-pane fade">
 									<div class="row">
 					            		<div class="col-sm-12">
-					            			<div class="form-group form-row">		
+					            			<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Merchant Address :
 							              		</label>
@@ -454,7 +454,7 @@
 								                	<span v-html="singleMerchantData.address"></span>
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">
+								            <div class="form-row">
 								            	<label class="col-sm-6 text-md-right">
 							              			Map :
 							              		</label>		
@@ -470,7 +470,7 @@
 									<div class="row">
 					            		<div class="col-sm-12">
 					            			<!-- 
-					            			<div class="form-group form-row">		
+					            			<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Maximum Booking Seats :
 							              		</label>
@@ -480,7 +480,7 @@
 								            </div> 
 								        	-->
 
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Minimum Order :
 							              		</label>
@@ -489,7 +489,7 @@
 								                </div>	
 								            </div>
 
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Self Delivery :
 							              		</label>
@@ -500,7 +500,7 @@
 								                </div>	
 								            </div>
 
-					            			<div class="form-group form-row">		
+					            			<div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Payment :
 							              		</label>
@@ -508,7 +508,7 @@
 								                  	{{singleMerchantData.is_post_paid ? 'Post-paid' : 'Pre-paid'}}
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Service :
 							              		</label>
@@ -516,7 +516,7 @@
 								                  	{{singleMerchantData.is_self_service ? 'Self-service' : 'Agent service'}}
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Parking Facility:
 							              		</label>
@@ -524,7 +524,7 @@
 								                  	{{singleMerchantData.has_parking ? 'Available' : 'Not-available'}}
 								                </div>	
 								            </div>
-								            <div class="form-group form-row">		
+								            <div class="form-row">		
 							              		<label class="col-sm-6 text-md-right">
 							              			Free Delivery:
 							              		</label>
@@ -657,7 +657,7 @@
 
 									                        <hr class="mt-1">
 
-									                        <div class="form-group form-row">
+									                        <div class="form-row">
 									                        	<div class="col-6">
 									                            	<div class="row d-flex align-items-center">
 									                              		<label for="inputFoodTags3" class="col-sm-4 col-form-label text-md-right">
@@ -726,7 +726,7 @@
 									                          	</div>
 									                        </div>
 
-									                        <div class="form-group form-row">
+									                        <div class="form-row">
 									                        	<div class="col-6">
 																	<div class="row">
 									                              		<label for="inputName3" class="col-sm-4 col-form-label text-md-right">
@@ -770,7 +770,7 @@
 																</div>
 									                        </div>
 
-									                        <div class="form-group form-row">
+									                        <div class="form-row">
 									                        	<div class="col-6">
 										                        	<div class="form-row">
 													              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
@@ -817,7 +817,7 @@
 									                        	</div>
 									                        </div>
 
-									                        <div class="form-group form-row">
+									                        <div class="form-row">
 									                        	<div class="col-6">
 										                            <div class="row">
 										                              	<label for="inputMobile3" class="col-sm-4 col-form-label text-md-right">
@@ -869,7 +869,7 @@
 										                      	</div>
 									                        </div>
 
-									                        <div class="form-group form-row">
+									                        <div class="form-row">
 									                        	<!-- 
 									                        	<div class="col-6">
 										                            <div class="row">
@@ -966,7 +966,7 @@
 
 											<div class="row">
 												<div class="card card-body">
-							            			<div class="form-group form-row text-center">
+							            			<div class="form-row text-center">
 							                        	<div class="col-sm-4">
 							                        		<div class="form-group">
 														  		<label for="inputOwnerApproval3">
@@ -1032,7 +1032,7 @@
 												<div class="col-sm-12">
 													<div class="card">
 														<div class="card-body">
-															<div class="form-group form-row">	
+															<div class="form-row">	
 											              		<label for="inputDealName3" class="col-sm-4 col-form-label text-md-right">
 											              			Discount
 											              		</label>
@@ -1061,7 +1061,7 @@
 												                </div>	
 											              	</div>
 
-											              	<div class="form-group form-row">	
+											              	<div class="form-row">	
 											              		<label for="inputDealName3" class="col-sm-4 col-form-label text-md-right">
 											              			Sale Percentage (Delivery)
 											              		</label>
@@ -1090,7 +1090,7 @@
 												                </div> 	
 											              	</div>
 
-											              	<div class="form-group form-row">	
+											              	<div class="form-row">	
 											              		<label for="inputDealName3" class="col-sm-4 col-form-label text-md-right">
 											              			General Sale Percentage
 											              		</label>
@@ -1163,7 +1163,7 @@
 									          	<div class="col-sm-12">
 									            	<div class="card">
 									                    <div class="card-body">
-									                        <div class="form-group form-row">    
+									                        <div class="form-row">    
 									                          <label for="inputLocation3" class="col-sm-4 col-form-label text-md-right">
 									                          	Location
 									                          </label>
@@ -1184,7 +1184,7 @@
 									                          	</div>   
 									                        </div>
 									                          
-									                        <div class="form-group form-row">
+									                        <div class="form-row">
 									                          	<label for="inputAddress3" class="col-sm-4 col-form-label text-md-right">
 									                          		Address Detail
 									                          	</label>
@@ -1208,7 +1208,7 @@
 									                        </div>
 
 									                        <div class="card card-body">
-										            			<div class="form-group form-row text-center">
+										            			<div class="form-row text-center">
 										                        	<div class="col-sm-4">
 										                        		<div class="form-group">
 																	  		<label for="inputOwnerApproval3">
@@ -1362,13 +1362,13 @@
 									          	<div class="col-sm-12">
 									            	<div class="card">
 									                    <div class="card-body">
-									                        <div class="form-group form-row mb-4">
+									                        <div class="form-row mb-4">
 									                          	<label for="inputServiceSchedule3" class="col-sm-2 col-form-label text-right">
 									                          		Service Schedule
 									                          	</label>
 									                          	<div class="col-sm-10">
 																	<div 
-																		class="form-group form-row border border-dark" 
+																		class="form-row border border-dark" 
 																		v-for="dayName in merchantWeekDays"
 																	>
 																		<label class="col-sm-4 col-form-label text-center">
@@ -1447,14 +1447,14 @@
 									                        </div>
 
 									                        <!-- 
-									                        <div class="form-group form-row mb-4">      
+									                        <div class="form-row mb-4">      
 									                          	<label for="inputBookingBreak3" class="col-sm-2 col-form-label text-right">
 									                          		Booking Breaks
 									                          	</label>
 
 									                          	<div class="col-sm-10">
 															    	<div 
-															    		class="form-group form-row border border-dark" 
+															    		class="form-row border border-dark" 
 															    		v-for="dayName in merchantWeekDays"
 															    	>
 															    		<label class="col-sm-4 col-form-label text-center">
@@ -1595,7 +1595,7 @@
 									<div class="col-sm-12">
 										<div class="card card-outline">
 								            <div class="card-body">
-									            <div class="form-group form-row">
+									            <div class="form-row">
 								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			First Name
 								              		</label>
@@ -1610,7 +1610,7 @@
 									                </div>	
 								              	</div>
 
-								              	<div class="form-group form-row">
+								              	<div class="form-row">
 								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Last Name
 								              		</label>
@@ -1625,7 +1625,7 @@
 									                </div>	
 								              	</div>  		
 								              	
-								              	<div class="form-group form-row">
+								              	<div class="form-row">
 								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			User Name
 								              		</label>
@@ -1645,7 +1645,7 @@
 									                </div>	
 								              	</div>
 
-								              	<div class="form-group form-row">
+								              	<div class="form-row">
 								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Mobile
 								              		</label>
@@ -1665,7 +1665,7 @@
 									                </div>	
 								              	</div>
 
-								              	<div class="form-group form-row">
+								              	<div class="form-row">
 								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Email
 								              		</label>
@@ -1685,7 +1685,7 @@
 									                </div>	
 								              	</div>
 
-								              	<div class="form-group form-row">
+								              	<div class="form-row">
 								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Password
 								              		</label>
@@ -1706,7 +1706,7 @@
 									                </div>	
 								              	</div>
 
-								              	<div class="form-group form-row">
+								              	<div class="form-row">
 								              		<label for="inputCuisineName3" class="col-sm-4 col-form-label text-md-right">
 								              			Repeat Password
 								              		</label>
