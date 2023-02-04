@@ -194,14 +194,16 @@ class OrderController extends Controller
 
     public function makeNewReservation(ReservationRequest $request)
     {   
-        $expectedMerchant = Merchant::find($request->reservation->merchant_id);
+        $expectedMerchant = Merchant::find($request->merchant->id);
 
         $newOrder = $this->createReservationOrder($request);
 
         $this->createScheduleOrder($newOrder, $request->reservation->arriving_time);
+        
         $this->createTableReservation($expectedMerchant, $request, $newOrder->id);
-        $this->updateMerchantBookingStatus($expectedMerchant, $request->reservation);
-        $merchantOrder = $this->createMerchantOrderRecord($newOrder, $request->reservation->merchant_id);
+        // $this->updateMerchantBookingStatus($expectedMerchant, $request->reservation);
+        
+        $merchantOrder = $this->createMerchantOrderRecord($newOrder, $expectedMerchant->id);
 
         $reservationMsg = 'Reservation request has been accepted';
 
@@ -317,10 +319,12 @@ class OrderController extends Controller
         ]);
     }
 
+    /*
     private function updateMerchantBookingStatus(Merchant $merchant, $reservation)
     {
         $merchant->booking()->increment('engaged_seat', $reservation->guest_number);
     }
+    */
 
     private function saveNewPayment(Order $order, $paymentId)
     {

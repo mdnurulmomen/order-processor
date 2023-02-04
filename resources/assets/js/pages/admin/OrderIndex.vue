@@ -489,7 +489,7 @@
 							              			Statuses:
 							              		</label>
 
-							              		<div class="col-sm-6">
+							              		<div class="col-sm-6 ml-auto">
 							              			<span 
 									    				v-if="orderIsPrimary(singleOrderData.order)" 
 									    				:class="[primaryOrderClass(singleOrderData.order), 'badge d-block']"
@@ -504,7 +504,7 @@
 							                	v-if="orderIsConfirmed(singleOrderData.order) && orderHasMerchants(singleOrderData.order)"
 							                >
 							                	<div 
-						                			class="col-sm-6" 
+						                			class="col-sm-6 ml-auto" 
 						                			v-for="merchantOrder in singleOrderData.order.merchants"
 						                		>
 									    			<div class="text-center">

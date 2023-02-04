@@ -33,7 +33,7 @@ class MerchantResource extends JsonResource
             'is_open' => $this->is_open,
 
             'discount' => $this->discount ?? 0,
-            'service_schedule' => json_decode($this->service_schedule),
+            'service_schedule' => $this->service_schedule,
             // 'booking_break_schedule' => json_decode($this->booking_break_schedule),
             
             // 'booking' => new MerchantBookingResource($this->booking),

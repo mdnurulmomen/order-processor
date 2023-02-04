@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantProductResource extends JsonResource
@@ -36,8 +37,8 @@ class MerchantProductResource extends JsonResource
 
             'available' => $this->available,
             
-            'merchant_id' => $this->when(strpos(Route::currentRouteName(), 'promotional-products.index') != false, $this->merchantProductCategory->merchant_id),
-            'merchant_name' => $this->when(strpos(Route::currentRouteName(), 'promotional-products.index') != false, $this->merchantProductCategory->merchant->name)
+            'merchant_id' => $this->when(strpos(Route::currentRouteName(), 'promotional-merchant-products.index') != false, $this->merchantProductCategory->merchant_id),
+            'merchant_name' => $this->when(strpos(Route::currentRouteName(), 'promotional-merchant-products.index') != false, $this->merchantProductCategory->merchant->name)
 
         ];
     }

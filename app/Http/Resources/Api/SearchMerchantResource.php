@@ -36,7 +36,7 @@ class SearchMerchantResource extends JsonResource
             'min_delivery_charge' => $this->min_delivery_charge,
             'max_delivery_charge' => $this->max_delivery_charge,
             
-            'cuisines' => RestaurantCuisineResource::collection($this->restaurantCuisines),
+            'cuisines' => MerchantCuisineResource::collection($this->merchantCuisines),
 
             'total_reviews' => count($reviews),
             'mean_review' => $number_reviews ? ($reviews->sum('rating') / $number_reviews) : 0,

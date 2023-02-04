@@ -286,6 +286,7 @@
 										Order
 									</a>
 								</li>
+
 								<li class="nav-item">
 									<a class="nav-link active" data-toggle="tab" href="#show-order-products">
 										Products
@@ -296,7 +297,6 @@
 							<!-- Tab panes -->
 							<div class="tab-content">
 								<div id="show-order-details" class="container tab-pane fade">
-									
 			            			<div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Id:
@@ -316,7 +316,7 @@
 						            </div>
 						            <div class="form-row" v-if="singleOrderData.order.is_asap_order || singleOrderData.order.scheduled">		
 					              		<label class="col-sm-6 text-right">
-					              			Scheduled:
+					              			Schedule:
 					              		</label>
 						                <div class="col-sm-6">
 						                  	{{
@@ -362,6 +362,16 @@
 						                </div>	
 						            </div>  
 						        	-->
+
+						        	<div class="form-row" v-show="singleOrderData.order_serve_confirmation">		
+					              		<label class="col-sm-6 text-right">
+					              			# Guests:
+					              		</label>
+						                <div class="col-sm-6">
+						                  	{{ singleOrderData.order_serve_confirmation && singleOrderData.order_serve_confirmation.guest_number ? singleOrderData.order_serve_confirmation.guest_number : 0 }}
+						                </div>	
+						            </div>
+
 						            <div class="form-row" v-show="singleOrderData.order.has_cutlery">		
 					              		<label class="col-sm-6 text-right">
 					              			Cutlery:
@@ -369,7 +379,8 @@
 						                <div class="col-sm-6">
 						                  	{{ singleOrderData.order.has_cutlery ? 'Added' : 'None' }}
 						                </div>	
-						            </div> 
+						            </div>
+
 						            <div class="form-row">		
 					              		<label class="col-sm-6 text-right">
 					              			Ordered By:
@@ -381,11 +392,12 @@
 											}}
 											({{
 												singleOrderData.order.orderer && singleOrderData.order.orderer.hasOwnProperty('merchant_id') ? 
-						                  		'Merchant Agent' : 'Customer'
+						                  		'Your Agent' : 'Customer'
 											}})
 						                </div>	
 						            </div>
 								</div>
+
 								<div id="show-order-products" class="container tab-pane active">
 									<div class="row">
 						                <div class="col-sm-12 text-md-center">
@@ -722,6 +734,7 @@
     		showOrderDetailModal(merchant) {
 				this.singleOrderData.order = merchant.order;
 				this.singleOrderData.order.products = merchant.products;
+				this.singleOrderData.order_serve_confirmation = merchant.order_serve_confirmation;
 				$("#modal-show-order").modal("show");
 			},
 			confirmOrder(){

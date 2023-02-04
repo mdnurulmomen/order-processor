@@ -75,7 +75,7 @@ class CustomerController extends Controller
         if ($per_page) {
             
             return new UserOrderCollection(
-                Order::with(['schedule', 'delivery'])
+                Order::with(['schedule', 'address'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
@@ -84,7 +84,7 @@ class CustomerController extends Controller
                 ->where(function ($query) {
                     $query->where('type', 'delivery')
                     ->orWhere('type', 'serving')
-                    ->orWhere('type', 'collection');
+                    ->orWhere('type', 'take-away');
                 })
                 ->paginate($per_page)
             );
@@ -93,7 +93,7 @@ class CustomerController extends Controller
         else {
 
             return UserOrderResource::collection(
-                Order::with(['schedule', 'delivery'])
+                Order::with(['schedule', 'address'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
@@ -102,7 +102,7 @@ class CustomerController extends Controller
                 ->where(function ($query) {
                     $query->where('type', 'delivery')
                     ->orWhere('type', 'serving')
-                    ->orWhere('type', 'collection');
+                    ->orWhere('type', 'take-away');
                 })
                 ->get()
             );
@@ -115,7 +115,7 @@ class CustomerController extends Controller
         if ($per_page) {
             
             return new UserOrderCollection(
-                Order::with(['schedule', 'delivery'])
+                Order::with(['schedule', 'address'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
@@ -124,7 +124,7 @@ class CustomerController extends Controller
                 ->where(function ($query) {
                     $query->where('type', 'delivery')
                     ->orWhere('type', 'serving')
-                    ->orWhere('type', 'collection');
+                    ->orWhere('type', 'take-away');
                 })
                 ->where('in_progress', 1)
                 ->paginate($per_page)
@@ -134,7 +134,7 @@ class CustomerController extends Controller
         else {
 
             return UserOrderResource::collection(
-                Order::with(['schedule', 'delivery'])
+                Order::with(['schedule', 'address'])
                 ->whereHasMorph('orderer', [ Customer::class ], 
                     function($query) use($user) {
                         $query->where('id', $user);
@@ -143,7 +143,7 @@ class CustomerController extends Controller
                 ->where(function ($query) {
                     $query->where('type', 'delivery')
                     ->orWhere('type', 'serving')
-                    ->orWhere('type', 'collection');
+                    ->orWhere('type', 'take-away');
                 })
                 ->where('in_progress', 1)
                 ->get()

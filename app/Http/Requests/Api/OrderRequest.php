@@ -70,13 +70,17 @@ class OrderRequest extends FormRequest
                     else if ($this->input('order.orderer_type') === 'merchant_agent' && $this->input('order.type') === 'delivery') {
                         return $fail('Delivery order is invalid.');     // Merchant Agent cant order for delivery
                     }
-                    
+                    else if (count($this->input('merchants.*.id')) > 1 && $this->input('order.orderer_type') === 'merchant_agent') {
+                        $fail('Multiple merchant-orders aint allowed for merchant-agent.');
+                    }
+                    else if ($this->input('order.orderer_type') === 'merchant_agent' && MerchantAgent::find($value)->merchant_id != $this->input('merchants.0.id')) {
+                        return $fail("Agent doesn't belong to the merchant.");     // Merchant Agent cant order for delivery
+                    }
                     /*
                         if (!Customer::where('id', $value)->exists() && !MerchantAgent::where('id', $value)->exists()) { 
                             return $fail($attribute.' is invalid.');
                         }
                     */
-                   
                 },
             ],
 
@@ -118,8 +122,8 @@ class OrderRequest extends FormRequest
             'order.delivery_additional_info' => 'nullable|string',
             
             'payment'=>'required',
-            'payment.id'=>'required_if:payment.method,bkash,card|string',
             'payment.method'=>'required|in:cash,card,bkash',
+            'payment.id'=>'required_unless:payment.method,cash|string',
 
             // 'merchants' => 'required|array|min:1',
             'merchants' => [
@@ -127,9 +131,6 @@ class OrderRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     if (count($this->input('merchants.*.id')) > 1 && $this->input('order.type')==='serving') {
                         $fail('Multiple merchant aint allowed for serve order.');
-                    }
-                    else if (count($this->input('merchants.*.id')) > 1 && $this->input('order.orderer_type') === 'merchant_agent') {
-                        $fail('Multiple merchant aint allowed for multiple merchant order.');
                     }
                 },
             ],
@@ -350,7 +351,7 @@ class OrderRequest extends FormRequest
             // 'order.type.required' => 'Order type is required',
             'order.is_asap_order.*'  => 'Order schedule is required',
             'order.schedule.*'  => 'Order schedule is not a valid',
-            'order.net_payable.required'  => 'Net payable amount is required',
+            // 'order.net_payable.required'  => 'Net payable amount is required',
             'order.has_cutlery.boolean'  => 'Cutlery addion value is invalid',
             'order.orderer_type.*'  => 'Invalid value for orderer_type: :input',
             'order.orderer_id.required'  => 'Orderer id is required',
