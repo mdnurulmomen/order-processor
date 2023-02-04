@@ -199,6 +199,14 @@ class OrderController extends Controller
         $newOrder = $this->createReservationOrder($request);
 
         $this->createScheduleOrder($newOrder, $request->reservation->arriving_time);
+
+        if ($request->payment->method !=='cash' && $request->payment->id) {
+
+            $newOrderPayment = $newOrder->payment()->create([
+                'payment_id'=>$request->payment->id
+            ]);
+            
+        }
         
         $this->createTableReservation($expectedMerchant, $request, $newOrder->id);
         // $this->updateMerchantBookingStatus($expectedMerchant, $request->reservation);
